@@ -2,7 +2,7 @@
 import { Inbox } from '@lucide/vue';
 import type { Component } from 'vue';
 
-const { icon = Inbox } = defineProps<{
+const props = defineProps<{
     title: string;
     description: string;
     icon?: Component;
@@ -16,13 +16,19 @@ const { icon = Inbox } = defineProps<{
         <div
             class="mb-4 flex size-12 items-center justify-center rounded-full bg-primary-soft text-primary"
         >
-            <component :is="icon" class="size-6" aria-hidden="true" />
+            <component
+                :is="props.icon ?? Inbox"
+                class="size-6"
+                aria-hidden="true"
+            />
         </div>
-        <h3 class="text-base font-semibold text-foreground">{{ title }}</h3>
+        <h3 class="text-base font-semibold text-foreground">
+            {{ props.title }}
+        </h3>
         <p
             class="mt-1.5 max-w-md text-sm leading-relaxed text-muted-foreground"
         >
-            {{ description }}
+            {{ props.description }}
         </p>
         <div
             v-if="$slots.action"
