@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\PolicyManagementController;
 use App\Http\Controllers\Ads\AdCampaignController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Billing\PaymentWebhookController;
 use App\Http\Controllers\Billing\WalletController;
 use App\Http\Controllers\Community\CommunityController;
@@ -43,6 +44,14 @@ Route::post('/webhooks/payments/{provider}', [PaymentWebhookController::class, '
 Route::post('/locale', LocaleController::class)
     ->middleware('throttle:30,1')
     ->name('locale.update');
+
+// ─── Social OAuth ────────────────────────────────────────────────────────────
+Route::prefix('auth/{provider}')
+    ->middleware('throttle:20,1')
+    ->group(function () {
+        Route::get('redirect', [SocialAuthController::class, 'redirect'])->name('auth.social.redirect');
+        Route::get('callback', [SocialAuthController::class, 'callback'])->name('auth.social.callback');
+    });
 
 Route::get('/policies/{policyPage:slug}', [PolicyPageController::class, 'show'])
     ->name('policies.show');
