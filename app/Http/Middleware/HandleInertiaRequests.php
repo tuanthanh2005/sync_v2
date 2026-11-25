@@ -3,14 +3,22 @@
 namespace App\Http\Middleware;
 
 use App\Enums\AdCampaignStatus;
+use App\Enums\BannerCampaignStatus;
+use App\Enums\PaymentStatus;
 use App\Enums\ReportStatus;
 use App\Models\AdCampaign;
 use App\Models\Appeal;
+use App\Models\BannerCampaign;
+use App\Models\Payment;
 use App\Models\PolicyPage;
 use App\Models\Report;
 use App\Models\VerificationRequest;
 use App\Services\Community\CommunityService;
 use App\Services\Messaging\MessagingService;
+use App\Services\Monetization\BannerAdvertisingService;
+use App\Services\Monetization\BoostPostService;
+use App\Services\Monetization\MonetizationPaymentService;
+use App\Services\Monetization\PlatformCapabilityService;
 use App\Services\Policy\FooterMenuService;
 use App\Services\Social\HashtagService;
 use App\Services\System\LanguageService;
@@ -29,6 +37,10 @@ class HandleInertiaRequests extends Middleware
         private readonly MessagingService $messagingService,
         private readonly LanguageService $languageService,
         private readonly SystemSettingService $systemSettingService,
+        private readonly BannerAdvertisingService $bannerService,
+        private readonly BoostPostService $boostService,
+        private readonly MonetizationPaymentService $paymentService,
+        private readonly PlatformCapabilityService $platformService,
     ) {}
 
     /**
@@ -61,10 +73,17 @@ class HandleInertiaRequests extends Middleware
             $adminPendingCounts = [
                 'reports' => Report::query()->whereIn('status', [ReportStatus::Pending->value, ReportStatus::UnderReview->value])->count(),
                 'ads' => AdCampaign::query()->where('status', AdCampaignStatus::PendingReview->value)->count(),
+                'banners' => Schema::hasTable('banner_campaigns') ? BannerCampaign::query()->where('status', BannerCampaignStatus::PendingReview->value)->count() : 0,
+                'pending_orders' => Schema::hasTable('payments') ? Payment::query()->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])->count() : 0,
                 'appeals' => Schema::hasTable('appeals') ? Appeal::query()->where('status', 'pending')->count() : 0,
                 'verifications' => Schema::hasTable('verification_requests') ? VerificationRequest::query()->where('status', 'pending')->count() : 0,
             ];
         }
+
+        $isAdminOrSensitive = $request->is('admin*', 'wallet*', 'payments*', 'settings*', 'login', 'register', 'forgot-password', 'reset-password*', 'two-factor*');
+        $sidebarBanners = $isAdminOrSensitive
+            ? ['desktop_sidebar_right' => null, 'desktop_sidebar_premium' => null]
+            : $this->bannerService->activeBannersForSlots(['desktop_sidebar_right', 'desktop_sidebar_premium'], $user, $request);
 
         return [
             ...parent::share($request),
@@ -80,6 +99,12 @@ class HandleInertiaRequests extends Middleware
             'sidebarHighlights' => [
                 'trendingHashtags' => $this->hashtagService->trending(5),
                 'featuredCommunities' => $this->communityService->featuredForSidebar($user, 3),
+                'banner' => $sidebarBanners['desktop_sidebar_right'] ?? $sidebarBanners['desktop_sidebar_premium'],
+            ],
+            'monetizationQuick' => $user === null ? null : [
+                'boostPackages' => $this->boostService->publicPackages(),
+                'paymentMethods' => $this->paymentService->availablePaymentMethods(null, $this->platformService->resolvePlatform($request)),
+                'maxPendingOrders' => $this->paymentService->maxPendingPaymentsPerUser(),
             ],
             'unreadNotificationsCount' => $user !== null ? $user->unreadNotifications()->count() : 0,
             'unreadMessagesCount' => $user !== null ? $this->messagingService->totalUnreadCount($user) : 0,
@@ -92,6 +117,9 @@ class HandleInertiaRequests extends Middleware
                     'username' => $user->username,
                     'email' => $user->email,
                     'avatar' => $user->avatarUrl(),
+                    'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
+                    'is_premium' => $user->isPremium(),
+                    'premium_until' => $user->premium_until?->toIso8601String(),
                     'role' => $user->role->value,
                     'role_label' => $user->rbacRole !== null ? $user->rbacRole->name : $user->role->label(),
                     'rbac_role' => $user->rbacRole !== null ? $user->rbacRole->slug : $user->role->value,
@@ -130,6 +158,11 @@ class HandleInertiaRequests extends Middleware
                         'manageAppeals' => $user->hasPermission('appeals.view'),
                         'manageKeywords' => $user->hasPermission('keywords.view'),
                         'manageFinance' => $user->hasPermission('finance.view'),
+                        'manageMonetization' => $user->hasPermission('monetization.view') || $user->hasPermission('finance.view'),
+                        'managePremium' => $user->hasPermission('premium.view') || $user->hasPermission('monetization.view'),
+                        'manageBanners' => $user->hasPermission('banners.view') || $user->hasPermission('ads.view'),
+                        'manageBoosts' => $user->hasPermission('boosts.view') || $user->hasPermission('ads.view'),
+                        'manageAdSense' => $user->hasPermission('adsense.manage') || $user->hasPermission('monetization.manage'),
                         'manageSettings' => $user->hasPermission('settings.view'),
                         'manageLanguages' => $user->hasPermission('languages.view'),
                         'manageNotifications' => $user->hasPermission('notifications.view'),

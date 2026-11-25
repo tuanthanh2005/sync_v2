@@ -460,7 +460,8 @@
             "moderation": "内容审核",
             "advertising": "广告业务",
             "finance": "财务管理",
-            "system": "系统配置"
+            "system": "系统配置",
+            "monetization": "商业化变现"
         },
         "nav": {
             "dashboard": "仪表盘",
@@ -493,7 +494,12 @@
             "notifications": "系统通知",
             "policies": "政策与页脚",
             "security": "安全与审计日志",
-            "backups": "备份管理"
+            "backups": "备份管理",
+            "revenueDashboard": "营收仪表盘",
+            "premiumManagement": "Premium 套餐与会员",
+            "bannerAdvertising": "横幅广告",
+            "boostPackages": "推文助推套餐",
+            "monetizationSettings": "支付、AdSense 与合规"
         },
         "common": {
             "search": "搜索...",
@@ -768,9 +774,202 @@
         "retry": "重试",
         "copy": "复制",
         "copied": "已复制到剪贴板",
-        "copyFailed": "无法复制到剪贴板"
+        "copyFailed": "无法复制到剪贴板",
+        "close": "关闭",
+        "cancel": "取消",
+        "confirm": "确认",
+        "apply": "应用",
+        "actionFailed": "无法完成操作，请重试。"
     },
     "pwa": {
         "installApp": "安装 SyncViet 应用"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "发现",
+            "explore": "探索",
+            "services": "服务中心",
+            "account": "账号",
+            "admin": "管理后台"
+        },
+        "badge": {
+            "title": "SyncViet Premium 会员",
+            "tooltip": "此蓝色认证徽章专属于有效期内的高级付费会员 SyncViet Premium，与身份认证、官方机构或管理员身份严格区分。"
+        },
+        "common": {
+            "days": "天",
+            "monthShort": "月"
+        },
+        "benefits": {
+            "blue_badge": "在帖子、评论、个人主页及私信中展示 SyncViet Premium 蓝标（#1D9BF0）",
+            "post_analytics": "帖子触达与互动表现数据分析",
+            "reduced_ads": "减少信息流中的赞助广告干扰",
+            "ad_free": "在 SyncViet 全站畅享无广告浏览体验",
+            "priority_support": "客服工单优先处理通道",
+            "profile_highlights": "增强版个人主页展示与创作者亮点标识"
+        },
+        "services": {
+            "pageTitle": "服务中心",
+            "eyebrow": "SyncViet 商业化服务",
+            "heading": "在 SyncViet 上扩大您的声音与品牌影响力",
+            "subtitle": "价格透明、人工确认下单、全程合规审核保障。SyncViet 的所有核心社交功能将永久 100% 免费。",
+            "freeCoreGuarantee": "发帖、评论、互动表态、关注、加入社区、搜索及举报对所有成员永久免费。",
+            "startingFrom": "起价",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "限时周期会员服务，尊享 SyncViet 蓝标、减少或免除广告浏览以及创作者数据分析。",
+            "bannerTitle": "横幅广告",
+            "bannerDesc": "按周或按月租用桌面端与移动端高曝光横幅广告位，支持品牌独占或公平轮播模式。",
+            "boostTitle": "帖子助推（Boost Post）",
+            "boostDesc": "将已过审的公开帖子推广 24 小时至 30 天，附带清晰透明的“赞助推广”标识与实时触达统计。",
+            "viewPremium": "浏览 Premium 套餐",
+            "viewBanners": "查看横幅广告位",
+            "viewBoost": "查看助推套餐",
+            "advertisingHubLink": "打开广告中心"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "加入 SyncViet Premium，脱颖而出",
+            "subtitle": "简单明了的预付费周期会员，绝无意外自动扣费。随时升级或续期，绝不损失剩余天数。",
+            "manageMyPlan": "管理我的 Premium",
+            "activeBanner": "您的 SyncViet Premium 会员有效期至 {date}。",
+            "extendPreservesDays": "现在续费会将新时长直接累加至您当前的到期时间。",
+            "paymentMethodLabel": "选择支付方式",
+            "noAutoAdBalanceDebit": "Premium 通过结账页面直接付款，绝不会自动扣除您的广告余额。",
+            "popular": "热门选择",
+            "buyButton": "选择套餐",
+            "extendButton": "续期套餐",
+            "moderationRuleTitle": "平等的安全与审核标准",
+            "moderationRuleDesc": "Premium 会员仍需严格遵守 SyncViet 社区准则、反垃圾信息规则及所有安全检查。",
+            "manualConfirmHint": "系统绝不会自动生成订单。在生成任何付款订单前，您都必须先核对详情并点击“是/否”确认。"
+        },
+        "accountPremium": {
+            "pageTitle": "我的 SyncViet Premium",
+            "expiresOn": "有效期至 {date}（剩余 {days} 天）",
+            "inactiveNotice": "您当前尚未开通有效的 SyncViet Premium 订阅。",
+            "historyTitle": "订阅历史记录",
+            "complimentary": "赠送 / 官方授予",
+            "emptyHistory": "暂无订阅记录。"
+        },
+        "advertising": {
+            "pageTitle": "广告中心",
+            "eyebrow": "SyncViet 广告",
+            "heading": "通过透明广告触达真实社区",
+            "subtitle": "选择按时间计费的横幅广告位打造持续品牌曝光，或选用固定时长的帖子助推套餐放大高价值讨论。"
+        },
+        "banner": {
+            "pageTitle": "横幅广告",
+            "heading": "租用高影响力 SyncViet 横幅广告位",
+            "subtitle": "桌面端与移动端广告位均采用透明的周租与月租定价。所有广告素材均需经过审核团队安全审查。",
+            "sponsoredLabel": "赞助广告",
+            "adOptions": "广告选项",
+            "adInfo": "关于此广告",
+            "adInfoDesc": "这是经过 SyncViet 审核的付费直投横幅广告位。您可以随时隐藏或举报此广告。",
+            "hideAd": "隐藏此广告",
+            "reportAd": "举报广告",
+            "placementsUnit": "个广告位",
+            "bulletExclusive": "单品牌独占锁定或公平多品牌轮播",
+            "bulletResponsive": "分别配置桌面端与移动端素材，支持实时预览",
+            "bulletStats": "去重后的展示量、点击量与点击率（CTR）报表",
+            "available": "当前可预订",
+            "bookedNow": "当前档期已满",
+            "bookTitle": "预订广告位",
+            "recommendedSize": "建议尺寸",
+            "campaignName": "广告活动名称",
+            "businessName": "品牌 / 企业名称",
+            "targetUrl": "目标跳转链接 (URL)",
+            "altText": "无障碍替代文本 (Alt Text)",
+            "headline": "简短标题",
+            "ctaLabel": "行动号召按钮文案 (CTA)",
+            "ctaPlaceholder": "了解更多",
+            "duration": "租用时长",
+            "startDate": "开始日期",
+            "desktopImage": "桌面端图片 (JPG/PNG/WebP)",
+            "mobileImage": "移动端图片 (JPG/PNG/WebP)",
+            "submitBooking": "核对并预订横幅广告",
+            "signInToBook": "登录后预订横幅广告",
+            "livePreview": "实时素材预览",
+            "previewPlaceholder": "上传图片或输入公开 HTTPS 图片链接以预览效果",
+            "myCampaigns": "我的横幅广告活动"
+        },
+        "boost": {
+            "pageTitle": "帖子助推",
+            "heading": "放大您的 SyncViet 公开帖子影响力",
+            "subtitle": "固定时长的推广套餐，带有清晰的“赞助”徽章。推广周期仅在审核通过后开始计算，绝不操纵自然热门榜单排名。",
+            "modalTitle": "助推此帖子",
+            "packagesUnit": "个套餐",
+            "featured": "精选推荐位",
+            "bulletFixed": "透明固定时长（24 小时至 30 天），自审核通过起计时",
+            "bulletTransparent": "明确标注“赞助”——绝不伪造点赞数或热门分值",
+            "bulletSafeRefund": "若被驳回或移除，自动停止推广并退还预算",
+            "paymentSource": "付款来源",
+            "directCheckout": "直接结账付款",
+            "ctaButton": "助推帖子",
+            "selectPostTitle": "选择一篇符合条件的公开帖子进行助推",
+            "noEligiblePosts": "请先发布一篇已过审的公开帖子，然后再使用帖子助推功能。"
+        },
+        "wallet": {
+            "title": "广告余额",
+            "subtitle": "专用于 SyncViet 帖子助推及符合条件广告活动的预付费广告余额。",
+            "promoBalance": "赠送额度",
+            "availableShort": "可用广告余额",
+            "topUpTitle": "充值广告余额",
+            "purposeDisclaimer": "广告余额仅限用于 SyncViet 广告服务，不支持用户间转账、现金提现或产生利息。"
+        },
+        "payments": {
+            "title": "支付历史",
+            "subtitle": "一站式管理您的 SyncViet Premium、横幅广告、帖子助推及广告余额充值订单。",
+            "openPendingLabel": "待支付订单",
+            "searchPlaceholder": "按订单编号、流水号或支付渠道搜索...",
+            "allServices": "全部服务",
+            "allStatuses": "全部状态",
+            "statusPending": "待支付",
+            "statusPaid": "已支付",
+            "statusCancelled": "已取消",
+            "statusRefunded": "已退款",
+            "refundedLabel": "已退款",
+            "pendingInstructionsTitle": "等待付款确认",
+            "transferNoteLabel": "请填写准确的转账附言",
+            "sandboxConfirm": "模拟沙盒 Webhook (Dev)",
+            "cancelOrder": "取消订单",
+            "cancelOrderConfirm": "确定取消此待支付订单吗？取消后将立即释放一个待支付订单名额。",
+            "empty": "未找到符合筛选条件的支付订单。"
+        },
+        "confirmModal": {
+            "title": "确认付款订单",
+            "subtitle": "请仔细核对以下订单详情。在您点击“是”之前，系统不会创建任何付款订单。",
+            "service": "服务项目",
+            "package": "方案 / 套餐",
+            "duration": "时长",
+            "method": "支付方式",
+            "fee": "手续费",
+            "total": "应付总额",
+            "termsNotice": "点击确认即表示您同意 SyncViet 支付条款及相应的服务政策。",
+            "noButton": "否，返回",
+            "yesButton": "是，创建付款订单"
+        },
+        "pendingLimit": {
+            "title": "已达待支付订单上限",
+            "description": "您当前有 {max} 笔未完成的待支付订单。请先完成支付或取消一笔现有待支付订单，再创建新订单。",
+            "viewPending": "查看待支付订单"
+        },
+        "compliance": {
+            "storeNotice": "在原生应用商店客户端上的购买遵循对应平台官方应用内购买政策。您可随时在 syncviet.com 管理订阅方案。"
+        },
+        "faq": {
+            "title": "常见问题",
+            "q1": "使用 SyncViet 需要付费吗？",
+            "a1": "不需要。发帖、评论、互动、关注、发送私信以及加入社区完全免费。",
+            "q2": "SyncViet Premium 徽章等同于身份认证吗？",
+            "a2": "不是。#1D9BF0 蓝色对勾仅代表有效付费期内的 SyncViet Premium 会员身份，与身份认证徽章和官方工作人员标识严格独立。",
+            "q3": "如果在到期前续费 Premium 套餐会怎样？",
+            "a3": "新购买的时长会直接叠加到您原有的到期时间点之后，您不会损失任何一天剩余有效期。",
+            "q4": "我可以将广告余额提现或转账给其他用户吗？",
+            "a4": "不可以。广告余额仅限于购买 SyncViet 广告服务的预付费额度，不支持提现或在账号之间转移。"
+        },
+        "admin": {
+            "revenueSubtitle": "双币种（VND 与 USD）财务报表，严格区分预付广告充值资金与已确认的直接服务营收。",
+            "recognizedRevenue": "已确认服务营收",
+            "prepaidDeposits": "预付广告余额充值额"
+        }
     }
 }

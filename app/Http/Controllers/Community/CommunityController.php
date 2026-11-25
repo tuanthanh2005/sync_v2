@@ -8,6 +8,8 @@ use App\Http\Requests\Community\CommunityUpdateRequest;
 use App\Models\Community;
 use App\Models\Post;
 use App\Services\Community\CommunityService;
+use App\Services\Monetization\AdSenseConfigService;
+use App\Services\Monetization\BannerAdvertisingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -19,6 +21,8 @@ class CommunityController extends Controller
 {
     public function __construct(
         private readonly CommunityService $communityService,
+        private readonly BannerAdvertisingService $bannerService,
+        private readonly AdSenseConfigService $adSenseService,
     ) {}
 
     public function index(Request $request): Response
@@ -42,7 +46,15 @@ class CommunityController extends Controller
 
         return Inertia::render(
             'communities/Show',
-            $this->communityService->showPayload($community, $request->user(), $tab, $category, $sort),
+            [
+                ...$this->communityService->showPayload($community, $request->user(), $tab, $category, $sort),
+                'banners' => $this->bannerService->activeBannersForSlots(
+                    ['desktop_community_top', 'mobile_community'],
+                    $request->user(),
+                    $request,
+                ),
+                'adSense' => $this->adSenseService->configForPage('community', $request->user()),
+            ],
         )->withViewData([
             'seo' => [
                 'title' => $community->name.' - '.config('app.name'),

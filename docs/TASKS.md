@@ -92,3 +92,5 @@ Quy ước trạng thái:
 | ---------------------------------------------------------------- | ---------- | ------------------------------------------------------------- |
 | Direct Messages 1-1 & Interactive Polls (Shared Hosting polling) | COMPLETED  | `conversations`, `messages`, `MessagingService`, `post_polls` |
 | PWA, Mobile API (Sanctum), Realtime WebSockets, Banner Ads       | TODO       | Tách riêng cho lộ trình mở rộng                               |
+
+| Complete Website Monetization System (Premium, Banner Ads, Boost Post, Advertising Balance, Payments, AdSense Readiness, Store Compliance, Admin Monetization Center, 15-Lang i18n, Tests & Docs) | COMPLETED | Đã triển khai toàn diện, kiểm thử tự động & đồng bộ 15 ngôn ngữ |

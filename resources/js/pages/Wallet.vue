@@ -16,36 +16,73 @@ import {
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import WalletController from '@/actions/App/Http/Controllers/Billing/WalletController';
-import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
+import PaymentConfirmModal from '@/components/monetization/PaymentConfirmModal.vue';
+import PendingLimitModal from '@/components/monetization/PendingLimitModal.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { formatVnd } from '@/lib/currency';
+import { formatMoney, formatVnd } from '@/lib/currency';
 import { formatDate, formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
 import { index as adsIndex } from '@/routes/ads';
+import { index as paymentsIndex } from '@/routes/payments';
 import type {
+    PaymentMethodPublic,
     PaymentTransactionItem,
+    PlatformCapabilities,
     WalletAccountSummary,
     WalletLedgerEntry,
 } from '@/types';
 
-const props = defineProps<{
-    account: WalletAccountSummary;
-    entries: WalletLedgerEntry[];
-    payments: PaymentTransactionItem[];
-    sandboxEnabled: boolean;
-    minAmount: number;
-    maxAmount: number;
-}>();
+const props = withDefaults(
+    defineProps<{
+        account: WalletAccountSummary;
+        entries: WalletLedgerEntry[];
+        payments: PaymentTransactionItem[];
+        paymentMethods?: PaymentMethodPublic[];
+        platformCapabilities?: PlatformCapabilities;
+        openPendingTopUpCount?: number;
+        maxPendingOrders?: number;
+        sandboxEnabled: boolean;
+        minAmount: number;
+        maxAmount: number;
+    }>(),
+    {
+        paymentMethods: () => [],
+        openPendingTopUpCount: 0,
+        maxPendingOrders: 5,
+    },
+);
 
 const { t, locale } = useI18n();
 const lang = computed<'vi' | 'en'>(() => (locale.value === 'en' ? 'en' : 'vi'));
 
 const quickPresets = [200_000, 500_000, 1_000_000, 2_450_000];
+
+const selectableMethods = computed(() => {
+    if (props.paymentMethods.length > 0) {
+        return props.paymentMethods;
+    }
+
+    return [
+        {
+            code: props.sandboxEnabled ? 'sandbox' : 'vietqr',
+            name: props.sandboxEnabled
+                ? 'Sandbox Test Gateway'
+                : 'VietQR Bank Transfer',
+            category: props.sandboxEnabled ? 'sandbox' : 'fiat',
+            supported_currencies: ['VND'],
+            fee_percent_bps: 0,
+            fee_fixed_vnd: 0,
+            fee_fixed_usd_cents: 0,
+            is_live_ready: false,
+            instructions: {},
+        } as PaymentMethodPublic,
+    ];
+});
 
 function newIdempotencyKey(): string {
     return `topup-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
@@ -53,12 +90,22 @@ function newIdempotencyKey(): string {
 
 const form = useForm({
     amount: 500_000,
-    provider: 'sandbox',
+    provider: props.sandboxEnabled
+        ? 'sandbox'
+        : (props.paymentMethods[0]?.code ?? 'vietqr'),
     idempotency_key: newIdempotencyKey(),
+    confirmed: true,
 });
 
 const selectedAmount = ref(500_000);
 const confirmTopUpOpen = ref(false);
+const pendingLimitOpen = ref(false);
+
+const activeMethodName = computed(
+    () =>
+        selectableMethods.value.find((m) => m.code === form.provider)?.name ??
+        form.provider.toUpperCase(),
+);
 
 function chooseAmount(val: number): void {
     selectedAmount.value = val;
@@ -72,6 +119,13 @@ function requestTopUp(): void {
 
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
         appToast.warning(t('common.offlineBanner'));
+
+        return;
+    }
+
+    if (props.openPendingTopUpCount >= props.maxPendingOrders) {
+        pendingLimitOpen.value = true;
+
         return;
     }
 
@@ -85,14 +139,18 @@ function submitTopUp(): void {
     }
 
     form.amount = Number(selectedAmount.value);
+    form.confirmed = true;
     form.post(WalletController.storeTopUp.url(), {
         preserveScroll: true,
         onSuccess: () => {
             confirmTopUpOpen.value = false;
             form.idempotency_key = newIdempotencyKey();
         },
-        onError: () => {
+        onError: (errors) => {
             confirmTopUpOpen.value = false;
+            if (errors.pending_limit) {
+                pendingLimitOpen.value = true;
+            }
         },
     });
 }
@@ -113,7 +171,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
 
 <template>
     <div class="space-y-5">
-        <Head :title="t('wallet.title')" />
+        <Head :title="t('monetization.wallet.title')" />
 
         <section
             class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-6 shadow-xs"
@@ -122,23 +180,31 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                 <div class="flex items-center gap-2 text-primary">
                     <WalletIcon class="size-5" aria-hidden="true" />
                     <h1 class="text-xl font-bold text-foreground">
-                        {{ t('wallet.title') }}
+                        {{ t('monetization.wallet.title') }}
                     </h1>
                 </div>
                 <p class="mt-1 text-sm text-muted-foreground">
-                    {{ t('wallet.subtitle') }}
+                    {{ t('monetization.wallet.subtitle') }}
                 </p>
             </div>
 
-            <Button class="rounded-lg" as-child>
-                <Link :href="adsIndex()">
-                    <Megaphone class="size-4" />
-                    <span>{{ t('ads.tabs.promote') }}</span>
-                </Link>
-            </Button>
+            <div class="flex flex-wrap items-center gap-2">
+                <Button variant="outline" class="rounded-lg" as-child>
+                    <Link :href="paymentsIndex()">
+                        <ReceiptText class="size-4" />
+                        <span>{{ t('monetization.payments.title') }}</span>
+                    </Link>
+                </Button>
+                <Button class="rounded-lg" as-child>
+                    <Link :href="adsIndex()">
+                        <Megaphone class="size-4" />
+                        <span>{{ t('ads.tabs.promote') }}</span>
+                    </Link>
+                </Button>
+            </div>
         </section>
 
-        <!-- Wallet Balances Overview -->
+        <!-- Advertising Balance Overview -->
         <section class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                 <p class="text-xs font-medium text-muted-foreground">
@@ -148,6 +214,13 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                     class="mt-1.5 text-lg font-bold text-primary sm:mt-2 sm:text-2xl"
                 >
                     {{ formatVnd(account.balance, lang) }}
+                </p>
+                <p
+                    v-if="account.promo_balance && account.promo_balance > 0"
+                    class="mt-1 text-[11px] text-muted-foreground"
+                >
+                    {{ t('monetization.wallet.promoBalance') }}:
+                    {{ formatVnd(account.promo_balance, lang) }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
@@ -193,16 +266,29 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                         class="flex items-center gap-2 text-base font-semibold text-foreground"
                     >
                         <CreditCard class="size-4 text-primary" />
-                        <span>{{ t('wallet.topUpTitle') }}</span>
+                        <span>{{ t('monetization.wallet.topUpTitle') }}</span>
                     </h2>
                     <p class="mt-1 text-xs text-muted-foreground">
-                        {{ t('wallet.topUpSubtitle') }}
+                        {{ t('monetization.wallet.purposeDisclaimer') }}
                     </p>
                 </div>
-                <Badge variant="success" class="gap-1 text-[11px]">
-                    <ShieldCheck class="size-3.5" />
-                    <span>HMAC-SHA256</span>
-                </Badge>
+                <div class="flex items-center gap-2">
+                    <Badge
+                        :variant="
+                            openPendingTopUpCount >= maxPendingOrders
+                                ? 'destructive'
+                                : 'secondary'
+                        "
+                        class="text-[11px]"
+                    >
+                        {{ t('monetization.payments.openPendingLabel') }}:
+                        {{ openPendingTopUpCount }} / {{ maxPendingOrders }}
+                    </Badge>
+                    <Badge variant="success" class="gap-1 text-[11px]">
+                        <ShieldCheck class="size-3.5" />
+                        <span>HMAC-SHA256</span>
+                    </Badge>
+                </div>
             </div>
 
             <div
@@ -215,11 +301,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                 }}
             </div>
 
-            <form
-                v-if="sandboxEnabled"
-                @submit.prevent="requestTopUp"
-                class="mt-5 space-y-4"
-            >
+            <form @submit.prevent="requestTopUp" class="mt-5 space-y-4">
                 <div class="space-y-2">
                     <Label>{{ t('wallet.quickAmounts') }}</Label>
                     <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
@@ -268,10 +350,13 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                             v-model="form.provider"
                             class="min-h-11 rounded-lg border border-input bg-background px-3 text-sm sm:min-h-9"
                         >
-                            <option value="sandbox">Sandbox Simulator</option>
-                            <option value="vnpay">VNPay QR</option>
-                            <option value="momo">MoMo E-Wallet</option>
-                            <option value="bank_transfer">Bank Transfer</option>
+                            <option
+                                v-for="m in selectableMethods"
+                                :key="m.code"
+                                :value="m.code"
+                            >
+                                {{ m.name }}
+                            </option>
                         </select>
                         <InputError :message="form.errors.provider" />
                     </div>
@@ -370,12 +455,20 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
             <section
                 class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
             >
-                <h2
-                    class="flex items-center gap-2 text-sm font-semibold text-foreground"
-                >
-                    <CreditCard class="size-4 text-primary" />
-                    <span>{{ t('wallet.paymentsTitle') }}</span>
-                </h2>
+                <div class="flex items-center justify-between gap-2">
+                    <h2
+                        class="flex items-center gap-2 text-sm font-semibold text-foreground"
+                    >
+                        <CreditCard class="size-4 text-primary" />
+                        <span>{{ t('wallet.paymentsTitle') }}</span>
+                    </h2>
+                    <Link
+                        :href="paymentsIndex()"
+                        class="text-xs font-medium text-primary hover:underline"
+                    >
+                        {{ t('sidebar.seeMore') }} →
+                    </Link>
+                </div>
 
                 <div v-if="payments.length > 0" class="divide-y divide-border">
                     <div
@@ -406,6 +499,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                     class="truncate font-mono text-[11px] text-muted-foreground"
                                 >
                                     {{
+                                        payment.order_code ||
                                         payment.provider_reference ||
                                         `#${payment.id}`
                                     }}
@@ -416,7 +510,8 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                     :aria-label="t('common.copy')"
                                     @click="
                                         copyReference(
-                                            payment.provider_reference ||
+                                            payment.order_code ||
+                                                payment.provider_reference ||
                                                 `#${payment.id}`,
                                         )
                                     "
@@ -428,7 +523,13 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
 
                         <div class="shrink-0 text-right">
                             <p class="font-bold text-foreground">
-                                {{ formatVnd(payment.amount, lang) }}
+                                {{
+                                    formatMoney(
+                                        payment.amount,
+                                        payment.currency,
+                                        locale,
+                                    )
+                                }}
                             </p>
                             <p
                                 v-if="payment.created_at"
@@ -445,14 +546,20 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
             </section>
         </div>
 
-        <ConfirmActionDialog
+        <PaymentConfirmModal
             v-model:open="confirmTopUpOpen"
-            :title="t('wallet.topUpTitle')"
-            :description="`${formatVnd(selectedAmount, lang)} · ${form.provider.toUpperCase()}`"
-            :confirm-label="t('wallet.topUpButton')"
-            :destructive="false"
+            :service-name="t('monetization.wallet.title')"
+            :item-name="t('monetization.wallet.topUpTitle')"
+            :amount="Number(selectedAmount)"
+            currency="VND"
+            :method-name="activeMethodName"
             :processing="form.processing"
             @confirm="submitTopUp"
+        />
+
+        <PendingLimitModal
+            v-model:open="pendingLimitOpen"
+            :max-pending="maxPendingOrders"
         />
     </div>
 </template>

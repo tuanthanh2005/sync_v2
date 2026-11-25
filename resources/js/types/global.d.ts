@@ -3,6 +3,7 @@ import type { Auth } from '@/types/auth';
 import type {
     AdminPendingCounts,
     FooterSharedData,
+    MonetizationQuickShared,
     PublicLanguageItem,
     SidebarHighlights,
     SystemSettingsPublic,
@@ -34,6 +35,7 @@ declare module '@inertiajs/core' {
             systemSettings: SystemSettingsPublic;
             footer: FooterSharedData;
             sidebarHighlights: SidebarHighlights;
+            monetizationQuick: MonetizationQuickShared | null;
             unreadNotificationsCount: number;
             unreadMessagesCount: number;
             walletBalance: number;

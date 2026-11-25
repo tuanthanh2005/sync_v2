@@ -24,6 +24,8 @@ export type PublicLanguageItem = {
 export type AdminPendingCounts = {
     reports: number;
     ads: number;
+    banners?: number;
+    pending_orders?: number;
     appeals: number;
     verifications: number;
 };
@@ -52,6 +54,7 @@ export type SocialAuthor = {
     headline: string | null;
     avatar: string | null;
     is_verified: boolean;
+    is_premium?: boolean;
 };
 
 export type FeedMediaItem = {
@@ -145,6 +148,7 @@ export type ConversationUser = {
     name: string;
     username: string;
     avatar: string | null;
+    is_premium?: boolean;
 };
 
 export type ConversationSummary = {
@@ -204,9 +208,156 @@ export type ModerationLogItem = {
     created_at: string;
 };
 
+export type ActiveBannerDisplay = {
+    id: number;
+    placement_code: string;
+    aspect_ratio: string;
+    platform: string;
+    name: string;
+    business_name: string | null;
+    headline: string | null;
+    cta_label: string;
+    alt_text: string;
+    desktop_image_url: string | null;
+    mobile_image_url: string | null;
+    logo_url: string | null;
+    click_url: string;
+};
+
+export type AdSensePageConfig = {
+    enabled: boolean;
+    publisher_id: string;
+    slots: Record<string, string>;
+    consent_required: boolean;
+};
+
+export type PremiumPlanItem = {
+    id: number;
+    slug: string;
+    name: string;
+    description: string | null;
+    duration_days: number;
+    price_usd_cents: number;
+    price_vnd: number;
+    promo_price_usd_cents: number | null;
+    promo_price_vnd: number | null;
+    effective_usd_cents: number;
+    effective_vnd: number;
+    benefits: string[];
+    ad_reduction_mode: 'none' | 'reduced' | 'ad_free';
+    sort_order: number;
+    is_active: boolean;
+    is_featured: boolean;
+};
+
+export type BannerPlacementItem = {
+    id: number;
+    code: string;
+    name: string;
+    description: string | null;
+    platform: 'desktop' | 'mobile' | 'both';
+    recommended_width: number;
+    recommended_height: number;
+    aspect_ratio: string;
+    delivery_mode: 'exclusive' | 'rotation';
+    delivery_mode_label: string;
+    max_active_banners: number;
+    price_7d_vnd: number;
+    price_15d_vnd: number;
+    price_30d_vnd: number;
+    price_90d_vnd: number;
+    price_7d_usd_cents: number;
+    price_15d_usd_cents: number;
+    price_30d_usd_cents: number;
+    price_90d_usd_cents: number;
+    is_active: boolean;
+    sort_order: number;
+    active_now?: number;
+    is_available_now?: boolean;
+};
+
+export type BannerCampaignItem = {
+    id: number;
+    user_id: number;
+    owner_name?: string | null;
+    owner_username?: string | null;
+    banner_placement_id: number;
+    placement_code?: string | null;
+    placement_name?: string | null;
+    payment_id: number | null;
+    name: string;
+    business_name: string | null;
+    headline: string | null;
+    cta_label: string | null;
+    target_url: string;
+    alt_text: string;
+    desktop_image_url: string | null;
+    mobile_image_url: string | null;
+    logo_url: string | null;
+    duration_days: number;
+    starts_at: string;
+    ends_at: string;
+    currency: string;
+    price_amount: number;
+    payment_status: string;
+    status: string;
+    status_label: string;
+    impressions_count: number;
+    clicks_count: number;
+    ctr_percent: number;
+    rejection_reason: string | null;
+    emergency_paused_at: string | null;
+    created_at: string | null;
+};
+
+export type BoostPackageItem = {
+    id: number;
+    slug: string;
+    name: string;
+    description: string | null;
+    duration_hours: number;
+    price_usd_cents: number;
+    price_vnd: number;
+    is_featured_slot: boolean;
+    priority_weight: number;
+    benefits: string[];
+    is_active: boolean;
+    sort_order: number;
+};
+
+export type PaymentMethodPublic = {
+    code: string;
+    name: string;
+    category: 'fiat' | 'crypto' | 'sandbox';
+    supported_currencies: string[];
+    fee_percent_bps: number;
+    fee_fixed_vnd: number;
+    fee_fixed_usd_cents: number;
+    is_live_ready: boolean;
+    instructions: Record<string, string | number | boolean | null>;
+};
+
+export type PlatformCapabilities = {
+    platform: 'web' | 'pwa' | 'android_play' | 'ios_appstore';
+    allow_external_web_checkout: boolean;
+    allow_premium_purchase: boolean;
+    allow_banner_display: boolean;
+    allow_boost_purchase: boolean;
+    require_native_iap_for_digital: boolean;
+    allowed_payment_methods: string[];
+    policy_note: string | null;
+};
+
+export type MonetizationQuickShared = {
+    boostPackages: BoostPackageItem[];
+    paymentMethods: PaymentMethodPublic[];
+    maxPendingOrders: number;
+};
+
 export type SidebarHighlights = {
     trendingHashtags: HashtagItem[];
     featuredCommunities: CommunitySummary[];
+    banner?: ActiveBannerDisplay | null;
 };
 
 export type SponsoredAdMeta = {
@@ -219,6 +370,7 @@ export type SponsoredAdMeta = {
 export type WalletAccountSummary = {
     currency: string;
     balance: number;
+    promo_balance?: number;
     held_balance: number;
     total_deposited: number;
     total_spent: number;
@@ -238,13 +390,34 @@ export type WalletLedgerEntry = {
 
 export type PaymentTransactionItem = {
     id: number;
+    order_code?: string;
+    service_type?: 'topup' | 'premium' | 'banner' | 'boost';
+    service_type_label?: string;
     provider: string;
     provider_reference: string | null;
     amount: number;
+    fee_amount?: number;
+    total_amount?: number;
+    refunded_amount?: number;
     currency: string;
-    status: 'pending' | 'paid' | 'failed' | 'cancelled';
+    exchange_rate_snapshot?: number | null;
+    status:
+        | 'pending'
+        | 'processing'
+        | 'paid'
+        | 'failed'
+        | 'cancelled'
+        | 'expired'
+        | 'refunded';
     status_label: string;
+    platform?: string;
+    metadata?: Record<string, unknown>;
+    can_cancel?: boolean;
     paid_at: string | null;
+    expires_at?: string | null;
+    cancelled_at?: string | null;
+    refunded_at?: string | null;
+    refund_reason?: string | null;
     created_at: string | null;
 };
 
@@ -352,6 +525,16 @@ export type PublicFeedPost = {
     is_bookmarked: boolean;
     can_edit: boolean;
     can_delete: boolean;
+    can_boost?: boolean;
+    boost_summary?: {
+        id: number;
+        status: string;
+        status_label: string;
+        impressions_count: number;
+        clicks_count: number;
+        ends_at: string | null;
+        is_featured_slot: boolean;
+    } | null;
     is_sponsored?: boolean;
     ad_campaign?: SponsoredAdMeta | null;
     author: SocialAuthor | null;
@@ -404,6 +587,7 @@ export type ProfileViewUser = {
     avatar: string | null;
     cover: string | null;
     is_verified: boolean;
+    is_premium?: boolean;
     followers_count: number;
     following_count: number;
     posts_count: number;
@@ -420,6 +604,7 @@ export type SearchUserResult = {
     headline: string | null;
     avatar: string | null;
     is_verified: boolean;
+    is_premium?: boolean;
     followers_count: number;
 };
 

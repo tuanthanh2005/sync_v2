@@ -5,23 +5,27 @@ import {
     Bell,
     CheckCircle2,
     ChevronDown,
+    Compass,
+    Crown,
     Download,
-    FileText,
     Home,
+    Image as ImageIcon,
     LayoutGrid,
     Megaphone,
     Menu,
     MessageSquare,
     Palette,
+    ReceiptText,
     Search,
     Shield,
-    ShieldAlert,
     ShieldCheck,
+    Sparkles,
     TrendingUp,
     Trophy,
     User as UserIcon,
     Users,
     Wallet as WalletIcon,
+    Zap,
 } from '@lucide/vue';
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -36,6 +40,8 @@ import NetworkStatusBanner from '@/components/common/NetworkStatusBanner.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
 import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import MiniFooter from '@/components/footer/MiniFooter.vue';
+import BannerSlot from '@/components/monetization/BannerSlot.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -61,14 +67,19 @@ import { formatVnd } from '@/lib/currency';
 import { toUrl } from '@/lib/utils';
 import { dashboard, home, login, register } from '@/routes';
 import { overview as adminOverview } from '@/routes/admin';
-import { index as adminAds } from '@/routes/admin/ads';
-import { index as adminModeration } from '@/routes/admin/moderation';
-import { index as adminPolicies } from '@/routes/admin/policies';
 import { index as adsIndex } from '@/routes/ads';
 import { edit as editAppearance } from '@/routes/appearance';
 import { index as communitiesIndex } from '@/routes/communities';
 import { index as messagesIndex } from '@/routes/messages';
+import {
+    banner as bannerRoute,
+    boost as boostRoute,
+    premium as premiumRoute,
+    services as servicesRoute,
+} from '@/routes/monetization';
 import { index as notificationsIndex } from '@/routes/notifications';
+import { index as paymentsIndex } from '@/routes/payments';
+import { premium as accountPremiumRoute } from '@/routes/account';
 import { edit as editSecurity } from '@/routes/security';
 import { index as walletIndex } from '@/routes/wallet';
 import type {
@@ -85,6 +96,12 @@ type Props = {
 
 type SidebarNavItem = NavItem & {
     badgeText?: string;
+};
+
+type SidebarGroup = {
+    id: string;
+    label: string;
+    items: SidebarNavItem[];
 };
 
 withDefaults(defineProps<Props>(), {
@@ -176,89 +193,152 @@ onBeforeUnmount(() => {
     }
 });
 
-const primaryNavItems = computed<SidebarNavItem[]>(() => {
-    const items: SidebarNavItem[] = [
+const sidebarGroups = computed<SidebarGroup[]>(() => {
+    if (!user.value) {
+        const guestGroups: SidebarGroup[] = [
+            {
+                id: 'discover',
+                label: t('monetization.sidebar.discover'),
+                items: [
+                    { title: t('nav.home'), href: home(), icon: Home },
+                    {
+                        title: t('monetization.sidebar.explore'),
+                        href: SearchController.url(),
+                        icon: Compass,
+                    },
+                    {
+                        title: t('nav.communities'),
+                        href: communitiesIndex(),
+                        icon: Users,
+                    },
+                ],
+            },
+            {
+                id: 'services',
+                label: t('monetization.sidebar.services'),
+                items: [
+                    {
+                        title: t('monetization.services.pageTitle'),
+                        href: servicesRoute(),
+                        icon: Sparkles,
+                    },
+                    {
+                        title: 'SyncViet Premium',
+                        href: premiumRoute(),
+                        icon: Crown,
+                    },
+                    {
+                        title: t('monetization.services.boostTitle'),
+                        href: boostRoute(),
+                        icon: Zap,
+                    },
+                    {
+                        title: t('monetization.services.bannerTitle'),
+                        href: bannerRoute(),
+                        icon: ImageIcon,
+                    },
+                ],
+            },
+        ];
+
+        return guestGroups;
+    }
+
+    const groups: SidebarGroup[] = [
         {
-            title: t('nav.home'),
-            href: home(),
-            icon: Home,
+            id: 'discover',
+            label: t('monetization.sidebar.discover'),
+            items: [
+                { title: t('nav.home'), href: home(), icon: Home },
+                {
+                    title: t('monetization.sidebar.explore'),
+                    href: SearchController.url(),
+                    icon: Compass,
+                },
+                {
+                    title: t('nav.communities'),
+                    href: communitiesIndex(),
+                    icon: Users,
+                },
+            ],
         },
         {
-            title: t('nav.communities'),
-            href: communitiesIndex(),
-            icon: Users,
+            id: 'services',
+            label: t('monetization.sidebar.services'),
+            items: [
+                {
+                    title: 'SyncViet Premium',
+                    href: user.value.is_premium
+                        ? accountPremiumRoute()
+                        : premiumRoute(),
+                    icon: Crown,
+                },
+                {
+                    title: t('monetization.services.boostTitle'),
+                    href: boostRoute(),
+                    icon: Zap,
+                },
+                {
+                    title: t('monetization.services.bannerTitle'),
+                    href: bannerRoute(),
+                    icon: ImageIcon,
+                },
+                {
+                    title: t('monetization.wallet.title'),
+                    href: walletIndex(),
+                    icon: WalletIcon,
+                    badgeText: formatVnd(walletBalance.value, lang.value),
+                },
+                {
+                    title: t('monetization.payments.title'),
+                    href: paymentsIndex(),
+                    icon: ReceiptText,
+                },
+            ],
+        },
+        {
+            id: 'account',
+            label: t('monetization.sidebar.account'),
+            items: [
+                {
+                    title: t('nav.publicProfile'),
+                    href: ProfileViewController.me.url(),
+                    icon: UserIcon,
+                },
+                {
+                    title: t('nav.dashboard'),
+                    href: dashboard(),
+                    icon: LayoutGrid,
+                },
+                {
+                    title: t('nav.security'),
+                    href: editSecurity(),
+                    icon: ShieldCheck,
+                },
+                {
+                    title: t('nav.appearance'),
+                    href: editAppearance(),
+                    icon: Palette,
+                },
+            ],
         },
     ];
 
-    if (user.value) {
-        items.push(
-            {
-                title: t('nav.ads'),
-                href: adsIndex(),
-                icon: Megaphone,
-            },
-            {
-                title: t('nav.wallet'),
-                href: walletIndex(),
-                icon: WalletIcon,
-                badgeText: formatVnd(walletBalance.value, lang.value),
-            },
-            {
-                title: t('nav.publicProfile'),
-                href: ProfileViewController.me.url(),
-                icon: UserIcon,
-            },
-            {
-                title: t('nav.dashboard'),
-                href: dashboard(),
-                icon: LayoutGrid,
-            },
-            {
-                title: t('nav.security'),
-                href: editSecurity(),
-                icon: ShieldCheck,
-            },
-            {
-                title: t('nav.appearance'),
-                href: editAppearance(),
-                icon: Palette,
-            },
-        );
-
-        if (user.value.can?.accessAdmin) {
-            items.push({
-                title: t('nav.adminOverview'),
-                href: adminOverview(),
-                icon: Shield,
-            });
-        }
-
-        if (user.value.can?.accessModeration) {
-            items.push({
-                title: t('nav.moderation'),
-                href: adminModeration(),
-                icon: ShieldAlert,
-            });
-        }
-
-        if (user.value.can?.reviewAds) {
-            items.push({
-                title: t('nav.adminAds'),
-                href: adminAds(),
-                icon: Megaphone,
-            });
-        }
-
-        if (user.value.can?.managePolicies) {
-            items.push({
-                title: t('nav.adminPolicies'),
-                href: adminPolicies(),
-                icon: FileText,
-            });
-        }
+    if (user.value.can?.accessAdmin) {
+        groups.push({
+            id: 'admin',
+            label: t('monetization.sidebar.admin'),
+            items: [
+                {
+                    title: t('nav.adminOverview'),
+                    href: adminOverview(),
+                    icon: Shield,
+                },
+            ],
+        });
     }
 
-    return items;
+    return groups;
 });
 
 function isItemActive(item: NavItem): boolean {
@@ -329,40 +409,52 @@ function isItemActive(item: NavItem): boolean {
                                 </SheetHeader>
                                 <nav
                                     :aria-label="t('nav.mobileNavLabel')"
-                                    class="flex flex-col gap-1 p-3"
+                                    class="flex flex-col gap-4 p-3"
                                 >
-                                    <Link
-                                        v-for="item in primaryNavItems"
-                                        :key="item.title"
-                                        :href="item.href"
-                                        @click="mobileMenuOpen = false"
-                                        :class="[
-                                            'flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
-                                            isItemActive(item)
-                                                ? 'bg-primary-soft text-accent-foreground'
-                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                        ]"
+                                    <div
+                                        v-for="group in sidebarGroups"
+                                        :key="group.id"
+                                        class="space-y-1"
                                     >
-                                        <component
-                                            :is="item.icon"
-                                            :class="[
-                                                'size-4.5 shrink-0',
-                                                isItemActive(item)
-                                                    ? 'text-primary'
-                                                    : '',
-                                            ]"
-                                            aria-hidden="true"
-                                        />
-                                        <span class="min-w-0 flex-1 truncate">{{
-                                            item.title
-                                        }}</span>
-                                        <span
-                                            v-if="item.badgeText"
-                                            class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-accent-foreground"
+                                        <p
+                                            class="px-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
                                         >
-                                            {{ item.badgeText }}
-                                        </span>
-                                    </Link>
+                                            {{ group.label }}
+                                        </p>
+                                        <Link
+                                            v-for="item in group.items"
+                                            :key="item.title"
+                                            :href="item.href"
+                                            @click="mobileMenuOpen = false"
+                                            :class="[
+                                                'flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
+                                                isItemActive(item)
+                                                    ? 'bg-primary-soft text-accent-foreground'
+                                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                            ]"
+                                        >
+                                            <component
+                                                :is="item.icon"
+                                                :class="[
+                                                    'size-4.5 shrink-0',
+                                                    isItemActive(item)
+                                                        ? 'text-primary'
+                                                        : '',
+                                                ]"
+                                                aria-hidden="true"
+                                            />
+                                            <span
+                                                class="min-w-0 flex-1 truncate"
+                                                >{{ item.title }}</span
+                                            >
+                                            <span
+                                                v-if="item.badgeText"
+                                                class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-accent-foreground"
+                                            >
+                                                {{ item.badgeText }}
+                                            </span>
+                                        </Link>
+                                    </div>
                                 </nav>
 
                                 <!-- Optional non-intrusive PWA Install entry -->
@@ -546,9 +638,15 @@ function isItemActive(item: NavItem): boolean {
                                     </Avatar>
                                     <div class="hidden text-left sm:block">
                                         <p
-                                            class="max-w-32 truncate text-xs leading-tight font-semibold"
+                                            class="flex max-w-36 items-center gap-1 truncate text-xs leading-tight font-semibold"
                                         >
-                                            {{ user.name }}
+                                            <span class="truncate">{{
+                                                user.name
+                                            }}</span>
+                                            <PremiumBadge
+                                                v-if="user.is_premium"
+                                                size="sm"
+                                            />
                                         </p>
                                         <p
                                             class="text-[11px] leading-tight text-muted-foreground"
@@ -606,36 +704,49 @@ function isItemActive(item: NavItem): boolean {
                 class="sticky top-22 hidden w-[240px] shrink-0 space-y-4 lg:block"
             >
                 <div class="rounded-xl border border-border bg-card p-3">
-                    <nav class="flex flex-col gap-1">
-                        <Link
-                            v-for="item in primaryNavItems"
-                            :key="item.title"
-                            :href="item.href"
-                            :class="[
-                                'flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors',
-                                isItemActive(item)
-                                    ? 'bg-primary-soft text-accent-foreground'
-                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                            ]"
+                    <nav class="space-y-4">
+                        <div
+                            v-for="group in sidebarGroups"
+                            :key="group.id"
+                            class="space-y-1"
                         >
-                            <component
-                                :is="item.icon"
-                                :class="[
-                                    'size-4.5 shrink-0',
-                                    isItemActive(item) ? 'text-primary' : '',
-                                ]"
-                                aria-hidden="true"
-                            />
-                            <span class="min-w-0 flex-1 truncate">{{
-                                item.title
-                            }}</span>
-                            <span
-                                v-if="item.badgeText"
-                                class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-accent-foreground"
+                            <p
+                                class="px-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
                             >
-                                {{ item.badgeText }}
-                            </span>
-                        </Link>
+                                {{ group.label }}
+                            </p>
+                            <Link
+                                v-for="item in group.items"
+                                :key="item.title"
+                                :href="item.href"
+                                :class="[
+                                    'flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors',
+                                    isItemActive(item)
+                                        ? 'bg-primary-soft text-accent-foreground'
+                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                ]"
+                            >
+                                <component
+                                    :is="item.icon"
+                                    :class="[
+                                        'size-4 shrink-0',
+                                        isItemActive(item)
+                                            ? 'text-primary'
+                                            : '',
+                                    ]"
+                                    aria-hidden="true"
+                                />
+                                <span class="min-w-0 flex-1 truncate">{{
+                                    item.title
+                                }}</span>
+                                <span
+                                    v-if="item.badgeText"
+                                    class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-accent-foreground"
+                                >
+                                    {{ item.badgeText }}
+                                </span>
+                            </Link>
+                        </div>
                     </nav>
                 </div>
 
@@ -1207,6 +1318,13 @@ function isItemActive(item: NavItem): boolean {
                         </Button>
                     </div>
                 </template>
+
+                <!-- Right Sidebar Active Direct Banner (auto-collapses cleanly if vacant) -->
+                <BannerSlot
+                    v-if="sidebarHighlights.banner"
+                    :banner="sidebarHighlights.banner"
+                    compact
+                />
 
                 <!-- Mini Footer below Right Sidebar -->
                 <MiniFooter />

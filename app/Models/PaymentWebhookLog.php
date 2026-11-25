@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -15,9 +15,17 @@ use Illuminate\Support\Carbon;
  * @property string|null $ip_address
  * @property array<string, mixed>|null $payload_summary
  * @property string|null $error_message
- * @property Carbon $created_at
+ * @property CarbonInterface $created_at
  */
-#[Fillable(['provider', 'event_id', 'status', 'signature_valid', 'ip_address', 'payload_summary', 'error_message'])]
+#[Fillable([
+    'provider',
+    'event_id',
+    'status',
+    'signature_valid',
+    'ip_address',
+    'payload_summary',
+    'error_message',
+])]
 class PaymentWebhookLog extends Model
 {
     public $timestamps = false;

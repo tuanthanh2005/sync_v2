@@ -63,14 +63,30 @@
         @vite(['resources/css/app.css', 'resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         <x-inertia::head>
             <title>{{ $seo['title'] ?? config('app.name', 'SyncViet') }}</title>
+            @if (! empty($seo['noindex']))
+                <meta name="robots" content="noindex, nofollow">
+            @endif
             @if (! empty($seo['description']))
                 <meta name="description" content="{{ $seo['description'] }}">
                 <meta property="og:title" content="{{ $seo['title'] ?? config('app.name') }}">
                 <meta property="og:description" content="{{ $seo['description'] }}">
+                <meta property="og:type" content="{{ $seo['type'] ?? 'website' }}">
+                <meta property="og:site_name" content="{{ config('app.name', 'SyncViet') }}">
+                <meta name="twitter:card" content="summary_large_image">
+                <meta name="twitter:title" content="{{ $seo['title'] ?? config('app.name') }}">
+                <meta name="twitter:description" content="{{ $seo['description'] }}">
             @endif
             @if (! empty($seo['url']))
                 <link rel="canonical" href="{{ $seo['url'] }}">
                 <meta property="og:url" content="{{ $seo['url'] }}">
+            @endif
+            @if (! empty($seo['hreflangs']) && is_array($seo['hreflangs']))
+                @foreach ($seo['hreflangs'] as $hlCode => $hlUrl)
+                    <link rel="alternate" hreflang="{{ $hlCode }}" href="{{ $hlUrl }}">
+                @endforeach
+            @endif
+            @if (! empty($seo['jsonLd']) && is_array($seo['jsonLd']))
+                <script type="application/ld+json">{!! json_encode($seo['jsonLd'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
             @endif
         </x-inertia::head>
     </head>

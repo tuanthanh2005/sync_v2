@@ -43,6 +43,10 @@ class SystemSettingService
             'feature_messaging' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
             'feature_ads' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
             'feature_payments' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feature_premium' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feature_banner_ads' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feature_boost_post' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feature_adsense' => ['group' => 'features', 'type' => 'boolean', 'value' => false, 'is_public' => true],
             'feature_require_email_verification' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => false],
             'maintenance_enabled' => ['group' => 'features', 'type' => 'boolean', 'value' => false, 'is_public' => true],
             'maintenance_message' => ['group' => 'features', 'type' => 'string', 'value' => 'SyncViet is undergoing scheduled maintenance. Please check back shortly.', 'is_public' => true],
@@ -70,6 +74,17 @@ class SystemSettingService
             'seo_title_suffix' => ['group' => 'seo', 'type' => 'string', 'value' => config('app.name', 'SyncViet'), 'is_public' => true],
             'seo_meta_description' => ['group' => 'seo', 'type' => 'string', 'value' => 'SyncViet global community platform for ideas, discussions, and communities.', 'is_public' => true],
             'seo_robots_index' => ['group' => 'seo', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+
+            // Monetization & Controlled Google AdSense Settings (Zero Arbitrary JS Injection)
+            'monetization_usd_to_vnd_rate' => ['group' => 'monetization', 'type' => 'integer', 'value' => (int) config('syncviet.monetization.default_usd_to_vnd_rate', 25_500), 'is_public' => true],
+            'monetization_max_pending_payments' => ['group' => 'monetization', 'type' => 'integer', 'value' => (int) config('syncviet.monetization.max_pending_payments_per_user', 5), 'is_public' => true],
+            'monetization_allow_banner_from_ad_balance' => ['group' => 'monetization', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'adsense_enabled' => ['group' => 'adsense', 'type' => 'boolean', 'value' => false, 'is_public' => true],
+            'adsense_publisher_id' => ['group' => 'adsense', 'type' => 'string', 'value' => '', 'is_public' => true],
+            'adsense_slots' => ['group' => 'adsense', 'type' => 'json', 'value' => [], 'is_public' => true],
+            'adsense_allowed_pages' => ['group' => 'adsense', 'type' => 'json', 'value' => ['home', 'explore', 'community', 'post'], 'is_public' => true],
+            'adsense_consent_required' => ['group' => 'adsense', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'adsense_ads_txt_line' => ['group' => 'adsense', 'type' => 'string', 'value' => '', 'is_public' => false],
         ];
     }
 
@@ -146,6 +161,10 @@ class SystemSettingService
                 'messaging' => (bool) $all['feature_messaging'],
                 'ads' => (bool) $all['feature_ads'],
                 'payments' => (bool) $all['feature_payments'],
+                'premium' => (bool) $all['feature_premium'],
+                'bannerAds' => (bool) $all['feature_banner_ads'],
+                'boostPost' => (bool) $all['feature_boost_post'],
+                'adsense' => (bool) $all['feature_adsense'],
             ],
             'limits' => [
                 'postMaxLength' => (int) $all['content_post_max_length'],

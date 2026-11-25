@@ -460,7 +460,8 @@
             "moderation": "Moderasi",
             "advertising": "Periklanan",
             "finance": "Keuangan",
-            "system": "Sistem"
+            "system": "Sistem",
+            "monetization": "Monetisasi"
         },
         "nav": {
             "dashboard": "Dasbor",
@@ -493,7 +494,12 @@
             "notifications": "Notifikasi",
             "policies": "Kebijakan & Footer",
             "security": "Keamanan & Log Audit",
-            "backups": "Manajemen Cadangan"
+            "backups": "Manajemen Cadangan",
+            "revenueDashboard": "Dasbor Pendapatan",
+            "premiumManagement": "Paket & Anggota Premium",
+            "bannerAdvertising": "Iklan Banner",
+            "boostPackages": "Paket Boost",
+            "monetizationSettings": "Pembayaran, AdSense & Kepatuhan"
         },
         "common": {
             "search": "Cari...",
@@ -768,9 +774,202 @@
         "retry": "Coba lagi",
         "copy": "Salin",
         "copied": "Disalin ke papan klip",
-        "copyFailed": "Gagal menyalin ke papan klip"
+        "copyFailed": "Gagal menyalin ke papan klip",
+        "close": "Tutup",
+        "cancel": "Batal",
+        "confirm": "Konfirmasi",
+        "apply": "Terapkan",
+        "actionFailed": "Tindakan tidak dapat diselesaikan. Silakan coba lagi."
     },
     "pwa": {
         "installApp": "Pasang Aplikasi SyncViet"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Temukan",
+            "explore": "Jelajahi",
+            "services": "Layanan",
+            "account": "Akun",
+            "admin": "Administrasi"
+        },
+        "badge": {
+            "title": "Anggota SyncViet Premium",
+            "tooltip": "Centang biru ini menandakan keanggotaan berbayar SyncViet Premium yang aktif. Ini berbeda dari Verifikasi Identitas, Organisasi Resmi, atau peran Administrator."
+        },
+        "common": {
+            "days": "hari",
+            "monthShort": "bln"
+        },
+        "benefits": {
+            "blue_badge": "Lencana biru SyncViet Premium (#1D9BF0) di postingan, komentar, profil & pesan",
+            "post_analytics": "Analitik jangkauan & performa interaksi postingan",
+            "reduced_ads": "Lebih sedikit tampilan konten bersponsor di beranda",
+            "ad_free": "Pengalaman menjelajah bebas iklan di seluruh SyncViet",
+            "priority_support": "Penanganan dukungan prioritas",
+            "profile_highlights": "Tampilan profil yang disempurnakan & sorotan kreator"
+        },
+        "services": {
+            "pageTitle": "Pusat Layanan",
+            "eyebrow": "Layanan Monetisasi SyncViet",
+            "heading": "Kembangkan suara & merek Anda di SyncViet",
+            "subtitle": "Harga transparan, konfirmasi pesanan manual, dan keamanan moderasi penuh. Fitur sosial inti di SyncViet tetap 100% gratis selamanya.",
+            "freeCoreGuarantee": "Memposting, berkomentar, memberi reaksi, mengikuti, bergabung dengan komunitas, mencari, dan melaporkan selalu gratis untuk setiap anggota.",
+            "startingFrom": "Mulai dari",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "Keanggotaan berjangka waktu dengan lencana biru SyncViet, penjelajahan dengan iklan lebih sedikit atau bebas iklan, dan analitik kreator.",
+            "bannerTitle": "Iklan Banner",
+            "bannerDesc": "Sewa penempatan banner bervisibilitas tinggi di desktop dan seluler per minggu atau bulan dengan slot eksklusif atau bergilir.",
+            "boostTitle": "Boost Postingan",
+            "boostDesc": "Promosikan postingan publik yang disetujui selama 24 jam hingga 30 hari dengan label Bersponsor yang transparan dan statistik jangkauan langsung.",
+            "viewPremium": "Jelajahi Paket Premium",
+            "viewBanners": "Lihat Penempatan Banner",
+            "viewBoost": "Jelajahi Paket Boost",
+            "advertisingHubLink": "Buka Pusat Periklanan"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "Tampil menonjol dengan SyncViet Premium",
+            "subtitle": "Keanggotaan prabayar berjangka waktu yang sederhana tanpa perpanjangan mendadak. Tingkatkan atau perpanjang kapan saja tanpa kehilangan sisa hari.",
+            "manageMyPlan": "Kelola Premium Saya",
+            "activeBanner": "Keanggotaan SyncViet Premium Anda aktif hingga {date}.",
+            "extendPreservesDays": "Memperpanjang sekarang akan menambahkan waktu langsung ke tanggal kedaluwarsa Anda saat ini.",
+            "paymentMethodLabel": "Pilih Metode Pembayaran",
+            "noAutoAdBalanceDebit": "Premium ditagih langsung melalui checkout dan tidak pernah memotong Saldo Iklan Anda secara otomatis.",
+            "popular": "Populer",
+            "buyButton": "Pilih Paket",
+            "extendButton": "Perpanjang Paket",
+            "moderationRuleTitle": "Standar Keamanan & Moderasi yang Setara",
+            "moderationRuleDesc": "Anggota Premium tetap tunduk pada seluruh Pedoman Komunitas SyncViet, aturan anti-spam, dan pemeriksaan keamanan.",
+            "manualConfirmHint": "Pesanan tidak pernah dibuat secara otomatis. Anda akan selalu meninjau dan mengonfirmasi Ya/Tidak sebelum pesanan pembayaran dibuat."
+        },
+        "accountPremium": {
+            "pageTitle": "SyncViet Premium Saya",
+            "expiresOn": "Aktif hingga {date} (tersisa {days} hari)",
+            "inactiveNotice": "Saat ini Anda belum memiliki langganan SyncViet Premium yang aktif.",
+            "historyTitle": "Riwayat Langganan",
+            "complimentary": "Gratis / Pemberian",
+            "emptyHistory": "Belum ada catatan langganan."
+        },
+        "advertising": {
+            "pageTitle": "Pusat Periklanan",
+            "eyebrow": "Periklanan SyncViet",
+            "heading": "Jangkau komunitas nyata dengan iklan yang transparan",
+            "subtitle": "Pilih penempatan Banner berbasis waktu untuk kehadiran merek berkelanjutan atau paket Boost Postingan berdurasi tetap untuk memperkuat diskusi bernilai tinggi."
+        },
+        "banner": {
+            "pageTitle": "Iklan Banner",
+            "heading": "Sewa penempatan banner SyncViet berdampak tinggi",
+            "subtitle": "Tarif sewa mingguan dan bulanan yang transparan di tampilan desktop dan seluler. Setiap materi iklan ditinjau oleh tim moderasi kami.",
+            "sponsoredLabel": "Bersponsor",
+            "adOptions": "Opsi iklan",
+            "adInfo": "Tentang iklan ini",
+            "adInfoDesc": "Ini adalah penempatan banner langsung berbayar yang telah ditinjau oleh SyncViet. Anda dapat menyembunyikan atau melaporkan iklan kapan saja.",
+            "hideAd": "Sembunyikan iklan ini",
+            "reportAd": "Laporkan iklan",
+            "placementsUnit": "penempatan",
+            "bulletExclusive": "Kunci eksklusif 1 merek atau rotasi multi-merek yang adil",
+            "bulletResponsive": "Materi iklan desktop & seluler terpisah dengan pratinjau langsung",
+            "bulletStats": "Pelaporan tayangan, klik & CTR yang telah dideduplikasi",
+            "available": "Tersedia sekarang",
+            "bookedNow": "Slot terisi saat ini",
+            "bookTitle": "Pesan Penempatan",
+            "recommendedSize": "Ukuran yang disarankan",
+            "campaignName": "Nama Kampanye",
+            "businessName": "Nama Merek / Bisnis",
+            "targetUrl": "URL Tujuan",
+            "altText": "Teks Alt Aksesibel",
+            "headline": "Judul Singkat",
+            "ctaLabel": "Label Tombol CTA",
+            "ctaPlaceholder": "Pelajari lebih lanjut",
+            "duration": "Durasi Sewa",
+            "startDate": "Tanggal Mulai",
+            "desktopImage": "Gambar Desktop (JPG/PNG/WebP)",
+            "mobileImage": "Gambar Seluler (JPG/PNG/WebP)",
+            "submitBooking": "Tinjau & Pesan Banner",
+            "signInToBook": "Masuk untuk Memesan Banner",
+            "livePreview": "Pratinjau Materi Iklan Langsung",
+            "previewPlaceholder": "Unggah gambar atau berikan URL gambar HTTPS publik untuk pratinjau",
+            "myCampaigns": "Kampanye Banner Saya"
+        },
+        "boost": {
+            "pageTitle": "Boost Postingan",
+            "heading": "Perkuat jangkauan postingan publik SyncViet Anda",
+            "subtitle": "Paket promosi berdurasi tetap dengan lencana Bersponsor yang jelas. Durasi baru berjalan setelah disetujui moderasi dan tidak pernah memanipulasi peringkat Populer organik.",
+            "modalTitle": "Boost postingan ini",
+            "packagesUnit": "paket",
+            "featured": "Slot Unggulan",
+            "bulletFixed": "Durasi tetap yang transparan (24 jam hingga 30 hari) dimulai saat disetujui",
+            "bulletTransparent": "Berlabel Bersponsor dengan jelas — tidak pernah memalsukan suka atau skor Populer",
+            "bulletSafeRefund": "Penghentian otomatis & pengembalian anggaran jika ditolak atau dihapus",
+            "paymentSource": "Sumber Pembayaran",
+            "directCheckout": "Checkout Langsung",
+            "ctaButton": "Boost Postingan",
+            "selectPostTitle": "Pilih salah satu postingan publik Anda yang memenuhi syarat untuk di-boost",
+            "noEligiblePosts": "Terbitkan postingan publik yang disetujui terlebih dahulu untuk menggunakan Boost Postingan."
+        },
+        "wallet": {
+            "title": "Saldo Iklan",
+            "subtitle": "Saldo iklan prabayar yang digunakan khusus untuk Boost Postingan SyncViet dan kampanye iklan yang memenuhi syarat.",
+            "promoBalance": "Kredit promo",
+            "availableShort": "Saldo Iklan Tersedia",
+            "topUpTitle": "Isi Ulang Saldo Iklan",
+            "purposeDisclaimer": "Saldo Iklan khusus untuk layanan periklanan SyncViet. Tidak ada transfer P2P, penarikan tunai, atau bunga."
+        },
+        "payments": {
+            "title": "Riwayat Pembayaran",
+            "subtitle": "Semua pesanan SyncViet Premium, Iklan Banner, Boost Postingan, dan Saldo Iklan Anda di satu tempat.",
+            "openPendingLabel": "Pesanan Tertunda Aktif",
+            "searchPlaceholder": "Cari berdasarkan kode pesanan, referensi, atau gateway...",
+            "allServices": "Semua Layanan",
+            "allStatuses": "Semua Status",
+            "statusPending": "Tertunda",
+            "statusPaid": "Dibayar",
+            "statusCancelled": "Dibatalkan",
+            "statusRefunded": "Dikembalikan",
+            "refundedLabel": "Dikembalikan",
+            "pendingInstructionsTitle": "Menunggu konfirmasi pembayaran",
+            "transferNoteLabel": "Sertakan catatan transfer yang tepat",
+            "sandboxConfirm": "Simulasikan Webhook Sandbox (Dev)",
+            "cancelOrder": "Batalkan Pesanan",
+            "cancelOrderConfirm": "Batalkan pesanan pembayaran yang tertunda ini? Tindakan ini segera membebaskan satu slot pesanan tertunda.",
+            "empty": "Tidak ditemukan pesanan pembayaran yang cocok dengan filter Anda."
+        },
+        "confirmModal": {
+            "title": "Konfirmasi Pesanan Pembayaran",
+            "subtitle": "Harap periksa detail di bawah ini dengan saksama. Tidak ada pesanan pembayaran yang dibuat hingga Anda mengeklik Ya.",
+            "service": "Layanan",
+            "package": "Paket",
+            "duration": "Durasi",
+            "method": "Metode Pembayaran",
+            "fee": "Biaya Pemrosesan",
+            "total": "Total yang Harus Dibayar",
+            "termsNotice": "Dengan mengonfirmasi, Anda menyetujui Ketentuan Pembayaran SyncViet dan kebijakan layanan yang berlaku.",
+            "noButton": "Tidak, Kembali",
+            "yesButton": "Ya, Buat Pesanan Pembayaran"
+        },
+        "pendingLimit": {
+            "title": "Batas Pesanan Tertunda Tercapai",
+            "description": "Saat ini Anda memiliki {max} pesanan pembayaran tertunda yang terbuka. Harap selesaikan atau batalkan pesanan tertunda yang ada sebelum membuat yang baru.",
+            "viewPending": "Lihat Pesanan Tertunda"
+        },
+        "compliance": {
+            "storeNotice": "Pembelian pada versi aplikasi toko resmi mengikuti kebijakan penagihan dalam aplikasi platform resmi. Kelola paket kapan saja di syncviet.com."
+        },
+        "faq": {
+            "title": "Pertanyaan yang Sering Diajukan",
+            "q1": "Apakah saya harus membayar untuk menggunakan SyncViet?",
+            "a1": "Tidak. Memposting, berkomentar, memberi reaksi, mengikuti, berkirim pesan, dan bergabung dengan komunitas sepenuhnya gratis.",
+            "q2": "Apakah lencana SyncViet Premium sama dengan Verifikasi Identitas?",
+            "a2": "Tidak. Centang biru #1D9BF0 menunjukkan keanggotaan berbayar SyncViet Premium yang aktif. Verifikasi identitas dan lencana staf terpisah sepenuhnya.",
+            "q3": "Apa yang terjadi jika saya memperpanjang paket Premium sebelum kedaluwarsa?",
+            "a3": "Durasi baru Anda ditambahkan langsung ke waktu kedaluwarsa yang ada sehingga Anda tidak akan kehilangan satu hari pun yang tersisa.",
+            "q4": "Dapatkah saya menarik atau mentransfer Saldo Iklan saya ke pengguna lain?",
+            "a4": "Tidak. Saldo Iklan khusus merupakan saldo kredit prabayar untuk layanan periklanan SyncViet dan tidak dapat ditarik atau ditransfer antar-akun."
+        },
+        "admin": {
+            "revenueSubtitle": "Pelaporan dua mata uang (VND & USD) yang memisahkan secara ketat setoran iklan prabayar dari pendapatan layanan langsung yang diakui.",
+            "recognizedRevenue": "Pendapatan Layanan Diakui",
+            "prepaidDeposits": "Setoran Saldo Iklan Prabayar"
+        }
     }
 }

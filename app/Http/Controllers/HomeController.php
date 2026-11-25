@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\PostCategory;
 use App\Services\Ads\AdDeliveryService;
+use App\Services\Monetization\AdSenseConfigService;
+use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Social\FeedService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,6 +17,8 @@ class HomeController extends Controller
     public function __construct(
         private readonly FeedService $feedService,
         private readonly AdDeliveryService $adDeliveryService,
+        private readonly BannerAdvertisingService $bannerService,
+        private readonly AdSenseConfigService $adSenseService,
     ) {}
 
     /**
@@ -25,10 +29,17 @@ class HomeController extends Controller
         $tab = $request->string('tab', 'trending')->toString();
         $feed = $this->feedService->publicFeed($request->user(), $tab);
         $sponsoredPost = $this->adDeliveryService->pickSponsoredPostForFeed($request->user(), $request);
+        $banners = $this->bannerService->activeBannersForSlots(
+            ['desktop_feed_top', 'mobile_after_composer', 'mobile_in_feed'],
+            $request->user(),
+            $request,
+        );
 
         return Inertia::render('Welcome', [
             'posts' => $feed['data'],
             'sponsoredPost' => $sponsoredPost,
+            'banners' => $banners,
+            'adSense' => $this->adSenseService->configForPage('home', $request->user()),
             'nextCursor' => $feed['next_cursor'],
             'hasMore' => $feed['has_more'],
             'activeTab' => $tab,

@@ -2,10 +2,12 @@
 
 namespace App\Services\Social;
 
+use App\Enums\AdCampaignStatus;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
 use App\Enums\UserStatus;
+use App\Models\AdCampaign;
 use App\Models\Bookmark;
 use App\Models\Hashtag;
 use App\Models\Post;
@@ -68,7 +70,7 @@ class FeedService
         $query = Post::query()
             ->publicVisible()
             ->with([
-                'author:id,name,username,status',
+                'author:id,name,username,status,premium_until,premium_suspended_at',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -113,6 +115,8 @@ class FeedService
         $viewerBookmarks = [];
         /** @var array<int, list<int>> $viewerVotes */
         $viewerVotes = [];
+        /** @var array<int, array<string, mixed>> $ownerBoosts */
+        $ownerBoosts = [];
 
         if ($viewer !== null) {
             $viewerReactions = PostReaction::query()
@@ -136,17 +140,46 @@ class FeedService
                     $viewerVotes[(int) $vote->poll_id][] = (int) $vote->option_id;
                 }
             }
+
+            $boostRows = AdCampaign::query()
+                ->where('user_id', $viewer->id)
+                ->whereIn('post_id', $postIds)
+                ->whereIn('status', [
+                    AdCampaignStatus::PendingPayment->value,
+                    AdCampaignStatus::PendingReview->value,
+                    AdCampaignStatus::Active->value,
+                    AdCampaignStatus::Paused->value,
+                ])
+                ->latest('id')
+                ->get(['id', 'post_id', 'status', 'impressions_count', 'clicks_count', 'ends_at', 'is_featured_slot']);
+
+            foreach ($boostRows as $b) {
+                if (! isset($ownerBoosts[$b->post_id])) {
+                    $ownerBoosts[$b->post_id] = [
+                        'id' => $b->id,
+                        'status' => $b->status->value,
+                        'status_label' => $b->status->label(),
+                        'impressions_count' => $b->impressions_count,
+                        'clicks_count' => $b->clicks_count,
+                        'ends_at' => $b->ends_at?->toIso8601String(),
+                        'is_featured_slot' => $b->is_featured_slot,
+                    ];
+                }
+            }
         }
 
         return array_values(
-            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes): array {
-                return $this->serializeOne(
+            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts): array {
+                $item = $this->serializeOne(
                     $post,
                     $viewer,
                     $viewerReactions[$post->id] ?? null,
                     isset($viewerBookmarks[$post->id]),
                     $post->poll !== null ? ($viewerVotes[$post->poll->id] ?? []) : [],
                 );
+                $item['boost_summary'] = $ownerBoosts[$post->id] ?? null;
+
+                return $item;
             })->all(),
         );
     }
@@ -210,6 +243,12 @@ class FeedService
             'is_bookmarked' => $isBookmarked,
             'can_edit' => $viewer !== null && $viewer->isActive() && $viewer->id === $post->user_id,
             'can_delete' => $viewer !== null && $viewer->isActive() && ($viewer->id === $post->user_id || $viewer->isStaff()),
+            'can_boost' => $viewer !== null
+                && $viewer->isActive()
+                && ! $viewer->isRestrictedFrom('advertise')
+                && $viewer->id === $post->user_id
+                && $post->visibility === PostVisibility::Public
+                && $post->moderation_status === ModerationStatus::Approved,
             'author' => $author === null ? null : [
                 'id' => $author->id,
                 'name' => $author->name,
@@ -217,6 +256,7 @@ class FeedService
                 'headline' => $profile?->headline,
                 'avatar' => $profile?->avatarUrl(),
                 'is_verified' => $profile !== null && $profile->is_verified_badge,
+                'is_premium' => $author->isPremium(),
             ],
             'community' => $post->community === null ? null : [
                 'id' => $post->community->id,

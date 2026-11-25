@@ -7,16 +7,25 @@ import HomeController from '@/actions/App/Http/Controllers/HomeController';
 import EmptyState from '@/components/common/EmptyState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import LoadingSkeleton from '@/components/common/LoadingSkeleton.vue';
+import AdSenseSlot from '@/components/monetization/AdSenseSlot.vue';
+import BannerSlot from '@/components/monetization/BannerSlot.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
 import { Button } from '@/components/ui/button';
 import { login, register } from '@/routes';
-import type { CategoryOption, PublicFeedPost } from '@/types';
+import type {
+    ActiveBannerDisplay,
+    AdSensePageConfig,
+    CategoryOption,
+    PublicFeedPost,
+} from '@/types';
 
 const props = withDefaults(
     defineProps<{
         posts?: PublicFeedPost[];
         sponsoredPost?: PublicFeedPost | null;
+        banners?: Record<string, ActiveBannerDisplay | null>;
+        adSense?: AdSensePageConfig | null;
         nextCursor?: string | null;
         hasMore?: boolean;
         activeTab?: string;
@@ -25,6 +34,8 @@ const props = withDefaults(
     {
         posts: () => [],
         sponsoredPost: null,
+        banners: () => ({}),
+        adSense: null,
         nextCursor: null,
         hasMore: false,
         activeTab: 'trending',
@@ -320,21 +331,44 @@ onBeforeUnmount(() => {
             </button>
         </div>
 
+        <!-- Desktop Feed Top Banner (auto-collapses if vacant) -->
+        <BannerSlot
+            :banner="banners?.desktop_feed_top"
+            class="hidden sm:block"
+        />
+
         <!-- Post Composer -->
         <PostComposer :categories="categories" />
 
+        <!-- Mobile Below Composer Banner (auto-collapses if vacant) -->
+        <BannerSlot
+            :banner="banners?.mobile_after_composer"
+            class="sm:hidden"
+        />
+
         <!-- Public Posts Stream -->
         <section v-if="feedItems.length > 0" class="space-y-3.5 sm:space-y-4">
-            <PostCard
-                v-for="post in feedItems"
+            <template
+                v-for="(post, idx) in feedItems"
                 :key="
                     post.is_sponsored
                         ? `ad-${post.ad_campaign?.id ?? post.id}`
                         : `post-${post.id}`
                 "
-                :post="post"
-                :categories="categories"
-            />
+            >
+                <PostCard :post="post" :categories="categories" />
+                <BannerSlot
+                    v-if="idx === 2 && banners?.mobile_in_feed"
+                    :banner="banners.mobile_in_feed"
+                    class="sm:hidden"
+                />
+                <AdSenseSlot
+                    v-if="idx === 3"
+                    :config="adSense"
+                    slot-key="in_feed"
+                    :has-direct-banner="Boolean(banners?.mobile_in_feed)"
+                />
+            </template>
 
             <LoadingSkeleton v-if="loadingMore" variant="feed" :count="2" />
 

@@ -460,7 +460,8 @@
             "moderation": "Moderasyon",
             "advertising": "Pag-aanunsyo",
             "finance": "Pananalapi",
-            "system": "Sistema"
+            "system": "Sistema",
+            "monetization": "Monetisasyon"
         },
         "nav": {
             "dashboard": "Panel ng Kontrol",
@@ -493,7 +494,12 @@
             "notifications": "Mga Abiso",
             "policies": "Mga Patakaran at Footer",
             "security": "Seguridad at Mga Log ng Audit",
-            "backups": "Pamamahala ng Backup"
+            "backups": "Pamamahala ng Backup",
+            "revenueDashboard": "Dashboard ng Kita",
+            "premiumManagement": "Mga Plan at Kasapi ng Premium",
+            "bannerAdvertising": "Pag-aanunsyo sa Banner",
+            "boostPackages": "Mga Pakete ng Boost",
+            "monetizationSettings": "Pagbabayad, AdSense at Pagsunod"
         },
         "common": {
             "search": "Maghanap...",
@@ -768,9 +774,202 @@
         "retry": "Subukan muli",
         "copy": "Kopyahin",
         "copied": "Nakopya sa clipboard",
-        "copyFailed": "Hindi makopya sa clipboard"
+        "copyFailed": "Hindi makopya sa clipboard",
+        "close": "Isara",
+        "cancel": "Kanselahin",
+        "confirm": "Kumpirmahin",
+        "apply": "Ilapat",
+        "actionFailed": "Hindi makumpleto ang aksyon. Pakisubukang muli."
     },
     "pwa": {
         "installApp": "I-install ang SyncViet App"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Tuklasin",
+            "explore": "Maghanap",
+            "services": "Mga Serbisyo",
+            "account": "Account",
+            "admin": "Administrasyon"
+        },
+        "badge": {
+            "title": "Kasaping SyncViet Premium",
+            "tooltip": "Ang asul na tsek na ito ay pagmamay-ari ng isang aktibong bayad na kasaping SyncViet Premium. Iba ito sa Beripikasyon ng Pagkakakilanlan, Opisyal na Organisasyon, o mga tungkuling Administrador."
+        },
+        "common": {
+            "days": "araw",
+            "monthShort": "buwan"
+        },
+        "benefits": {
+            "blue_badge": "Asul na badge ng SyncViet Premium (#1D9BF0) sa mga paskil, komento, propayl at mensahe",
+            "post_analytics": "Pagsusuri sa abot at pakikipag-ugnayan ng paskil",
+            "reduced_ads": "Mas kaunting nakakagambalang mga naka-sponsor na paskil sa daloy",
+            "ad_free": "Walang anunsyong karanasan sa pag-browse sa buong SyncViet",
+            "priority_support": "Priyoridad na pagtugon ng suporta",
+            "profile_highlights": "Pinahusay na pagpapakita ng propayl at tampok ng tagalikha"
+        },
+        "services": {
+            "pageTitle": "Sentro ng mga Serbisyo",
+            "eyebrow": "Mga Serbisyo sa Monetisasyon ng SyncViet",
+            "heading": "Palaguin ang iyong boses at tatak sa SyncViet",
+            "subtitle": "Malinaw na presyo, manu-manong kumpirmasyon ng order, at ganap na kaligtasan sa moderasyon. Ang mga pangunahing tampok ng pakikipag-ugnayan sa SyncViet ay mananatiling 100% libre magpakailanman.",
+            "freeCoreGuarantee": "Ang pagpapaskil, pagkokomento, pagbibigay ng reaksyon, pagsubaybay, pagsali sa mga komunidad, paghahanap, at pag-uulat ay palaging libre para sa bawat kasapi.",
+            "startingFrom": "Nagsisimula sa",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "May takdang-panahong pagiging kasapi na may asul na badge ng SyncViet, bawas o walang anunsyong pag-browse, at pagsusuri para sa tagalikha.",
+            "bannerTitle": "Pag-aanunsyo sa Banner",
+            "bannerDesc": "Magrenta ng mga kapansin-pansing puwesto ng banner sa desktop at mobile bawat linggo o buwan na may eksklusibo o umiikot na slot.",
+            "boostTitle": "I-boost ang Paskil",
+            "boostDesc": "I-promote ang iyong mga aprubadong pampublikong paskil mula 24 oras hanggang 30 araw na may malinaw na tatak na Naka-sponsor at live na estadistika ng abot.",
+            "viewPremium": "Tuklasin ang mga Plan ng Premium",
+            "viewBanners": "Tingnan ang mga Puwesto ng Banner",
+            "viewBoost": "Tuklasin ang mga Pakete ng Boost",
+            "advertisingHubLink": "Buksan ang Sentro ng Pag-aanunsyo"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "Mamukod-tangi gamit ang SyncViet Premium",
+            "subtitle": "Simple at may takdang-panahong prepaid na pagiging kasapi na walang biglaang pagbabawas sa pag-renew. Mag-upgrade o magpahaba anumang oras nang hindi nawawala ang mga natitirang araw.",
+            "manageMyPlan": "Pamahalaan ang Aking Premium",
+            "activeBanner": "Aktibo ang iyong pagiging kasapi sa SyncViet Premium hanggang {date}.",
+            "extendPreservesDays": "Ang pag-renew ngayon ay direktang magdaragdag ng oras sa iyong kasalukuyang petsa ng pagtatapos.",
+            "paymentMethodLabel": "Pumili ng Paraan ng Pagbabayad",
+            "noAutoAdBalanceDebit": "Direktang sinisingil ang Premium sa checkout at hindi kailanman awtomatikong ibabawas sa iyong Balanse sa Pag-aanunsyo.",
+            "popular": "Sikat",
+            "buyButton": "Piliin ang Plan",
+            "extendButton": "Pahabain ang Plan",
+            "moderationRuleTitle": "Pantay na Pamantayan sa Kaligtasan at Moderasyon",
+            "moderationRuleDesc": "Ang mga kasaping Premium ay saklaw pa rin ng lahat ng Alituntunin ng Komunidad ng SyncViet, mga panuntunan laban sa spam, at mga pagsusuri sa seguridad.",
+            "manualConfirmHint": "Hindi kailanman awtomatikong ginagawa ang mga order. Palagi mong susuriin at kukumpirmahin ang Oo/Hindi bago makagawa ng anumang order sa pagbabayad."
+        },
+        "accountPremium": {
+            "pageTitle": "Aking SyncViet Premium",
+            "expiresOn": "Aktibo hanggang {date} ({days} araw ang natitira)",
+            "inactiveNotice": "Wala ka pang aktibong subskripsyon sa SyncViet Premium sa ngayon.",
+            "historyTitle": "Kasaysayan ng Subskripsyon",
+            "complimentary": "Libre / Kaloob",
+            "emptyHistory": "Wala pang tala ng subskripsyon."
+        },
+        "advertising": {
+            "pageTitle": "Sentro ng Pag-aanunsyo",
+            "eyebrow": "Pag-aanunsyo sa SyncViet",
+            "heading": "Abutin ang totoong mga komunidad sa pamamagitan ng malinaw na pag-aanunsyo",
+            "subtitle": "Pumili ng nakabase sa oras na mga puwesto ng Banner para sa tuloy-tuloy na presensya ng tatak o mga nakatakdang-tagal na pakete ng Boost Post upang palakasin ang mahahalagang talakayan."
+        },
+        "banner": {
+            "pageTitle": "Pag-aanunsyo sa Banner",
+            "heading": "Magrenta ng mga epektibong puwesto ng banner sa SyncViet",
+            "subtitle": "Malinaw na lingguhan at buwanang singil sa renta sa desktop at mobile. Ang bawat materyal ng anunsyo ay sinusuri ng aming pangkat sa moderasyon.",
+            "sponsoredLabel": "Naka-sponsor",
+            "adOptions": "Mga opsyon sa anunsyo",
+            "adInfo": "Tungkol sa anunsyong ito",
+            "adInfoDesc": "Isa itong bayad na direktang puwesto ng banner na sinuri ng SyncViet. Maaari mong itago o iulat ang mga anunsyo anumang oras.",
+            "hideAd": "Itago ang anunsyong ito",
+            "reportAd": "Iulat ang anunsyo",
+            "placementsUnit": "mga puwesto",
+            "bulletExclusive": "Eksklusibong pag-lock sa 1 tatak o patas na pag-ikot ng maraming tatak",
+            "bulletResponsive": "Magkahiwalay na disenyo para sa desktop at mobile na may live na preview",
+            "bulletStats": "Walang dobleng pag-uulat ng impression, klik at CTR",
+            "available": "Available ngayon",
+            "bookedNow": "Kasalukuyang may nakapareserba sa slot",
+            "bookTitle": "Magpareserba ng Puwesto",
+            "recommendedSize": "Inirerekomendang sukat",
+            "campaignName": "Pangalan ng Kampanya",
+            "businessName": "Pangalan ng Tatak / Negosyo",
+            "targetUrl": "Destinasyong URL",
+            "altText": "Naa-access na Alt Text",
+            "headline": "Maikling Pamagat",
+            "ctaLabel": "Etiketa ng Pindutang CTA",
+            "ctaPlaceholder": "Matuto nang higit pa",
+            "duration": "Tagal ng Renta",
+            "startDate": "Petsa ng Pagsisimula",
+            "desktopImage": "Larawan sa Desktop (JPG/PNG/WebP)",
+            "mobileImage": "Larawan sa Mobile (JPG/PNG/WebP)",
+            "submitBooking": "Suriin at Magpareserba ng Banner",
+            "signInToBook": "Mag-sign in upang Magpareserba ng Banner",
+            "livePreview": "Live na Preview ng Anunsyo",
+            "previewPlaceholder": "Mag-upload ng larawan o maglagay ng pampublikong HTTPS na URL ng larawan para sa preview",
+            "myCampaigns": "Aking mga Kampanya sa Banner"
+        },
+        "boost": {
+            "pageTitle": "I-boost ang Paskil",
+            "heading": "Palakasin ang iyong mga pampublikong paskil sa SyncViet",
+            "subtitle": "Mga nakatakdang-tagal na pakete ng promosyon na may malinaw na badge na Naka-sponsor. Magsisimula lamang ang tagal pagkatapos maaprubahan sa moderasyon at hindi kailanman minamanipula ang natural na ranggo ng Sikat.",
+            "modalTitle": "I-boost ang paskil na ito",
+            "packagesUnit": "mga pakete",
+            "featured": "Tampok na Slot",
+            "bulletFixed": "Malinaw at nakatakdang tagal (24 oras hanggang 30 araw) na magsisimula pagka-apruba",
+            "bulletTransparent": "Malinaw na may tatak na Naka-sponsor — hindi kailanman gumagawa ng pekeng gusto o marka sa Sikat",
+            "bulletSafeRefund": "Awtomatikong pagtigil at pagbabalik ng badyet kapag tinanggihan o inalis",
+            "paymentSource": "Pinagmulan ng Bayad",
+            "directCheckout": "Direktang Checkout",
+            "ctaButton": "I-boost ang Paskil",
+            "selectPostTitle": "Pumili ng isa sa iyong mga kwalipikadong pampublikong paskil na i-bo-boost",
+            "noEligiblePosts": "Maglathala muna ng aprubadong pampublikong paskil bago gamitin ang Boost Post."
+        },
+        "wallet": {
+            "title": "Balanse sa Pag-aanunsyo",
+            "subtitle": "Prepaid na balanse sa pag-aanunsyo na eksklusibong ginagamit para sa SyncViet Boost Post at mga kwalipikadong kampanya ng anunsyo.",
+            "promoBalance": "Promo credit",
+            "availableShort": "Magagamit na Balanse sa Pag-aanunsyo",
+            "topUpTitle": "Mag-top Up ng Balanse sa Pag-aanunsyo",
+            "purposeDisclaimer": "Ang Balanse sa Pag-aanunsyo ay para lamang sa mga serbisyo sa pag-aanunsyo ng SyncViet. Walang P2P na paglilipat, pag-withdraw ng pera, o interes."
+        },
+        "payments": {
+            "title": "Kasaysayan ng Pagbabayad",
+            "subtitle": "Lahat ng iyong order para sa SyncViet Premium, Pag-aanunsyo sa Banner, Boost Post, at Balanse sa Pag-aanunsyo sa isang lugar.",
+            "openPendingLabel": "Mga Bukas na Nakabinbing Order",
+            "searchPlaceholder": "Maghanap ayon sa code ng order, reference, o gateway...",
+            "allServices": "Lahat ng Serbisyo",
+            "allStatuses": "Lahat ng Katayuan",
+            "statusPending": "Nakabinbin",
+            "statusPaid": "Bayad na",
+            "statusCancelled": "Kinansela",
+            "statusRefunded": "Na-refund",
+            "refundedLabel": "Na-refund",
+            "pendingInstructionsTitle": "Naghihintay ng kumpirmasyon ng bayad",
+            "transferNoteLabel": "Ilagay ang eksaktong tala ng paglipat",
+            "sandboxConfirm": "Gayahin ang Sandbox Webhook (Dev)",
+            "cancelOrder": "Kanselahin ang Order",
+            "cancelOrderConfirm": "Kanselahin ang nakabinbing order na ito? Agad nitong palalayain ang isang slot para sa nakabinbing order.",
+            "empty": "Walang nahanap na order ng pagbabayad na tugma sa iyong mga panala."
+        },
+        "confirmModal": {
+            "title": "Kumpirmahin ang Order ng Pagbabayad",
+            "subtitle": "Pakisuri nang mabuti ang mga detalye sa ibaba. Walang magagawang order hangga't hindi mo pinipindot ang Oo.",
+            "service": "Serbisyo",
+            "package": "Plan / Pakete",
+            "duration": "Tagal",
+            "method": "Paraan ng Pagbabayad",
+            "fee": "Bayad sa Pagproseso",
+            "total": "Kabuuang Babayaran",
+            "termsNotice": "Sa pagkumpirma, sumasang-ayon ka sa Mga Tuntunin sa Pagbabayad ng SyncViet at naaangkop na patakaran ng serbisyo.",
+            "noButton": "Hindi, Bumalik",
+            "yesButton": "Oo, Gumawa ng Order ng Pagbabayad"
+        },
+        "pendingLimit": {
+            "title": "Naabot ang Limitasyon ng Nakabinbing Order",
+            "description": "Kasalukuyan kang may {max} bukas na nakabinbing order ng pagbabayad. Pakikumpleto o kanselahin muna ang isang nakabinbing order bago gumawa ng bago.",
+            "viewPending": "Tingnan ang mga Nakabinbing Order"
+        },
+        "compliance": {
+            "storeNotice": "Ang mga pagbili sa mga bersyon ng app store ay sumusunod sa opisyal na patakaran sa in-app billing ng plataporma. Pamahalaan ang mga plan anumang oras sa syncviet.com."
+        },
+        "faq": {
+            "title": "Mga Madalas Itanong",
+            "q1": "Kailangan ko bang magbayad para magamit ang SyncViet?",
+            "a1": "Hindi. Ang pagpapaskil, pagkokomento, pagbibigay ng reaksyon, pagsubaybay, pagmemensahe, at pagsali sa mga komunidad ay ganap na libre.",
+            "q2": "Pareho ba ang badge ng SyncViet Premium sa Beripikasyon ng Pagkakakilanlan?",
+            "a2": "Hindi. Ang #1D9BF0 na asul na tsek ay nagpapahiwatig ng aktibong bayad na kasaping SyncViet Premium. Ganap na magkahiwalay ang beripikasyon ng pagkakakilanlan at mga badge ng kawani.",
+            "q3": "Ano ang mangyayari kapag pinahaba ko ang aking Premium plan bago ito mag-expire?",
+            "a3": "Direktang idinaragdag ang iyong bagong tagal sa kasalukuyang petsa at oras ng pagtatapos upang hindi ka mawalan ng kahit isang natitirang araw.",
+            "q4": "Maaari ko bang i-withdraw o ilipat ang aking Balanse sa Pag-aanunsyo sa ibang user?",
+            "a4": "Hindi. Ang Balanse sa Pag-aanunsyo ay eksklusibong prepaid na credit balance para sa mga serbisyo sa pag-aanunsyo ng SyncViet at hindi maaaring i-withdraw o ilipat sa ibang account."
+        },
+        "admin": {
+            "revenueSubtitle": "Dalawahang-salaping pag-uulat (VND at USD) na mahigpit na naghihiwalay sa mga prepaid na deposito sa pag-aanunsyo mula sa kinikilalang direktang kita ng serbisyo.",
+            "recognizedRevenue": "Kinikilalang Kita ng Serbisyo",
+            "prepaidDeposits": "Mga Prepaid na Deposito sa Balanse ng Anunsyo"
+        }
     }
 }

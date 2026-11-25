@@ -460,7 +460,8 @@
             "moderation": "Modération",
             "advertising": "Publicité",
             "finance": "Finances",
-            "system": "Système"
+            "system": "Système",
+            "monetization": "Monétisation"
         },
         "nav": {
             "dashboard": "Tableau de bord",
@@ -493,7 +494,12 @@
             "notifications": "Notifications",
             "policies": "Politiques et pied de page",
             "security": "Sécurité et journaux d'audit",
-            "backups": "Gestion des sauvegardes"
+            "backups": "Gestion des sauvegardes",
+            "revenueDashboard": "Tableau des revenus",
+            "premiumManagement": "Offres et membres Premium",
+            "bannerAdvertising": "Bannières publicitaires",
+            "boostPackages": "Forfaits de mise en avant",
+            "monetizationSettings": "Paiements, AdSense et conformité"
         },
         "common": {
             "search": "Rechercher...",
@@ -768,9 +774,202 @@
         "retry": "Réessayer",
         "copy": "Copier",
         "copied": "Copié dans le presse-papiers",
-        "copyFailed": "Impossible de copier"
+        "copyFailed": "Impossible de copier",
+        "close": "Fermer",
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "apply": "Appliquer",
+        "actionFailed": "L'action n'a pas pu être effectuée. Veuillez réessayer."
     },
     "pwa": {
         "installApp": "Installer l’application SyncViet"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Découvrir",
+            "explore": "Explorer",
+            "services": "Services",
+            "account": "Compte",
+            "admin": "Administration"
+        },
+        "badge": {
+            "title": "Membre SyncViet Premium",
+            "tooltip": "Ce badge bleu appartient à un abonnement payant SyncViet Premium actif. Il est distinct de la Vérification d'identité, d'une Organisation officielle ou des rôles d'Administrateur."
+        },
+        "common": {
+            "days": "jours",
+            "monthShort": "mois"
+        },
+        "benefits": {
+            "blue_badge": "Badge bleu SyncViet Premium (#1D9BF0) sur les publications, commentaires, profils et messages",
+            "post_analytics": "Statistiques de portée et d'engagement des publications",
+            "reduced_ads": "Réduction des contenus sponsorisés dans le fil",
+            "ad_free": "Navigation sans publicité sur tout SyncViet",
+            "priority_support": "Traitement prioritaire par le support",
+            "profile_highlights": "Présentation enrichie du profil et mises en avant de créateur"
+        },
+        "services": {
+            "pageTitle": "Centre de services",
+            "eyebrow": "Services de monétisation SyncViet",
+            "heading": "Développez votre voix et votre marque sur SyncViet",
+            "subtitle": "Tarification transparente, confirmation manuelle des commandes et sécurité complète de modération. Les fonctionnalités sociales de base de SyncViet restent 100 % gratuites à vie.",
+            "freeCoreGuarantee": "Publier, commenter, réagir, suivre, rejoindre des communautés, rechercher et signaler restent toujours gratuits pour chaque membre.",
+            "startingFrom": "À partir de",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "Abonnement à durée limitée avec badge bleu SyncViet, navigation allégée ou sans publicité et statistiques pour créateurs.",
+            "bannerTitle": "Bannières publicitaires",
+            "bannerDesc": "Louez des emplacements de bannière à forte visibilité sur ordinateur et mobile à la semaine ou au mois, en exclusivité ou en rotation.",
+            "boostTitle": "Booster une publication",
+            "boostDesc": "Mettez en avant vos publications publiques approuvées de 24 heures à 30 jours avec la mention transparente Sponsorisé et des statistiques de portée en direct.",
+            "viewPremium": "Découvrir les offres Premium",
+            "viewBanners": "Voir les emplacements de bannière",
+            "viewBoost": "Découvrir les forfaits Boost",
+            "advertisingHubLink": "Ouvrir l'espace publicitaire"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "Démarquez-vous avec SyncViet Premium",
+            "subtitle": "Des abonnements prépayés simples et à durée limitée, sans renouvellement surprise. Passez à l'offre supérieure ou prolongez à tout moment sans perdre les jours restants.",
+            "manageMyPlan": "Gérer mon Premium",
+            "activeBanner": "Votre abonnement SyncViet Premium est actif jusqu'au {date}.",
+            "extendPreservesDays": "Renouveler maintenant ajoute directement la durée à votre date d'expiration actuelle.",
+            "paymentMethodLabel": "Choisir le mode de paiement",
+            "noAutoAdBalanceDebit": "Premium est facturé directement au paiement et ne débite jamais automatiquement votre Solde publicitaire.",
+            "popular": "Populaire",
+            "buyButton": "Choisir l'offre",
+            "extendButton": "Prolonger l'offre",
+            "moderationRuleTitle": "Mêmes normes de sécurité et de modération",
+            "moderationRuleDesc": "Les membres Premium restent soumis à toutes les Règles de la communauté SyncViet, aux règles anti-spam et aux contrôles de sécurité.",
+            "manualConfirmHint": "Aucune commande n'est jamais créée automatiquement. Vous vérifiez et confirmez toujours par Oui/Non avant la création d'une commande de paiement."
+        },
+        "accountPremium": {
+            "pageTitle": "Mon SyncViet Premium",
+            "expiresOn": "Actif jusqu'au {date} ({days} jours restants)",
+            "inactiveNotice": "Vous n'avez actuellement aucun abonnement SyncViet Premium actif.",
+            "historyTitle": "Historique des abonnements",
+            "complimentary": "Offert / Attribution",
+            "emptyHistory": "Aucun historique d'abonnement pour le moment."
+        },
+        "advertising": {
+            "pageTitle": "Espace publicitaire",
+            "eyebrow": "Publicité SyncViet",
+            "heading": "Touchez de vraies communautés avec une publicité transparente",
+            "subtitle": "Choisissez des emplacements de bannière à durée déterminée pour une présence durable de marque ou des forfaits Booster une publication pour amplifier vos discussions clés."
+        },
+        "banner": {
+            "pageTitle": "Bannières publicitaires",
+            "heading": "Louez des emplacements de bannière à fort impact sur SyncViet",
+            "subtitle": "Tarifs hebdomadaires et mensuels transparents sur ordinateur et mobile. Chaque visuel est vérifié par notre équipe de modération.",
+            "sponsoredLabel": "Sponsorisé",
+            "adOptions": "Options de l'annonce",
+            "adInfo": "À propos de cette annonce",
+            "adInfoDesc": "Il s'agit d'un emplacement de bannière direct payant vérifié par SyncViet. Vous pouvez masquer ou signaler des annonces à tout moment.",
+            "hideAd": "Masquer cette annonce",
+            "reportAd": "Signaler l'annonce",
+            "placementsUnit": "emplacements",
+            "bulletExclusive": "Exclusivité mono-marque ou rotation équitable entre plusieurs marques",
+            "bulletResponsive": "Visuels distincts ordinateur et mobile avec aperçu en direct",
+            "bulletStats": "Rapports dédupliqués d'impressions, de clics et de CTR",
+            "available": "Disponible maintenant",
+            "bookedNow": "Emplacement actuellement occupé",
+            "bookTitle": "Réserver l'emplacement",
+            "recommendedSize": "Dimensions recommandées",
+            "campaignName": "Nom de la campagne",
+            "businessName": "Nom de la marque / entreprise",
+            "targetUrl": "URL de destination",
+            "altText": "Texte alternatif accessible",
+            "headline": "Titre court",
+            "ctaLabel": "Libellé du bouton CTA",
+            "ctaPlaceholder": "En savoir plus",
+            "duration": "Durée de location",
+            "startDate": "Date de début",
+            "desktopImage": "Image ordinateur (JPG/PNG/WebP)",
+            "mobileImage": "Image mobile (JPG/PNG/WebP)",
+            "submitBooking": "Vérifier et réserver la bannière",
+            "signInToBook": "Se connecter pour réserver une bannière",
+            "livePreview": "Aperçu du visuel en direct",
+            "previewPlaceholder": "Téléversez une image ou indiquez une URL d'image HTTPS publique pour l'aperçu",
+            "myCampaigns": "Mes campagnes de bannière"
+        },
+        "boost": {
+            "pageTitle": "Booster une publication",
+            "heading": "Amplifiez vos publications publiques sur SyncViet",
+            "subtitle": "Forfaits de promotion à durée fixe avec mention claire Sponsorisé. La durée ne démarre qu'après approbation par la modération et n'altère jamais le classement organique des Tendances.",
+            "modalTitle": "Booster cette publication",
+            "packagesUnit": "forfaits",
+            "featured": "Emplacement mis en avant",
+            "bulletFixed": "Durée fixe et transparente (24 h à 30 jours) dès l'approbation",
+            "bulletTransparent": "Claire mention Sponsorisé — ne génère jamais de faux J'aime ni de faux scores Tendances",
+            "bulletSafeRefund": "Arrêt automatique et remboursement du budget en cas de refus ou de suppression",
+            "paymentSource": "Source de paiement",
+            "directCheckout": "Paiement direct",
+            "ctaButton": "Booster la publication",
+            "selectPostTitle": "Choisissez l'une de vos publications publiques éligibles à booster",
+            "noEligiblePosts": "Publiez d'abord une publication publique approuvée pour utiliser Booster une publication."
+        },
+        "wallet": {
+            "title": "Solde publicitaire",
+            "subtitle": "Solde publicitaire prépayé utilisé exclusivement pour Booster une publication et les campagnes publicitaires éligibles sur SyncViet.",
+            "promoBalance": "Crédit promotionnel",
+            "availableShort": "Solde publicitaire disponible",
+            "topUpTitle": "Recharger le solde publicitaire",
+            "purposeDisclaimer": "Le Solde publicitaire est strictement réservé aux services publicitaires SyncViet. Aucun transfert entre particuliers, retrait en espèces ou intérêt."
+        },
+        "payments": {
+            "title": "Historique des paiements",
+            "subtitle": "Toutes vos commandes SyncViet Premium, Bannières publicitaires, Booster une publication et Solde publicitaire au même endroit.",
+            "openPendingLabel": "Commandes en attente ouvertes",
+            "searchPlaceholder": "Rechercher par code de commande, référence ou passerelle...",
+            "allServices": "Tous les services",
+            "allStatuses": "Tous les statuts",
+            "statusPending": "En attente",
+            "statusPaid": "Payé",
+            "statusCancelled": "Annulé",
+            "statusRefunded": "Remboursé",
+            "refundedLabel": "Remboursé",
+            "pendingInstructionsTitle": "En attente de confirmation du paiement",
+            "transferNoteLabel": "Indiquez exactement ce libellé de virement",
+            "sandboxConfirm": "Simuler le webhook Sandbox (Dev)",
+            "cancelOrder": "Annuler la commande",
+            "cancelOrderConfirm": "Annuler cette commande de paiement en attente ? Cela libère immédiatement un emplacement de commande en attente.",
+            "empty": "Aucune commande de paiement ne correspond à vos filtres."
+        },
+        "confirmModal": {
+            "title": "Confirmer la commande de paiement",
+            "subtitle": "Veuillez vérifier attentivement les informations ci-dessous. Aucune commande de paiement n'est créée tant que vous ne cliquez pas sur Oui.",
+            "service": "Service",
+            "package": "Offre / Forfait",
+            "duration": "Durée",
+            "method": "Mode de paiement",
+            "fee": "Frais de traitement",
+            "total": "Total à payer",
+            "termsNotice": "En confirmant, vous acceptez les Conditions de paiement SyncViet ainsi que la politique applicable au service.",
+            "noButton": "Non, revenir",
+            "yesButton": "Oui, créer la commande de paiement"
+        },
+        "pendingLimit": {
+            "title": "Limite de commandes en attente atteinte",
+            "description": "Vous avez actuellement {max} commandes de paiement en attente ouvertes. Veuillez finaliser ou annuler une commande en attente existante avant d'en créer une nouvelle.",
+            "viewPending": "Voir les commandes en attente"
+        },
+        "compliance": {
+            "storeNotice": "Les achats sur les versions natives des boutiques d'applications suivent les politiques officielles de facturation intégrée de chaque plateforme. Gérez vos offres à tout moment sur syncviet.com."
+        },
+        "faq": {
+            "title": "Foire aux questions",
+            "q1": "Dois-je payer pour utiliser SyncViet ?",
+            "a1": "Non. Publier, commenter, réagir, suivre, envoyer des messages et rejoindre des communautés est entièrement gratuit.",
+            "q2": "Le badge SyncViet Premium est-il identique à la Vérification d'identité ?",
+            "a2": "Non. La coche bleue #1D9BF0 indique un abonnement payant SyncViet Premium actif. La vérification d'identité et les badges du personnel sont strictement distincts.",
+            "q3": "Que se passe-t-il si je prolonge mon offre Premium avant son expiration ?",
+            "a3": "La nouvelle durée s'ajoute directement à votre date d'expiration existante afin que vous ne perdiez aucun jour restant.",
+            "q4": "Puis-je retirer ou transférer mon Solde publicitaire vers un autre utilisateur ?",
+            "a4": "Non. Le Solde publicitaire est strictement un crédit prépayé destiné aux services publicitaires SyncViet et ne peut être ni retiré ni transféré entre comptes."
+        },
+        "admin": {
+            "revenueSubtitle": "Rapports bi-devises (VND et USD) séparant strictement les dépôts publicitaires prépayés des revenus directs reconnus pour les services.",
+            "recognizedRevenue": "Revenus de services reconnus",
+            "prepaidDeposits": "Dépôts prépayés de solde publicitaire"
+        }
     }
 }

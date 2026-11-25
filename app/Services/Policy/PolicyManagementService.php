@@ -102,6 +102,27 @@ class PolicyManagementService
                 'footer_group' => FooterGroup::Support,
                 'sort_order' => 100,
             ],
+            [
+                'slug' => 'premium-policy',
+                'title_vi' => 'Chính sách thành viên Premium',
+                'title_en' => 'Premium Membership Policy',
+                'footer_group' => FooterGroup::Legal,
+                'sort_order' => 110,
+            ],
+            [
+                'slug' => 'payment-terms',
+                'title_vi' => 'Điều khoản thanh toán & Số dư quảng cáo',
+                'title_en' => 'Payment & Advertising Balance Terms',
+                'footer_group' => FooterGroup::Legal,
+                'sort_order' => 120,
+            ],
+            [
+                'slug' => 'child-safety-standards',
+                'title_vi' => 'Tiêu chuẩn an toàn trẻ em',
+                'title_en' => 'Child Safety Standards',
+                'footer_group' => FooterGroup::Legal,
+                'sort_order' => 130,
+            ],
         ];
     }
 

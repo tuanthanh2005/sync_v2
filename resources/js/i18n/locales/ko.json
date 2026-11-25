@@ -460,7 +460,8 @@
             "moderation": "운영 관리",
             "advertising": "광고",
             "finance": "재무",
-            "system": "시스템"
+            "system": "시스템",
+            "monetization": "수익화"
         },
         "nav": {
             "dashboard": "대시보드",
@@ -493,7 +494,12 @@
             "notifications": "알림 관리",
             "policies": "정책 및 푸터",
             "security": "보안 및 감사 로그",
-            "backups": "백업 관리"
+            "backups": "백업 관리",
+            "revenueDashboard": "수익 대시보드",
+            "premiumManagement": "Premium 요금제 및 회원",
+            "bannerAdvertising": "배너 광고",
+            "boostPackages": "부스트 패키지",
+            "monetizationSettings": "결제, AdSense 및 규정 준수"
         },
         "common": {
             "search": "검색...",
@@ -768,9 +774,202 @@
         "retry": "다시 시도",
         "copy": "복사",
         "copied": "클립보드에 복사되었습니다",
-        "copyFailed": "복사할 수 없습니다"
+        "copyFailed": "복사할 수 없습니다",
+        "close": "닫기",
+        "cancel": "취소",
+        "confirm": "확인",
+        "apply": "적용",
+        "actionFailed": "작업을 완료할 수 없습니다. 다시 시도해 주세요."
     },
     "pwa": {
         "installApp": "SyncViet 앱 설치"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "발견",
+            "explore": "탐색",
+            "services": "서비스",
+            "account": "계정",
+            "admin": "관리"
+        },
+        "badge": {
+            "title": "SyncViet Premium 회원",
+            "tooltip": "이 파란색 체크 배지는 활성 상태인 SyncViet Premium 유료 멤버십에 부여됩니다. 본인 인증, 공식 기관 또는 관리자 역할과는 명확히 구분됩니다."
+        },
+        "common": {
+            "days": "일",
+            "monthShort": "개월"
+        },
+        "benefits": {
+            "blue_badge": "게시물, 댓글, 프로필 및 메시지에 SyncViet Premium 블루 배지(#1D9BF0) 표시",
+            "post_analytics": "게시물 도달률 및 참여 성과 분석",
+            "reduced_ads": "피드 내 스폰서 광고 노출 감소",
+            "ad_free": "SyncViet 전역 광고 없는 탐색 환경",
+            "priority_support": "우선 지원 접수 및 처리",
+            "profile_highlights": "향상된 프로필 표시 및 크리에이터 하이라이트"
+        },
+        "services": {
+            "pageTitle": "서비스 센터",
+            "eyebrow": "SyncViet 수익화 서비스",
+            "heading": "SyncViet에서 영향력과 브랜드를 성장시키세요",
+            "subtitle": "투명한 요금제, 수동 주문 확인 및 철저한 운영 안전성. SyncViet의 핵심 소셜 기능은 앞으로도 영구히 100% 무료로 제공됩니다.",
+            "freeCoreGuarantee": "게시물 작성, 댓글, 반응, 팔로우, 커뮤니티 가입, 검색 및 신고는 모든 회원에게 항상 무료입니다.",
+            "startingFrom": "시작 가격",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "SyncViet 블루 배지, 광고 축소 또는 광고 제거, 크리에이터 분석을 제공하는 기간제 멤버십입니다.",
+            "bannerTitle": "배너 광고",
+            "bannerDesc": "주간 또는 월간 단위로 데스크톱 및 모바일 고가시성 배너 지면을 독점 또는 순환 슬롯으로 임대하세요.",
+            "boostTitle": "게시물 부스트",
+            "boostDesc": "승인된 공개 게시물을 24시간에서 30일까지 홍보하세요. 투명한 스폰서 라벨과 실시간 도달 통계가 제공됩니다.",
+            "viewPremium": "Premium 요금제 보기",
+            "viewBanners": "배너 지면 보기",
+            "viewBoost": "부스트 패키지 보기",
+            "advertisingHubLink": "광고 허브 열기"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "SyncViet Premium으로 돋보이세요",
+            "subtitle": "예기치 않은 자동 갱신이 없는 간편한 기간제 선불 멤버십입니다. 남은 일수를 잃지 않고 언제든 업그레이드하거나 연장할 수 있습니다.",
+            "manageMyPlan": "내 Premium 관리",
+            "activeBanner": "SyncViet Premium 멤버십이 {date}까지 활성 상태입니다.",
+            "extendPreservesDays": "지금 갱신하면 현재 만료일에 기간이 바로 합산됩니다.",
+            "paymentMethodLabel": "결제 수단 선택",
+            "noAutoAdBalanceDebit": "Premium은 체크아웃을 통해 직접 결제되며 광고 잔액에서 자동으로 차감되지 않습니다.",
+            "popular": "인기",
+            "buyButton": "요금제 선택",
+            "extendButton": "요금제 연장",
+            "moderationRuleTitle": "동일한 안전 및 운영 기준",
+            "moderationRuleDesc": "Premium 회원도 모든 SyncViet 커뮤니티 가이드라인, 스팸 방지 규칙 및 보안 검사를 동일하게 준수해야 합니다.",
+            "manualConfirmHint": "주문은 자동으로 생성되지 않습니다. 결제 주문이 생성되기 전에 항상 세부 정보를 확인하고 예/아니오로 직접 확정하게 됩니다."
+        },
+        "accountPremium": {
+            "pageTitle": "내 SyncViet Premium",
+            "expiresOn": "{date}까지 활성 ({days}일 남음)",
+            "inactiveNotice": "현재 활성화된 SyncViet Premium 구독이 없습니다.",
+            "historyTitle": "구독 내역",
+            "complimentary": "무상 제공 / 증정",
+            "emptyHistory": "아직 구독 기록이 없습니다."
+        },
+        "advertising": {
+            "pageTitle": "광고 센터",
+            "eyebrow": "SyncViet 광고",
+            "heading": "투명한 광고로 실제 커뮤니티에 도달하세요",
+            "subtitle": "지속적인 브랜드 노출을 위한 기간제 배너 지면 또는 가치 있는 게시물을 확산하는 고정 기간 게시물 부스트 패키지를 선택하세요."
+        },
+        "banner": {
+            "pageTitle": "배너 광고",
+            "heading": "효과적인 SyncViet 배너 지면 임대",
+            "subtitle": "데스크톱 및 모바일 지면에 적용되는 투명한 주간·월간 임대 요금. 모든 광고 소재는 운영팀의 심사를 거칩니다.",
+            "sponsoredLabel": "스폰서",
+            "adOptions": "광고 옵션",
+            "adInfo": "이 광고 정보",
+            "adInfoDesc": "SyncViet의 심사를 거친 유료 직접 배너 광고입니다. 언제든지 광고를 숨기거나 신고할 수 있습니다.",
+            "hideAd": "이 광고 숨기기",
+            "reportAd": "광고 신고",
+            "placementsUnit": "지면",
+            "bulletExclusive": "1개 브랜드 독점 잠금 또는 공정한 다수 브랜드 순환 노출",
+            "bulletResponsive": "데스크톱 및 모바일 별도 소재 지원 및 실시간 미리보기",
+            "bulletStats": "중복 제거된 노출 수, 클릭 수 및 CTR 리포트 제공",
+            "available": "지금 예약 가능",
+            "bookedNow": "현재 슬롯 사용 중",
+            "bookTitle": "지면 예약",
+            "recommendedSize": "권장 크기",
+            "campaignName": "캠페인 이름",
+            "businessName": "브랜드 / 사업자명",
+            "targetUrl": "연결 URL",
+            "altText": "대체 텍스트(Alt Text)",
+            "headline": "짧은 제목",
+            "ctaLabel": "CTA 버튼 문구",
+            "ctaPlaceholder": "자세히 알아보기",
+            "duration": "임대 기간",
+            "startDate": "시작일",
+            "desktopImage": "데스크톱 이미지 (JPG/PNG/WebP)",
+            "mobileImage": "모바일 이미지 (JPG/PNG/WebP)",
+            "submitBooking": "검토 및 배너 예약",
+            "signInToBook": "로그인하여 배너 예약",
+            "livePreview": "실시간 소재 미리보기",
+            "previewPlaceholder": "미리보기를 보려면 이미지를 업로드하거나 공개 HTTPS 이미지 URL을 입력하세요",
+            "myCampaigns": "내 배너 캠페인"
+        },
+        "boost": {
+            "pageTitle": "게시물 부스트",
+            "heading": "SyncViet 공개 게시물의 도달 범위 넓히기",
+            "subtitle": "명확한 스폰서 배지가 표시되는 고정 기간 홍보 패키지입니다. 기간은 운영 승인 후에만 시작되며 오가닉 인기 순위를 조작하지 않습니다.",
+            "modalTitle": "이 게시물 부스트하기",
+            "packagesUnit": "패키지",
+            "featured": "추천 슬롯",
+            "bulletFixed": "승인 시점부터 시작되는 투명한 고정 기간(24시간~30일)",
+            "bulletTransparent": "스폰서로 명확히 표기 — 좋아요 수나 인기 점수를 조작하지 않습니다",
+            "bulletSafeRefund": "반려 또는 삭제 시 자동 중지 및 잔여 예산 환불",
+            "paymentSource": "결제 수단",
+            "directCheckout": "직접 결제",
+            "ctaButton": "게시물 부스트",
+            "selectPostTitle": "부스트할 승인된 공개 게시물을 선택하세요",
+            "noEligiblePosts": "게시물 부스트를 사용하려면 먼저 승인된 공개 게시물을 등록하세요."
+        },
+        "wallet": {
+            "title": "광고 잔액",
+            "subtitle": "SyncViet 게시물 부스트 및 대상 광고 캠페인 전용 선불 광고 잔액입니다.",
+            "promoBalance": "프로모션 크레딧",
+            "availableShort": "사용 가능한 광고 잔액",
+            "topUpTitle": "광고 잔액 충전",
+            "purposeDisclaimer": "광고 잔액은 SyncViet 광고 서비스 전용입니다. 사용자 간 이체, 현금 출금 또는 이자 지급은 지원되지 않습니다."
+        },
+        "payments": {
+            "title": "결제 내역",
+            "subtitle": "SyncViet Premium, 배너 광고, 게시물 부스트 및 광고 잔액 주문을 한곳에서 확인하세요.",
+            "openPendingLabel": "대기 중인 주문",
+            "searchPlaceholder": "주문 코드, 참조 번호 또는 결제 게이트웨이 검색...",
+            "allServices": "모든 서비스",
+            "allStatuses": "모든 상태",
+            "statusPending": "대기 중",
+            "statusPaid": "결제 완료",
+            "statusCancelled": "취소됨",
+            "statusRefunded": "환불됨",
+            "refundedLabel": "환불됨",
+            "pendingInstructionsTitle": "결제 확인 대기 중",
+            "transferNoteLabel": "정확한 입금 메모를 포함하세요",
+            "sandboxConfirm": "샌드박스 웹훅 시뮬레이션 (Dev)",
+            "cancelOrder": "주문 취소",
+            "cancelOrderConfirm": "이 대기 중인 결제 주문을 취소하시겠습니까? 대기 주문 슬롯 1개가 즉시 확보됩니다.",
+            "empty": "필터 조건과 일치하는 결제 주문이 없습니다."
+        },
+        "confirmModal": {
+            "title": "결제 주문 확인",
+            "subtitle": "아래 세부 정보를 꼼꼼히 확인해 주세요. 예를 클릭하기 전에는 결제 주문이 생성되지 않습니다.",
+            "service": "서비스",
+            "package": "요금제 / 패키지",
+            "duration": "기간",
+            "method": "결제 수단",
+            "fee": "결제 수수료",
+            "total": "총 결제 금액",
+            "termsNotice": "확인하면 SyncViet 결제 약관 및 해당 서비스 정책에 동의하게 됩니다.",
+            "noButton": "아니오, 돌아가기",
+            "yesButton": "예, 결제 주문 생성"
+        },
+        "pendingLimit": {
+            "title": "대기 중인 주문 한도 도달",
+            "description": "현재 미결제 대기 주문이 {max}건 있습니다. 새 주문을 생성하기 전에 기존 대기 주문을 완료하거나 취소해 주세요.",
+            "viewPending": "대기 중인 주문 보기"
+        },
+        "compliance": {
+            "storeNotice": "네이티브 앱 스토어 빌드에서의 구매는 공식 플랫폼 인앱 결제 정책을 따릅니다. 요금제는 언제든 syncviet.com에서 관리할 수 있습니다."
+        },
+        "faq": {
+            "title": "자주 묻는 질문",
+            "q1": "SyncViet을 이용하려면 비용을 내야 하나요?",
+            "a1": "아니요. 게시물 작성, 댓글, 반응, 팔로우, 메시지 및 커뮤니티 가입은 모두 완전 무료입니다.",
+            "q2": "SyncViet Premium 배지는 본인 인증과 같은 것인가요?",
+            "a2": "아니요. #1D9BF0 파란색 체크 표시는 활성화된 유료 SyncViet Premium 멤버십을 나타냅니다. 본인 인증 및 운영진 배지와는 엄격히 구분됩니다.",
+            "q3": "만료 전에 Premium 요금제를 연장하면 어떻게 되나요?",
+            "a3": "새 기간이 기존 만료 일시에 바로 합산되므로 남은 일수를 단 하루도 잃지 않습니다.",
+            "q4": "광고 잔액을 출금하거나 다른 사용자에게 이체할 수 있나요?",
+            "a4": "아니요. 광고 잔액은 SyncViet 광고 서비스 전용 선불 크레딧이며 계정 간 이체나 출금이 불가능합니다."
+        },
+        "admin": {
+            "revenueSubtitle": "선불 광고 예치금과 확정된 직접 서비스 수익을 엄격히 구분하여 집계하는 이중 통화(VND 및 USD) 리포트입니다.",
+            "recognizedRevenue": "확정 서비스 수익",
+            "prepaidDeposits": "선불 광고 잔액 입금액"
+        }
     }
 }

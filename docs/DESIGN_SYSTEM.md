@@ -73,3 +73,5 @@ Dùng chung `FooterLinkList.vue` đọc từ Inertia shared prop `footer` (`Foot
     - Mọi toast đều có nút `X` đóng rõ ràng, hỗ trợ đóng bằng phím `Escape`, có thanh tiến trình tự động đếm ngược và tạm dừng khi hover/focus, chống hiển thị trùng lặp, hỗ trợ ARIA/Light/Dark/RTL và tự động loại bỏ stack trace/dữ liệu nhạy cảm.
 - **Dialog xác nhận & nhập lý do**: `ConfirmActionDialog.vue` và `ReasonDialog.vue` (tuyệt đối không sử dụng `window.alert()` hoặc `window.confirm()`).
 - **UI States khác**: `LoadingSkeleton.vue` (`feed`, `card`, `profile`), `EmptyState.vue`, `ErrorState.vue`, `RoleBadge.vue`, `FlagIcon.vue`, `ThemeToggle.vue`, `LocaleSwitcher.vue`.
+
+- **Monetization UI & Sidebar (`docs/MONETIZATION.md`)**: `PremiumBadge.vue` (`#1D9BF0`, 15px feed/comments, 20px profile, accessible identity-distinction tooltip), auto-collapsing `BannerSlot.vue` with Sponsored label & 3-dot hide/report menu, controlled `AdSenseSlot.vue`, manual Yes/No `PaymentConfirmModal.vue`, `PendingLimitModal.vue`, `BoostPostModal.vue`, and grouped Website Sidebar (`Discover`, `Services`, `Account`, `Administration`) in `ConnectHubLayout.vue` plus `Monetization` module in `AdminLayout.vue`.

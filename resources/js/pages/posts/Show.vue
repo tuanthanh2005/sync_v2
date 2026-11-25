@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 import CommentController from '@/actions/App/Http/Controllers/Social/CommentController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -181,9 +182,15 @@ function executeDeleteComment(): void {
                             </Link>
                             <div class="min-w-0">
                                 <p
-                                    class="text-xs font-semibold text-foreground"
+                                    class="flex flex-wrap items-center gap-1 text-xs font-semibold text-foreground"
                                 >
-                                    {{ comment.author?.name || 'Member' }}
+                                    <span>{{
+                                        comment.author?.name || 'Member'
+                                    }}</span>
+                                    <PremiumBadge
+                                        v-if="comment.author?.is_premium"
+                                        size="sm"
+                                    />
                                     <span
                                         class="ml-1 font-normal text-muted-foreground"
                                     >
@@ -272,9 +279,15 @@ function executeDeleteComment(): void {
                                 />
                                 <div class="min-w-0">
                                     <p
-                                        class="text-xs font-semibold text-foreground"
+                                        class="flex flex-wrap items-center gap-1 text-xs font-semibold text-foreground"
                                     >
-                                        {{ reply.author?.name || 'Member' }}
+                                        <span>{{
+                                            reply.author?.name || 'Member'
+                                        }}</span>
+                                        <PremiumBadge
+                                            v-if="reply.author?.is_premium"
+                                            size="sm"
+                                        />
                                         <span
                                             class="ml-1 font-normal text-muted-foreground"
                                         >

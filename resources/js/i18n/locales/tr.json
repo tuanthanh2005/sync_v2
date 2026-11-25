@@ -460,7 +460,8 @@
             "moderation": "Moderasyon",
             "advertising": "Reklam",
             "finance": "Finans",
-            "system": "Sistem"
+            "system": "Sistem",
+            "monetization": "Gelir Yönetimi"
         },
         "nav": {
             "dashboard": "Kontrol Paneli",
@@ -493,7 +494,12 @@
             "notifications": "Bildirimler",
             "policies": "Politikalar ve Alt Bilgi",
             "security": "Güvenlik ve Denetim Günlükleri",
-            "backups": "Yedekleme Yönetimi"
+            "backups": "Yedekleme Yönetimi",
+            "revenueDashboard": "Gelir Kontrol Paneli",
+            "premiumManagement": "Premium Planlar ve Üyeler",
+            "bannerAdvertising": "Banner Reklamları",
+            "boostPackages": "Öne Çıkarma Paketleri",
+            "monetizationSettings": "Ödemeler, AdSense ve Uyumluluk"
         },
         "common": {
             "search": "Ara...",
@@ -768,9 +774,202 @@
         "retry": "Tekrar dene",
         "copy": "Kopyala",
         "copied": "Panoya kopyalandı",
-        "copyFailed": "Panoya kopyalanamadı"
+        "copyFailed": "Panoya kopyalanamadı",
+        "close": "Kapat",
+        "cancel": "İptal",
+        "confirm": "Onayla",
+        "apply": "Uygula",
+        "actionFailed": "İşlem tamamlanamadı. Lütfen tekrar deneyin."
     },
     "pwa": {
         "installApp": "SyncViet Uygulamasını Yükle"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Keşfet",
+            "explore": "Göz At",
+            "services": "Hizmetler",
+            "account": "Hesap",
+            "admin": "Yönetim"
+        },
+        "badge": {
+            "title": "SyncViet Premium Üyesi",
+            "tooltip": "Bu mavi onay işareti aktif bir ücretli SyncViet Premium üyeliğine aittir. Kimlik Doğrulama, Resmi Kuruluş veya Yönetici rollerinden tamamen ayrıdır."
+        },
+        "common": {
+            "days": "gün",
+            "monthShort": "ay"
+        },
+        "benefits": {
+            "blue_badge": "Gönderilerde, yorumlarda, profillerde ve mesajlarda SyncViet Premium mavi rozeti (#1D9BF0)",
+            "post_analytics": "Gönderi erişimi ve etkileşim performansı analizleri",
+            "reduced_ads": "Akışta daha az sponsorlu içerik gösterimi",
+            "ad_free": "SyncViet genelinde reklamsız gezinme deneyimi",
+            "priority_support": "Öncelikli destek talebi değerlendirmesi",
+            "profile_highlights": "Gelişmiş profil görünümü ve içerik üreticisi vurguları"
+        },
+        "services": {
+            "pageTitle": "Hizmet Merkezi",
+            "eyebrow": "SyncViet Gelir ve Tanıtım Hizmetleri",
+            "heading": "SyncViet üzerinde sesinizi ve markanızı büyütün",
+            "subtitle": "Şeffaf fiyatlandırma, manuel sipariş onayı ve tam moderasyon güvenliği. SyncViet üzerindeki temel sosyal özellikler sonsuza kadar %100 ücretsiz kalır.",
+            "freeCoreGuarantee": "Gönderi paylaşma, yorum yapma, tepki verme, takip etme, topluluklara katılma, arama ve bildirimde bulunma her üye için her zaman ücretsizdir.",
+            "startingFrom": "Başlangıç fiyatı",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "SyncViet mavi rozeti, azaltılmış veya reklamsız gezinme ve içerik üreticisi analizleri sunan süreli üyelik.",
+            "bannerTitle": "Banner Reklamları",
+            "bannerDesc": "Özel veya dönüşümlü slotlarla masaüstü ve mobilde yüksek görünürlüklü banner alanlarını haftalık veya aylık kiralayın.",
+            "boostTitle": "Gönderi Öne Çıkarma (Boost Post)",
+            "boostDesc": "Onaylanmış herkese açık gönderilerinizi 24 saatten 30 güne kadar şeffaf Sponsorlu etiketleri ve canlı erişim istatistikleriyle tanıtın.",
+            "viewPremium": "Premium Planları İncele",
+            "viewBanners": "Banner Alanlarını Gör",
+            "viewBoost": "Öne Çıkarma Paketlerini İncele",
+            "advertisingHubLink": "Reklam Merkezini Aç"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "SyncViet Premium ile öne çıkın",
+            "subtitle": "Sürpriz yenilemeler içermeyen sade, süreli ön ödemeli üyelikler. Kalan günlerinizi kaybetmeden istediğiniz zaman yükseltin veya uzatın.",
+            "manageMyPlan": "Premium Planımı Yönet",
+            "activeBanner": "SyncViet Premium üyeliğiniz {date} tarihine kadar aktiftir.",
+            "extendPreservesDays": "Şimdi yenilemek, süreyi doğrudan mevcut bitiş tarihinizin üzerine ekler.",
+            "paymentMethodLabel": "Ödeme Yöntemi Seçin",
+            "noAutoAdBalanceDebit": "Premium doğrudan ödeme sayfası üzerinden faturalandırılır ve hiçbir zaman Reklam Bakiyenizden otomatik düşülmez.",
+            "popular": "Popüler",
+            "buyButton": "Planı Seç",
+            "extendButton": "Planı Uzat",
+            "moderationRuleTitle": "Eşit Güvenlik ve Moderasyon Standartları",
+            "moderationRuleDesc": "Premium üyeler de tüm SyncViet Topluluk Kurallarına, spam önleme kurallarına ve güvenlik kontrollerine tabidir.",
+            "manualConfirmHint": "Siparişler hiçbir zaman otomatik oluşturulmaz. Herhangi bir ödeme siparişi oluşturulmadan önce ayrıntıları her zaman inceleyip Evet/Hayır ile onaylarsınız."
+        },
+        "accountPremium": {
+            "pageTitle": "SyncViet Premium Üyeliğim",
+            "expiresOn": "{date} tarihine kadar aktif ({days} gün kaldı)",
+            "inactiveNotice": "Şu anda aktif bir SyncViet Premium aboneliğiniz bulunmuyor.",
+            "historyTitle": "Abonelik Geçmişi",
+            "complimentary": "Hediye / Tanımlama",
+            "emptyHistory": "Henüz abonelik kaydı yok."
+        },
+        "advertising": {
+            "pageTitle": "Reklam Merkezi",
+            "eyebrow": "SyncViet Reklamcılık",
+            "heading": "Şeffaf reklamlarla gerçek topluluklara ulaşın",
+            "subtitle": "Sürekli marka görünürlüğü için zamana dayalı Banner alanlarını veya değerli tartışmaları öne çıkarmak için sabit süreli Gönderi Öne Çıkarma paketlerini seçin."
+        },
+        "banner": {
+            "pageTitle": "Banner Reklamları",
+            "heading": "Yüksek etkili SyncViet banner alanları kiralayın",
+            "subtitle": "Masaüstü ve mobil yüzeylerde şeffaf haftalık ve aylık kiralama ücretleri. Her görsel moderasyon ekibimiz tarafından incelenir.",
+            "sponsoredLabel": "Sponsorlu",
+            "adOptions": "Reklam seçenekleri",
+            "adInfo": "Bu reklam hakkında",
+            "adInfoDesc": "Bu, SyncViet tarafından incelenmiş ücretli doğrudan bir banner yerleşimidir. Reklamları istediğiniz zaman gizleyebilir veya bildirebilirsiniz.",
+            "hideAd": "Bu reklamı gizle",
+            "reportAd": "Reklamı bildir",
+            "placementsUnit": "alan",
+            "bulletExclusive": "Tek markaya özel kilit veya adil çoklu marka dönüşümü",
+            "bulletResponsive": "Canlı önizlemeli ayrı masaüstü ve mobil görselleri",
+            "bulletStats": "Tekilleştirilmiş gösterim, tıklama ve TO (CTR) raporlaması",
+            "available": "Şimdi müsait",
+            "bookedNow": "Alan şu an dolu",
+            "bookTitle": "Alanı Rezerve Et",
+            "recommendedSize": "Önerilen boyut",
+            "campaignName": "Kampanya Adı",
+            "businessName": "Marka / İşletme Adı",
+            "targetUrl": "Hedef URL",
+            "altText": "Erişilebilir Alternatif Metin",
+            "headline": "Kısa Başlık",
+            "ctaLabel": "Eylem Çağrısı (CTA) Düğme Metni",
+            "ctaPlaceholder": "Daha fazla bilgi",
+            "duration": "Kiralama Süresi",
+            "startDate": "Başlangıç Tarihi",
+            "desktopImage": "Masaüstü Görseli (JPG/PNG/WebP)",
+            "mobileImage": "Mobil Görseli (JPG/PNG/WebP)",
+            "submitBooking": "İncele ve Banner Rezerve Et",
+            "signInToBook": "Banner Rezerve Etmek İçin Giriş Yapın",
+            "livePreview": "Canlı Görsel Önizleme",
+            "previewPlaceholder": "Önizlemek için bir görsel yükleyin veya herkese açık bir HTTPS görsel URL’si girin",
+            "myCampaigns": "Banner Kampanyalarım"
+        },
+        "boost": {
+            "pageTitle": "Gönderi Öne Çıkarma",
+            "heading": "Herkese açık SyncViet gönderilerinizi daha geniş kitlelere ulaştırın",
+            "subtitle": "Net Sponsorlu rozetlerine sahip sabit süreli tanıtım paketleri. Süre yalnızca moderasyon onayından sonra başlar ve organik Popüler sıralamalarını asla manipüle etmez.",
+            "modalTitle": "Bu gönderiyi öne çıkar",
+            "packagesUnit": "paket",
+            "featured": "Öne Çıkan Alan",
+            "bulletFixed": "Onaylandığı anda başlayan şeffaf sabit süre (24 saat – 30 gün)",
+            "bulletTransparent": "Açıkça Sponsorlu olarak etiketlenir — beğeni veya Popüler puanlarını asla sahte biçimde artırmaz",
+            "bulletSafeRefund": "Reddedilir veya kaldırılırsa otomatik durdurma ve bütçe iadesi",
+            "paymentSource": "Ödeme Kaynağı",
+            "directCheckout": "Doğrudan Ödeme",
+            "ctaButton": "Gönderiyi Öne Çıkar",
+            "selectPostTitle": "Öne çıkarmak için uygun herkese açık gönderilerinizden birini seçin",
+            "noEligiblePosts": "Gönderi Öne Çıkarma özelliğini kullanmak için önce onaylanmış herkese açık bir gönderi yayımlayın."
+        },
+        "wallet": {
+            "title": "Reklam Bakiyesi",
+            "subtitle": "Yalnızca SyncViet Gönderi Öne Çıkarma ve uygun reklam kampanyaları için kullanılan ön ödemeli reklam bakiyesi.",
+            "promoBalance": "Promosyon kredisi",
+            "availableShort": "Kullanılabilir Reklam Bakiyesi",
+            "topUpTitle": "Reklam Bakiyesi Yükle",
+            "purposeDisclaimer": "Reklam Bakiyesi yalnızca SyncViet reklam hizmetleri içindir. Kişiden kişiye transfer, nakit çekim veya faiz uygulanmaz."
+        },
+        "payments": {
+            "title": "Ödeme Geçmişi",
+            "subtitle": "Tüm SyncViet Premium, Banner Reklamları, Gönderi Öne Çıkarma ve Reklam Bakiyesi siparişleriniz tek bir yerde.",
+            "openPendingLabel": "Açık Bekleyen Siparişler",
+            "searchPlaceholder": "Sipariş kodu, referans veya ödeme sağlayıcısına göre ara...",
+            "allServices": "Tüm Hizmetler",
+            "allStatuses": "Tüm Durumlar",
+            "statusPending": "Bekliyor",
+            "statusPaid": "Ödendi",
+            "statusCancelled": "İptal Edildi",
+            "statusRefunded": "İade Edildi",
+            "refundedLabel": "İade Edildi",
+            "pendingInstructionsTitle": "Ödeme onayı bekleniyor",
+            "transferNoteLabel": "Tam transfer açıklamasını ekleyin",
+            "sandboxConfirm": "Sandbox Webhook Simülasyonu (Dev)",
+            "cancelOrder": "Siparişi İptal Et",
+            "cancelOrderConfirm": "Bu bekleyen ödeme siparişi iptal edilsin mi? Bu işlem bekleyen sipariş kotasından bir yeri anında serbest bırakır.",
+            "empty": "Filtrelerinizle eşleşen ödeme siparişi bulunamadı."
+        },
+        "confirmModal": {
+            "title": "Ödeme Siparişini Onayla",
+            "subtitle": "Lütfen aşağıdaki ayrıntıları dikkatlice doğrulayın. Siz Evet seçeneğine tıklayana kadar hiçbir ödeme siparişi oluşturulmaz.",
+            "service": "Hizmet",
+            "package": "Plan / Paket",
+            "duration": "Süre",
+            "method": "Ödeme Yöntemi",
+            "fee": "İşlem Ücreti",
+            "total": "Ödenecek Toplam",
+            "termsNotice": "Onaylayarak SyncViet Ödeme Koşullarını ve ilgili hizmet politikasını kabul etmiş olursunuz.",
+            "noButton": "Hayır, Geri Dön",
+            "yesButton": "Evet, Ödeme Siparişi Oluştur"
+        },
+        "pendingLimit": {
+            "title": "Bekleyen Sipariş Sınırına Ulaşıldı",
+            "description": "Şu anda {max} adet açık bekleyen ödeme siparişiniz bulunuyor. Yeni bir sipariş oluşturmadan önce lütfen mevcut bekleyen siparişlerinizden birini tamamlayın veya iptal edin.",
+            "viewPending": "Bekleyen Siparişleri Görüntüle"
+        },
+        "compliance": {
+            "storeNotice": "Yerel uygulama mağazası sürümlerindeki satın alımlar resmi platform uygulama içi faturalandırma politikalarına tabidir. Planları istediğiniz zaman syncviet.com üzerinden yönetebilirsiniz."
+        },
+        "faq": {
+            "title": "Sıkça Sorulan Sorular",
+            "q1": "SyncViet kullanmak için ödeme yapmam gerekiyor mu?",
+            "a1": "Hayır. Gönderi paylaşmak, yorum yapmak, tepki vermek, takip etmek, mesajlaşmak ve topluluklara katılmak tamamen ücretsizdir.",
+            "q2": "SyncViet Premium rozeti Kimlik Doğrulama ile aynı şey mi?",
+            "a2": "Hayır. #1D9BF0 mavi onay işareti aktif ücretli bir SyncViet Premium üyeliğini gösterir. Kimlik doğrulama ve personel rozetleri tamamen ayrıdır.",
+            "q3": "Süresi dolmadan önce Premium planımı uzatırsam ne olur?",
+            "a3": "Yeni süreniz doğrudan mevcut bitiş zaman damganızın üzerine eklenir; böylece tek bir kalan gününüzü bile kaybetmezsiniz.",
+            "q4": "Reklam Bakiyemi çekebilir veya başka bir kullanıcıya aktarabilir miyim?",
+            "a4": "Hayır. Reklam Bakiyesi yalnızca SyncViet reklam hizmetleri için kullanılan ön ödemeli bir kredidir; çekilemez ve hesaplar arasında aktarılamaz."
+        },
+        "admin": {
+            "revenueSubtitle": "Ön ödemeli reklam yüklemelerini muhasebeleştirilmiş doğrudan hizmet gelirinden kesin olarak ayıran çift para birimli (VND ve USD) raporlama.",
+            "recognizedRevenue": "Muhasebeleştirilmiş Hizmet Geliri",
+            "prepaidDeposits": "Ön Ödemeli Reklam Bakiyesi Yüklemeleri"
+        }
     }
 }

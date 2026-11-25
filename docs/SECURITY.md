@@ -80,3 +80,5 @@ SyncViet áp dụng **Security by Design** và **Defense in Depth** ngay từ Ph
 - Không bypass Authorization hoặc Form Request Validation.
 - Không tạo backdoor hay tài khoản Admin mặc định có mật khẩu cố định trong mã nguồn.
 - Mọi module chỉ được đánh dấu hoàn thành sau khi vượt qua `docs/SECURITY_CHECKLIST.md` và test tự động.
+
+- **Monetization Security Controls (`docs/FINANCIAL_SECURITY.md`)**: Server-only integer pricing (VND & USD cents, zero floats), manual Yes/No confirmation (`confirmed: accepted`), locked max-5 pending orders per user (`User::lockForUpdate()`), HMAC-SHA256 webhook verification with `payment_webhook_logs` audit trail, anti-IDOR payment receipts (`403`), exclusive banner row locking, SSRF-safe banner image/URL validation, controlled regex-only AdSense config (zero raw JS), password-confirmed Admin reconciliation/refunds, and platform compliance enforcement (`PlatformCapabilityService`).

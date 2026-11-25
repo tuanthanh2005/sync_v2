@@ -21,6 +21,11 @@ export type UserPermissions = {
     manageAppeals?: boolean;
     manageKeywords?: boolean;
     manageFinance?: boolean;
+    manageMonetization?: boolean;
+    managePremium?: boolean;
+    manageBanners?: boolean;
+    manageBoosts?: boolean;
+    manageAdSense?: boolean;
     manageSettings?: boolean;
     manageLanguages?: boolean;
     manageNotifications?: boolean;
@@ -42,6 +47,9 @@ export type User = {
     username: string;
     email: string;
     avatar?: string;
+    is_verified?: boolean;
+    is_premium?: boolean;
+    premium_until?: string | null;
     role: UserRole;
     role_label: string;
     rbac_role?: string;

@@ -79,3 +79,5 @@ Service / Action Layer (DB::transaction, Sanitizer, AuditLogger, Cache Invalidat
 - **Storage**: Sử dụng `config('syncviet.media_disk')` ánh xạ qua `config/filesystems.php` (`local`, `public`, hoặc `s3` cho Cloudflare R2).
 - **Cache & Queue & Session**: Chạy `database` trên Hostinger Shared Hosting; chuyển sang `redis` trên VPS chỉ bằng `.env` (`CACHE_STORE=redis`, `QUEUE_CONNECTION=redis`, `SESSION_DRIVER=redis`).
 - **Config & Env**: Mọi thông số môi trường, secrets, brand name, URL và seed credentials quản lý ngoài source code qua `.env` + `config/*.php`.
+
+- **Monetization Domain (`app/Services/Monetization/`)**: `MonetizationPaymentService`, `PremiumSubscriptionService`, `BannerAdvertisingService`, `BoostPostService`, `RevenueAnalyticsService`, `AdSenseConfigService`, `PlatformCapabilityService`, plus native IAP contracts (`GooglePlayBillingAdapter`, `AppleStoreKitAdapter`). Scheduled via `app:monetization:sync` every 5 minutes (Hostinger cron compatible).

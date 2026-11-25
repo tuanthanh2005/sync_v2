@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property int $user_id
  * @property int $post_id
+ * @property int|null $boost_package_id
+ * @property int|null $payment_id
  * @property string $name
  * @property AdObjective $objective
  * @property list<string>|null $target_topics
@@ -22,8 +24,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $cta_label
  * @property string $schedule_mode
  * @property CarbonInterface|null $starts_at
+ * @property CarbonInterface|null $activated_at
  * @property CarbonInterface|null $ends_at
  * @property AdBudgetType $budget_type
+ * @property string $billing_mode
+ * @property bool $is_featured_slot
  * @property int|null $daily_budget
  * @property int $duration_days
  * @property int $total_budget
@@ -64,8 +69,10 @@ class AdCampaign extends Model
             'status' => AdCampaignStatus::class,
             'target_topics' => 'array',
             'starts_at' => 'datetime',
+            'activated_at' => 'datetime',
             'ends_at' => 'datetime',
             'reviewed_at' => 'datetime',
+            'is_featured_slot' => 'boolean',
             'daily_budget' => 'integer',
             'duration_days' => 'integer',
             'total_budget' => 'integer',
@@ -90,6 +97,22 @@ class AdCampaign extends Model
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    /**
+     * @return BelongsTo<BoostPackage, $this>
+     */
+    public function boostPackage(): BelongsTo
+    {
+        return $this->belongsTo(BoostPackage::class);
+    }
+
+    /**
+     * @return BelongsTo<Payment, $this>
+     */
+    public function payment(): BelongsTo
+    {
+        return $this->belongsTo(Payment::class);
     }
 
     /**

@@ -460,7 +460,8 @@
             "moderation": "モデレーション",
             "advertising": "広告",
             "finance": "財務",
-            "system": "システム"
+            "system": "システム",
+            "monetization": "収益化"
         },
         "nav": {
             "dashboard": "ダッシュボード",
@@ -493,7 +494,12 @@
             "notifications": "システム通知",
             "policies": "ポリシー・フッター",
             "security": "セキュリティ・監査ログ",
-            "backups": "バックアップ管理"
+            "backups": "バックアップ管理",
+            "revenueDashboard": "収益ダッシュボード",
+            "premiumManagement": "Premiumプラン・会員管理",
+            "bannerAdvertising": "バナー広告",
+            "boostPackages": "ブーストパッケージ",
+            "monetizationSettings": "決済・AdSense・コンプライアンス"
         },
         "common": {
             "search": "検索...",
@@ -768,9 +774,202 @@
         "retry": "再試行",
         "copy": "コピー",
         "copied": "クリップボードにコピーしました",
-        "copyFailed": "コピーできませんでした"
+        "copyFailed": "コピーできませんでした",
+        "close": "閉じる",
+        "cancel": "キャンセル",
+        "confirm": "確認",
+        "apply": "適用",
+        "actionFailed": "操作を完了できませんでした。もう一度お試しください。"
     },
     "pwa": {
         "installApp": "SyncVietアプリをインストール"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "見つける",
+            "explore": "探索",
+            "services": "サービス",
+            "account": "アカウント",
+            "admin": "管理センター"
+        },
+        "badge": {
+            "title": "SyncViet Premiumメンバー",
+            "tooltip": "この青い認証バッジは、有効なSyncViet Premium有料メンバーシップに付与されるものです。本人確認、公式組織、または管理者ロールとは明確に区別されています。"
+        },
+        "common": {
+            "days": "日",
+            "monthShort": "ヶ月"
+        },
+        "benefits": {
+            "blue_badge": "投稿、コメント、プロフィール、メッセージでSyncViet Premiumの青いバッジ（#1D9BF0）を表示",
+            "post_analytics": "投稿のリーチおよびエンゲージメント分析",
+            "reduced_ads": "フィード上のスポンサー広告の表示を軽減",
+            "ad_free": "SyncViet全体での広告なしブラウジング体験",
+            "priority_support": "サポート問い合わせの優先対応",
+            "profile_highlights": "プロフィールの拡張表示とクリエイターハイライト"
+        },
+        "services": {
+            "pageTitle": "サービスセンター",
+            "eyebrow": "SyncViet収益化サービス",
+            "heading": "SyncVietであなたの発信力とブランドを広げる",
+            "subtitle": "明確な料金体系、手動による注文確認、そして徹底したモデレーションの安全性。SyncVietの基本的なソーシャル機能は今後もずっと100%無料でご利用いただけます。",
+            "freeCoreGuarantee": "投稿、コメント、リアクション、フォロー、コミュニティ参加、検索、通報は、すべてのメンバーに対して常に無料です。",
+            "startingFrom": "最低価格",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "SyncVietの青いバッジ、広告の軽減または非表示、クリエイター向け分析が利用できる期間制メンバーシップです。",
+            "bannerTitle": "バナー広告",
+            "bannerDesc": "PCおよびモバイル向けの視認性の高いバナー広告枠を、週単位または月単位で独占枠・ローテーション枠として出稿できます。",
+            "boostTitle": "投稿ブースト",
+            "boostDesc": "承認済みの公開投稿を24時間〜30日間プロモーションできます。明確な「スポンサー」表示とリアルタイムのリーチ統計付きです。",
+            "viewPremium": "Premiumプランを見る",
+            "viewBanners": "バナー広告枠を見る",
+            "viewBoost": "ブーストパッケージを見る",
+            "advertisingHubLink": "広告ハブを開く"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "SyncViet Premiumで存在感を高める",
+            "subtitle": "自動更新による予期せぬ請求のない、シンプルな期間制プリペイドメンバーシップ。残りの日数を失うことなく、いつでもアップグレードや延長が可能です。",
+            "manageMyPlan": "マイPremiumを管理",
+            "activeBanner": "SyncViet Premiumメンバーシップは {date} まで有効です。",
+            "extendPreservesDays": "今すぐ延長すると、現在の有効期限にそのまま日数が加算されます。",
+            "paymentMethodLabel": "お支払い方法を選択",
+            "noAutoAdBalanceDebit": "Premiumはチェックアウトで直接決済され、広告残高から自動的に引き落とされることはありません。",
+            "popular": "人気",
+            "buyButton": "プランを選択",
+            "extendButton": "プランを延長",
+            "moderationRuleTitle": "平等な安全性・モデレーション基準",
+            "moderationRuleDesc": "Premiumメンバーにも、すべてのSyncVietコミュニティガイドライン、スパム対策ルール、およびセキュリティチェックが同等に適用されます。",
+            "manualConfirmHint": "注文が自動的に作成されることはありません。決済注文が生成される前に、必ず内容をご確認のうえ「はい／いいえ」で確定していただきます。"
+        },
+        "accountPremium": {
+            "pageTitle": "マイSyncViet Premium",
+            "expiresOn": "{date} まで有効（残り {days} 日）",
+            "inactiveNotice": "現在、有効なSyncViet Premiumサブスクリプションはありません。",
+            "historyTitle": "契約・更新履歴",
+            "complimentary": "無償付与 / プロモーション",
+            "emptyHistory": "サブスクリプションの履歴はまだありません。"
+        },
+        "advertising": {
+            "pageTitle": "広告センター",
+            "eyebrow": "SyncViet広告",
+            "heading": "透明性の高い広告で本物のコミュニティに届ける",
+            "subtitle": "継続的なブランド認知には期間指定のバナー広告枠を、注目度の高い投稿の拡散には固定期間の投稿ブーストパッケージをお選びいただけます。"
+        },
+        "banner": {
+            "pageTitle": "バナー広告",
+            "heading": "効果の高いSyncVietバナー広告枠に出稿",
+            "subtitle": "PC・モバイル各面に適用される透明性の高い週額・月額料金。すべてのクリエイティブはモデレーションチームによって審査されます。",
+            "sponsoredLabel": "スポンサー",
+            "adOptions": "広告オプション",
+            "adInfo": "この広告について",
+            "adInfoDesc": "これはSyncVietの審査を通過した直接契約の有料バナー広告です。いつでも広告を非表示にしたり、報告したりできます。",
+            "hideAd": "この広告を非表示",
+            "reportAd": "広告を報告",
+            "placementsUnit": "広告枠",
+            "bulletExclusive": "1ブランド限定の独占枠、または公平な複数ブランドによるローテーション配信",
+            "bulletResponsive": "PC・モバイル別のクリエイティブ設定とリアルタイムプレビュー",
+            "bulletStats": "重複除外済みのインプレッション・クリック・CTRレポート",
+            "available": "現在空きあり",
+            "bookedNow": "現在予約済み",
+            "bookTitle": "広告枠を予約",
+            "recommendedSize": "推奨サイズ",
+            "campaignName": "キャンペーン名",
+            "businessName": "ブランド / 事業者名",
+            "targetUrl": "遷移先URL",
+            "altText": "代替テキスト（Altテキスト）",
+            "headline": "短い見出し",
+            "ctaLabel": "CTAボタンのラベル",
+            "ctaPlaceholder": "詳しく見る",
+            "duration": "掲載期間",
+            "startDate": "開始日",
+            "desktopImage": "PC用画像（JPG/PNG/WebP）",
+            "mobileImage": "モバイル用画像（JPG/PNG/WebP）",
+            "submitBooking": "内容を確認してバナーを予約",
+            "signInToBook": "ログインしてバナーを予約",
+            "livePreview": "ライブクリエイティブプレビュー",
+            "previewPlaceholder": "画像をアップロードするか、公開HTTPS画像URLを入力してプレビューします",
+            "myCampaigns": "マイバナーキャンペーン"
+        },
+        "boost": {
+            "pageTitle": "投稿ブースト",
+            "heading": "SyncVietの公開投稿をさらに拡散",
+            "subtitle": "明確な「スポンサー」ラベル付きの固定期間プロモーションパッケージ。掲載期間はモデレーション承認後にのみ開始され、オーガニックのトレンド順位を操作することはありません。",
+            "modalTitle": "この投稿をブースト",
+            "packagesUnit": "パッケージ",
+            "featured": "注目枠",
+            "bulletFixed": "承認後から開始される透明な固定期間（24時間〜30日間）",
+            "bulletTransparent": "「スポンサー」と明記 — いいね数やトレンドスコアの不正操作は一切ありません",
+            "bulletSafeRefund": "却下または削除された場合は自動停止し、予算を返金",
+            "paymentSource": "お支払い元",
+            "directCheckout": "直接決済",
+            "ctaButton": "投稿をブースト",
+            "selectPostTitle": "ブースト対象となる承認済みの公開投稿を選択してください",
+            "noEligiblePosts": "投稿ブーストを利用するには、まず承認済みの公開投稿を公開してください。"
+        },
+        "wallet": {
+            "title": "広告残高",
+            "subtitle": "SyncVietの投稿ブーストおよび対象広告キャンペーン専用のプリペイド広告残高です。",
+            "promoBalance": "プロモクレジット",
+            "availableShort": "利用可能な広告残高",
+            "topUpTitle": "広告残高にチャージ",
+            "purposeDisclaimer": "広告残高はSyncVietの広告サービス専用です。ユーザー間送金、現金出金、および利息の付与には対応していません。"
+        },
+        "payments": {
+            "title": "決済履歴",
+            "subtitle": "SyncViet Premium、バナー広告、投稿ブースト、広告残高チャージのすべての注文を一元管理します。",
+            "openPendingLabel": "未払いの注文",
+            "searchPlaceholder": "注文コード、参照番号、または決済ゲートウェイで検索...",
+            "allServices": "すべてのサービス",
+            "allStatuses": "すべてのステータス",
+            "statusPending": "支払い待ち",
+            "statusPaid": "支払い済み",
+            "statusCancelled": "キャンセル済み",
+            "statusRefunded": "返金済み",
+            "refundedLabel": "返金済み",
+            "pendingInstructionsTitle": "お支払い確認待ち",
+            "transferNoteLabel": "正確な振込メモを記載してください",
+            "sandboxConfirm": "サンドボックスWebhookをシミュレート (Dev)",
+            "cancelOrder": "注文をキャンセル",
+            "cancelOrderConfirm": "この支払い待ちの注文をキャンセルしますか？キャンセルすると未払い注文枠が1つすぐに解放されます。",
+            "empty": "条件に一致する決済注文が見つかりません。"
+        },
+        "confirmModal": {
+            "title": "決済注文の確認",
+            "subtitle": "以下の詳細をよくご確認ください。「はい」をクリックするまで決済注文は作成されません。",
+            "service": "サービス",
+            "package": "プラン / パッケージ",
+            "duration": "期間",
+            "method": "お支払い方法",
+            "fee": "決済手数料",
+            "total": "お支払い合計",
+            "termsNotice": "確定することで、SyncVietの決済規約および該当サービスのポリシーに同意したものとみなされます。",
+            "noButton": "いいえ、戻る",
+            "yesButton": "はい、決済注文を作成する"
+        },
+        "pendingLimit": {
+            "title": "保留中注文の上限に達しました",
+            "description": "現在、未払いの保留中注文が {max} 件あります。新しい注文を作成する前に、既存の注文の支払いを完了するかキャンセルしてください。",
+            "viewPending": "保留中の注文を表示"
+        },
+        "compliance": {
+            "storeNotice": "ネイティブアプリストア版での購入は、各プラットフォームの公式アプリ内課金ポリシーに従います。プランの管理はいつでも syncviet.com で行えます。"
+        },
+        "faq": {
+            "title": "よくある質問",
+            "q1": "SyncVietを利用するには料金がかかりますか？",
+            "a1": "いいえ。投稿、コメント、リアクション、フォロー、メッセージ、コミュニティ参加はすべて完全無料です。",
+            "q2": "SyncViet Premiumのバッジは本人確認と同じものですか？",
+            "a2": "いいえ。#1D9BF0の青いチェックマークは有効な有料SyncViet Premiumメンバーシップを示します。本人確認やスタッフバッジとは完全に別個のものです。",
+            "q3": "有効期限前にPremiumプランを延長するとどうなりますか？",
+            "a3": "新しい期間が現在の有効期限の日時にそのまま加算されるため、残りの日数が1日も失われることはありません。",
+            "q4": "広告残高を出金したり、他のユーザーに送金したりできますか？",
+            "a4": "いいえ。広告残高はSyncVietの広告サービス専用のプリペイドクレジットであり、出金やアカウント間での移行はできません。"
+        },
+        "admin": {
+            "revenueSubtitle": "プリペイド広告入金額と確定した直接サービス収益を厳密に分離した二通貨（VND・USD）レポート。",
+            "recognizedRevenue": "確定サービス収益",
+            "prepaidDeposits": "プリペイド広告残高入金額"
+        }
     }
 }

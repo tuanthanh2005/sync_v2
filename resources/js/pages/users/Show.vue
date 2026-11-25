@@ -22,6 +22,7 @@ import MessageController from '@/actions/App/Http/Controllers/Messaging/MessageC
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import EmptyState from '@/components/common/EmptyState.vue';
 import ReportDialog from '@/components/common/ReportDialog.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -442,6 +443,10 @@ function setFile(field: 'avatar' | 'cover', event: Event): void {
                         <h1 class="text-xl font-bold text-foreground">
                             {{ profile_user.name }}
                         </h1>
+                        <PremiumBadge
+                            v-if="profile_user.is_premium"
+                            size="md"
+                        />
                         <BadgeCheck
                             v-if="profile_user.is_verified"
                             class="size-5 text-primary"

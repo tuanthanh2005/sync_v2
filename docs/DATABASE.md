@@ -49,3 +49,14 @@
 | `admin_notifications`    | `500003`  | Thông báo hệ thống/quảng bá gửi tức thì hoặc lên lịch (`sender_id`, `audience`, `target_user_id`, `category`, `title`, `body`, `action_url`, `status`, `scheduled_at`, `sent_at`, `recipients_count`) |
 | `notification_templates` | `500003`  | Mẫu thông báo chuẩn tái sử dụng (`key` unique, `name`, `category`, `subject_template`, `body_template`, `is_active`, `updated_by`)                                                                    |
 | `backup_records`         | `500003`  | Nhật ký snapshot sao lưu dữ liệu an toàn trên Hostinger (`created_by`, `type`, `disk`, `path`, `size_bytes`, `checksum` SHA-256, `status`, `notes`)                                                   |
+
+| `premium_plans` | `600001` | Gói thành viên SyncViet Premium cấu hình động (`slug`, `duration_days`, `price_usd_cents`, `price_vnd`, promo prices, `benefits`, `ad_reduction_mode`) |
+| `subscriptions` | `600001` | Vòng đời gói Premium của người dùng (`status`, `source`, `starts_at`, `expires_at`, nhắc hết hạn 7d/3d/1d/expired, `granted_by`) |
+| `subscription_events` | `600001` | Lịch sử bất biến kích hoạt/gia hạn/tạm khóa/thu hồi với khóa duy nhất `(payment_id, event_type)` chống cộng dồn 2 lần |
+| `banner_placements` | `600001` | 9 vị trí Banner Desktop & Mobile (`code`, `delivery_mode` exclusive/rotation, `max_active_banners`, bảng giá 7d/15d/30d/90d VND & USD cents) |
+| `banner_campaigns` | `600001` | Chiến dịch thuê Banner (`desktop_image`, `mobile_image`, `target_url`, `starts_at`, `ends_at`, `status`, `emergency_paused_at`, `impressions_count`, `clicks_count`) |
+| `banner_events` | `600001` | Chống gian lận impression/click/hide/report theo `dedup_hash` duy nhất |
+| `boost_packages` | `600001` | Các gói đẩy bài viết cố định (`duration_hours`, `price_usd_cents`, `price_vnd`, `is_featured_slot`, `priority_weight`) |
+| `payment_methods` | `600001` | Danh mục cổng thanh toán Fiat (`vietqr`, `bank_transfer`, `paypal`, `sandbox`) & Crypto adapters tắt mặc định (`binance_pay`, `metamask`, `usdt`, `usdc`) |
+| `platform_compliance_rules` | `600001` | Quy tắc tuân thủ thanh toán theo nền tảng (`web`, `pwa`, `android_play`, `ios_appstore`) |
+| `users` / `payments` / `ad_campaigns` | `600002` | Mở rộng `users.premium_until`, `payments.order_code/service_type/fee_amount/exchange_rate_snapshot/platform/expires_at`, `ad_campaigns.boost_package_id/billing_mode/is_featured_slot/activated_at` |

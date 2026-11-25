@@ -8,7 +8,9 @@ import {
     Bell,
     ChevronDown,
     CreditCard,
+    Crown,
     DatabaseBackup,
+    DollarSign,
     FileText,
     Flag,
     Globe,
@@ -29,8 +31,10 @@ import {
     Shield,
     ShieldAlert,
     ShieldBan,
+    Sliders,
     Users,
     Vote,
+    Zap,
 } from '@lucide/vue';
 import type { Component } from 'vue';
 import { computed, onMounted, ref } from 'vue';
@@ -79,6 +83,13 @@ import {
 import { index as adminFinance } from '@/routes/admin/finance';
 import { index as adminLanguages } from '@/routes/admin/languages';
 import { index as adminModeration } from '@/routes/admin/moderation';
+import {
+    banners as adminMonetizationBanners,
+    boosts as adminMonetizationBoosts,
+    premium as adminMonetizationPremium,
+    revenue as adminMonetizationRevenue,
+    settings as adminMonetizationSettings,
+} from '@/routes/admin/monetization';
 import { index as adminNotifications } from '@/routes/admin/notifications';
 import { index as adminPolicies } from '@/routes/admin/policies';
 import { index as adminRoles } from '@/routes/admin/roles';
@@ -374,6 +385,59 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                       },
                   ]
                 : [],
+        },
+        {
+            id: 'monetization',
+            label: t('admin.groups.monetization'),
+            items: [
+                ...(perms.manageMonetization || perms.manageFinance
+                    ? [
+                          {
+                              label: t('admin.nav.revenueDashboard'),
+                              href: adminMonetizationRevenue.url(),
+                              icon: DollarSign,
+                          },
+                      ]
+                    : []),
+                ...(perms.managePremium || perms.manageMonetization
+                    ? [
+                          {
+                              label: t('admin.nav.premiumManagement'),
+                              href: adminMonetizationPremium.url(),
+                              icon: Crown,
+                          },
+                      ]
+                    : []),
+                ...(perms.manageBanners || perms.reviewAds
+                    ? [
+                          {
+                              label: t('admin.nav.bannerAdvertising'),
+                              href: adminMonetizationBanners.url(),
+                              icon: ImageIcon,
+                              badge: pending.value?.banners || 0,
+                          },
+                      ]
+                    : []),
+                ...(perms.manageBoosts || perms.reviewAds
+                    ? [
+                          {
+                              label: t('admin.nav.boostPackages'),
+                              href: adminMonetizationBoosts.url(),
+                              icon: Zap,
+                          },
+                      ]
+                    : []),
+                ...(perms.manageMonetization || perms.manageFinance
+                    ? [
+                          {
+                              label: t('admin.nav.monetizationSettings'),
+                              href: adminMonetizationSettings.url(),
+                              icon: Sliders,
+                              badge: pending.value?.pending_orders || 0,
+                          },
+                      ]
+                    : []),
+            ],
         },
         {
             id: 'finance',

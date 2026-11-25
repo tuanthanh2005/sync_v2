@@ -37,13 +37,13 @@ class CommentService
             ->whereNull('parent_id')
             ->where('moderation_status', ModerationStatus::Approved->value)
             ->with([
-                'author:id,name,username',
+                'author:id,name,username,status,premium_until,premium_suspended_at',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'replies' => function ($replyQuery) use ($blockedIds): void {
                     $replyQuery
                         ->where('moderation_status', ModerationStatus::Approved->value)
                         ->with([
-                            'author:id,name,username',
+                            'author:id,name,username,status,premium_until,premium_suspended_at',
                             'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                         ]);
 
@@ -76,6 +76,7 @@ class CommentService
                         'headline' => $comment->author->profile?->headline,
                         'avatar' => $comment->author->profile?->avatarUrl(),
                         'is_verified' => $comment->author->profile !== null && $comment->author->profile->is_verified_badge,
+                        'is_premium' => $comment->author->isPremium(),
                     ],
                     'replies' => array_values(
                         $comment->replies->map(static function (Comment $reply) use ($post, $viewer): array {
@@ -96,6 +97,7 @@ class CommentService
                                     'headline' => $reply->author->profile?->headline,
                                     'avatar' => $reply->author->profile?->avatarUrl(),
                                     'is_verified' => $reply->author->profile !== null && $reply->author->profile->is_verified_badge,
+                                    'is_premium' => $reply->author->isPremium(),
                                 ],
                             ];
                         })->all(),

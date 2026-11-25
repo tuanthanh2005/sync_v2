@@ -20,6 +20,8 @@ import { toast } from 'vue-sonner';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import EmptyState from '@/components/common/EmptyState.vue';
+import BannerSlot from '@/components/monetization/BannerSlot.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -40,6 +42,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
 import { login } from '@/routes';
 import type {
+    ActiveBannerDisplay,
     CategoryOption,
     CommunityDetail,
     CommunityMemberItem,
@@ -57,6 +60,7 @@ const props = defineProps<{
     members: CommunityMemberItem[];
     leaderboard: CommunityMemberItem[];
     trending_hashtags: HashtagItem[];
+    banners?: Record<string, ActiveBannerDisplay | null>;
 }>();
 
 const { t } = useI18n();
@@ -374,6 +378,12 @@ function submitEdit(): void {
             </div>
         </section>
 
+        <BannerSlot
+            :banner="banners?.desktop_community_top"
+            class="hidden sm:block"
+        />
+        <BannerSlot :banner="banners?.mobile_community" class="sm:hidden" />
+
         <!-- Tab: Posts -->
         <template v-if="tab === 'posts'">
             <PostComposer
@@ -532,8 +542,14 @@ function submitEdit(): void {
                             </AvatarFallback>
                         </Avatar>
                         <div>
-                            <p class="text-sm font-semibold text-foreground">
-                                {{ member.user.name }}
+                            <p
+                                class="flex items-center gap-1 text-sm font-semibold text-foreground"
+                            >
+                                <span>{{ member.user.name }}</span>
+                                <PremiumBadge
+                                    v-if="member.user.is_premium"
+                                    size="sm"
+                                />
                             </p>
                             <p class="text-xs text-muted-foreground">
                                 {{ member.role_label }}

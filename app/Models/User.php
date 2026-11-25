@@ -40,6 +40,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property CarbonInterface|null $community_restricted_until
  * @property CarbonInterface|null $message_restricted_until
  * @property CarbonInterface|null $ad_restricted_until
+ * @property CarbonInterface|null $premium_until
+ * @property CarbonInterface|null $premium_suspended_at
  * @property CarbonInterface|null $deactivated_at
  * @property string $timezone
  * @property string|null $preferred_locale
@@ -102,6 +104,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'community_restricted_until' => 'datetime',
             'message_restricted_until' => 'datetime',
             'ad_restricted_until' => 'datetime',
+            'premium_until' => 'datetime',
+            'premium_suspended_at' => 'datetime',
             'deactivated_at' => 'datetime',
             'warnings_count' => 'integer',
             'violations_count' => 'integer',
@@ -359,6 +363,35 @@ class User extends Authenticatable implements MustVerifyEmail
     public function adCampaigns(): HasMany
     {
         return $this->hasMany(AdCampaign::class);
+    }
+
+    public function isPremium(): bool
+    {
+        if ($this->premium_until === null || ! $this->premium_until->isFuture() || $this->premium_suspended_at !== null) {
+            return false;
+        }
+
+        if (array_key_exists('status', $this->attributes)) {
+            return $this->isActive();
+        }
+
+        return true;
+    }
+
+    /**
+     * @return HasMany<Subscription, $this>
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * @return HasMany<BannerCampaign, $this>
+     */
+    public function bannerCampaigns(): HasMany
+    {
+        return $this->hasMany(BannerCampaign::class);
     }
 
     public function avatarUrl(): ?string

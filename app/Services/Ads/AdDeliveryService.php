@@ -11,6 +11,7 @@ use App\Models\AdCampaign;
 use App\Models\AdDailyStat;
 use App\Models\User;
 use App\Services\Billing\WalletService;
+use App\Services\Monetization\PremiumSubscriptionService;
 use App\Services\Social\FeedService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class AdDeliveryService
         private readonly FeedService $feedService,
         private readonly WalletService $walletService,
         private readonly SystemSettingService $settings,
+        private readonly PremiumSubscriptionService $premiumService,
     ) {}
 
     /**
@@ -34,12 +36,19 @@ class AdDeliveryService
         if (! $this->settings->featureEnabled('feature_ads')) {
             return null;
         }
+
+        if ($this->premiumService->userAdReductionMode($viewer) === 'ad_free') {
+            return null;
+        }
+
         $now = now();
         $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
         $query = AdCampaign::query()
             ->where('status', AdCampaignStatus::Active->value)
-            ->where('held_amount', '>', 0)
+            ->where(static function ($q): void {
+                $q->where('billing_mode', 'fixed_package')->orWhere('held_amount', '>', 0);
+            })
             ->where(static function ($q) use ($now): void {
                 $q->whereNull('starts_at')->orWhere('starts_at', '<=', $now);
             })
@@ -55,13 +64,14 @@ class AdDeliveryService
                     ->whereNotNull('published_at');
             })
             ->with([
-                'post.author:id,name,username,status',
+                'post.author:id,name,username,status,premium_until,premium_suspended_at',
                 'post.author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'post.community:id,name,slug',
                 'post.hashtags:id,name,slug',
                 'post.media',
                 'post.poll.options',
             ])
+            ->orderByDesc('is_featured_slot')
             ->orderByDesc('held_amount')
             ->orderBy('impressions_count');
 
@@ -102,9 +112,11 @@ class AdDeliveryService
             return;
         }
 
-        $cost = $campaign->objective === AdObjective::Reach
-            ? (int) $this->settings->get('ad_impression_cost_vnd', (int) config('syncviet.ad_pricing.impression_cost_vnd', 25))
-            : 0;
+        $cost = $campaign->billing_mode === 'fixed_package'
+            ? 0
+            : ($campaign->objective === AdObjective::Reach
+                ? (int) $this->settings->get('ad_impression_cost_vnd', (int) config('syncviet.ad_pricing.impression_cost_vnd', 25))
+                : 0);
 
         $this->recordUniqueEvent($campaign, $viewer, $request, 'impression', 'Y-m-d-H', $cost);
     }
@@ -116,13 +128,15 @@ class AdDeliveryService
 
         if (
             $campaign->status !== AdCampaignStatus::Active
-            || $campaign->held_amount <= 0
+            || ($campaign->billing_mode !== 'fixed_package' && $campaign->held_amount <= 0)
             || $viewer?->id === $campaign->user_id
         ) {
             return $destination;
         }
 
-        $cost = (int) $this->settings->get('ad_click_cost_vnd', (int) config('syncviet.ad_pricing.click_cost_vnd', 1_250));
+        $cost = $campaign->billing_mode === 'fixed_package'
+            ? 0
+            : (int) $this->settings->get('ad_click_cost_vnd', (int) config('syncviet.ad_pricing.click_cost_vnd', 1_250));
         $this->recordUniqueEvent($campaign, $viewer, $request, 'click', 'Y-m-d', $cost);
 
         return $destination;

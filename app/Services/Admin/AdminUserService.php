@@ -6,6 +6,7 @@ use App\Enums\SanctionType;
 use App\Enums\UserStatus;
 use App\Models\AdCampaign;
 use App\Models\AuditLog;
+use App\Models\BannerCampaign;
 use App\Models\Comment;
 use App\Models\CommunityMember;
 use App\Models\Post;
@@ -421,6 +422,23 @@ class AdminUserService
                 $target->violations_count++;
                 $target->save();
                 $this->invalidateUserSessions($target);
+
+                // Stop active/pending Boost and Banner campaigns when an advertiser is banned.
+                AdCampaign::query()
+                    ->where('user_id', $target->id)
+                    ->whereIn('status', ['pending_payment', 'pending_review', 'active', 'paused'])
+                    ->update(['status' => 'cancelled', 'rejection_reason' => __('Account banned: campaign stopped.')]);
+
+                if (Schema::hasTable('banner_campaigns')) {
+                    BannerCampaign::query()
+                        ->where('user_id', $target->id)
+                        ->whereIn('status', ['pending_payment', 'pending_review', 'scheduled', 'active'])
+                        ->update([
+                            'status' => 'paused',
+                            'emergency_paused_at' => now(),
+                            'rejection_reason' => __('Account banned: banner paused.'),
+                        ]);
+                }
             } elseif ($sanctionType === SanctionType::Unban || $sanctionType === SanctionType::Unsuspend) {
                 $target->status = UserStatus::Active;
                 $target->suspended_until = null;

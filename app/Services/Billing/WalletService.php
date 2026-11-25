@@ -4,6 +4,7 @@ namespace App\Services\Billing;
 
 use App\Enums\AdCampaignStatus;
 use App\Enums\CreditEntryType;
+use App\Enums\PaymentServiceType;
 use App\Enums\PaymentStatus;
 use App\Models\AdCampaign;
 use App\Models\AdCreditAccount;
@@ -61,7 +62,20 @@ class WalletService
             ]);
         }
 
-        return DB::transaction(function () use ($user, $amountVnd, $provider, $idempotencyKey): Payment {
+        $maxPending = max(1, min(10, (int) $this->settings->get(
+            'monetization_max_pending_payments',
+            (int) config('syncviet.monetization.max_pending_payments_per_user', 5),
+        )));
+        $expiryHours = max(1, (int) config('syncviet.monetization.payment_order_expiry_hours', 24));
+        $exchangeRate = max(1_000, (int) $this->settings->get(
+            'monetization_usd_to_vnd_rate',
+            (int) config('syncviet.monetization.default_usd_to_vnd_rate', 25_500),
+        ));
+
+        return DB::transaction(function () use ($user, $amountVnd, $provider, $idempotencyKey, $maxPending, $expiryHours, $exchangeRate): Payment {
+            // Serialize concurrent top-up requests for the same user to strictly enforce max-5 pending orders.
+            User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+
             $existing = Payment::query()
                 ->where('idempotency_key', $idempotencyKey)
                 ->first();
@@ -76,6 +90,30 @@ class WalletService
                 return $existing;
             }
 
+            Payment::query()
+                ->where('user_id', $user->id)
+                ->where('status', PaymentStatus::Pending->value)
+                ->whereNotNull('expires_at')
+                ->where('expires_at', '<=', now())
+                ->update(['status' => PaymentStatus::Expired->value]);
+
+            $openPendingCount = Payment::query()
+                ->where('user_id', $user->id)
+                ->where('service_type', PaymentServiceType::TopUp->value)
+                ->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])
+                ->count();
+
+            if ($openPendingCount >= $maxPending) {
+                throw ValidationException::withMessages([
+                    'pending_limit' => [
+                        __(
+                            'You have reached the maximum of :max pending payment orders. Please complete or cancel an existing pending order before creating a new one.',
+                            ['max' => $maxPending],
+                        ),
+                    ],
+                ]);
+            }
+
             $payment = new Payment([
                 'provider' => $provider,
                 'idempotency_key' => $idempotencyKey,
@@ -83,8 +121,12 @@ class WalletService
                 'currency' => 'VND',
                 'metadata' => ['channel' => $provider],
             ]);
+            $payment->order_code = 'SV-'.now()->format('Ymd').'-'.Str::upper(Str::random(6));
             $payment->user_id = $user->id;
+            $payment->service_type = PaymentServiceType::TopUp;
+            $payment->exchange_rate_snapshot = $exchangeRate;
             $payment->status = PaymentStatus::Pending;
+            $payment->expires_at = now()->addHours($expiryHours);
             $payment->save();
 
             return $payment;
@@ -372,28 +414,49 @@ class WalletService
             ->get()
             ->map(static fn (Payment $payment): array => [
                 'id' => $payment->id,
+                'order_code' => $payment->order_code ?? ('PAY-'.$payment->id),
+                'service_type' => $payment->service_type->value,
+                'service_type_label' => $payment->service_type->label(),
                 'provider' => $payment->provider,
                 'provider_reference' => $payment->provider_reference,
                 'amount' => $payment->amount,
+                'fee_amount' => $payment->fee_amount,
                 'currency' => $payment->currency,
                 'status' => $payment->status->value,
                 'status_label' => $payment->status->label(),
                 'paid_at' => $payment->paid_at?->toIso8601String(),
+                'expires_at' => $payment->expires_at?->toIso8601String(),
                 'created_at' => $payment->created_at?->toIso8601String(),
             ])
             ->values()
             ->all();
 
+        $maxPending = max(1, min(10, (int) $this->settings->get(
+            'monetization_max_pending_payments',
+            (int) config('syncviet.monetization.max_pending_payments_per_user', 5),
+        )));
+        $openPendingTopUpCount = Payment::query()
+            ->where('user_id', $user->id)
+            ->where('service_type', PaymentServiceType::TopUp->value)
+            ->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])
+            ->where(static function ($q): void {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->count();
+
         return [
             'account' => [
                 'currency' => $account->currency,
                 'balance' => $account->balance,
+                'promo_balance' => $account->promo_balance,
                 'held_balance' => $account->held_balance,
                 'total_deposited' => $account->total_deposited,
                 'total_spent' => $account->total_spent,
             ],
             'entries' => $entries,
             'payments' => $payments,
+            'openPendingTopUpCount' => $openPendingTopUpCount,
+            'maxPendingOrders' => $maxPending,
             'sandboxEnabled' => (bool) config('syncviet.sandbox_topup_enabled', false),
             'minAmount' => (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000),
             'maxAmount' => (int) config('syncviet.ad_pricing.max_total_budget_vnd', 50_000_000),

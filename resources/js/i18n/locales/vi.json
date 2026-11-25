@@ -460,7 +460,8 @@
             "moderation": "Kiểm duyệt",
             "advertising": "Quảng cáo",
             "finance": "Tài chính",
-            "system": "Hệ thống"
+            "system": "Hệ thống",
+            "monetization": "Kiếm tiền & Doanh thu"
         },
         "nav": {
             "dashboard": "Bảng điều khiển",
@@ -493,7 +494,12 @@
             "notifications": "Thông báo hệ thống",
             "policies": "Chính sách & Footer",
             "security": "Bảo mật & Audit Log",
-            "backups": "Sao lưu dữ liệu"
+            "backups": "Sao lưu dữ liệu",
+            "revenueDashboard": "Doanh thu & Báo cáo",
+            "premiumManagement": "Gói & Thành viên Premium",
+            "bannerAdvertising": "Quảng cáo Banner",
+            "boostPackages": "Gói Đẩy bài viết",
+            "monetizationSettings": "Thanh toán, AdSense & Tuân thủ"
         },
         "common": {
             "search": "Tìm kiếm...",
@@ -768,9 +774,202 @@
         "retry": "Thử lại",
         "copy": "Sao chép",
         "copied": "Đã sao chép vào bộ nhớ tạm",
-        "copyFailed": "Không thể sao chép nội dung"
+        "copyFailed": "Không thể sao chép nội dung",
+        "close": "Đóng",
+        "cancel": "Hủy",
+        "confirm": "Xác nhận",
+        "apply": "Áp dụng",
+        "actionFailed": "Không thể hoàn tất thao tác. Vui lòng thử lại."
     },
     "pwa": {
         "installApp": "Cài đặt ứng dụng SyncViet"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Khám phá",
+            "explore": "Tìm kiếm & Khám phá",
+            "services": "Dịch vụ",
+            "account": "Tài khoản",
+            "admin": "Quản trị"
+        },
+        "badge": {
+            "title": "Thành viên SyncViet Premium",
+            "tooltip": "Huy hiệu tích xanh này thuộc gói thành viên trả phí SyncViet Premium đang hoạt động, khác hoàn toàn với Xác minh danh tính, Tổ chức chính thức hay Quản trị viên."
+        },
+        "common": {
+            "days": "ngày",
+            "monthShort": "tháng"
+        },
+        "benefits": {
+            "blue_badge": "Huy hiệu tích xanh SyncViet Premium (#1D9BF0) tại bài viết, bình luận, hồ sơ & tin nhắn",
+            "post_analytics": "Thống kê hiệu suất tiếp cận & tương tác bài viết",
+            "reduced_ads": "Giảm tần suất hiển thị quảng cáo trên bảng tin",
+            "ad_free": "Trải nghiệm duyệt SyncViet không quảng cáo",
+            "priority_support": "Ưu tiên tiếp nhận & xử lý hỗ trợ",
+            "profile_highlights": "Tùy chỉnh & làm nổi bật hồ sơ cá nhân nâng cao"
+        },
+        "services": {
+            "pageTitle": "Trung tâm Dịch vụ",
+            "eyebrow": "Dịch vụ chính thức SyncViet",
+            "heading": "Nâng tầm thương hiệu & tiếng nói trên SyncViet",
+            "subtitle": "Bảng giá minh bạch, xác nhận thủ công Có/Không trước khi tạo đơn và kiểm duyệt an toàn. Mọi chức năng mạng xã hội cơ bản luôn miễn phí 100%.",
+            "freeCoreGuarantee": "Đăng bài, bình luận, bày tỏ cảm xúc, theo dõi, tham gia cộng đồng, tìm kiếm và báo cáo vi phạm luôn miễn phí cho mọi thành viên.",
+            "startingFrom": "Giá khởi điểm từ",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "Gói thành viên có thời hạn với huy hiệu tích xanh riêng, giảm hoặc tắt quảng cáo và thống kê hiệu suất bài viết.",
+            "bannerTitle": "Quảng cáo Banner",
+            "bannerDesc": "Thuê vị trí banner nổi bật trên Desktop và Mobile theo tuần hoặc tháng với chế độ độc quyền hoặc xoay vòng.",
+            "boostTitle": "Quảng bá bài viết (Boost)",
+            "boostDesc": "Đẩy bài viết công khai đã duyệt trong 24 giờ đến 30 ngày với nhãn Được tài trợ minh bạch và thống kê trực tiếp.",
+            "viewPremium": "Xem gói Premium",
+            "viewBanners": "Xem vị trí Banner",
+            "viewBoost": "Xem gói Boost Post",
+            "advertisingHubLink": "Mở Trung tâm Quảng cáo"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "Nổi bật cùng SyncViet Premium",
+            "subtitle": "Gói thành viên trả trước có thời hạn minh bạch, không tự động trừ tiền bất ngờ. Gia hạn bất kỳ lúc nào mà không mất ngày còn lại.",
+            "manageMyPlan": "Quản lý Premium của tôi",
+            "activeBanner": "Gói SyncViet Premium của bạn đang hoạt động đến {date}.",
+            "extendPreservesDays": "Gia hạn ngay sẽ cộng dồn thời gian vào ngày hết hạn hiện tại.",
+            "paymentMethodLabel": "Chọn phương thức thanh toán",
+            "noAutoAdBalanceDebit": "SyncViet Premium thanh toán trực tiếp qua đơn hàng, tuyệt đối không tự động trừ Số dư quảng cáo.",
+            "popular": "Phổ biến nhất",
+            "buyButton": "Chọn gói này",
+            "extendButton": "Gia hạn gói",
+            "moderationRuleTitle": "Tiêu chuẩn kiểm duyệt & an toàn bình đẳng",
+            "moderationRuleDesc": "Thành viên Premium vẫn tuân thủ đầy đủ Quy tắc cộng đồng, chống spam và mọi giới hạn bảo mật của SyncViet.",
+            "manualConfirmHint": "Hệ thống không bao giờ tự tạo đơn khi mở trang. Bạn luôn xem chi tiết và bấm xác nhận Có/Không trước khi tạo đơn thanh toán."
+        },
+        "accountPremium": {
+            "pageTitle": "SyncViet Premium của tôi",
+            "expiresOn": "Đang hoạt động đến {date} (còn {days} ngày)",
+            "inactiveNotice": "Tài khoản của bạn hiện chưa kích hoạt gói SyncViet Premium.",
+            "historyTitle": "Lịch sử đăng ký & gia hạn",
+            "complimentary": "Tặng / Khuyến mãi",
+            "emptyHistory": "Chưa có lịch sử đăng ký Premium."
+        },
+        "advertising": {
+            "pageTitle": "Trung tâm Quảng cáo",
+            "eyebrow": "Quảng cáo SyncViet",
+            "heading": "Tiếp cận cộng đồng thật với quảng cáo minh bạch",
+            "subtitle": "Chọn thuê Banner theo thời gian để phủ thương hiệu bền vững hoặc Boost Post theo gói cố định để lan tỏa bài viết chất lượng."
+        },
+        "banner": {
+            "pageTitle": "Quảng cáo Banner",
+            "heading": "Thuê vị trí Banner nổi bật trên SyncViet",
+            "subtitle": "Giá thuê minh bạch theo 7, 15, 30, 90 ngày cho cả Desktop và Mobile. Mọi banner đều qua kiểm duyệt an toàn trước khi hiển thị.",
+            "sponsoredLabel": "Được tài trợ",
+            "adOptions": "Tùy chọn quảng cáo",
+            "adInfo": "Thông tin quảng cáo này",
+            "adInfoDesc": "Đây là vị trí banner tài trợ trực tiếp đã qua kiểm duyệt của SyncViet. Bạn có thể ẩn hoặc báo cáo bất kỳ lúc nào.",
+            "hideAd": "Ẩn quảng cáo này",
+            "reportAd": "Báo cáo quảng cáo",
+            "placementsUnit": "vị trí",
+            "bulletExclusive": "Khóa độc quyền 1 thương hiệu hoặc chia sẻ xoay vòng công bằng",
+            "bulletResponsive": "Hỗ trợ ảnh Desktop & Mobile riêng kèm xem trước trực tiếp",
+            "bulletStats": "Thống kê lượt hiển thị, lượt nhấp & CTR chống gian lận",
+            "available": "Đang còn trống",
+            "bookedNow": "Đã có lịch hiển thị",
+            "bookTitle": "Đặt thuê vị trí",
+            "recommendedSize": "Kích thước khuyến nghị",
+            "campaignName": "Tên chiến dịch",
+            "businessName": "Tên thương hiệu / Doanh nghiệp",
+            "targetUrl": "Liên kết đích (URL)",
+            "altText": "Mô tả ảnh (Alt Text)",
+            "headline": "Tiêu đề ngắn",
+            "ctaLabel": "Nút kêu gọi (CTA)",
+            "ctaPlaceholder": "Tìm hiểu thêm",
+            "duration": "Thời hạn thuê",
+            "startDate": "Ngày bắt đầu",
+            "desktopImage": "Ảnh Desktop (JPG/PNG/WebP)",
+            "mobileImage": "Ảnh Mobile (JPG/PNG/WebP)",
+            "submitBooking": "Xem lại & Đặt Banner",
+            "signInToBook": "Đăng nhập để đặt Banner",
+            "livePreview": "Xem trước Banner trực tiếp",
+            "previewPlaceholder": "Tải ảnh lên hoặc nhập link ảnh HTTPS công khai để xem trước",
+            "myCampaigns": "Chiến dịch Banner của tôi"
+        },
+        "boost": {
+            "pageTitle": "Quảng bá bài viết (Boost Post)",
+            "heading": "Tăng tiếp cận cho bài viết công khai trên SyncViet",
+            "subtitle": "Gói đẩy bài cố định rõ ràng với nhãn Được tài trợ. Thời hạn chỉ bắt đầu tính sau khi duyệt và không bao giờ làm sai lệch bảng Thịnh hành tự nhiên.",
+            "modalTitle": "Quảng bá bài viết này",
+            "packagesUnit": "gói",
+            "featured": "Vị trí nổi bật",
+            "bulletFixed": "Thời hạn cố định rõ ràng (24 giờ – 30 ngày) bắt đầu từ lúc duyệt",
+            "bulletTransparent": "Gắn nhãn Được tài trợ minh bạch — không tạo lượt thích hay Thịnh hành ảo",
+            "bulletSafeRefund": "Tự động dừng & hoàn ngân sách nếu bài bị từ chối hoặc gỡ bỏ",
+            "paymentSource": "Nguồn thanh toán",
+            "directCheckout": "Thanh toán trực tiếp",
+            "ctaButton": "Kích hoạt nổi bật",
+            "selectPostTitle": "Chọn bài viết công khai đủ điều kiện để quảng bá",
+            "noEligiblePosts": "Hãy đăng một bài viết công khai đã được duyệt để sử dụng Boost Post."
+        },
+        "wallet": {
+            "title": "Số dư quảng cáo",
+            "subtitle": "Số dư trả trước chỉ dùng cho dịch vụ Quảng bá bài viết và Quảng cáo trên SyncViet.",
+            "promoBalance": "Tín dụng khuyến mãi",
+            "availableShort": "Số dư quảng cáo khả dụng",
+            "topUpTitle": "Nạp Số dư quảng cáo",
+            "purposeDisclaimer": "Số dư quảng cáo chỉ phục vụ quảng cáo trên SyncViet. Không hỗ trợ rút tiền mặt, chuyển tiền giữa người dùng hoặc sinh lãi."
+        },
+        "payments": {
+            "title": "Lịch sử thanh toán",
+            "subtitle": "Quản lý toàn bộ đơn hàng SyncViet Premium, Quảng cáo Banner, Boost Post và Nạp Số dư quảng cáo tại một nơi.",
+            "openPendingLabel": "Đơn chờ thanh toán",
+            "searchPlaceholder": "Tìm theo mã đơn, mã giao dịch hoặc cổng thanh toán...",
+            "allServices": "Tất cả dịch vụ",
+            "allStatuses": "Tất cả trạng thái",
+            "statusPending": "Chờ thanh toán",
+            "statusPaid": "Đã thanh toán",
+            "statusCancelled": "Đã hủy",
+            "statusRefunded": "Đã hoàn tiền",
+            "refundedLabel": "Đã hoàn",
+            "pendingInstructionsTitle": "Đang chờ xác nhận thanh toán",
+            "transferNoteLabel": "Ghi đúng nội dung chuyển khoản",
+            "sandboxConfirm": "Giả lập Webhook Sandbox (Dev)",
+            "cancelOrder": "Hủy đơn hàng",
+            "cancelOrderConfirm": "Hủy đơn hàng đang chờ thanh toán này? Thao tác sẽ giải phóng ngay 1 suất đơn chờ.",
+            "empty": "Không tìm thấy giao dịch nào phù hợp với bộ lọc."
+        },
+        "confirmModal": {
+            "title": "Xác nhận tạo đơn thanh toán",
+            "subtitle": "Vui lòng kiểm tra kỹ thông tin bên dưới. Hệ thống chỉ tạo đơn sau khi bạn bấm xác nhận Có.",
+            "service": "Dịch vụ",
+            "package": "Gói dịch vụ",
+            "duration": "Thời hạn",
+            "method": "Phương thức",
+            "fee": "Phí xử lý",
+            "total": "Tổng thanh toán",
+            "termsNotice": "Khi bấm xác nhận, bạn đồng ý với Điều khoản thanh toán và chính sách dịch vụ tương ứng của SyncViet.",
+            "noButton": "Không, quay lại",
+            "yesButton": "Có, tạo đơn thanh toán"
+        },
+        "pendingLimit": {
+            "title": "Đã đạt giới hạn đơn thanh toán",
+            "description": "Bạn đang có {max} đơn chờ thanh toán. Vui lòng hoàn tất thanh toán hoặc hủy bớt đơn cũ trước khi tạo đơn mới.",
+            "viewPending": "Xem đơn chờ thanh toán"
+        },
+        "compliance": {
+            "storeNotice": "Giao dịch trên ứng dụng cửa hàng tuân theo chính sách thanh toán của nền tảng. Bạn có thể quản lý gói dịch vụ trực tiếp trên syncviet.com."
+        },
+        "faq": {
+            "title": "Câu hỏi thường gặp",
+            "q1": "Tôi có phải trả tiền để dùng mạng xã hội SyncViet không?",
+            "a1": "Không. Đăng bài, bình luận, thả cảm xúc, theo dõi, nhắn tin và tham gia cộng đồng luôn hoàn toàn miễn phí.",
+            "q2": "Huy hiệu SyncViet Premium có phải Xác minh danh tính không?",
+            "a2": "Không. Tích xanh #1D9BF0 biểu thị thành viên trả phí SyncViet Premium đang hoạt động, hoàn toàn tách biệt với Xác minh danh tính và Quản trị viên.",
+            "q3": "Gia hạn Premium trước khi hết hạn có bị mất ngày còn lại không?",
+            "a3": "Không. Thời hạn mới luôn được cộng dồn trực tiếp vào mốc hết hạn hiện tại của bạn.",
+            "q4": "Tôi có thể rút tiền hoặc chuyển Số dư quảng cáo sang tài khoản khác không?",
+            "a4": "Không. Số dư quảng cáo chỉ dùng để thanh toán dịch vụ quảng cáo trên SyncViet, không phải ví ngân hàng và không hỗ trợ rút tiền hay chuyển P2P."
+        },
+        "admin": {
+            "revenueSubtitle": "Báo cáo tách bạch VND & USD, phân tách rõ tiền nạp trả trước (Số dư quảng cáo) và doanh thu dịch vụ đã ghi nhận.",
+            "recognizedRevenue": "Doanh thu dịch vụ ghi nhận",
+            "prepaidDeposits": "Tiền nạp Số dư quảng cáo"
+        }
     }
 }

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PolicyFoundationSeeder::class,
             RbacSeeder::class,
             LanguageSeeder::class,
+            MonetizationSeeder::class,
         ]);
 
         if (app()->isProduction()) {

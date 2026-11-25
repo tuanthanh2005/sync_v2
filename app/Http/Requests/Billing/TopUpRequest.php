@@ -22,8 +22,10 @@ class TopUpRequest extends FormRequest
 
         return [
             'amount' => ['required', 'integer', "min:{$minAmount}", "max:{$maxAmount}"],
-            'provider' => ['nullable', 'string', Rule::in(['sandbox', 'bank_transfer', 'vnpay', 'momo'])],
+            'provider' => ['nullable', 'string', Rule::in(['sandbox', 'vietqr', 'bank_transfer', 'paypal', 'vnpay', 'momo'])],
             'idempotency_key' => ['required', 'string', 'min:8', 'max:100', 'regex:/^[A-Za-z0-9_.:-]+$/'],
+            'defer_settlement' => ['nullable', 'boolean'],
+            'confirmed' => ['nullable', 'boolean'],
         ];
     }
 }

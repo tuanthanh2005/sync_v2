@@ -7,6 +7,11 @@ use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\LanguageManagementController;
 use App\Http\Controllers\Admin\ModerationController;
+use App\Http\Controllers\Admin\Monetization\BannerAdminController;
+use App\Http\Controllers\Admin\Monetization\BoostAdminController;
+use App\Http\Controllers\Admin\Monetization\MonetizationSettingsAdminController;
+use App\Http\Controllers\Admin\Monetization\PremiumAdminController;
+use App\Http\Controllers\Admin\Monetization\RevenueDashboardController;
 use App\Http\Controllers\Admin\NotificationCenterController;
 use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\PolicyManagementController;
@@ -24,6 +29,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Messaging\MessageController;
 use App\Http\Controllers\Moderation\ReportController;
+use App\Http\Controllers\Monetization\BannerOrderController;
+use App\Http\Controllers\Monetization\BoostPostController;
+use App\Http\Controllers\Monetization\PaymentHistoryController;
+use App\Http\Controllers\Monetization\PremiumController;
+use App\Http\Controllers\Monetization\ServicesCenterController;
 use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\PolicyPageController;
 use App\Http\Controllers\Social\CommentController;
@@ -65,6 +75,21 @@ Route::prefix('auth/{provider}')
 
 Route::get('/policies/{policyPage:slug}', [PolicyPageController::class, 'show'])
     ->name('policies.show');
+
+// ─── Public Services Center, Banners & SEO Endpoints ─────────────────────────
+Route::get('/services', [ServicesCenterController::class, 'index'])->name('monetization.services');
+Route::get('/premium', [ServicesCenterController::class, 'premium'])->name('monetization.premium');
+Route::get('/advertising', [ServicesCenterController::class, 'advertising'])->name('monetization.advertising');
+Route::get('/advertising/banner', [ServicesCenterController::class, 'banner'])->name('monetization.banner');
+Route::get('/advertising/boost', [ServicesCenterController::class, 'boost'])->name('monetization.boost');
+Route::get('/banners/{bannerCampaign}/click', [ServicesCenterController::class, 'bannerClick'])
+    ->middleware('throttle:60,1')
+    ->name('banners.click');
+Route::post('/banners/{bannerCampaign}/event', [ServicesCenterController::class, 'bannerEvent'])
+    ->middleware('throttle:30,1')
+    ->name('banners.event');
+Route::get('/ads.txt', [ServicesCenterController::class, 'adsTxt'])->name('seo.ads-txt');
+Route::get('/sitemap.xml', [ServicesCenterController::class, 'sitemap'])->name('seo.sitemap');
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
@@ -145,6 +170,27 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::post('/ads/campaigns/{adCampaign}/status', [AdCampaignController::class, 'updateStatus'])
         ->middleware('throttle:30,1')
         ->name('ads.campaigns.status');
+
+    // ── Authenticated Monetization: Premium, Banner Orders, Boost Post & Payments ─
+    Route::get('/account/premium', [PremiumController::class, 'account'])->name('account.premium');
+    Route::post('/premium/checkout', [PremiumController::class, 'checkout'])
+        ->middleware('throttle:15,1')
+        ->name('premium.checkout');
+    Route::post('/advertising/banner/campaigns', [BannerOrderController::class, 'store'])
+        ->middleware('throttle:15,1')
+        ->name('banners.campaigns.store');
+    Route::post('/posts/{post}/boost', [BoostPostController::class, 'store'])
+        ->middleware('throttle:15,1')
+        ->name('posts.boost');
+
+    Route::get('/payments', [PaymentHistoryController::class, 'index'])->name('payments.index');
+    Route::get('/payments/{payment}', [PaymentHistoryController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{payment}/cancel', [PaymentHistoryController::class, 'cancel'])
+        ->middleware('throttle:20,1')
+        ->name('payments.cancel');
+    Route::post('/payments/{payment}/sandbox-confirm', [PaymentHistoryController::class, 'sandboxConfirm'])
+        ->middleware('throttle:15,1')
+        ->name('payments.sandbox-confirm');
 
     Route::prefix('admin')
         ->name('admin.')
@@ -307,6 +353,80 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::get('/finance/export-csv', [FinanceController::class, 'exportCsv'])
                 ->middleware('permission:finance.export')
                 ->name('finance.export-csv');
+
+            // ── Monetization Administration Center ───────────────────────────────
+            Route::prefix('monetization')->name('monetization.')->group(function () {
+                Route::get('/revenue', [RevenueDashboardController::class, 'index'])
+                    ->middleware('permission:monetization.view,finance.view')
+                    ->name('revenue');
+                Route::get('/revenue/export-csv', [RevenueDashboardController::class, 'exportCsv'])
+                    ->middleware('permission:finance.export')
+                    ->name('revenue.export-csv');
+
+                Route::get('/premium', [PremiumAdminController::class, 'index'])
+                    ->middleware('permission:premium.view,monetization.view')
+                    ->name('premium');
+                Route::post('/premium/plans', [PremiumAdminController::class, 'storePlan'])
+                    ->middleware('permission:premium.manage')
+                    ->name('premium.plans.store');
+                Route::patch('/premium/plans/{premiumPlan}', [PremiumAdminController::class, 'updatePlan'])
+                    ->middleware('permission:premium.manage')
+                    ->name('premium.plans.update');
+                Route::post('/premium/grant', [PremiumAdminController::class, 'grantSubscription'])
+                    ->middleware('permission:premium.manage')
+                    ->name('premium.grant');
+                Route::post('/premium/subscriptions/{subscription}/manage', [PremiumAdminController::class, 'manageSubscription'])
+                    ->middleware('permission:premium.manage')
+                    ->name('premium.subscriptions.manage');
+
+                Route::get('/banners', [BannerAdminController::class, 'index'])
+                    ->middleware('permission:banners.view,monetization.view,ads.view')
+                    ->name('banners');
+                Route::patch('/banners/placements/{bannerPlacement}', [BannerAdminController::class, 'updatePlacement'])
+                    ->middleware('permission:banners.manage')
+                    ->name('banners.placements.update');
+                Route::post('/banners/campaigns', [BannerAdminController::class, 'storeCampaign'])
+                    ->middleware('permission:banners.manage')
+                    ->name('banners.campaigns.store');
+                Route::post('/banners/campaigns/{bannerCampaign}/review', [BannerAdminController::class, 'reviewCampaign'])
+                    ->middleware('permission:banners.manage')
+                    ->name('banners.campaigns.review');
+                Route::post('/banners/campaigns/{bannerCampaign}/manage', [BannerAdminController::class, 'manageCampaign'])
+                    ->middleware('permission:banners.manage')
+                    ->name('banners.campaigns.manage');
+
+                Route::get('/boosts', [BoostAdminController::class, 'index'])
+                    ->middleware('permission:boosts.view,monetization.view,ads.view')
+                    ->name('boosts');
+                Route::post('/boosts/packages', [BoostAdminController::class, 'storePackage'])
+                    ->middleware('permission:boosts.manage')
+                    ->name('boosts.packages.store');
+                Route::patch('/boosts/packages/{boostPackage}', [BoostAdminController::class, 'updatePackage'])
+                    ->middleware('permission:boosts.manage')
+                    ->name('boosts.packages.update');
+
+                Route::get('/settings', [MonetizationSettingsAdminController::class, 'index'])
+                    ->middleware('permission:monetization.view,finance.view')
+                    ->name('settings');
+                Route::patch('/payment-methods/{paymentMethod}', [MonetizationSettingsAdminController::class, 'updatePaymentMethod'])
+                    ->middleware('permission:monetization.manage,finance.manage')
+                    ->name('payment-methods.update');
+                Route::post('/payments/{payment}/confirm', [MonetizationSettingsAdminController::class, 'confirmPayment'])
+                    ->middleware('permission:finance.manage')
+                    ->name('payments.confirm');
+                Route::post('/payments/{payment}/refund', [MonetizationSettingsAdminController::class, 'refundPayment'])
+                    ->middleware('permission:finance.manage')
+                    ->name('payments.refund');
+                Route::post('/adsense', [MonetizationSettingsAdminController::class, 'updateAdSense'])
+                    ->middleware('permission:adsense.manage,monetization.manage')
+                    ->name('adsense.update');
+                Route::patch('/compliance/{platformComplianceRule}', [MonetizationSettingsAdminController::class, 'updateCompliance'])
+                    ->middleware('permission:monetization.manage')
+                    ->name('compliance.update');
+                Route::post('/guardrails', [MonetizationSettingsAdminController::class, 'updateGeneralMonetization'])
+                    ->middleware('permission:monetization.manage')
+                    ->name('guardrails.update');
+            });
 
             // ── System: Languages, Settings, Notifications, Policies, Security, Backups ─
             Route::get('/languages', [LanguageManagementController::class, 'index'])

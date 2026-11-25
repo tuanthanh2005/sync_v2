@@ -460,7 +460,8 @@
             "moderation": "Moderation",
             "advertising": "Advertising",
             "finance": "Finance",
-            "system": "System"
+            "system": "System",
+            "monetization": "Monetization"
         },
         "nav": {
             "dashboard": "Dashboard",
@@ -493,7 +494,12 @@
             "notifications": "Notifications",
             "policies": "Policies & Footer",
             "security": "Security & Audit Logs",
-            "backups": "Backup Management"
+            "backups": "Backup Management",
+            "revenueDashboard": "Revenue Dashboard",
+            "premiumManagement": "Premium Plans & Members",
+            "bannerAdvertising": "Banner Advertising",
+            "boostPackages": "Boost Packages",
+            "monetizationSettings": "Payments, AdSense & Compliance"
         },
         "common": {
             "search": "Search...",
@@ -768,9 +774,202 @@
         "retry": "Retry",
         "copy": "Copy",
         "copied": "Copied to clipboard",
-        "copyFailed": "Unable to copy to clipboard"
+        "copyFailed": "Unable to copy to clipboard",
+        "close": "Close",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "apply": "Apply",
+        "actionFailed": "Action could not be completed. Please try again."
     },
     "pwa": {
         "installApp": "Install SyncViet App"
+    },
+    "monetization": {
+        "sidebar": {
+            "discover": "Discover",
+            "explore": "Explore",
+            "services": "Services",
+            "account": "Account",
+            "admin": "Administration"
+        },
+        "badge": {
+            "title": "SyncViet Premium Member",
+            "tooltip": "This blue checkmark belongs to an active SyncViet Premium paid membership. It is distinct from Identity Verification, Official Organization, or Administrator roles."
+        },
+        "common": {
+            "days": "days",
+            "monthShort": "mo"
+        },
+        "benefits": {
+            "blue_badge": "SyncViet Premium blue badge (#1D9BF0) across posts, comments, profiles & messages",
+            "post_analytics": "Post reach & engagement performance analytics",
+            "reduced_ads": "Reduced sponsored feed clutter",
+            "ad_free": "Ad-free browsing experience across SyncViet",
+            "priority_support": "Priority support triage",
+            "profile_highlights": "Enhanced profile presentation & creator highlights"
+        },
+        "services": {
+            "pageTitle": "Services Center",
+            "eyebrow": "SyncViet Monetization Services",
+            "heading": "Grow your voice & brand on SyncViet",
+            "subtitle": "Transparent pricing, manual order confirmation, and full moderation safety. Core social features on SyncViet remain 100% free forever.",
+            "freeCoreGuarantee": "Posting, commenting, reacting, following, joining communities, searching, and reporting are always free for every member.",
+            "startingFrom": "Starting from",
+            "premiumTitle": "SyncViet Premium",
+            "premiumDesc": "Time-limited membership with the SyncViet blue badge, reduced or ad-free browsing, and creator analytics.",
+            "bannerTitle": "Banner Advertising",
+            "bannerDesc": "Rent high-visibility desktop and mobile banner placements by week or month with exclusive or rotating slots.",
+            "boostTitle": "Boost Post",
+            "boostDesc": "Promote your public approved posts for 24 hours to 30 days with transparent Sponsored labels and live reach stats.",
+            "viewPremium": "Explore Premium Plans",
+            "viewBanners": "View Banner Placements",
+            "viewBoost": "Explore Boost Packages",
+            "advertisingHubLink": "Open Advertising Hub"
+        },
+        "premium": {
+            "pageTitle": "SyncViet Premium",
+            "heading": "Stand out with SyncViet Premium",
+            "subtitle": "Simple, time-limited prepaid memberships with no surprise renewals. Upgrade or extend anytime without losing remaining days.",
+            "manageMyPlan": "Manage My Premium",
+            "activeBanner": "Your SyncViet Premium membership is active until {date}.",
+            "extendPreservesDays": "Renewing now adds time directly onto your current expiration date.",
+            "paymentMethodLabel": "Select Payment Method",
+            "noAutoAdBalanceDebit": "Premium is billed directly via checkout and never auto-deducts your Advertising Balance.",
+            "popular": "Popular",
+            "buyButton": "Choose Plan",
+            "extendButton": "Extend Plan",
+            "moderationRuleTitle": "Equal Safety & Moderation Standards",
+            "moderationRuleDesc": "Premium members remain subject to all SyncViet Community Guidelines, anti-spam rules, and security checks.",
+            "manualConfirmHint": "Orders are never created automatically. You will always review and confirm Yes/No before any payment order is generated."
+        },
+        "accountPremium": {
+            "pageTitle": "My SyncViet Premium",
+            "expiresOn": "Active until {date} ({days} days remaining)",
+            "inactiveNotice": "You do not currently have an active SyncViet Premium subscription.",
+            "historyTitle": "Subscription History",
+            "complimentary": "Complimentary / Grant",
+            "emptyHistory": "No subscription records yet."
+        },
+        "advertising": {
+            "pageTitle": "Advertising Center",
+            "eyebrow": "SyncViet Advertising",
+            "heading": "Reach real communities with transparent advertising",
+            "subtitle": "Choose time-based Banner placements for sustained brand presence or fixed-duration Boost Post packages to amplify high-value discussions."
+        },
+        "banner": {
+            "pageTitle": "Banner Advertising",
+            "heading": "Rent high-impact SyncViet banner placements",
+            "subtitle": "Transparent weekly and monthly rental rates across desktop and mobile surfaces. Every creative is reviewed by our moderation team.",
+            "sponsoredLabel": "Sponsored",
+            "adOptions": "Ad options",
+            "adInfo": "About this ad",
+            "adInfoDesc": "This is a paid direct banner placement reviewed by SyncViet. You can hide or report ads at any time.",
+            "hideAd": "Hide this ad",
+            "reportAd": "Report ad",
+            "placementsUnit": "placements",
+            "bulletExclusive": "Exclusive 1-brand lock or fair multi-brand rotation",
+            "bulletResponsive": "Separate desktop & mobile creatives with live preview",
+            "bulletStats": "Deduplicated impression, click & CTR reporting",
+            "available": "Available now",
+            "bookedNow": "Slot occupied now",
+            "bookTitle": "Book Placement",
+            "recommendedSize": "Recommended size",
+            "campaignName": "Campaign Name",
+            "businessName": "Brand / Business Name",
+            "targetUrl": "Destination URL",
+            "altText": "Accessible Alt Text",
+            "headline": "Short Headline",
+            "ctaLabel": "CTA Button Label",
+            "ctaPlaceholder": "Learn more",
+            "duration": "Rental Duration",
+            "startDate": "Start Date",
+            "desktopImage": "Desktop Image (JPG/PNG/WebP)",
+            "mobileImage": "Mobile Image (JPG/PNG/WebP)",
+            "submitBooking": "Review & Book Banner",
+            "signInToBook": "Sign in to Book Banner",
+            "livePreview": "Live Creative Preview",
+            "previewPlaceholder": "Upload an image or provide a public HTTPS image URL to preview",
+            "myCampaigns": "My Banner Campaigns"
+        },
+        "boost": {
+            "pageTitle": "Boost Post",
+            "heading": "Amplify your public SyncViet posts",
+            "subtitle": "Fixed-duration promotion packages with clear Sponsored badges. Duration begins only after moderation approval and never manipulates organic Trending rankings.",
+            "modalTitle": "Boost this post",
+            "packagesUnit": "packages",
+            "featured": "Featured Slot",
+            "bulletFixed": "Fixed transparent duration (24h to 30 days) starting on approval",
+            "bulletTransparent": "Clearly labeled Sponsored — never fakes likes or Trending scores",
+            "bulletSafeRefund": "Automatic stop & budget refund if rejected or removed",
+            "paymentSource": "Payment Source",
+            "directCheckout": "Direct Checkout",
+            "ctaButton": "Boost Post",
+            "selectPostTitle": "Choose one of your eligible public posts to boost",
+            "noEligiblePosts": "Publish a public approved post first to use Boost Post."
+        },
+        "wallet": {
+            "title": "Advertising Balance",
+            "subtitle": "Prepaid advertising balance used exclusively for SyncViet Boost Post and eligible advertising campaigns.",
+            "promoBalance": "Promo credit",
+            "availableShort": "Available Advertising Balance",
+            "topUpTitle": "Top Up Advertising Balance",
+            "purposeDisclaimer": "Advertising Balance is strictly for SyncViet advertising services. No P2P transfers, cash withdrawals, or interest."
+        },
+        "payments": {
+            "title": "Payment History",
+            "subtitle": "All your SyncViet Premium, Banner Advertising, Boost Post, and Advertising Balance orders in one place.",
+            "openPendingLabel": "Open Pending Orders",
+            "searchPlaceholder": "Search by order code, reference, or gateway...",
+            "allServices": "All Services",
+            "allStatuses": "All Statuses",
+            "statusPending": "Pending",
+            "statusPaid": "Paid",
+            "statusCancelled": "Cancelled",
+            "statusRefunded": "Refunded",
+            "refundedLabel": "Refunded",
+            "pendingInstructionsTitle": "Awaiting payment confirmation",
+            "transferNoteLabel": "Include exact transfer memo",
+            "sandboxConfirm": "Simulate Sandbox Webhook (Dev)",
+            "cancelOrder": "Cancel Order",
+            "cancelOrderConfirm": "Cancel this pending payment order? This immediately frees up one pending order slot.",
+            "empty": "No payment orders found matching your filters."
+        },
+        "confirmModal": {
+            "title": "Confirm Payment Order",
+            "subtitle": "Please verify the details below carefully. No payment order is created until you click Yes.",
+            "service": "Service",
+            "package": "Plan / Package",
+            "duration": "Duration",
+            "method": "Payment Method",
+            "fee": "Processing Fee",
+            "total": "Total Payable",
+            "termsNotice": "By confirming, you agree to the SyncViet Payment Terms and applicable service policy.",
+            "noButton": "No, Go Back",
+            "yesButton": "Yes, Create Payment Order"
+        },
+        "pendingLimit": {
+            "title": "Pending Order Limit Reached",
+            "description": "You currently have {max} open pending payment orders. Please complete or cancel an existing pending order before creating a new one.",
+            "viewPending": "View Pending Orders"
+        },
+        "compliance": {
+            "storeNotice": "Purchases on native app store builds follow official platform in-app billing policies. Manage plans anytime on syncviet.com."
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "q1": "Do I need to pay to use SyncViet?",
+            "a1": "No. Posting, commenting, reacting, following, messaging, and joining communities are completely free.",
+            "q2": "Is the SyncViet Premium badge the same as Identity Verification?",
+            "a2": "No. The #1D9BF0 blue checkmark indicates an active paid SyncViet Premium membership. Identity verification and staff badges are strictly separate.",
+            "q3": "What happens if I extend my Premium plan before it expires?",
+            "a3": "Your new duration is added directly onto your existing expiration timestamp so you never lose a single remaining day.",
+            "q4": "Can I withdraw or transfer my Advertising Balance to another user?",
+            "a4": "No. Advertising Balance is strictly a prepaid credit balance for SyncViet advertising services and cannot be withdrawn or transferred between accounts."
+        },
+        "admin": {
+            "revenueSubtitle": "Dual-currency (VND & USD) reporting strictly separating prepaid advertising deposits from recognized direct service revenue.",
+            "recognizedRevenue": "Recognized Service Revenue",
+            "prepaidDeposits": "Prepaid Ad Balance Deposits"
+        }
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Services\Media;
 
+use App\Services\Social\SafeLinkPreviewService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -60,12 +62,81 @@ class SafeImageUploadService
             ]);
         }
 
+        return $this->storeRawBytes($rawBytes, $directory, 'images');
+    }
+
+    /**
+     * Download an image from a validated public HTTPS/HTTP URL (SSRF-safe, no redirects),
+     * re-encode through GD to strip EXIF/metadata, and persist to local/S3 storage.
+     *
+     * @return array{
+     *     disk: string,
+     *     path: string,
+     *     mime_type: string,
+     *     width: int,
+     *     height: int,
+     *     size_bytes: int
+     * }
+     */
+    public function importImageFromUrl(
+        string $url,
+        SafeLinkPreviewService $linkGuard,
+        string $directory = 'banners',
+        string $errorField = 'image_url',
+    ): array {
+        if (! $linkGuard->isSafePublicUrl($url)) {
+            throw ValidationException::withMessages([
+                $errorField => [__('The image URL must be a valid public HTTP/HTTPS address.')],
+            ]);
+        }
+
+        try {
+            $response = Http::withOptions(['allow_redirects' => false])
+                ->connectTimeout(3)
+                ->timeout(6)
+                ->withHeaders(['Accept' => 'image/jpeg,image/png,image/webp'])
+                ->get($url);
+        } catch (\Throwable) {
+            throw ValidationException::withMessages([
+                $errorField => [__('Unable to download image from the provided URL.')],
+            ]);
+        }
+
+        if (! $response->successful()) {
+            throw ValidationException::withMessages([
+                $errorField => [__('The remote image URL did not return a valid image.')],
+            ]);
+        }
+
+        $rawBytes = $response->body();
+
+        if ($rawBytes === '' || strlen($rawBytes) > self::MAX_BYTES) {
+            throw ValidationException::withMessages([
+                $errorField => [__('The remote image must be no larger than 5 MB.')],
+            ]);
+        }
+
+        return $this->storeRawBytes($rawBytes, $directory, $errorField);
+    }
+
+    /**
+     * @return array{
+     *     disk: string,
+     *     path: string,
+     *     mime_type: string,
+     *     width: int,
+     *     height: int,
+     *     size_bytes: int
+     * }
+     */
+    private function storeRawBytes(string $rawBytes, string $directory, string $errorField): array
+    {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $detectedMime = $finfo->buffer($rawBytes);
 
         if (! is_string($detectedMime) || ! array_key_exists($detectedMime, self::ALLOWED_MIME_MAP)) {
             throw ValidationException::withMessages([
-                'images' => [__('Only JPEG, PNG, and WebP images are permitted.')],
+                $errorField => [__('Only JPEG, PNG, and WebP images are permitted.')],
             ]);
         }
 
@@ -73,7 +144,7 @@ class SafeImageUploadService
 
         if ($imageInfo === false) {
             throw ValidationException::withMessages([
-                'images' => [__('The uploaded image is corrupted or unreadable.')],
+                $errorField => [__('The uploaded image is corrupted or unreadable.')],
             ]);
         }
 
@@ -89,7 +160,7 @@ class SafeImageUploadService
             || ! array_key_exists($imageMime, self::ALLOWED_MIME_MAP)
         ) {
             throw ValidationException::withMessages([
-                'images' => [__('Image dimensions exceed safe processing limits.')],
+                $errorField => [__('Image dimensions exceed safe processing limits.')],
             ]);
         }
 
@@ -97,7 +168,7 @@ class SafeImageUploadService
 
         if ($source === false) {
             throw ValidationException::withMessages([
-                'images' => [__('The image could not be decoded safely.')],
+                $errorField => [__('The image could not be decoded safely.')],
             ]);
         }
 
@@ -109,7 +180,7 @@ class SafeImageUploadService
             imagedestroy($source);
 
             throw ValidationException::withMessages([
-                'images' => [__('Unable to allocate image processing buffer.')],
+                $errorField => [__('Unable to allocate image processing buffer.')],
             ]);
         }
 

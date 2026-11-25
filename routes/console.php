@@ -6,9 +6,15 @@ use App\Models\AdminNotification;
 use App\Models\User;
 use App\Models\UserSanction;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Monetization\BannerAdvertisingService;
+use App\Services\Monetization\BoostPostService;
+use App\Services\Monetization\MonetizationPaymentService;
+use App\Services\Monetization\PremiumSubscriptionService;
+use App\Services\Policy\PolicyManagementService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\RbacService;
 use App\Services\System\LanguageService;
+use Database\Seeders\MonetizationSeeder;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -19,11 +25,40 @@ Artisan::command('inspire', function (): void {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Artisan::command('app:rbac:sync', function (RbacService $rbacService, LanguageService $languageService): void {
+Artisan::command('app:rbac:sync', function (
+    RbacService $rbacService,
+    LanguageService $languageService,
+    PolicyManagementService $policyService,
+): void {
     $rbacService->syncCatalog();
     $languageService->ensureSeeded();
-    $this->info('RBAC catalog and 15 platform languages synced.');
-})->purpose('Synchronize RBAC roles, permissions, and supported platform languages');
+    $policyService->ensureDefaultPoliciesExist();
+    MonetizationSeeder::seedDefaultsIfEmpty();
+    $this->info('RBAC catalog, 15 platform languages, draft policies, and monetization catalog synced.');
+})->purpose('Synchronize RBAC roles, permissions, languages, draft policies, and monetization defaults');
+
+Artisan::command('app:monetization:sync', function (
+    PremiumSubscriptionService $premiumService,
+    BannerAdvertisingService $bannerService,
+    BoostPostService $boostService,
+    MonetizationPaymentService $paymentService,
+): void {
+    $premium = $premiumService->processExpirationsAndReminders();
+    $banners = $bannerService->syncScheduledAndExpiredBanners();
+    $completedBoosts = $boostService->completeElapsedBoosts();
+    $expiredOrders = $paymentService->expireStalePendingOrders();
+
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'Monetization sync: premium_expired=%d reminders=%d banners_activated=%d banners_expired=%d boosts_completed=%d orders_expired=%d',
+        $premium['expired'],
+        $premium['reminders_sent'],
+        $banners['activated'],
+        $banners['expired'],
+        $completedBoosts,
+        $expiredOrders,
+    ));
+})->purpose('Expire elapsed subscriptions/banners/boosts/orders and dispatch deduplicated Premium reminders');
 
 Artisan::command('app:sanctions:expire', function (AuditLogger $auditLogger): void {
     if (! Schema::hasTable('user_sanctions')) {
@@ -141,4 +176,5 @@ Artisan::command('app:notifications:dispatch', function (): void {
 })->purpose('Dispatch due scheduled administrative notifications');
 
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();

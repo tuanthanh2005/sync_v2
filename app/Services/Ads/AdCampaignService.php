@@ -291,7 +291,7 @@ class AdCampaignService
                 $locked->status = AdCampaignStatus::Paused;
                 $locked->save();
             } elseif ($action === 'resume') {
-                if ($locked->status !== AdCampaignStatus::Paused || $locked->held_amount <= 0) {
+                if ($locked->status !== AdCampaignStatus::Paused || ($locked->billing_mode !== 'fixed_package' && $locked->held_amount <= 0)) {
                     throw ValidationException::withMessages([
                         'action' => [__('This campaign cannot be resumed.')],
                     ]);
@@ -300,7 +300,7 @@ class AdCampaignService
                 $locked->status = AdCampaignStatus::Active;
                 $locked->save();
             } elseif ($action === 'cancel') {
-                if (! in_array($locked->status, [AdCampaignStatus::PendingReview, AdCampaignStatus::Active, AdCampaignStatus::Paused], true)) {
+                if (! in_array($locked->status, [AdCampaignStatus::PendingPayment, AdCampaignStatus::PendingReview, AdCampaignStatus::Active, AdCampaignStatus::Paused], true)) {
                     throw ValidationException::withMessages([
                         'action' => [__('This campaign is already closed.')],
                     ]);
@@ -370,7 +370,19 @@ class AdCampaignService
 
             if ($decision === 'approve') {
                 $locked->status = AdCampaignStatus::Active;
-                $locked->starts_at ??= now();
+                $locked->activated_at = now();
+
+                if ($locked->billing_mode === 'fixed_package') {
+                    $locked->loadMissing('boostPackage');
+                    $hours = $locked->boostPackage !== null
+                        ? max(1, $locked->boostPackage->duration_hours)
+                        : max(24, $locked->duration_days * 24);
+                    $locked->starts_at = now();
+                    $locked->ends_at = now()->addHours($hours);
+                } else {
+                    $locked->starts_at ??= now();
+                }
+
                 $locked->rejection_reason = null;
             } else {
                 $locked->status = AdCampaignStatus::Rejected;
@@ -442,6 +454,9 @@ class AdCampaignService
             'starts_at' => $campaign->starts_at?->toIso8601String(),
             'ends_at' => $campaign->ends_at?->toIso8601String(),
             'budget_type' => $campaign->budget_type->value,
+            'billing_mode' => $campaign->billing_mode,
+            'is_featured_slot' => $campaign->is_featured_slot,
+            'boost_package_id' => $campaign->boost_package_id,
             'daily_budget' => $campaign->daily_budget,
             'duration_days' => $campaign->duration_days,
             'total_budget' => $campaign->total_budget,

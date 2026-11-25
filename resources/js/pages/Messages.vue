@@ -5,6 +5,7 @@ import { onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MessageController from '@/actions/App/Http/Controllers/Messaging/MessageController';
 import EmptyState from '@/components/common/EmptyState.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -117,9 +118,15 @@ onBeforeUnmount(() => {
                             </Avatar>
                             <div class="min-w-0">
                                 <p
-                                    class="truncate text-sm font-semibold text-foreground"
+                                    class="flex items-center gap-1 truncate text-sm font-semibold text-foreground"
                                 >
-                                    {{ conv.other_user?.name || 'Member' }}
+                                    <span class="truncate">{{
+                                        conv.other_user?.name || 'Member'
+                                    }}</span>
+                                    <PremiumBadge
+                                        v-if="conv.other_user?.is_premium"
+                                        size="sm"
+                                    />
                                 </p>
                                 <p
                                     class="truncate text-xs text-muted-foreground"
@@ -184,9 +191,18 @@ onBeforeUnmount(() => {
                         </Avatar>
                         <div class="min-w-0">
                             <p
-                                class="truncate text-sm font-semibold text-foreground"
+                                class="flex items-center gap-1 truncate text-sm font-semibold text-foreground"
                             >
-                                {{ activeConversation.other_user?.name }}
+                                <span class="truncate">{{
+                                    activeConversation.other_user?.name
+                                }}</span>
+                                <PremiumBadge
+                                    v-if="
+                                        activeConversation.other_user
+                                            ?.is_premium
+                                    "
+                                    size="sm"
+                                />
                             </p>
                             <p class="truncate text-xs text-muted-foreground">
                                 @{{ activeConversation.other_user?.username }}

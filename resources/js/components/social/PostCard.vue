@@ -32,6 +32,8 @@ import ProfileViewController from '@/actions/App/Http/Controllers/Social/Profile
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import ImageLightbox from '@/components/common/ImageLightbox.vue';
+import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import InputError from '@/components/InputError.vue';
 import { formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
@@ -83,6 +85,7 @@ const isContentExpanded = ref(false);
 const isEditing = ref(false);
 const showReactionMenu = ref(false);
 const reportOpen = ref(false);
+const boostModalOpen = ref(false);
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
@@ -352,6 +355,10 @@ function submitReport(): void {
                         >
                             {{ post.author?.name ?? 'Member' }}
                         </Link>
+                        <PremiumBadge
+                            v-if="post.author?.is_premium"
+                            size="sm"
+                        />
                         <BadgeCheck
                             v-if="post.author?.is_verified"
                             class="size-4 shrink-0 text-primary"
@@ -463,6 +470,14 @@ function submitReport(): void {
                     >
                         <Pencil class="mr-2 size-4" />
                         <span>{{ t('post.edit') }}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        v-if="post.can_boost && !post.boost_summary"
+                        class="min-h-10 cursor-pointer text-primary focus:text-primary"
+                        @click="boostModalOpen = true"
+                    >
+                        <Zap class="mr-2 size-4" />
+                        <span>{{ t('monetization.boost.ctaButton') }}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="user && user.id !== post.author?.id"
@@ -727,6 +742,23 @@ function submitReport(): void {
                 </p>
             </div>
 
+            <!-- Owner Boost Status Strip -->
+            <div
+                v-if="post.boost_summary"
+                class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-primary/25 bg-primary-soft/60 px-3.5 py-2 text-xs"
+            >
+                <span
+                    class="inline-flex items-center gap-1.5 font-semibold text-accent-foreground"
+                >
+                    <Zap class="size-3.5 text-primary" />
+                    <span>{{ post.boost_summary.status_label }}</span>
+                </span>
+                <span class="text-[11px] text-muted-foreground">
+                    {{ post.boost_summary.impressions_count }} imp ·
+                    {{ post.boost_summary.clicks_count }} clicks
+                </span>
+            </div>
+
             <!-- Sponsored Ad Call-to-Action Strip -->
             <a
                 v-if="post.ad_campaign"
@@ -960,6 +992,13 @@ function submitReport(): void {
             :processing="deletingPost"
             destructive
             @confirm="executeDeletePost"
+        />
+
+        <BoostPostModal
+            v-if="post.can_boost"
+            v-model:open="boostModalOpen"
+            :post-id="post.id"
+            :post-excerpt="post.title || post.content.slice(0, 140)"
         />
     </article>
 </template>

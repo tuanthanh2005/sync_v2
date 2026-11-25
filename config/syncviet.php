@@ -46,4 +46,15 @@ return [
         'impression_cost_vnd' => 25,
         'click_cost_vnd' => 1_250,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Monetization & Payment Guardrails
+    |--------------------------------------------------------------------------
+    */
+    'monetization' => [
+        'max_pending_payments_per_user' => (int) env('SYNCVIET_MAX_PENDING_PAYMENTS', 5),
+        'payment_order_expiry_hours' => (int) env('SYNCVIET_PAYMENT_EXPIRY_HOURS', 24),
+        'default_usd_to_vnd_rate' => (int) env('SYNCVIET_USD_VND_RATE', 25_500),
+    ],
 ];

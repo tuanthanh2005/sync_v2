@@ -7,6 +7,8 @@ import CommunityController from '@/actions/App/Http/Controllers/Community/Commun
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
 import EmptyState from '@/components/common/EmptyState.vue';
+import BannerSlot from '@/components/monetization/BannerSlot.vue';
+import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInitials } from '@/composables/useInitials';
 import type {
+    ActiveBannerDisplay,
     CommunitySummary,
     HashtagItem,
     PublicFeedPost,
@@ -25,6 +28,7 @@ const props = defineProps<{
     hashtag: string;
     posts: PublicFeedPost[];
     users: SearchUserResult[];
+    banners?: Record<string, ActiveBannerDisplay | null>;
     communities: Array<
         Pick<
             CommunitySummary,
@@ -113,6 +117,12 @@ onBeforeUnmount(() => {
                 {{ t('search.button') }}
             </Button>
         </form>
+
+        <BannerSlot
+            :banner="banners?.desktop_explore_top"
+            class="hidden sm:block"
+        />
+        <BannerSlot :banner="banners?.mobile_explore" class="sm:hidden" />
 
         <div
             v-if="hashtag"
@@ -248,6 +258,7 @@ onBeforeUnmount(() => {
                             >
                                 {{ person.name }}
                             </p>
+                            <PremiumBadge v-if="person.is_premium" size="sm" />
                             <BadgeCheck
                                 v-if="person.is_verified"
                                 class="size-3.5 shrink-0 text-primary"
