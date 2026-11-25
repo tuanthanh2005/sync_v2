@@ -28,6 +28,19 @@ const footer = computed(() => page.props.footer);
         </p>
 
         <div
+            v-if="footer.supportEmail"
+            class="mt-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground"
+        >
+            <span>{{ t('footer.supportContact') }}:</span>
+            <a
+                :href="`mailto:${footer.supportEmail}`"
+                class="font-medium text-primary hover:underline"
+            >
+                {{ footer.supportEmail }}
+            </a>
+        </div>
+
+        <div
             class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3"
         >
             <LocaleSwitcher compact />

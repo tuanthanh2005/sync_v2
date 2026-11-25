@@ -109,6 +109,7 @@ class FooterMenuService
 
         return [
             'year' => (int) now()->year,
+            'supportEmail' => config('mail.from.address'),
             'links' => $localizedLinks,
             'groups' => array_values($grouped),
         ];

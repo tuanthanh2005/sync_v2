@@ -46,7 +46,8 @@
         "draftNotice": "Our community information and legal pages will appear here soon.",
         "mobileSectionTitle": "Legal & Information",
         "openInNewTab": "Opens in a new tab",
-        "noPublishedLinks": "Information and policy links will appear here soon."
+        "noPublishedLinks": "Information and policy links will appear here soon.",
+        "supportContact": "Support"
     },
     "policy": {
         "draftBadge": "Draft (Admin preview only)",

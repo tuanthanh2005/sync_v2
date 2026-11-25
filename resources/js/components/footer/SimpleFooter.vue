@@ -34,6 +34,18 @@ const footer = computed(() => page.props.footer);
                     :items="footer.links"
                     variant="inline"
                 />
+                <span
+                    v-if="footer.supportEmail"
+                    class="text-xs text-muted-foreground"
+                >
+                    {{ t('footer.supportContact') }}:
+                    <a
+                        :href="`mailto:${footer.supportEmail}`"
+                        class="font-medium text-primary hover:underline"
+                    >
+                        {{ footer.supportEmail }}
+                    </a>
+                </span>
             </div>
 
             <LocaleSwitcher compact />

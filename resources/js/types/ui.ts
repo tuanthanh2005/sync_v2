@@ -443,6 +443,7 @@ export type FooterGroupSection = {
 
 export type FooterSharedData = {
     year: number;
+    supportEmail?: string | null;
     links: FooterLinkItem[];
     groups: FooterGroupSection[];
 };

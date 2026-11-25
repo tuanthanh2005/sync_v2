@@ -76,6 +76,15 @@ const footer = computed(() => page.props.footer);
                         })
                     }}
                 </p>
+                <p v-if="footer.supportEmail">
+                    {{ t('footer.supportContact') }}:
+                    <a
+                        :href="`mailto:${footer.supportEmail}`"
+                        class="font-medium text-primary hover:underline"
+                    >
+                        {{ footer.supportEmail }}
+                    </a>
+                </p>
             </div>
         </div>
     </footer>
