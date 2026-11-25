@@ -198,7 +198,7 @@ Vue components must have a single root element.
 
 # SyncViet Project Engineering Rules (Mandatory)
 
-Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/BUSINESS_RULES.md`, `docs/SECURITY.md`, `docs/SECURITY_CHECKLIST.md`, `docs/DESIGN_SYSTEM.md`, `docs/ADMINISTRATION.md`, `docs/PERMISSION_MATRIX.md`, `docs/MODERATION_GUIDE.md`, `docs/LOCALIZATION.md`, `docs/FEATURE_MANAGEMENT.md`, `docs/DEPLOYMENT_HOSTINGER.md`, `docs/DEPLOYMENT_VPS.md`, `docs/MIGRATION_GUIDE.md`, and `docs/TASKS.md` before starting any task.
+Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/BUSINESS_RULES.md`, `docs/SECURITY.md`, `docs/SECURITY_CHECKLIST.md`, `docs/DESIGN_SYSTEM.md`, `docs/ADMINISTRATION.md`, `docs/PERMISSION_MATRIX.md`, `docs/MODERATION_GUIDE.md`, `docs/LOCALIZATION.md`, `docs/FEATURE_MANAGEMENT.md`, `docs/MOBILE_UI_UX.md`, `docs/MOBILE_COMPATIBILITY.md`, `docs/PWA_GUIDE.md`, `docs/PERFORMANCE_OPTIMIZATION.md`, `docs/MOBILE_TESTING.md`, `docs/DEPLOYMENT_HOSTINGER.md`, `docs/DEPLOYMENT_VPS.md`, `docs/MIGRATION_GUIDE.md`, and `docs/TASKS.md` before starting any task.
 
 ## 1. Fixed Technology Stack
 
@@ -228,7 +228,8 @@ Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/B
 ## 4. UI / UX, Toast System & Footer Standards
 
 - Light Palette: Primary `#4F46E5` (Hover `#4338CA`, Active `#3730A3`, Soft `#EEF2FF`), Background `#F3F5F9`, Surface `#FFFFFF`, Text `#0F172A` / `#64748B`, Border `#E2E8F0`, Semantic `#16A34A` / `#D97706` / `#DC2626`. Dark Palette: Primary `#818CF8` (`primary-foreground: #0B0F17`, Hover `#A5B4FC`, Soft `#25264A`), Background `#0B0F17`, Surface `#161B26` (Hover `#1E293B`), Text `#F1F5F9` / `#94A3B8`, Border `#273244`, Semantic `#4ADE80` / `#FBBF24` / `#F87171`. Enforce ~90% neutral / 10% Indigo brand (no purple gradients, no duplicate sidebar promo cards at desktop widths), font `Be Vietnam Pro`, `@lucide/vue` icons, Loading Skeleton, Empty State, Error State, `ConfirmActionDialog`/`ReasonDialog` (zero browser `alert()`/`confirm()`), and unified `appToast` + `Sonner.vue` (X close button, Escape key close, hover-pausing progress bar, deduplication, Light/Dark & RTL support).
-- **Administration Center**: Dedicated collapsible, responsive `AdminLayout.vue` grouped into 7 modules (`Overview`, `User Management`, `Content Management`, `Moderation`, `Advertising`, `Finance`, `System`), automatically applied to all `admin/*` Inertia pages.
+- **Administration Center**: Dedicated collapsible, responsive `AdminLayout.vue` grouped into 7 modules (`Overview`, `User Management`, `Content Management`, `Moderation`, `Advertising`, `Finance`, `System`), automatically applied to all `admin/*` Inertia pages, with Mobile Drawer & Mobile Card Lists on `< md`.
+- **Mobile First & PWA Standards**: `viewport-fit=cover` (never disable pinch-to-zoom), `16px` mobile inputs to prevent iOS auto-zoom, `touch-action: manipulation`, safe-area insets (`env(safe-area-inset-*)`), `100dvh` modals/bottom-sheets/full-screen mobile composer, full-screen pinch-zoom `ImageLightbox`, Visual Viewport keyboard-aware `MobileBottomNav`, normal OS text selection & copy/paste everywhere, dynamic-imported 14 non-English locale chunks, and secure static-only PWA Service Worker (`public/sw.js` strictly excluding `/admin`, `/wallet`, `/payments`, `/webhooks`, `/messages`, auth & Inertia XHR).
 - **Footer architecture**:
     - **No large footer at the end of Infinite Scroll News Feed**.
     - **MiniFooter** placed below the Right Sidebar (`ConnectHubLayout`).

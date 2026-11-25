@@ -16,21 +16,27 @@ const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
-    <div class="flex min-h-svh flex-col bg-background text-foreground">
-        <header class="sticky top-0 z-40 h-16 border-b border-border bg-card">
+    <div class="flex min-h-[100dvh] flex-col bg-background text-foreground">
+        <header
+            class="safe-pt sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md"
+        >
             <div
-                class="mx-auto flex h-full max-w-[1360px] items-center justify-between gap-4 px-4 lg:px-6"
+                class="mx-auto flex h-14 max-w-[1360px] items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4 lg:px-6"
             >
-                <Link :href="home()" class="flex items-center">
+                <Link :href="home()" class="flex min-w-0 items-center">
                     <AppLogo />
                 </Link>
 
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <LocaleSwitcher compact />
                     <ThemeToggle />
 
                     <template v-if="user">
-                        <Button size="sm" class="rounded-lg" as-child>
+                        <Button
+                            size="sm"
+                            class="min-h-10 rounded-lg sm:min-h-9"
+                            as-child
+                        >
                             <Link :href="dashboard()">{{
                                 t('nav.dashboard')
                             }}</Link>
@@ -40,12 +46,16 @@ const user = computed(() => page.props.auth.user);
                         <Button
                             variant="ghost"
                             size="sm"
-                            class="rounded-lg"
+                            class="min-h-10 rounded-lg px-2.5 sm:min-h-9 sm:px-3"
                             as-child
                         >
                             <Link :href="login()">{{ t('nav.login') }}</Link>
                         </Button>
-                        <Button size="sm" class="rounded-lg" as-child>
+                        <Button
+                            size="sm"
+                            class="hidden min-h-9 rounded-lg sm:inline-flex"
+                            as-child
+                        >
                             <Link :href="register()">{{
                                 t('nav.register')
                             }}</Link>
@@ -55,11 +65,13 @@ const user = computed(() => page.props.auth.user);
             </div>
         </header>
 
-        <main class="mx-auto w-full max-w-4xl flex-1 px-4 py-8 lg:px-6">
+        <main
+            class="mx-auto w-full max-w-4xl flex-1 px-3 py-6 sm:px-4 sm:py-8 lg:px-6"
+        >
             <slot />
         </main>
 
         <FullFooter />
-        <Toaster position="top-right" rich-colors />
+        <Toaster />
     </div>
 </template>

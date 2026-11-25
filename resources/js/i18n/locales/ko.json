@@ -27,7 +27,9 @@
         "skipToContent": "본문으로 바로가기",
         "openMobileMenu": "내비게이션 메뉴 열기",
         "mobileNavLabel": "모바일 내비게이션",
-        "searchPlaceholder": "게시물, 커뮤니티, 사용자 검색..."
+        "searchPlaceholder": "게시물, 커뮤니티, 사용자 검색...",
+        "explore": "탐색",
+        "createPostShort": "작성"
     },
     "theme": {
         "light": "라이트",
@@ -106,7 +108,8 @@
                 "finance": "수익·금융",
                 "qa": "질문·답변",
                 "marketplace": "마켓플레이스"
-            }
+            },
+            "newPostsAvailable": "새 게시물이 있습니다"
         },
         "composer": {
             "placeholder": "무엇을 공유하고 싶으신가요?",
@@ -125,7 +128,10 @@
             "addOption": "선택지 추가",
             "submit": "게시",
             "publishing": "게시 중...",
-            "signInPrompt": "게시물을 작성하고 토론에 참여하려면 로그인해 주세요."
+            "signInPrompt": "게시물을 작성하고 토론에 참여하려면 로그인해 주세요.",
+            "discardTitle": "저장하지 않은 초안을 삭제할까요?",
+            "discardDescription": "저장되지 않은 게시물 초안이 영구적으로 삭제됩니다.",
+            "discardConfirm": "초안 삭제"
         },
         "empty": {
             "title": "{brand} 커뮤니티를 둘러보세요",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "답글을 입력하세요...",
         "reply": "답글",
         "sendComment": "등록",
-        "noComments": "아직 댓글이 없습니다. 첫 번째 대화를 시작해 보세요!"
+        "noComments": "아직 댓글이 없습니다. 첫 번째 대화를 시작해 보세요!",
+        "copyText": "게시물 텍스트 복사",
+        "copiedText": "게시물 텍스트가 복사되었습니다"
     },
     "profile": {
         "postsTab": "게시물",
@@ -753,5 +761,16 @@
             "checksum": "SHA-256 체크섬",
             "size": "크기"
         }
+    },
+    "common": {
+        "offlineBanner": "오프라인 상태입니다. 일부 기능을 사용할 수 없습니다.",
+        "backOnline": "다시 온라인 상태입니다",
+        "retry": "다시 시도",
+        "copy": "복사",
+        "copied": "클립보드에 복사되었습니다",
+        "copyFailed": "복사할 수 없습니다"
+    },
+    "pwa": {
+        "installApp": "SyncViet 앱 설치"
     }
 }

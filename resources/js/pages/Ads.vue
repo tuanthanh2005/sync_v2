@@ -33,6 +33,7 @@ import {
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AdCampaignController from '@/actions/App/Http/Controllers/Ads/AdCampaignController';
+import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import InputError from '@/components/InputError.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -89,6 +90,7 @@ const activeTab = ref<'promote' | 'campaigns' | 'reports' | 'billing'>(
 const previewMode = ref<'desktop' | 'mobile'>('desktop');
 const postPickerOpen = ref(false);
 const guideOpen = ref(false);
+const cancelTargetId = ref<number | null>(null);
 
 const selectedPost = ref<AdEligiblePostItem | null>(
     props.eligiblePosts[0] ?? null,
@@ -291,14 +293,14 @@ function updateCampaignStatus(
             </div>
 
             <div
-                class="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3.5"
+                class="no-scrollbar mt-4 flex flex-nowrap items-center gap-2 overflow-x-auto border-t border-border pt-3.5 sm:flex-wrap sm:overflow-visible"
             >
                 <Button
                     type="button"
                     size="sm"
                     :variant="activeTab === 'promote' ? 'secondary' : 'ghost'"
                     :class="[
-                        'rounded-lg text-xs',
+                        'min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap',
                         activeTab === 'promote'
                             ? 'border-transparent bg-primary-soft font-semibold text-accent-foreground'
                             : '',
@@ -313,7 +315,7 @@ function updateCampaignStatus(
                     size="sm"
                     :variant="activeTab === 'campaigns' ? 'secondary' : 'ghost'"
                     :class="[
-                        'rounded-lg text-xs',
+                        'min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap',
                         activeTab === 'campaigns'
                             ? 'border-transparent bg-primary-soft font-semibold text-accent-foreground'
                             : '',
@@ -332,7 +334,7 @@ function updateCampaignStatus(
                     size="sm"
                     :variant="activeTab === 'reports' ? 'secondary' : 'ghost'"
                     :class="[
-                        'rounded-lg text-xs',
+                        'min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap',
                         activeTab === 'reports'
                             ? 'border-transparent bg-primary-soft font-semibold text-accent-foreground'
                             : '',
@@ -347,7 +349,7 @@ function updateCampaignStatus(
                     size="sm"
                     :variant="activeTab === 'billing' ? 'secondary' : 'ghost'"
                     :class="[
-                        'rounded-lg text-xs',
+                        'min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap',
                         activeTab === 'billing'
                             ? 'border-transparent bg-primary-soft font-semibold text-accent-foreground'
                             : '',
@@ -751,6 +753,7 @@ function updateCampaignStatus(
                             id="ad-total-budget"
                             v-model.number="form.total_budget"
                             type="number"
+                            inputmode="numeric"
                             :min="pricing.min_total_budget_vnd"
                             :max="pricing.max_total_budget_vnd"
                             step="50000"
@@ -1181,8 +1184,8 @@ function updateCampaignStatus(
                             type="button"
                             size="sm"
                             variant="ghost"
-                            class="h-8 rounded-lg text-xs text-destructive hover:text-destructive"
-                            @click="updateCampaignStatus(campaign.id, 'cancel')"
+                            class="min-h-9 rounded-lg text-xs text-destructive hover:text-destructive sm:min-h-8"
+                            @click="cancelTargetId = campaign.id"
                         >
                             <XCircle class="size-3.5" />
                             <span>{{ t('ads.cancelAndRefund') }}</span>
@@ -1190,6 +1193,27 @@ function updateCampaignStatus(
                     </div>
                 </div>
             </article>
+
+            <ConfirmActionDialog
+                :open="cancelTargetId !== null"
+                :title="t('ads.cancelAndRefund')"
+                :description="t('ads.note2')"
+                :confirm-label="t('ads.cancelAndRefund')"
+                destructive
+                @update:open="
+                    (val) => {
+                        if (!val) cancelTargetId = null;
+                    }
+                "
+                @confirm="
+                    () => {
+                        if (cancelTargetId !== null) {
+                            updateCampaignStatus(cancelTargetId, 'cancel');
+                            cancelTargetId = null;
+                        }
+                    }
+                "
+            />
 
             <EmptyState
                 v-if="campaigns.length === 0"

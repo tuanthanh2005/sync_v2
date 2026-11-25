@@ -27,7 +27,9 @@
         "skipToContent": "Langsung ke konten utama",
         "openMobileMenu": "Buka menu navigasi",
         "mobileNavLabel": "Navigasi seluler",
-        "searchPlaceholder": "Cari postingan, komunitas, pengguna..."
+        "searchPlaceholder": "Cari postingan, komunitas, pengguna...",
+        "explore": "Jelajahi",
+        "createPostShort": "Posting"
     },
     "theme": {
         "light": "Terang",
@@ -106,7 +108,8 @@
                 "finance": "Penghasilan",
                 "qa": "Tanya Jawab",
                 "marketplace": "Jual Beli"
-            }
+            },
+            "newPostsAvailable": "Postingan baru tersedia"
         },
         "composer": {
             "placeholder": "Apa yang ingin Anda bagikan?",
@@ -125,7 +128,10 @@
             "addOption": "Tambah pilihan",
             "submit": "Posting",
             "publishing": "Menerbitkan...",
-            "signInPrompt": "Silakan masuk untuk membagikan postingan dan bergabung dalam diskusi."
+            "signInPrompt": "Silakan masuk untuk membagikan postingan dan bergabung dalam diskusi.",
+            "discardTitle": "Buang draf yang belum disimpan?",
+            "discardDescription": "Draf postingan yang belum disimpan akan dihapus secara permanen.",
+            "discardConfirm": "Buang draf"
         },
         "empty": {
             "title": "Jelajahi komunitas {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Tulis balasan...",
         "reply": "Balas",
         "sendComment": "Kirim",
-        "noComments": "Belum ada komentar. Mulai percakapan sekarang!"
+        "noComments": "Belum ada komentar. Mulai percakapan sekarang!",
+        "copyText": "Salin teks postingan",
+        "copiedText": "Teks postingan disalin"
     },
     "profile": {
         "postsTab": "Postingan",
@@ -753,5 +761,16 @@
             "checksum": "Checksum SHA-256",
             "size": "Ukuran"
         }
+    },
+    "common": {
+        "offlineBanner": "Anda sedang offline. Beberapa fitur tidak tersedia.",
+        "backOnline": "Kembali online",
+        "retry": "Coba lagi",
+        "copy": "Salin",
+        "copied": "Disalin ke papan klip",
+        "copyFailed": "Gagal menyalin ke papan klip"
+    },
+    "pwa": {
+        "installApp": "Pasang Aplikasi SyncViet"
     }
 }

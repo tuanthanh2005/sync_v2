@@ -27,7 +27,9 @@
         "skipToContent": "Chuyển đến nội dung chính",
         "openMobileMenu": "Mở menu điều hướng",
         "mobileNavLabel": "Điều hướng di động",
-        "searchPlaceholder": "Tìm kiếm bài viết, cộng đồng, người dùng..."
+        "searchPlaceholder": "Tìm kiếm bài viết, cộng đồng, người dùng...",
+        "explore": "Khám phá",
+        "createPostShort": "Đăng bài"
     },
     "theme": {
         "light": "Sáng",
@@ -106,7 +108,8 @@
                 "finance": "Kiếm tiền",
                 "qa": "Hỏi đáp",
                 "marketplace": "Mua bán"
-            }
+            },
+            "newPostsAvailable": "Có bài viết mới"
         },
         "composer": {
             "placeholder": "Bạn muốn chia sẻ điều gì?",
@@ -125,7 +128,10 @@
             "addOption": "Thêm lựa chọn",
             "submit": "Đăng bài",
             "publishing": "Đang đăng...",
-            "signInPrompt": "Vui lòng đăng nhập để đăng bài và tham gia thảo luận."
+            "signInPrompt": "Vui lòng đăng nhập để đăng bài và tham gia thảo luận.",
+            "discardTitle": "Hủy bản nháp chưa lưu?",
+            "discardDescription": "Nội dung bài viết bạn đang soạn sẽ bị xóa vĩnh viễn.",
+            "discardConfirm": "Hủy bản nháp"
         },
         "empty": {
             "title": "Khám phá cộng đồng {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Viết phản hồi...",
         "reply": "Trả lời",
         "sendComment": "Gửi",
-        "noComments": "Chưa có bình luận nào. Hãy là người đầu tiên chia sẻ góc nhìn!"
+        "noComments": "Chưa có bình luận nào. Hãy là người đầu tiên chia sẻ góc nhìn!",
+        "copyText": "Sao chép nội dung bài viết",
+        "copiedText": "Đã sao chép nội dung bài viết"
     },
     "profile": {
         "postsTab": "Bài viết",
@@ -753,5 +761,16 @@
             "checksum": "Mã SHA-256",
             "size": "Dung lượng"
         }
+    },
+    "common": {
+        "offlineBanner": "Bạn đang ngoại tuyến. Một số tính năng tạm không khả dụng.",
+        "backOnline": "Đã kết nối lại mạng",
+        "retry": "Thử lại",
+        "copy": "Sao chép",
+        "copied": "Đã sao chép vào bộ nhớ tạm",
+        "copyFailed": "Không thể sao chép nội dung"
+    },
+    "pwa": {
+        "installApp": "Cài đặt ứng dụng SyncViet"
     }
 }

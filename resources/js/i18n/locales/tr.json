@@ -27,7 +27,9 @@
         "skipToContent": "Ana içeriğe geç",
         "openMobileMenu": "Gezinme menüsünü aç",
         "mobileNavLabel": "Mobil gezinme",
-        "searchPlaceholder": "Gönderi, topluluk veya kişi ara..."
+        "searchPlaceholder": "Gönderi, topluluk veya kişi ara...",
+        "explore": "Keşfet",
+        "createPostShort": "Paylaş"
     },
     "theme": {
         "light": "Açık",
@@ -106,7 +108,8 @@
                 "finance": "Kazanç",
                 "qa": "Soru-Cevap",
                 "marketplace": "Pazar Yeri"
-            }
+            },
+            "newPostsAvailable": "Yeni gönderiler var"
         },
         "composer": {
             "placeholder": "Ne paylaşmak istersiniz?",
@@ -125,7 +128,10 @@
             "addOption": "Seçenek ekle",
             "submit": "Paylaş",
             "publishing": "Yayımlanıyor...",
-            "signInPrompt": "Gönderi paylaşmak ve tartışmalara katılmak için lütfen giriş yapın."
+            "signInPrompt": "Gönderi paylaşmak ve tartışmalara katılmak için lütfen giriş yapın.",
+            "discardTitle": "Kaydedilmemiş taslak silinsin mi?",
+            "discardDescription": "Kaydedilmemiş gönderi taslağınız kalıcı olarak silinecek.",
+            "discardConfirm": "Taslağı sil"
         },
         "empty": {
             "title": "{brand} topluluğunu keşfedin",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Bir yanıt yazın...",
         "reply": "Yanıtla",
         "sendComment": "Gönder",
-        "noComments": "Henüz yorum yok. Sohbeti ilk siz başlatın!"
+        "noComments": "Henüz yorum yok. Sohbeti ilk siz başlatın!",
+        "copyText": "Gönderi metnini kopyala",
+        "copiedText": "Gönderi metni kopyalandı"
     },
     "profile": {
         "postsTab": "Gönderiler",
@@ -753,5 +761,16 @@
             "checksum": "SHA-256 Sağlama Toplamı",
             "size": "Boyut"
         }
+    },
+    "common": {
+        "offlineBanner": "Çevrimdışısınız. Bazı özellikler kullanılamıyor.",
+        "backOnline": "Tekrar çevrimiçi",
+        "retry": "Tekrar dene",
+        "copy": "Kopyala",
+        "copied": "Panoya kopyalandı",
+        "copyFailed": "Panoya kopyalanamadı"
+    },
+    "pwa": {
+        "installApp": "SyncViet Uygulamasını Yükle"
     }
 }

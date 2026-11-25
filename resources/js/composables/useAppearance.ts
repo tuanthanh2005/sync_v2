@@ -15,19 +15,28 @@ export function updateTheme(value: Appearance): void {
         return;
     }
 
+    let isDark = false;
+
     if (value === 'system') {
         const mediaQueryList = window.matchMedia(
             '(prefers-color-scheme: dark)',
         );
-        const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
-
-        document.documentElement.classList.toggle(
-            'dark',
-            systemTheme === 'dark',
-        );
+        isDark = mediaQueryList.matches;
     } else {
-        document.documentElement.classList.toggle('dark', value === 'dark');
+        isDark = value === 'dark';
     }
+
+    document.documentElement.classList.toggle('dark', isDark);
+
+    let themeMeta = document.querySelector<HTMLMetaElement>(
+        'meta[name="theme-color"]:not([media])',
+    );
+    if (!themeMeta) {
+        themeMeta = document.createElement('meta');
+        themeMeta.name = 'theme-color';
+        document.head.appendChild(themeMeta);
+    }
+    themeMeta.content = isDark ? '#161B26' : '#FFFFFF';
 }
 
 const setCookie = (name: string, value: string, days = 365) => {

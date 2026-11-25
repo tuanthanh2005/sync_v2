@@ -27,7 +27,9 @@
         "skipToContent": "Pular para o conteúdo principal",
         "openMobileMenu": "Abrir menu de navegação",
         "mobileNavLabel": "Navegação móvel",
-        "searchPlaceholder": "Pesquisar publicações, comunidades, pessoas..."
+        "searchPlaceholder": "Pesquisar publicações, comunidades, pessoas...",
+        "explore": "Explorar",
+        "createPostShort": "Publicar"
     },
     "theme": {
         "light": "Claro",
@@ -106,7 +108,8 @@
                 "finance": "Renda",
                 "qa": "Perguntas e respostas",
                 "marketplace": "Mercado"
-            }
+            },
+            "newPostsAvailable": "Novas publicações disponíveis"
         },
         "composer": {
             "placeholder": "O que você gostaria de compartilhar?",
@@ -125,7 +128,10 @@
             "addOption": "Adicionar opção",
             "submit": "Publicar",
             "publishing": "Publicando...",
-            "signInPrompt": "Entre na sua conta para publicar e participar da discussão."
+            "signInPrompt": "Entre na sua conta para publicar e participar da discussão.",
+            "discardTitle": "Descartar rascunho não salvo?",
+            "discardDescription": "Seu rascunho não salvo será excluído permanentemente.",
+            "discardConfirm": "Descartar rascunho"
         },
         "empty": {
             "title": "Explore a comunidade {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Escreva uma resposta...",
         "reply": "Responder",
         "sendComment": "Enviar",
-        "noComments": "Ainda não há comentários. Comece a conversa!"
+        "noComments": "Ainda não há comentários. Comece a conversa!",
+        "copyText": "Copiar texto da publicação",
+        "copiedText": "Texto da publicação copiado"
     },
     "profile": {
         "postsTab": "Publicações",
@@ -753,5 +761,16 @@
             "checksum": "Soma de verificação SHA-256",
             "size": "Tamanho"
         }
+    },
+    "common": {
+        "offlineBanner": "Você está offline. Alguns recursos estão indisponíveis.",
+        "backOnline": "Conexão restabelecida",
+        "retry": "Tentar novamente",
+        "copy": "Copiar",
+        "copied": "Copiado para a área de transferência",
+        "copyFailed": "Não foi possível copiar"
+    },
+    "pwa": {
+        "installApp": "Instalar aplicativo SyncViet"
     }
 }

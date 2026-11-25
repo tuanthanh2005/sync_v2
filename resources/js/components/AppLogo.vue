@@ -26,7 +26,7 @@ const brandName = computed(() => page.props.name);
             </span>
             <span
                 v-if="showTagline"
-                class="text-[11px] font-medium text-muted-foreground"
+                class="hidden text-[11px] font-medium text-muted-foreground sm:block"
             >
                 {{ t('brand.tagline') }}
             </span>

@@ -3,15 +3,17 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { ArrowLeft, CornerDownRight, Trash2 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { toast } from 'vue-sonner';
 import CommentController from '@/actions/App/Http/Controllers/Social/CommentController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
+import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
+import { formatDateTime } from '@/lib/formatters';
+import { appToast } from '@/lib/toast';
 import { home, login } from '@/routes';
 import type { CommentItem, PublicFeedPost } from '@/types';
 
@@ -20,13 +22,15 @@ const props = defineProps<{
     comments: CommentItem[];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const { getInitials } = useInitials();
 
 const replyingToId = ref<number | null>(null);
 const replyContent = ref('');
+const deleteCommentId = ref<number | null>(null);
+const deletingComment = ref(false);
 
 const commentForm = useForm({
     content: '',
@@ -34,9 +38,13 @@ const commentForm = useForm({
 
 function submitComment(): void {
     if (!user.value) {
-        toast.info(t('home.composer.signInPrompt'));
+        appToast.info(t('home.composer.signInPrompt'));
         router.visit(login());
 
+        return;
+    }
+
+    if (commentForm.processing) {
         return;
     }
 
@@ -50,7 +58,7 @@ function submitComment(): void {
 
 function submitReply(parentId: number): void {
     if (!user.value) {
-        toast.info(t('home.composer.signInPrompt'));
+        appToast.info(t('home.composer.signInPrompt'));
         router.visit(login());
 
         return;
@@ -75,9 +83,22 @@ function submitReply(parentId: number): void {
     );
 }
 
-function deleteComment(commentId: number): void {
-    router.delete(CommentController.destroy.url(commentId), {
+function requestDeleteComment(commentId: number): void {
+    deleteCommentId.value = commentId;
+}
+
+function executeDeleteComment(): void {
+    if (deleteCommentId.value === null) {
+        return;
+    }
+
+    deletingComment.value = true;
+    router.delete(CommentController.destroy.url(deleteCommentId.value), {
         preserveScroll: true,
+        onFinish: () => {
+            deletingComment.value = false;
+            deleteCommentId.value = null;
+        },
     });
 }
 </script>
@@ -168,15 +189,16 @@ function deleteComment(commentId: number): void {
                                     >
                                         {{
                                             comment.created_at
-                                                ? new Date(
+                                                ? formatDateTime(
                                                       comment.created_at,
-                                                  ).toLocaleString()
+                                                      locale,
+                                                  )
                                                 : ''
                                         }}
                                     </span>
                                 </p>
                                 <p
-                                    class="mt-1 text-sm whitespace-pre-line text-foreground/90"
+                                    class="mt-1 text-sm [overflow-wrap:anywhere] break-words whitespace-pre-line text-foreground/90"
                                 >
                                     {{ comment.content }}
                                 </p>
@@ -188,7 +210,7 @@ function deleteComment(commentId: number): void {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                class="h-7 rounded-md px-2 text-xs text-muted-foreground"
+                                class="min-h-9 rounded-lg px-2.5 text-xs text-muted-foreground sm:min-h-7"
                                 @click="
                                     replyingToId =
                                         replyingToId === comment.id
@@ -203,8 +225,8 @@ function deleteComment(commentId: number): void {
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                class="size-7 text-muted-foreground hover:text-destructive"
-                                @click="deleteComment(comment.id)"
+                                class="size-9 text-muted-foreground hover:text-destructive sm:size-7"
+                                @click="requestDeleteComment(comment.id)"
                             >
                                 <Trash2 class="size-3.5" />
                             </Button>
@@ -214,20 +236,20 @@ function deleteComment(commentId: number): void {
                     <!-- Reply box -->
                     <div
                         v-if="replyingToId === comment.id"
-                        class="flex items-center gap-2 pl-10"
+                        class="flex items-center gap-2 sm:pl-10"
                     >
                         <input
                             v-model="replyContent"
                             type="text"
                             maxlength="3000"
                             :placeholder="t('post.replyPlaceholder')"
-                            class="h-9 flex-1 rounded-lg border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            class="min-h-10 min-w-0 flex-1 rounded-lg border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring sm:min-h-9"
                             @keydown.enter.prevent="submitReply(comment.id)"
                         />
                         <Button
                             type="button"
                             size="sm"
-                            class="h-9 rounded-lg text-xs"
+                            class="min-h-10 shrink-0 rounded-lg text-xs sm:min-h-9"
                             @click="submitReply(comment.id)"
                         >
                             {{ t('post.sendComment') }}
@@ -237,7 +259,7 @@ function deleteComment(commentId: number): void {
                     <!-- Nested Replies -->
                     <div
                         v-if="comment.replies.length > 0"
-                        class="space-y-2.5 border-l-2 border-border pl-4 sm:ml-6"
+                        class="space-y-2.5 border-l-2 border-border pl-3 sm:ml-6 sm:pl-4"
                     >
                         <div
                             v-for="reply in comment.replies"
@@ -258,15 +280,16 @@ function deleteComment(commentId: number): void {
                                         >
                                             {{
                                                 reply.created_at
-                                                    ? new Date(
+                                                    ? formatDateTime(
                                                           reply.created_at,
-                                                      ).toLocaleString()
+                                                          locale,
+                                                      )
                                                     : ''
                                             }}
                                         </span>
                                     </p>
                                     <p
-                                        class="mt-0.5 text-xs leading-relaxed whitespace-pre-line text-foreground/90"
+                                        class="mt-0.5 text-xs leading-relaxed [overflow-wrap:anywhere] break-words whitespace-pre-line text-foreground/90"
                                     >
                                         {{ reply.content }}
                                     </p>
@@ -277,8 +300,8 @@ function deleteComment(commentId: number): void {
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                class="size-7 shrink-0 text-muted-foreground hover:text-destructive"
-                                @click="deleteComment(reply.id)"
+                                class="size-9 shrink-0 text-muted-foreground hover:text-destructive sm:size-7"
+                                @click="requestDeleteComment(reply.id)"
                             >
                                 <Trash2 class="size-3.5" />
                             </Button>
@@ -291,5 +314,20 @@ function deleteComment(commentId: number): void {
                 {{ t('post.noComments') }}
             </p>
         </section>
+
+        <ConfirmActionDialog
+            :open="deleteCommentId !== null"
+            :title="t('post.delete')"
+            :description="t('post.confirmDelete')"
+            :confirm-label="t('post.delete')"
+            :processing="deletingComment"
+            destructive
+            @update:open="
+                (val) => {
+                    if (!val) deleteCommentId = null;
+                }
+            "
+            @confirm="executeDeleteComment"
+        />
     </div>
 </template>

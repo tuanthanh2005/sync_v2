@@ -237,9 +237,11 @@ function submitRefund(): void {
         </section>
 
         <div
-            class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-3"
+            class="flex flex-col gap-3 rounded-xl border border-border bg-card p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between"
         >
-            <div class="flex flex-wrap gap-1.5">
+            <div
+                class="no-scrollbar flex flex-nowrap gap-1.5 overflow-x-auto sm:flex-wrap sm:overflow-visible"
+            >
                 <Button
                     v-for="tk in [
                         'balances',
@@ -250,28 +252,32 @@ function submitRefund(): void {
                     :key="tk"
                     size="sm"
                     :variant="activeTab === tk ? 'default' : 'ghost'"
-                    class="h-8 rounded-lg text-xs"
+                    class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap sm:min-h-8"
                     @click="activeTab = tk"
                 >
                     {{ t(`admin.finance.tabs.${tk}`) }}
                 </Button>
             </div>
-            <form @submit.prevent="applySearch" class="flex items-center gap-2">
-                <div class="relative">
+            <form
+                @submit.prevent="applySearch"
+                class="flex w-full items-center gap-2 sm:w-auto"
+            >
+                <div class="relative min-w-0 flex-1 sm:flex-initial">
                     <Search
                         class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
                     />
                     <input
                         v-model="searchInput"
                         type="search"
+                        inputmode="search"
                         :placeholder="t('admin.common.search')"
-                        class="h-8 rounded-lg border border-input bg-background pr-3 pl-8 text-xs"
+                        class="min-h-10 w-full rounded-lg border border-input bg-background pr-3 pl-8 text-xs sm:min-h-8 sm:w-52"
                     />
                 </div>
                 <Button
                     type="submit"
                     size="sm"
-                    class="h-8 rounded-lg text-xs"
+                    class="min-h-10 shrink-0 rounded-lg text-xs sm:min-h-8"
                     >{{ t('admin.common.filter') }}</Button
                 >
             </form>
@@ -280,215 +286,402 @@ function submitRefund(): void {
         <!-- Tab: Balances -->
         <section
             v-if="activeTab === 'balances'"
-            class="rounded-xl border border-border bg-card p-4"
+            class="rounded-xl border border-border bg-card p-3.5 sm:p-4"
         >
             <EmptyState
                 v-if="accounts.data.length === 0"
                 :title="t('admin.common.emptyTitle')"
                 :description="t('admin.common.emptyDescription')"
             />
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="border-b border-border text-muted-foreground">
-                        <tr>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.users.member') }}
-                            </th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.finance.paidBalance') }}
-                            </th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.finance.promoBalance') }}
-                            </th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.finance.heldBalance') }}
-                            </th>
-                            <th class="py-2 text-right">
-                                {{ t('admin.common.actions') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border">
-                        <tr v-for="acc in accounts.data" :key="acc.id">
-                            <td class="py-2.5 pr-3">
-                                <p class="font-semibold text-foreground">
+            <template v-else>
+                <div class="space-y-3 md:hidden">
+                    <div
+                        v-for="acc in accounts.data"
+                        :key="`card-acc-${acc.id}`"
+                        class="space-y-2.5 rounded-xl border border-border bg-background/50 p-3.5 text-xs"
+                    >
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <p
+                                    class="truncate font-semibold text-foreground"
+                                >
                                     {{ acc.name }}
                                 </p>
-                                <p class="text-[11px] text-muted-foreground">
+                                <p
+                                    class="truncate text-[11px] text-muted-foreground"
+                                >
                                     @{{ acc.username }} · {{ acc.email }}
                                 </p>
-                            </td>
-                            <td class="py-2.5 pr-3 font-mono font-semibold">
-                                {{ formatCurrencyVnd(acc.balance, locale) }}
-                            </td>
-                            <td class="py-2.5 pr-3 font-mono text-success">
-                                {{
-                                    formatCurrencyVnd(acc.promo_balance, locale)
-                                }}
-                            </td>
-                            <td
-                                class="py-2.5 pr-3 font-mono text-muted-foreground"
-                            >
-                                {{
-                                    formatCurrencyVnd(acc.held_balance, locale)
-                                }}
-                            </td>
-                            <td class="py-2.5 text-right">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    class="h-7 rounded-lg text-[11px]"
-                                    @click="openAdjust(acc)"
+                            </div>
+                        </div>
+                        <div
+                            class="grid grid-cols-3 gap-2 rounded-lg bg-muted/40 p-2 text-[11px]"
+                        >
+                            <div>
+                                <p class="text-muted-foreground">
+                                    {{ t('admin.finance.paidBalance') }}
+                                </p>
+                                <p
+                                    class="font-mono font-semibold text-foreground"
                                 >
-                                    {{ t('admin.finance.adjustLedger') }}
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    {{ formatCurrencyVnd(acc.balance, locale) }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-muted-foreground">
+                                    {{ t('admin.finance.promoBalance') }}
+                                </p>
+                                <p class="font-mono font-semibold text-success">
+                                    {{
+                                        formatCurrencyVnd(
+                                            acc.promo_balance,
+                                            locale,
+                                        )
+                                    }}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-muted-foreground">
+                                    {{ t('admin.finance.heldBalance') }}
+                                </p>
+                                <p class="font-mono text-muted-foreground">
+                                    {{
+                                        formatCurrencyVnd(
+                                            acc.held_balance,
+                                            locale,
+                                        )
+                                    }}
+                                </p>
+                            </div>
+                        </div>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            class="min-h-9 w-full rounded-lg text-xs"
+                            @click="openAdjust(acc)"
+                        >
+                            {{ t('admin.finance.adjustLedger') }}
+                        </Button>
+                    </div>
+                </div>
+
+                <div class="hidden overflow-x-auto md:block">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="border-b border-border text-muted-foreground"
+                        >
+                            <tr>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.users.member') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.finance.paidBalance') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.finance.promoBalance') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.finance.heldBalance') }}
+                                </th>
+                                <th class="py-2 text-right">
+                                    {{ t('admin.common.actions') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            <tr v-for="acc in accounts.data" :key="acc.id">
+                                <td class="py-2.5 pr-3">
+                                    <p class="font-semibold text-foreground">
+                                        {{ acc.name }}
+                                    </p>
+                                    <p
+                                        class="text-[11px] text-muted-foreground"
+                                    >
+                                        @{{ acc.username }} · {{ acc.email }}
+                                    </p>
+                                </td>
+                                <td class="py-2.5 pr-3 font-mono font-semibold">
+                                    {{ formatCurrencyVnd(acc.balance, locale) }}
+                                </td>
+                                <td class="py-2.5 pr-3 font-mono text-success">
+                                    {{
+                                        formatCurrencyVnd(
+                                            acc.promo_balance,
+                                            locale,
+                                        )
+                                    }}
+                                </td>
+                                <td
+                                    class="py-2.5 pr-3 font-mono text-muted-foreground"
+                                >
+                                    {{
+                                        formatCurrencyVnd(
+                                            acc.held_balance,
+                                            locale,
+                                        )
+                                    }}
+                                </td>
+                                <td class="py-2.5 text-right">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        class="h-7 rounded-lg text-[11px]"
+                                        @click="openAdjust(acc)"
+                                    >
+                                        {{ t('admin.finance.adjustLedger') }}
+                                    </Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
         </section>
 
         <!-- Tab: Ledger Transactions -->
         <section
             v-if="activeTab === 'transactions'"
-            class="rounded-xl border border-border bg-card p-4"
+            class="rounded-xl border border-border bg-card p-3.5 sm:p-4"
         >
             <EmptyState
                 v-if="entries.length === 0"
                 :title="t('admin.common.emptyTitle')"
                 :description="t('admin.common.emptyDescription')"
             />
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="border-b border-border text-muted-foreground">
-                        <tr>
-                            <th class="py-2 pr-3">ID</th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.users.member') }}
-                            </th>
-                            <th class="py-2 pr-3">Type / Bucket</th>
-                            <th class="py-2 pr-3">Amount</th>
-                            <th class="py-2 pr-3">Description</th>
-                            <th class="py-2">
-                                {{ t('admin.common.createdAt') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border">
-                        <tr v-for="e in entries" :key="e.id">
-                            <td
-                                class="py-2.5 pr-3 font-mono text-muted-foreground"
+            <template v-else>
+                <div class="space-y-2.5 md:hidden">
+                    <div
+                        v-for="e in entries"
+                        :key="`card-e-${e.id}`"
+                        class="space-y-1.5 rounded-xl border border-border bg-background/50 p-3 text-xs"
+                    >
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="font-mono text-muted-foreground"
+                                >#{{ e.id }} · @{{ e.username || '-' }}</span
                             >
-                                #{{ e.id }}
-                            </td>
-                            <td class="py-2.5 pr-3">
-                                @{{ e.username || '-' }}
-                            </td>
-                            <td class="py-2.5 pr-3">
-                                <Badge
-                                    variant="secondary"
-                                    class="text-[10px]"
-                                    >{{ e.type_label }}</Badge
+                            <span
+                                class="font-mono font-semibold text-foreground"
+                                >{{ formatCurrencyVnd(e.amount, locale) }}</span
+                            >
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1">
+                            <Badge variant="secondary" class="text-[10px]">{{
+                                e.type_label
+                            }}</Badge>
+                            <Badge variant="outline" class="text-[10px]">{{
+                                e.wallet_bucket
+                            }}</Badge>
+                        </div>
+                        <p class="break-words text-muted-foreground">
+                            {{ e.description }}
+                        </p>
+                        <p class="text-[11px] text-muted-foreground">
+                            {{ formatDateTime(e.created_at, locale) }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="hidden overflow-x-auto md:block">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="border-b border-border text-muted-foreground"
+                        >
+                            <tr>
+                                <th class="py-2 pr-3">ID</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.users.member') }}
+                                </th>
+                                <th class="py-2 pr-3">Type / Bucket</th>
+                                <th class="py-2 pr-3">Amount</th>
+                                <th class="py-2 pr-3">Description</th>
+                                <th class="py-2">
+                                    {{ t('admin.common.createdAt') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            <tr v-for="e in entries" :key="e.id">
+                                <td
+                                    class="py-2.5 pr-3 font-mono text-muted-foreground"
                                 >
-                                <Badge
-                                    variant="outline"
-                                    class="ms-1 text-[10px]"
-                                    >{{ e.wallet_bucket }}</Badge
-                                >
-                            </td>
-                            <td class="py-2.5 pr-3 font-mono font-semibold">
-                                {{ formatCurrencyVnd(e.amount, locale) }}
-                            </td>
-                            <td class="py-2.5 pr-3 text-muted-foreground">
-                                {{ e.description }}
-                            </td>
-                            <td class="py-2.5 text-muted-foreground">
-                                {{ formatDateTime(e.created_at, locale) }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    #{{ e.id }}
+                                </td>
+                                <td class="py-2.5 pr-3">
+                                    @{{ e.username || '-' }}
+                                </td>
+                                <td class="py-2.5 pr-3">
+                                    <Badge
+                                        variant="secondary"
+                                        class="text-[10px]"
+                                        >{{ e.type_label }}</Badge
+                                    >
+                                    <Badge
+                                        variant="outline"
+                                        class="ms-1 text-[10px]"
+                                        >{{ e.wallet_bucket }}</Badge
+                                    >
+                                </td>
+                                <td class="py-2.5 pr-3 font-mono font-semibold">
+                                    {{ formatCurrencyVnd(e.amount, locale) }}
+                                </td>
+                                <td class="py-2.5 pr-3 text-muted-foreground">
+                                    {{ e.description }}
+                                </td>
+                                <td class="py-2.5 text-muted-foreground">
+                                    {{ formatDateTime(e.created_at, locale) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
         </section>
 
         <!-- Tab: Payments & Refunds -->
         <section
             v-if="activeTab === 'payments'"
-            class="rounded-xl border border-border bg-card p-4"
+            class="rounded-xl border border-border bg-card p-3.5 sm:p-4"
         >
             <EmptyState
                 v-if="payments.data.length === 0"
                 :title="t('admin.common.emptyTitle')"
                 :description="t('admin.common.emptyDescription')"
             />
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="border-b border-border text-muted-foreground">
-                        <tr>
-                            <th class="py-2 pr-3">ID</th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.users.member') }}
-                            </th>
-                            <th class="py-2 pr-3">Provider</th>
-                            <th class="py-2 pr-3">Amount</th>
-                            <th class="py-2 pr-3">
-                                {{ t('admin.common.status') }}
-                            </th>
-                            <th class="py-2 text-right">
-                                {{ t('admin.common.actions') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border">
-                        <tr v-for="p in payments.data" :key="p.id">
-                            <td class="py-2.5 pr-3 font-mono">#{{ p.id }}</td>
-                            <td class="py-2.5 pr-3">@{{ p.username }}</td>
-                            <td class="py-2.5 pr-3 uppercase">
-                                {{ p.provider }}
-                            </td>
-                            <td class="py-2.5 pr-3 font-mono">
-                                {{ formatCurrencyVnd(p.amount, locale) }}
-                                <span
-                                    v-if="p.refunded_amount > 0"
-                                    class="block text-[10px] text-destructive"
+            <template v-else>
+                <div class="space-y-3 md:hidden">
+                    <div
+                        v-for="p in payments.data"
+                        :key="`card-p-${p.id}`"
+                        class="space-y-2 rounded-xl border border-border bg-background/50 p-3.5 text-xs"
+                    >
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0">
+                                <p class="font-semibold text-foreground">
+                                    #{{ p.id }} · @{{ p.username }}
+                                </p>
+                                <p
+                                    class="truncate font-mono text-[11px] text-muted-foreground"
                                 >
-                                    -{{
+                                    {{ p.provider.toUpperCase() }} ·
+                                    {{ p.provider_reference || '-' }}
+                                </p>
+                            </div>
+                            <Badge
+                                variant="secondary"
+                                class="shrink-0 text-[10px]"
+                                >{{ p.status_label }}</Badge
+                            >
+                        </div>
+                        <div
+                            class="flex items-center justify-between gap-2 border-t border-border pt-2"
+                        >
+                            <div>
+                                <p
+                                    class="font-mono font-semibold text-foreground"
+                                >
+                                    {{ formatCurrencyVnd(p.amount, locale) }}
+                                </p>
+                                <p
+                                    v-if="p.refunded_amount > 0"
+                                    class="text-[11px] text-destructive"
+                                >
+                                    Refunded:
+                                    {{
                                         formatCurrencyVnd(
                                             p.refunded_amount,
                                             locale,
                                         )
                                     }}
-                                </span>
-                            </td>
-                            <td class="py-2.5 pr-3">
-                                <Badge
-                                    variant="secondary"
-                                    class="text-[10px]"
-                                    >{{ p.status_label }}</Badge
-                                >
-                            </td>
-                            <td class="py-2.5 text-right">
-                                <Button
-                                    v-if="
-                                        p.status === 'paid' &&
-                                        p.refundable_remaining > 0
-                                    "
-                                    size="sm"
-                                    variant="destructive"
-                                    class="h-7 gap-1 rounded-lg text-[11px]"
-                                    @click="openRefund(p)"
-                                >
-                                    <RotateCcw class="size-3" />
-                                    <span>{{
-                                        t('admin.finance.refundPayment')
-                                    }}</span>
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                </p>
+                            </div>
+                            <Button
+                                v-if="p.refundable_remaining > 0"
+                                size="sm"
+                                variant="destructive"
+                                class="min-h-9 gap-1 rounded-lg text-xs"
+                                @click="openRefund(p)"
+                            >
+                                <RotateCcw class="size-3.5" />
+                                <span>{{
+                                    t('admin.finance.refundPayment')
+                                }}</span>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden overflow-x-auto md:block">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="border-b border-border text-muted-foreground"
+                        >
+                            <tr>
+                                <th class="py-2 pr-3">ID</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.users.member') }}
+                                </th>
+                                <th class="py-2 pr-3">Provider</th>
+                                <th class="py-2 pr-3">Amount</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.common.status') }}
+                                </th>
+                                <th class="py-2 text-right">
+                                    {{ t('admin.common.actions') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            <tr v-for="p in payments.data" :key="p.id">
+                                <td class="py-2.5 pr-3 font-mono">
+                                    #{{ p.id }}
+                                </td>
+                                <td class="py-2.5 pr-3">@{{ p.username }}</td>
+                                <td class="py-2.5 pr-3 uppercase">
+                                    {{ p.provider }}
+                                </td>
+                                <td class="py-2.5 pr-3 font-mono">
+                                    {{ formatCurrencyVnd(p.amount, locale) }}
+                                    <span
+                                        v-if="p.refunded_amount > 0"
+                                        class="block text-[10px] text-destructive"
+                                    >
+                                        -{{
+                                            formatCurrencyVnd(
+                                                p.refunded_amount,
+                                                locale,
+                                            )
+                                        }}
+                                    </span>
+                                </td>
+                                <td class="py-2.5 pr-3">
+                                    <Badge
+                                        variant="secondary"
+                                        class="text-[10px]"
+                                        >{{ p.status_label }}</Badge
+                                    >
+                                </td>
+                                <td class="py-2.5 text-right">
+                                    <Button
+                                        v-if="
+                                            p.status === 'paid' &&
+                                            p.refundable_remaining > 0
+                                        "
+                                        size="sm"
+                                        variant="destructive"
+                                        class="h-7 gap-1 rounded-lg text-[11px]"
+                                        @click="openRefund(p)"
+                                    >
+                                        <RotateCcw class="size-3" />
+                                        <span>{{
+                                            t('admin.finance.refundPayment')
+                                        }}</span>
+                                    </Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
         </section>
 
         <!-- Tab: Revenue Chart -->

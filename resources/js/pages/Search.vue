@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
 import { BadgeCheck, Hash, Search as SearchIcon, Users } from '@lucide/vue';
-import { ref, watch } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
@@ -51,13 +51,40 @@ watch(
     },
 );
 
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
+
+function handleDebouncedInput(): void {
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+    }
+
+    const q = keyword.value.trim();
+    if (q.length > 0 && q.length < 2) {
+        return;
+    }
+
+    searchTimer = setTimeout(() => {
+        submitSearch();
+    }, 350);
+}
+
 function submitSearch(): void {
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+    }
+
     router.get(
         SearchController.url({ query: { q: keyword.value.trim() } }),
         {},
         { preserveState: true, replace: true },
     );
 }
+
+onBeforeUnmount(() => {
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+    }
+});
 </script>
 
 <template>
@@ -72,10 +99,17 @@ function submitSearch(): void {
             <Input
                 v-model="keyword"
                 type="search"
+                inputmode="search"
+                enterkeyhint="search"
                 :placeholder="t('search.placeholder')"
-                class="border-0 bg-transparent shadow-none focus-visible:ring-0"
+                class="min-w-0 flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0"
+                @input="handleDebouncedInput"
             />
-            <Button type="submit" size="sm" class="rounded-lg">
+            <Button
+                type="submit"
+                size="sm"
+                class="min-h-10 shrink-0 rounded-lg sm:min-h-9"
+            >
                 {{ t('search.button') }}
             </Button>
         </form>

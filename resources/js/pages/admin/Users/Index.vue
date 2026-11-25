@@ -120,14 +120,18 @@ function statusVariant(
         </div>
 
         <!-- Filter Tabs & Search -->
-        <div class="space-y-3 rounded-xl border border-border bg-card p-4">
-            <div class="flex flex-wrap gap-1.5">
+        <div
+            class="space-y-3 rounded-xl border border-border bg-card p-3.5 sm:p-4"
+        >
+            <div
+                class="no-scrollbar flex flex-nowrap gap-1.5 overflow-x-auto pb-0.5 sm:flex-wrap sm:overflow-visible"
+            >
                 <button
                     v-for="tab in tabs"
                     :key="tab.key"
                     type="button"
                     :class="[
-                        'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                        'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors',
                         filters.filter === tab.key
                             ? 'bg-primary text-primary-foreground'
                             : 'bg-muted/60 text-muted-foreground hover:bg-surface-hover hover:text-foreground',
@@ -184,167 +188,280 @@ function statusVariant(
                 :description="t('admin.common.emptyDescription')"
             />
 
-            <div v-else class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="border-b border-border text-muted-foreground">
-                        <tr>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.id') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.member') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.role') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.common.status') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.posts') }} /
-                                {{ t('admin.users.comments') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.violations') }}
-                            </th>
-                            <th class="py-2.5 pr-3 font-medium">
-                                {{ t('admin.users.lastLogin') }}
-                            </th>
-                            <th class="py-2.5 text-right font-medium">
-                                {{ t('admin.common.actions') }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border">
-                        <tr
-                            v-for="u in users.data"
-                            :key="u.id"
-                            class="hover:bg-surface-hover/50"
-                        >
-                            <td
-                                class="py-3 pr-3 font-mono text-muted-foreground"
-                            >
-                                #{{ u.id }}
-                            </td>
-                            <td class="py-3 pr-3">
-                                <div class="flex items-center gap-2.5">
-                                    <Avatar class="size-8 rounded-full">
-                                        <AvatarImage
-                                            v-if="u.avatar"
-                                            :src="u.avatar"
-                                            :alt="u.name"
+            <template v-else>
+                <!-- Mobile Card List -->
+                <div class="space-y-3 md:hidden">
+                    <div
+                        v-for="u in users.data"
+                        :key="`card-${u.id}`"
+                        class="space-y-3 rounded-xl border border-border bg-background/50 p-3.5 text-xs"
+                    >
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex min-w-0 items-center gap-2.5">
+                                <Avatar class="size-10 shrink-0 rounded-full">
+                                    <AvatarImage
+                                        v-if="u.avatar"
+                                        :src="u.avatar"
+                                        :alt="u.name"
+                                    />
+                                    <AvatarFallback
+                                        class="bg-primary-soft text-xs font-semibold text-accent-foreground"
+                                    >
+                                        {{ getInitials(u.name) }}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div class="min-w-0">
+                                    <p
+                                        class="flex items-center gap-1 font-semibold text-foreground"
+                                    >
+                                        <span class="truncate">{{
+                                            u.name
+                                        }}</span>
+                                        <BadgeCheck
+                                            v-if="u.is_verified_badge"
+                                            class="size-3.5 shrink-0 text-primary"
                                         />
-                                        <AvatarFallback
-                                            class="bg-primary-soft text-[11px] font-semibold text-accent-foreground"
-                                        >
-                                            {{ getInitials(u.name) }}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div class="min-w-0">
-                                        <p
-                                            class="flex items-center gap-1 font-semibold text-foreground"
-                                        >
-                                            <span class="truncate">{{
-                                                u.name
-                                            }}</span>
-                                            <BadgeCheck
-                                                v-if="u.is_verified_badge"
-                                                class="size-3.5 shrink-0 text-primary"
-                                            />
-                                            <ShieldCheck
-                                                v-if="u.two_factor_enabled"
-                                                class="size-3.5 shrink-0 text-success"
-                                                title="2FA"
-                                            />
-                                        </p>
-                                        <p
-                                            class="truncate text-[11px] text-muted-foreground"
-                                        >
-                                            @{{ u.username }} · {{ u.email }}
-                                        </p>
-                                    </div>
+                                        <ShieldCheck
+                                            v-if="u.two_factor_enabled"
+                                            class="size-3.5 shrink-0 text-success"
+                                            title="2FA"
+                                        />
+                                    </p>
+                                    <p
+                                        class="truncate text-[11px] text-muted-foreground"
+                                    >
+                                        @{{ u.username }} · #{{ u.id }}
+                                    </p>
+                                    <p
+                                        class="truncate text-[11px] text-muted-foreground"
+                                    >
+                                        {{ u.email }}
+                                    </p>
                                 </div>
-                            </td>
-                            <td class="py-3 pr-3">
+                            </div>
+                            <Badge
+                                :variant="statusVariant(u.status)"
+                                class="shrink-0 text-[10px]"
+                            >
+                                {{
+                                    u.deleted_at
+                                        ? t('admin.common.delete')
+                                        : u.status_label
+                                }}
+                            </Badge>
+                        </div>
+
+                        <div
+                            class="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2.5"
+                        >
+                            <div class="flex flex-wrap items-center gap-1.5">
                                 <RoleBadge
                                     :role="u.role"
                                     :label="u.role_label"
                                 />
-                            </td>
-                            <td class="py-3 pr-3">
-                                <div class="flex flex-col gap-1">
-                                    <Badge
-                                        :variant="statusVariant(u.status)"
-                                        class="w-fit text-[11px]"
-                                    >
-                                        {{
-                                            u.deleted_at
-                                                ? t('admin.common.delete')
-                                                : u.status_label
-                                        }}
-                                    </Badge>
-                                    <span
-                                        :class="[
-                                            'text-[10px]',
-                                            u.email_verified
-                                                ? 'text-success'
-                                                : 'text-warning',
-                                        ]"
-                                    >
-                                        {{
-                                            u.email_verified
-                                                ? t('admin.users.verified')
-                                                : t('admin.users.unverified')
-                                        }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td
-                                class="py-3 pr-3 font-mono text-muted-foreground"
-                            >
-                                {{ formatNumber(u.posts_count, locale) }} /
-                                {{ formatNumber(u.comments_count, locale) }}
-                            </td>
-                            <td class="py-3 pr-3">
                                 <span
-                                    :class="
-                                        u.violations_count > 0
-                                            ? 'font-semibold text-destructive'
-                                            : 'text-muted-foreground'
-                                    "
+                                    class="font-mono text-[11px] text-muted-foreground"
                                 >
+                                    {{ formatNumber(u.posts_count, locale) }} /
+                                    {{ formatNumber(u.comments_count, locale) }}
+                                </span>
+                                <span
+                                    v-if="u.violations_count > 0"
+                                    class="font-semibold text-destructive"
+                                >
+                                    · {{ t('admin.users.violations') }}:
                                     {{
                                         formatNumber(u.violations_count, locale)
                                     }}
                                 </span>
-                            </td>
-                            <td class="py-3 pr-3 text-muted-foreground">
-                                {{
-                                    formatDate(
-                                        u.last_login_at || u.created_at,
-                                        locale,
-                                    )
-                                }}
-                            </td>
-                            <td class="py-3 text-right">
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    class="h-7 gap-1 rounded-lg px-2.5 text-xs"
-                                    as-child
+                            </div>
+
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                class="min-h-9 gap-1.5 rounded-lg px-3 text-xs"
+                                as-child
+                            >
+                                <Link :href="adminUserShow(u.id)">
+                                    <Eye class="size-3.5" />
+                                    <span>{{ t('admin.common.view') }}</span>
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Data Table -->
+                <div class="hidden overflow-x-auto md:block">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="border-b border-border text-muted-foreground"
+                        >
+                            <tr>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.id') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.member') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.role') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.common.status') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.posts') }} /
+                                    {{ t('admin.users.comments') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.violations') }}
+                                </th>
+                                <th class="py-2.5 pr-3 font-medium">
+                                    {{ t('admin.users.lastLogin') }}
+                                </th>
+                                <th class="py-2.5 text-right font-medium">
+                                    {{ t('admin.common.actions') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-border">
+                            <tr
+                                v-for="u in users.data"
+                                :key="u.id"
+                                class="hover:bg-surface-hover/50"
+                            >
+                                <td
+                                    class="py-3 pr-3 font-mono text-muted-foreground"
                                 >
-                                    <Link :href="adminUserShow(u.id)">
-                                        <Eye class="size-3.5" />
-                                        <span>{{
-                                            t('admin.common.view')
-                                        }}</span>
-                                    </Link>
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    #{{ u.id }}
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <Avatar class="size-8 rounded-full">
+                                            <AvatarImage
+                                                v-if="u.avatar"
+                                                :src="u.avatar"
+                                                :alt="u.name"
+                                            />
+                                            <AvatarFallback
+                                                class="bg-primary-soft text-[11px] font-semibold text-accent-foreground"
+                                            >
+                                                {{ getInitials(u.name) }}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div class="min-w-0">
+                                            <p
+                                                class="flex items-center gap-1 font-semibold text-foreground"
+                                            >
+                                                <span class="truncate">{{
+                                                    u.name
+                                                }}</span>
+                                                <BadgeCheck
+                                                    v-if="u.is_verified_badge"
+                                                    class="size-3.5 shrink-0 text-primary"
+                                                />
+                                                <ShieldCheck
+                                                    v-if="u.two_factor_enabled"
+                                                    class="size-3.5 shrink-0 text-success"
+                                                    title="2FA"
+                                                />
+                                            </p>
+                                            <p
+                                                class="truncate text-[11px] text-muted-foreground"
+                                            >
+                                                @{{ u.username }} ·
+                                                {{ u.email }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <RoleBadge
+                                        :role="u.role"
+                                        :label="u.role_label"
+                                    />
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <div class="flex flex-col gap-1">
+                                        <Badge
+                                            :variant="statusVariant(u.status)"
+                                            class="w-fit text-[11px]"
+                                        >
+                                            {{
+                                                u.deleted_at
+                                                    ? t('admin.common.delete')
+                                                    : u.status_label
+                                            }}
+                                        </Badge>
+                                        <span
+                                            :class="[
+                                                'text-[10px]',
+                                                u.email_verified
+                                                    ? 'text-success'
+                                                    : 'text-warning',
+                                            ]"
+                                        >
+                                            {{
+                                                u.email_verified
+                                                    ? t('admin.users.verified')
+                                                    : t(
+                                                          'admin.users.unverified',
+                                                      )
+                                            }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td
+                                    class="py-3 pr-3 font-mono text-muted-foreground"
+                                >
+                                    {{ formatNumber(u.posts_count, locale) }} /
+                                    {{ formatNumber(u.comments_count, locale) }}
+                                </td>
+                                <td class="py-3 pr-3">
+                                    <span
+                                        :class="
+                                            u.violations_count > 0
+                                                ? 'font-semibold text-destructive'
+                                                : 'text-muted-foreground'
+                                        "
+                                    >
+                                        {{
+                                            formatNumber(
+                                                u.violations_count,
+                                                locale,
+                                            )
+                                        }}
+                                    </span>
+                                </td>
+                                <td class="py-3 pr-3 text-muted-foreground">
+                                    {{
+                                        formatDate(
+                                            u.last_login_at || u.created_at,
+                                            locale,
+                                        )
+                                    }}
+                                </td>
+                                <td class="py-3 text-right">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        class="h-7 gap-1 rounded-lg px-2.5 text-xs"
+                                        as-child
+                                    >
+                                        <Link :href="adminUserShow(u.id)">
+                                            <Eye class="size-3.5" />
+                                            <span>{{
+                                                t('admin.common.view')
+                                            }}</span>
+                                        </Link>
+                                    </Button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </template>
 
             <AdminPagination
                 :current-page="users.current_page"

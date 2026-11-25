@@ -2,8 +2,16 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ ($isRtl ?? false) ? 'rtl' : 'ltr' }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#4F46E5">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#161B26" media="(prefers-color-scheme: dark)">
+        <meta name="color-scheme" content="light dark">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="{{ config('app.name', 'SyncViet') }}">
+        <meta name="format-detection" content="telephone=no">
+        <link rel="manifest" href="/manifest.webmanifest">
 
         {{-- Inline script to detect saved/system theme preference before first paint --}}
         <script>
@@ -14,19 +22,24 @@
                 } catch (e) {}
 
                 var appearance = savedAppearance || '{{ $appearance ?? "system" }}';
+                var isDark = false;
 
                 if (appearance === 'dark') {
-                    document.documentElement.classList.add('dark');
+                    isDark = true;
                 } else if (appearance === 'light') {
-                    document.documentElement.classList.remove('dark');
+                    isDark = false;
                 } else {
-                    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                    }
+                    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 }
+
+                document.documentElement.classList.toggle('dark', isDark);
+                var themeMeta = document.querySelector('meta[name="theme-color"]:not([media])');
+                if (!themeMeta) {
+                    themeMeta = document.createElement('meta');
+                    themeMeta.name = 'theme-color';
+                    document.head.appendChild(themeMeta);
+                }
+                themeMeta.content = isDark ? '#161B26' : '#FFFFFF';
             })();
         </script>
 

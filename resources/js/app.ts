@@ -1,5 +1,6 @@
 import { createInertiaApp, router } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
+import { initializePwa } from '@/composables/usePwa';
 import { i18n, syncI18nLocale } from '@/i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -15,7 +16,7 @@ function syncPageLocale(props: Record<string, unknown> | undefined): void {
         return;
     }
 
-    syncI18nLocale(
+    void syncI18nLocale(
         props.locale as string | undefined,
         props.isRtl as boolean | undefined,
         props.translationOverrides as Record<string, string> | undefined,
@@ -69,3 +70,6 @@ initializeTheme();
 
 // This will listen for flash toast data and validation errors from the server...
 initializeFlashToast();
+
+// Register safe PWA Service Worker & non-intrusive install/update handlers...
+initializePwa();

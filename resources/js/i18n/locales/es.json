@@ -27,7 +27,9 @@
         "skipToContent": "Ir al contenido principal",
         "openMobileMenu": "Abrir menú de navegación",
         "mobileNavLabel": "Navegación móvil",
-        "searchPlaceholder": "Buscar publicaciones, comunidades, personas..."
+        "searchPlaceholder": "Buscar publicaciones, comunidades, personas...",
+        "explore": "Explorar",
+        "createPostShort": "Publicar"
     },
     "theme": {
         "light": "Claro",
@@ -106,7 +108,8 @@
                 "finance": "Ingresos",
                 "qa": "Preguntas y respuestas",
                 "marketplace": "Mercado"
-            }
+            },
+            "newPostsAvailable": "Nuevas publicaciones disponibles"
         },
         "composer": {
             "placeholder": "¿Qué te gustaría compartir?",
@@ -125,7 +128,10 @@
             "addOption": "Añadir opción",
             "submit": "Publicar",
             "publishing": "Publicando...",
-            "signInPrompt": "Inicia sesión para compartir publicaciones y unirte al debate."
+            "signInPrompt": "Inicia sesión para compartir publicaciones y unirte al debate.",
+            "discardTitle": "¿Descartar borrador sin guardar?",
+            "discardDescription": "Tu borrador sin guardar se eliminará de forma permanente.",
+            "discardConfirm": "Descartar borrador"
         },
         "empty": {
             "title": "Explora la comunidad de {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Escribe una respuesta...",
         "reply": "Responder",
         "sendComment": "Enviar",
-        "noComments": "Aún no hay comentarios. ¡Inicia la conversación!"
+        "noComments": "Aún no hay comentarios. ¡Inicia la conversación!",
+        "copyText": "Copiar texto de la publicación",
+        "copiedText": "Texto de la publicación copiado"
     },
     "profile": {
         "postsTab": "Publicaciones",
@@ -753,5 +761,16 @@
             "checksum": "Suma de comprobación SHA-256",
             "size": "Tamaño"
         }
+    },
+    "common": {
+        "offlineBanner": "Estás sin conexión. Algunas funciones no están disponibles.",
+        "backOnline": "Conexión restablecida",
+        "retry": "Reintentar",
+        "copy": "Copiar",
+        "copied": "Copiado al portapapeles",
+        "copyFailed": "No se pudo copiar"
+    },
+    "pwa": {
+        "installApp": "Instalar aplicación SyncViet"
     }
 }

@@ -27,7 +27,9 @@
         "skipToContent": "Zum Hauptinhalt springen",
         "openMobileMenu": "Navigationsmenü öffnen",
         "mobileNavLabel": "Mobile Navigation",
-        "searchPlaceholder": "Beiträge, Communitys, Personen suchen..."
+        "searchPlaceholder": "Beiträge, Communitys, Personen suchen...",
+        "explore": "Entdecken",
+        "createPostShort": "Beitrag"
     },
     "theme": {
         "light": "Hell",
@@ -106,7 +108,8 @@
                 "finance": "Einkommen",
                 "qa": "Fragen & Antworten",
                 "marketplace": "Marktplatz"
-            }
+            },
+            "newPostsAvailable": "Neue Beiträge verfügbar"
         },
         "composer": {
             "placeholder": "Was möchten Sie teilen?",
@@ -125,7 +128,10 @@
             "addOption": "Option hinzufügen",
             "submit": "Veröffentlichen",
             "publishing": "Wird veröffentlicht...",
-            "signInPrompt": "Bitte melden Sie sich an, um Beiträge zu teilen und an der Diskussion teilzunehmen."
+            "signInPrompt": "Bitte melden Sie sich an, um Beiträge zu teilen und an der Diskussion teilzunehmen.",
+            "discardTitle": "Ungespeicherten Entwurf verwerfen?",
+            "discardDescription": "Ihr ungespeicherter Beitragsentwurf wird dauerhaft gelöscht.",
+            "discardConfirm": "Entwurf verwerfen"
         },
         "empty": {
             "title": "Entdecken Sie die {brand}-Community",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Eine Antwort schreiben...",
         "reply": "Antworten",
         "sendComment": "Senden",
-        "noComments": "Noch keine Kommentare. Starten Sie die Unterhaltung!"
+        "noComments": "Noch keine Kommentare. Starten Sie die Unterhaltung!",
+        "copyText": "Beitragstext kopieren",
+        "copiedText": "Beitragstext kopiert"
     },
     "profile": {
         "postsTab": "Beiträge",
@@ -753,5 +761,16 @@
             "checksum": "SHA-256-Prüfsumme",
             "size": "Größe"
         }
+    },
+    "common": {
+        "offlineBanner": "Sie sind offline. Einige Funktionen sind nicht verfügbar.",
+        "backOnline": "Wieder online",
+        "retry": "Erneut versuchen",
+        "copy": "Kopieren",
+        "copied": "In die Zwischenablage kopiert",
+        "copyFailed": "Kopieren fehlgeschlagen"
+    },
+    "pwa": {
+        "installApp": "SyncViet-App installieren"
     }
 }

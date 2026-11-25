@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { ArrowRight, MessageSquareText } from '@lucide/vue';
-import { computed, ref, watch } from 'vue';
+import { ArrowRight, ArrowUp, MessageSquareText } from '@lucide/vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import HomeController from '@/actions/App/Http/Controllers/HomeController';
 import EmptyState from '@/components/common/EmptyState.vue';
@@ -52,6 +52,14 @@ const cursor = ref<string | null>(props.nextCursor);
 const moreAvailable = ref<boolean>(props.hasMore);
 const loadingMore = ref(false);
 const loadError = ref(false);
+const hasNewPostsBanner = ref(false);
+const loadMoreSentinel = ref<HTMLElement | null>(null);
+
+let feedObserver: IntersectionObserver | null = null;
+let freshnessTimer: ReturnType<typeof setInterval> | null = null;
+let loadAbortController: AbortController | null = null;
+
+const MAX_RENDERED_POSTS = 120;
 
 watch(
     () => [props.posts, props.nextCursor, props.hasMore],
@@ -60,6 +68,7 @@ watch(
         cursor.value = newCursor as string | null;
         moreAvailable.value = Boolean(newHasMore);
         loadError.value = false;
+        hasNewPostsBanner.value = false;
     },
 );
 
@@ -74,6 +83,7 @@ const tabs = computed(() => [
 ]);
 
 function switchTab(tabKey: string): void {
+    hasNewPostsBanner.value = false;
     router.get(
         HomeController.index.url({ query: { tab: tabKey } }),
         {},
@@ -84,13 +94,28 @@ function switchTab(tabKey: string): void {
     );
 }
 
+function reloadFreshFeed(): void {
+    hasNewPostsBanner.value = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.reload({
+        only: ['posts', 'sponsoredPost', 'nextCursor', 'hasMore'],
+    });
+}
+
 async function loadMorePosts(): Promise<void> {
-    if (!cursor.value || loadingMore.value) {
+    if (
+        !cursor.value ||
+        loadingMore.value ||
+        organicItems.value.length >= MAX_RENDERED_POSTS
+    ) {
         return;
     }
 
     loadingMore.value = true;
     loadError.value = false;
+
+    loadAbortController?.abort();
+    loadAbortController = new AbortController();
 
     try {
         const response = await fetch(
@@ -101,6 +126,7 @@ async function loadMorePosts(): Promise<void> {
                 },
             }),
             {
+                signal: loadAbortController.signal,
                 headers: {
                     Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
@@ -118,15 +144,94 @@ async function loadMorePosts(): Promise<void> {
             has_more: boolean;
         };
 
-        organicItems.value = [...organicItems.value, ...payload.data];
+        const existingIds = new Set(organicItems.value.map((p) => p.id));
+        const uniqueNew = payload.data.filter((p) => !existingIds.has(p.id));
+
+        organicItems.value = [...organicItems.value, ...uniqueNew];
         cursor.value = payload.next_cursor;
-        moreAvailable.value = payload.has_more;
-    } catch {
-        loadError.value = true;
+        moreAvailable.value =
+            payload.has_more && organicItems.value.length < MAX_RENDERED_POSTS;
+    } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+            loadError.value = true;
+        }
     } finally {
         loadingMore.value = false;
     }
 }
+
+async function checkForNewerPosts(): Promise<void> {
+    if (
+        typeof document === 'undefined' ||
+        document.hidden ||
+        !navigator.onLine ||
+        window.scrollY < 320 ||
+        hasNewPostsBanner.value ||
+        organicItems.value.length === 0
+    ) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            HomeController.more.url({
+                query: { tab: props.activeTab },
+            }),
+            {
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            },
+        );
+        if (!response.ok) {
+            return;
+        }
+        const payload = (await response.json()) as { data?: PublicFeedPost[] };
+        const latestTopId = payload.data?.[0]?.id;
+        const currentTopId = organicItems.value[0]?.id;
+        if (latestTopId && currentTopId && latestTopId !== currentTopId) {
+            hasNewPostsBanner.value = true;
+        }
+    } catch {
+        // Ignore silent background freshness check failures
+    }
+}
+
+onMounted(() => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    if ('IntersectionObserver' in window && loadMoreSentinel.value) {
+        feedObserver = new IntersectionObserver(
+            (entries) => {
+                if (
+                    entries.some((entry) => entry.isIntersecting) &&
+                    moreAvailable.value &&
+                    !loadingMore.value &&
+                    !loadError.value
+                ) {
+                    void loadMorePosts();
+                }
+            },
+            { rootMargin: '320px 0px' },
+        );
+        feedObserver.observe(loadMoreSentinel.value);
+    }
+
+    freshnessTimer = setInterval(() => {
+        void checkForNewerPosts();
+    }, 90_000);
+});
+
+onBeforeUnmount(() => {
+    feedObserver?.disconnect();
+    loadAbortController?.abort();
+    if (freshnessTimer !== null) {
+        clearInterval(freshnessTimer);
+    }
+});
 </script>
 
 <template>
@@ -175,11 +280,27 @@ async function loadMorePosts(): Promise<void> {
             </div>
         </section>
 
-        <!-- News Feed Category Tabs -->
+        <!-- Non-disruptive New Posts Pill (never jumps reading position automatically) -->
+        <div
+            v-if="hasNewPostsBanner"
+            class="sticky top-16 z-30 flex justify-center sm:top-20"
+        >
+            <Button
+                type="button"
+                size="sm"
+                class="min-h-10 gap-1.5 rounded-full px-4 text-xs font-semibold shadow-md"
+                @click="reloadFreshFeed"
+            >
+                <ArrowUp class="size-3.5" aria-hidden="true" />
+                <span>{{ t('home.feed.newPostsAvailable') }}</span>
+            </Button>
+        </div>
+
+        <!-- News Feed Category Tabs (Horizontal Snap Strip on Mobile) -->
         <div
             role="tablist"
             :aria-label="t('home.feed.categoriesLabel')"
-            class="flex flex-wrap items-center gap-2"
+            class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-0.5 select-none sm:flex-wrap sm:overflow-visible"
         >
             <button
                 v-for="tab in tabs"
@@ -188,7 +309,7 @@ async function loadMorePosts(): Promise<void> {
                 role="tab"
                 :aria-selected="activeTab === tab.key"
                 :class="[
-                    'rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                    'min-h-9 shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
                     activeTab === tab.key
                         ? 'bg-primary-soft font-semibold text-accent-foreground'
                         : 'border border-border bg-card text-muted-foreground hover:bg-surface-hover hover:text-foreground',
@@ -203,7 +324,7 @@ async function loadMorePosts(): Promise<void> {
         <PostComposer :categories="categories" />
 
         <!-- Public Posts Stream -->
-        <section v-if="feedItems.length > 0" class="space-y-4">
+        <section v-if="feedItems.length > 0" class="space-y-3.5 sm:space-y-4">
             <PostCard
                 v-for="post in feedItems"
                 :key="
@@ -223,6 +344,8 @@ async function loadMorePosts(): Promise<void> {
                 @retry="loadMorePosts"
             />
 
+            <div ref="loadMoreSentinel" class="h-1" aria-hidden="true" />
+
             <div
                 v-if="moreAvailable && !loadingMore"
                 class="flex justify-center pt-2"
@@ -230,7 +353,7 @@ async function loadMorePosts(): Promise<void> {
                 <Button
                     type="button"
                     variant="outline"
-                    class="rounded-lg"
+                    class="min-h-11 rounded-xl px-6 sm:min-h-9"
                     @click="loadMorePosts"
                 >
                     {{ t('home.feed.loadMore') }}

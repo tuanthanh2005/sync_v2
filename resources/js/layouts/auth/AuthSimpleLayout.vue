@@ -21,15 +21,15 @@ const brandName = computed(() => page.props.name);
 </script>
 
 <template>
-    <div class="flex min-h-svh flex-col bg-background text-foreground">
-        <header class="border-b border-border bg-card">
+    <div class="flex min-h-[100dvh] flex-col bg-background text-foreground">
+        <header class="safe-pt border-b border-border bg-card">
             <div
-                class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 lg:px-6"
+                class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:h-16 sm:px-4 lg:px-6"
             >
-                <Link :href="home()" class="flex items-center">
+                <Link :href="home()" class="flex min-w-0 items-center">
                     <AppLogo />
                 </Link>
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
                     <LocaleSwitcher compact />
                     <ThemeToggle />
                 </div>
@@ -37,7 +37,7 @@ const brandName = computed(() => page.props.name);
         </header>
 
         <main
-            class="mx-auto grid w-full max-w-6xl flex-1 items-center gap-8 px-4 py-8 lg:grid-cols-12 lg:px-6 lg:py-12"
+            class="mx-auto grid w-full max-w-6xl flex-1 items-center gap-6 px-3 py-6 sm:px-4 sm:py-8 lg:grid-cols-12 lg:gap-8 lg:px-6 lg:py-12"
         >
             <section
                 class="hidden space-y-6 rounded-xl border border-border bg-card p-8 lg:col-span-5 lg:block"
@@ -96,6 +96,6 @@ const brandName = computed(() => page.props.name);
         </main>
 
         <SimpleFooter />
-        <Toaster position="top-right" rich-colors />
+        <Toaster />
     </div>
 </template>

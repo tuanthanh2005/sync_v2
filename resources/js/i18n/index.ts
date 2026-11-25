@@ -1,19 +1,5 @@
 import { createI18n } from 'vue-i18n';
-import ar from '@/i18n/locales/ar.json';
-import de from '@/i18n/locales/de.json';
 import en from '@/i18n/locales/en.json';
-import es from '@/i18n/locales/es.json';
-import fil from '@/i18n/locales/fil.json';
-import fr from '@/i18n/locales/fr.json';
-import hi from '@/i18n/locales/hi.json';
-import id from '@/i18n/locales/id.json';
-import ja from '@/i18n/locales/ja.json';
-import ko from '@/i18n/locales/ko.json';
-import ptBR from '@/i18n/locales/pt-BR.json';
-import th from '@/i18n/locales/th.json';
-import tr from '@/i18n/locales/tr.json';
-import vi from '@/i18n/locales/vi.json';
-import zhCN from '@/i18n/locales/zh-CN.json';
 
 export const SUPPORTED_LOCALES = [
     'en',
@@ -36,28 +22,39 @@ export const SUPPORTED_LOCALES = [
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 const RTL_LOCALES = new Set<string>(['ar']);
+const loadedLocales = new Set<SupportedLocale>(['en']);
 
-export const i18n = createI18n({
+type LocaleModule = { default: Record<string, unknown> };
+
+const localeLoaders: Record<
+    Exclude<SupportedLocale, 'en'>,
+    () => Promise<LocaleModule>
+> = {
+    vi: () => import('@/i18n/locales/vi.json') as Promise<LocaleModule>,
+    es: () => import('@/i18n/locales/es.json') as Promise<LocaleModule>,
+    'pt-BR': () => import('@/i18n/locales/pt-BR.json') as Promise<LocaleModule>,
+    id: () => import('@/i18n/locales/id.json') as Promise<LocaleModule>,
+    hi: () => import('@/i18n/locales/hi.json') as Promise<LocaleModule>,
+    th: () => import('@/i18n/locales/th.json') as Promise<LocaleModule>,
+    fil: () => import('@/i18n/locales/fil.json') as Promise<LocaleModule>,
+    fr: () => import('@/i18n/locales/fr.json') as Promise<LocaleModule>,
+    de: () => import('@/i18n/locales/de.json') as Promise<LocaleModule>,
+    ja: () => import('@/i18n/locales/ja.json') as Promise<LocaleModule>,
+    ko: () => import('@/i18n/locales/ko.json') as Promise<LocaleModule>,
+    'zh-CN': () => import('@/i18n/locales/zh-CN.json') as Promise<LocaleModule>,
+    ar: () => import('@/i18n/locales/ar.json') as Promise<LocaleModule>,
+    tr: () => import('@/i18n/locales/tr.json') as Promise<LocaleModule>,
+};
+
+type MessageSchema = typeof en;
+
+export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
     legacy: false,
     locale: 'en',
     fallbackLocale: 'en',
     messages: {
         en,
-        vi,
-        es,
-        'pt-BR': ptBR,
-        id,
-        hi,
-        th,
-        fil,
-        fr,
-        de,
-        ja,
-        ko,
-        'zh-CN': zhCN,
-        ar,
-        tr,
-    },
+    } as Record<SupportedLocale, MessageSchema>,
 });
 
 function setNestedKey(
@@ -91,12 +88,35 @@ export function isSupportedLocale(
     );
 }
 
-export function syncI18nLocale(
+async function ensureLocaleLoaded(locale: SupportedLocale): Promise<void> {
+    if (locale === 'en' || loadedLocales.has(locale)) {
+        return;
+    }
+
+    try {
+        const mod = await localeLoaders[locale]();
+        i18n.global.setLocaleMessage(locale, mod.default as typeof en);
+        loadedLocales.add(locale);
+    } catch {
+        // Fallback safely to English if network chunk load fails while offline
+    }
+}
+
+export async function syncI18nLocale(
     locale: string | undefined,
     isRtl?: boolean,
     overrides?: Record<string, string>,
-): void {
+): Promise<void> {
     const resolved: SupportedLocale = isSupportedLocale(locale) ? locale : 'en';
+
+    if (typeof document !== 'undefined') {
+        const rtl =
+            typeof isRtl === 'boolean' ? isRtl : RTL_LOCALES.has(resolved);
+        document.documentElement.lang = resolved;
+        document.documentElement.dir = rtl ? 'rtl' : 'ltr';
+    }
+
+    await ensureLocaleLoaded(resolved);
     i18n.global.locale.value = resolved;
 
     if (overrides && Object.keys(overrides).length > 0) {
@@ -107,12 +127,5 @@ export function syncI18nLocale(
         }
 
         i18n.global.mergeLocaleMessage(resolved, nested);
-    }
-
-    if (typeof document !== 'undefined') {
-        const rtl =
-            typeof isRtl === 'boolean' ? isRtl : RTL_LOCALES.has(resolved);
-        document.documentElement.lang = resolved;
-        document.documentElement.dir = rtl ? 'rtl' : 'ltr';
     }
 }

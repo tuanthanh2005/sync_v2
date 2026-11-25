@@ -40,9 +40,10 @@ Tham chiếu thẩm mỹ từ 4 mockup giao diện cộng đồng kết hợp Sa
 
 ### Bố cục Người dùng (`ConnectHubLayout.vue`)
 
-- **Top Header (`64px`)**: Sticky top, nút mở Drawer mobile, Logo thương hiệu động (`AppLogo.vue`), Breadcrumbs, `LocaleSwitcher`, `ThemeToggle`, User Dropdown hoặc Đăng nhập/Đăng ký.
+- **Top Header (`56px` Mobile / `64px` Desktop + Safe Area)**: Sticky top kèm `env(safe-area-inset-top)`, thu gọn tinh tế khi cuộn xuống trên Mobile (`useCompactScrollHeader`), nút mở Drawer mobile (`44px`), Logo thương hiệu động (`AppLogo.vue` ẩn tagline trên `< sm`), nút tìm kiếm nhanh trên Mobile, Thông báo, Tin nhắn, `LocaleSwitcher`, `ThemeToggle`, User Dropdown hoặc Đăng nhập/Đăng ký.
 - **Desktop (`xl+`, `max-w-[1360px]`)**: Left Sidebar (`240px`) + Main Content (`max-w-[760px]`) + Right Sidebar (`320px`).
-- **Mobile (`< lg`)**: 1 cột + Left Drawer (`Sheet`) + `MobileBottomNav` (`min-h-14`).
+- **Mobile (`< lg`, 320px–767px)**: 1 cột tận dụng chiều rộng (`px-2.5 sm:px-4`) + Left Drawer (`85vw`, `100dvh`, Safe Area) + `MobileBottomNav` (`52px` + `env(safe-area-inset-bottom)`, 5 mục một tay gồm Home, Explore, Create Post, Communities, Profile; tự ẩn khi bàn phím ảo mở nhờ Visual Viewport API).
+- **Mobile Modals, Composer & Media**: `DialogContent.vue` chuyển sang **Bottom Sheet** trên `< 640px` (`max-h-[90dvh]`, cuộn nội bộ, nút `X` `40px`, đệm Safe Area); `PostComposer.vue` mở dạng toàn màn hình trên Mobile kèm lưu nháp; `ImageLightbox.vue` hỗ trợ pinch-to-zoom, vuốt chuyển ảnh và nút Back; các bảng Admin/Finance chuyển sang **Mobile Card List** trên `< md`. Chi tiết xem [docs/MOBILE_UI_UX.md](MOBILE_UI_UX.md).
 
 ### Bố cục Administration Center (`AdminLayout.vue`)
 

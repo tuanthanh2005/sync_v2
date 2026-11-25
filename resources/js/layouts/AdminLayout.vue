@@ -38,6 +38,7 @@ import { useI18n } from 'vue-i18n';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue';
+import NetworkStatusBanner from '@/components/common/NetworkStatusBanner.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -566,183 +567,202 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
         </aside>
 
         <!-- Main Workspace Column -->
-        <div class="flex min-w-0 flex-1 flex-col">
+        <div class="flex min-h-[100dvh] min-w-0 flex-1 flex-col">
             <header
-                class="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-card px-4 lg:px-6"
+                class="safe-pt sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md"
             >
-                <div class="flex min-w-0 items-center gap-3">
-                    <!-- Mobile Sidebar Drawer -->
-                    <Sheet v-model:open="mobileOpen">
-                        <SheetTrigger as-child>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                class="size-9 rounded-lg lg:hidden"
-                                :aria-label="t('nav.openMobileMenu')"
-                            >
-                                <Menu class="size-5" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent
-                            side="left"
-                            class="flex w-72 flex-col p-0"
-                        >
-                            <SheetHeader
-                                class="border-b border-border px-4 py-4 text-left"
-                            >
-                                <SheetTitle
-                                    class="flex items-center gap-2 text-sm font-bold"
-                                >
-                                    <AppLogoIcon class="size-5 text-primary" />
-                                    <span
-                                        >{{ brandName }} ·
-                                        {{ t('admin.centerTitle') }}</span
-                                    >
-                                </SheetTitle>
-                                <SheetDescription class="sr-only">
-                                    {{ t('admin.centerTitle') }}
-                                </SheetDescription>
-                            </SheetHeader>
-                            <nav class="flex-1 space-y-4 overflow-y-auto p-3">
-                                <div
-                                    v-for="group in navGroups"
-                                    :key="group.id"
-                                    class="space-y-1"
-                                >
-                                    <p
-                                        class="px-2.5 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
-                                    >
-                                        {{ group.label }}
-                                    </p>
-                                    <Link
-                                        v-for="item in group.items"
-                                        :key="item.href"
-                                        :href="item.href"
-                                        @click="mobileOpen = false"
-                                        :class="[
-                                            'flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium',
-                                            isActive(item)
-                                                ? 'bg-primary-soft text-accent-foreground'
-                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                        ]"
-                                    >
-                                        <component
-                                            :is="item.icon"
-                                            class="size-4 shrink-0"
-                                        />
-                                        <span class="flex-1 truncate">{{
-                                            item.label
-                                        }}</span>
-                                        <span
-                                            v-if="item.badge && item.badge > 0"
-                                            class="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground"
-                                        >
-                                            {{ item.badge }}
-                                        </span>
-                                    </Link>
-                                </div>
-                            </nav>
-                            <div class="border-t border-border p-3">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    class="w-full rounded-lg text-xs"
-                                    as-child
-                                >
-                                    <Link
-                                        :href="home()"
-                                        @click="mobileOpen = false"
-                                    >
-                                        <ArrowLeft class="size-3.5" />
-                                        <span>{{ t('admin.backToSite') }}</span>
-                                    </Link>
-                                </Button>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-
-                    <div v-if="breadcrumbs.length > 0" class="min-w-0 truncate">
-                        <Breadcrumbs :breadcrumbs="breadcrumbs" />
-                    </div>
-                    <h2
-                        v-else
-                        class="truncate text-sm font-semibold text-foreground"
-                    >
-                        {{ t('admin.centerTitle') }}
-                    </h2>
-                </div>
-
-                <!-- Quick Search -->
-                <form
-                    @submit.prevent="submitQuickSearch"
-                    class="hidden max-w-sm flex-1 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-1.5 focus-within:border-primary/50 focus-within:bg-card md:flex"
+                <div
+                    class="flex h-14 items-center justify-between gap-2 px-3 sm:h-16 sm:gap-3 sm:px-4 lg:px-6"
                 >
-                    <Search
-                        class="size-3.5 shrink-0 text-muted-foreground"
-                        aria-hidden="true"
-                    />
-                    <input
-                        v-model="quickQuery"
-                        type="search"
-                        :placeholder="t('admin.quickSearch')"
-                        class="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
-                    />
-                </form>
-
-                <!-- Right Controls -->
-                <div class="flex items-center gap-2">
-                    <LocaleSwitcher compact />
-                    <ThemeToggle />
-
-                    <DropdownMenu v-if="user">
-                        <DropdownMenuTrigger as-child>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                class="h-9 gap-2 rounded-full px-2 pr-2.5 hover:bg-surface-hover"
+                    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+                        <!-- Mobile Sidebar Drawer -->
+                        <Sheet v-model:open="mobileOpen">
+                            <SheetTrigger as-child>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    class="size-11 shrink-0 rounded-xl lg:hidden"
+                                    :aria-label="t('nav.openMobileMenu')"
+                                >
+                                    <Menu class="size-5" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent
+                                side="left"
+                                class="flex w-72 flex-col p-0"
                             >
-                                <Avatar class="size-7 rounded-full">
-                                    <AvatarImage
-                                        v-if="user.avatar"
-                                        :src="user.avatar"
-                                        :alt="user.name"
-                                    />
-                                    <AvatarFallback
-                                        class="bg-primary-soft text-[11px] font-semibold text-accent-foreground"
+                                <SheetHeader
+                                    class="border-b border-border px-4 py-4 text-left"
+                                >
+                                    <SheetTitle
+                                        class="flex items-center gap-2 text-sm font-bold"
                                     >
-                                        {{ getInitials(user.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div class="hidden text-left sm:block">
-                                    <p
-                                        class="max-w-28 truncate text-xs leading-tight font-semibold"
+                                        <AppLogoIcon
+                                            class="size-5 text-primary"
+                                        />
+                                        <span
+                                            >{{ brandName }} ·
+                                            {{ t('admin.centerTitle') }}</span
+                                        >
+                                    </SheetTitle>
+                                    <SheetDescription class="sr-only">
+                                        {{ t('admin.centerTitle') }}
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <nav
+                                    class="flex-1 space-y-4 overflow-y-auto p-3"
+                                >
+                                    <div
+                                        v-for="group in navGroups"
+                                        :key="group.id"
+                                        class="space-y-1"
                                     >
-                                        {{ user.name }}
-                                    </p>
-                                    <p
-                                        class="text-[10px] leading-tight text-muted-foreground"
+                                        <p
+                                            class="px-2.5 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
+                                        >
+                                            {{ group.label }}
+                                        </p>
+                                        <Link
+                                            v-for="item in group.items"
+                                            :key="item.href"
+                                            :href="item.href"
+                                            @click="mobileOpen = false"
+                                            :class="[
+                                                'flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium',
+                                                isActive(item)
+                                                    ? 'bg-primary-soft text-accent-foreground'
+                                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                            ]"
+                                        >
+                                            <component
+                                                :is="item.icon"
+                                                class="size-4 shrink-0"
+                                            />
+                                            <span class="flex-1 truncate">{{
+                                                item.label
+                                            }}</span>
+                                            <span
+                                                v-if="
+                                                    item.badge && item.badge > 0
+                                                "
+                                                class="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground"
+                                            >
+                                                {{ item.badge }}
+                                            </span>
+                                        </Link>
+                                    </div>
+                                </nav>
+                                <div class="border-t border-border p-3">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        class="w-full rounded-lg text-xs"
+                                        as-child
                                     >
-                                        {{ user.role_label }}
-                                    </p>
+                                        <Link
+                                            :href="home()"
+                                            @click="mobileOpen = false"
+                                        >
+                                            <ArrowLeft class="size-3.5" />
+                                            <span>{{
+                                                t('admin.backToSite')
+                                            }}</span>
+                                        </Link>
+                                    </Button>
                                 </div>
-                                <ChevronDown
-                                    class="size-3.5 text-muted-foreground"
-                                    aria-hidden="true"
-                                />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            align="end"
-                            class="w-60 rounded-xl"
+                            </SheetContent>
+                        </Sheet>
+
+                        <div
+                            v-if="breadcrumbs.length > 0"
+                            class="min-w-0 truncate"
                         >
-                            <UserMenuContent :user="user" />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            <Breadcrumbs :breadcrumbs="breadcrumbs" />
+                        </div>
+                        <h2
+                            v-else
+                            class="truncate text-sm font-semibold text-foreground"
+                        >
+                            {{ t('admin.centerTitle') }}
+                        </h2>
+                    </div>
+
+                    <!-- Quick Search -->
+                    <form
+                        @submit.prevent="submitQuickSearch"
+                        class="hidden max-w-sm flex-1 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-1.5 focus-within:border-primary/50 focus-within:bg-card md:flex"
+                    >
+                        <Search
+                            class="size-3.5 shrink-0 text-muted-foreground"
+                            aria-hidden="true"
+                        />
+                        <input
+                            v-model="quickQuery"
+                            type="search"
+                            :placeholder="t('admin.quickSearch')"
+                            class="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
+                        />
+                    </form>
+
+                    <!-- Right Controls -->
+                    <div class="flex items-center gap-2">
+                        <LocaleSwitcher compact />
+                        <ThemeToggle />
+
+                        <DropdownMenu v-if="user">
+                            <DropdownMenuTrigger as-child>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    class="h-9 gap-2 rounded-full px-2 pr-2.5 hover:bg-surface-hover"
+                                >
+                                    <Avatar class="size-7 rounded-full">
+                                        <AvatarImage
+                                            v-if="user.avatar"
+                                            :src="user.avatar"
+                                            :alt="user.name"
+                                        />
+                                        <AvatarFallback
+                                            class="bg-primary-soft text-[11px] font-semibold text-accent-foreground"
+                                        >
+                                            {{ getInitials(user.name) }}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div class="hidden text-left sm:block">
+                                        <p
+                                            class="max-w-28 truncate text-xs leading-tight font-semibold"
+                                        >
+                                            {{ user.name }}
+                                        </p>
+                                        <p
+                                            class="text-[10px] leading-tight text-muted-foreground"
+                                        >
+                                            {{ user.role_label }}
+                                        </p>
+                                    </div>
+                                    <ChevronDown
+                                        class="size-3.5 text-muted-foreground"
+                                        aria-hidden="true"
+                                    />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="end"
+                                class="w-60 rounded-xl"
+                            >
+                                <UserMenuContent :user="user" />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </header>
 
-            <main class="mx-auto w-full max-w-[1440px] flex-1 p-4 lg:p-6">
+            <NetworkStatusBanner />
+
+            <main
+                class="safe-pb mx-auto w-full max-w-[1440px] flex-1 p-3 sm:p-4 lg:p-6"
+            >
                 <slot />
             </main>
         </div>

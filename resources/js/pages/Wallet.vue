@@ -4,6 +4,7 @@ import {
     ArrowDownLeft,
     ArrowUpRight,
     Clock,
+    Copy,
     CreditCard,
     Lock,
     Megaphone,
@@ -15,6 +16,7 @@ import {
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import WalletController from '@/actions/App/Http/Controllers/Billing/WalletController';
+import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { formatVnd } from '@/lib/currency';
+import { formatDate, formatDateTime } from '@/lib/formatters';
+import { appToast } from '@/lib/toast';
 import { index as adsIndex } from '@/routes/ads';
 import type {
     PaymentTransactionItem,
@@ -54,20 +58,52 @@ const form = useForm({
 });
 
 const selectedAmount = ref(500_000);
+const confirmTopUpOpen = ref(false);
 
 function chooseAmount(val: number): void {
     selectedAmount.value = val;
     form.amount = val;
 }
 
+function requestTopUp(): void {
+    if (form.processing) {
+        return;
+    }
+
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        appToast.warning(t('common.offlineBanner'));
+        return;
+    }
+
+    form.amount = Number(selectedAmount.value);
+    confirmTopUpOpen.value = true;
+}
+
 function submitTopUp(): void {
+    if (form.processing) {
+        return;
+    }
+
     form.amount = Number(selectedAmount.value);
     form.post(WalletController.storeTopUp.url(), {
         preserveScroll: true,
         onSuccess: () => {
+            confirmTopUpOpen.value = false;
             form.idempotency_key = newIdempotencyKey();
         },
+        onError: () => {
+            confirmTopUpOpen.value = false;
+        },
     });
+}
+
+async function copyReference(value: string): Promise<void> {
+    try {
+        await navigator.clipboard.writeText(value);
+        appToast.success(t('common.copied'));
+    } catch {
+        appToast.error(t('common.copyFailed'));
+    }
 }
 
 function isCreditType(type: WalletLedgerEntry['type']): boolean {
@@ -103,46 +139,54 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
         </section>
 
         <!-- Wallet Balances Overview -->
-        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-xl border border-border bg-card p-4">
+        <section class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                 <p class="text-xs font-medium text-muted-foreground">
                     {{ t('wallet.balance') }}
                 </p>
-                <p class="mt-2 text-2xl font-bold text-primary">
+                <p
+                    class="mt-1.5 text-lg font-bold text-primary sm:mt-2 sm:text-2xl"
+                >
                     {{ formatVnd(account.balance, lang) }}
                 </p>
             </div>
-            <div class="rounded-xl border border-border bg-card p-4">
+            <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                 <p
                     class="flex items-center gap-1 text-xs font-medium text-muted-foreground"
                 >
-                    <Lock class="size-3.5" />
-                    <span>{{ t('wallet.heldBalance') }}</span>
+                    <Lock class="size-3.5 shrink-0" />
+                    <span class="truncate">{{ t('wallet.heldBalance') }}</span>
                 </p>
-                <p class="mt-2 text-2xl font-bold text-foreground">
+                <p
+                    class="mt-1.5 text-lg font-bold text-foreground sm:mt-2 sm:text-2xl"
+                >
                     {{ formatVnd(account.held_balance, lang) }}
                 </p>
             </div>
-            <div class="rounded-xl border border-border bg-card p-4">
+            <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                 <p class="text-xs font-medium text-muted-foreground">
                     {{ t('wallet.totalDeposited') }}
                 </p>
-                <p class="mt-2 text-2xl font-bold text-success">
+                <p
+                    class="mt-1.5 text-lg font-bold text-success sm:mt-2 sm:text-2xl"
+                >
                     {{ formatVnd(account.total_deposited, lang) }}
                 </p>
             </div>
-            <div class="rounded-xl border border-border bg-card p-4">
+            <div class="rounded-xl border border-border bg-card p-3.5 sm:p-4">
                 <p class="text-xs font-medium text-muted-foreground">
                     {{ t('wallet.totalSpent') }}
                 </p>
-                <p class="mt-2 text-2xl font-bold text-foreground">
+                <p
+                    class="mt-1.5 text-lg font-bold text-foreground sm:mt-2 sm:text-2xl"
+                >
                     {{ formatVnd(account.total_spent, lang) }}
                 </p>
             </div>
         </section>
 
         <!-- Top-Up Panel -->
-        <section class="rounded-xl border border-border bg-card p-6">
+        <section class="rounded-xl border border-border bg-card p-4 sm:p-6">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <h2
@@ -173,12 +217,12 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
 
             <form
                 v-if="sandboxEnabled"
-                @submit.prevent="submitTopUp"
+                @submit.prevent="requestTopUp"
                 class="mt-5 space-y-4"
             >
                 <div class="space-y-2">
                     <Label>{{ t('wallet.quickAmounts') }}</Label>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                         <Button
                             v-for="preset in quickPresets"
                             :key="preset"
@@ -189,7 +233,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                     ? 'default'
                                     : 'outline'
                             "
-                            class="rounded-lg"
+                            class="min-h-11 rounded-lg sm:min-h-9"
                             @click="chooseAmount(preset)"
                         >
                             {{ formatVnd(preset, lang) }}
@@ -206,6 +250,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                             id="topup-amount"
                             v-model.number="selectedAmount"
                             type="number"
+                            inputmode="numeric"
                             :min="minAmount"
                             :max="maxAmount"
                             step="10000"
@@ -221,7 +266,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                         <select
                             id="topup-provider"
                             v-model="form.provider"
-                            class="h-9 rounded-lg border border-input bg-background px-3 text-sm"
+                            class="min-h-11 rounded-lg border border-input bg-background px-3 text-sm sm:min-h-9"
                         >
                             <option value="sandbox">Sandbox Simulator</option>
                             <option value="vnpay">VNPay QR</option>
@@ -235,7 +280,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                 <Button
                     type="submit"
                     :disabled="form.processing"
-                    class="rounded-lg"
+                    class="min-h-11 w-full rounded-xl sm:w-auto sm:rounded-lg"
                 >
                     <Spinner v-if="form.processing" />
                     <Plus v-else class="size-4" />
@@ -293,9 +338,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                 >
                                     <Clock class="size-3" />
                                     <span>{{
-                                        new Date(
-                                            entry.created_at,
-                                        ).toLocaleString()
+                                        formatDateTime(entry.created_at, locale)
                                     }}</span>
                                 </p>
                             </div>
@@ -358,12 +401,29 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                     {{ payment.status_label }}
                                 </Badge>
                             </div>
-                            <p class="mt-0.5 truncate text-muted-foreground">
-                                {{
-                                    payment.provider_reference ||
-                                    `#${payment.id}`
-                                }}
-                            </p>
+                            <div class="mt-1 flex items-center gap-1.5">
+                                <p
+                                    class="truncate font-mono text-[11px] text-muted-foreground"
+                                >
+                                    {{
+                                        payment.provider_reference ||
+                                        `#${payment.id}`
+                                    }}
+                                </p>
+                                <button
+                                    type="button"
+                                    class="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-surface-hover hover:text-foreground"
+                                    :aria-label="t('common.copy')"
+                                    @click="
+                                        copyReference(
+                                            payment.provider_reference ||
+                                                `#${payment.id}`,
+                                        )
+                                    "
+                                >
+                                    <Copy class="size-3.5" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="shrink-0 text-right">
@@ -374,11 +434,7 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                                 v-if="payment.created_at"
                                 class="text-[11px] text-muted-foreground"
                             >
-                                {{
-                                    new Date(
-                                        payment.created_at,
-                                    ).toLocaleDateString()
-                                }}
+                                {{ formatDate(payment.created_at, locale) }}
                             </p>
                         </div>
                     </div>
@@ -388,5 +444,15 @@ function isCreditType(type: WalletLedgerEntry['type']): boolean {
                 </p>
             </section>
         </div>
+
+        <ConfirmActionDialog
+            v-model:open="confirmTopUpOpen"
+            :title="t('wallet.topUpTitle')"
+            :description="`${formatVnd(selectedAmount, lang)} · ${form.provider.toUpperCase()}`"
+            :confirm-label="t('wallet.topUpButton')"
+            :destructive="false"
+            :processing="form.processing"
+            @confirm="submitTopUp"
+        />
     </div>
 </template>

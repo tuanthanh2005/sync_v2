@@ -146,8 +146,12 @@ function submitAction(reason: string): void {
             </p>
         </div>
 
-        <div class="space-y-3 rounded-xl border border-border bg-card p-4">
-            <div class="flex flex-wrap gap-1.5">
+        <div
+            class="space-y-3 rounded-xl border border-border bg-card p-3.5 sm:p-4"
+        >
+            <div
+                class="no-scrollbar flex flex-nowrap gap-1.5 overflow-x-auto pb-0.5 sm:flex-wrap sm:overflow-visible"
+            >
                 <Button
                     v-for="tab in [
                         'all',
@@ -160,7 +164,7 @@ function submitAction(reason: string): void {
                     :key="tab"
                     size="sm"
                     :variant="filters.filter === tab ? 'default' : 'ghost'"
-                    class="h-8 rounded-lg text-xs capitalize"
+                    class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap capitalize sm:min-h-8"
                     @click="applyFilter(tab)"
                 >
                     {{ tab }}

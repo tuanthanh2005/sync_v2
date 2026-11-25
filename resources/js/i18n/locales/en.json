@@ -27,7 +27,9 @@
         "skipToContent": "Skip to main content",
         "openMobileMenu": "Open navigation menu",
         "mobileNavLabel": "Mobile navigation",
-        "searchPlaceholder": "Search posts, communities, people..."
+        "searchPlaceholder": "Search posts, communities, people...",
+        "explore": "Explore",
+        "createPostShort": "Post"
     },
     "theme": {
         "light": "Light",
@@ -106,7 +108,8 @@
                 "finance": "Earning",
                 "qa": "Q&A",
                 "marketplace": "Marketplace"
-            }
+            },
+            "newPostsAvailable": "New posts available"
         },
         "composer": {
             "placeholder": "What would you like to share?",
@@ -125,7 +128,10 @@
             "addOption": "Add option",
             "submit": "Post",
             "publishing": "Publishing...",
-            "signInPrompt": "Please sign in to share posts and join the discussion."
+            "signInPrompt": "Please sign in to share posts and join the discussion.",
+            "discardTitle": "Discard unsaved draft?",
+            "discardDescription": "Your unsaved post draft will be permanently discarded.",
+            "discardConfirm": "Discard draft"
         },
         "empty": {
             "title": "Explore the {brand} community",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Write a reply...",
         "reply": "Reply",
         "sendComment": "Send",
-        "noComments": "No comments yet. Start the conversation!"
+        "noComments": "No comments yet. Start the conversation!",
+        "copyText": "Copy post text",
+        "copiedText": "Post text copied"
     },
     "profile": {
         "postsTab": "Posts",
@@ -753,5 +761,16 @@
             "checksum": "SHA-256 Checksum",
             "size": "Size"
         }
+    },
+    "common": {
+        "offlineBanner": "You are offline. Some features are unavailable.",
+        "backOnline": "Back online",
+        "retry": "Retry",
+        "copy": "Copy",
+        "copied": "Copied to clipboard",
+        "copyFailed": "Unable to copy to clipboard"
+    },
+    "pwa": {
+        "installApp": "Install SyncViet App"
     }
 }

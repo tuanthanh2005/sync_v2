@@ -27,7 +27,9 @@
         "skipToContent": "メインコンテンツへスキップ",
         "openMobileMenu": "ナビゲーションメニューを開く",
         "mobileNavLabel": "モバイルナビゲーション",
-        "searchPlaceholder": "投稿、コミュニティ、ユーザーを検索..."
+        "searchPlaceholder": "投稿、コミュニティ、ユーザーを検索...",
+        "explore": "探索",
+        "createPostShort": "投稿"
     },
     "theme": {
         "light": "ライト",
@@ -106,7 +108,8 @@
                 "finance": "収益化・金融",
                 "qa": "質問・回答",
                 "marketplace": "マーケットプレイス"
-            }
+            },
+            "newPostsAvailable": "新しい投稿があります"
         },
         "composer": {
             "placeholder": "何を共有しますか？",
@@ -125,7 +128,10 @@
             "addOption": "選択肢を追加",
             "submit": "投稿する",
             "publishing": "投稿中...",
-            "signInPrompt": "投稿を共有してディスカッションに参加するにはログインしてください。"
+            "signInPrompt": "投稿を共有してディスカッションに参加するにはログインしてください。",
+            "discardTitle": "未保存の下書きを破棄しますか？",
+            "discardDescription": "保存されていない投稿の下書きは完全に削除されます。",
+            "discardConfirm": "下書きを破棄"
         },
         "empty": {
             "title": "{brand}コミュニティを探索しよう",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "返信を入力...",
         "reply": "返信",
         "sendComment": "送信",
-        "noComments": "まだコメントがありません。最初のコメントを投稿しましょう！"
+        "noComments": "まだコメントがありません。最初のコメントを投稿しましょう！",
+        "copyText": "投稿テキストをコピー",
+        "copiedText": "投稿テキストをコピーしました"
     },
     "profile": {
         "postsTab": "投稿",
@@ -753,5 +761,16 @@
             "checksum": "SHA-256 チェックサム",
             "size": "サイズ"
         }
+    },
+    "common": {
+        "offlineBanner": "オフラインです。一部の機能は利用できません。",
+        "backOnline": "オンラインに復帰しました",
+        "retry": "再試行",
+        "copy": "コピー",
+        "copied": "クリップボードにコピーしました",
+        "copyFailed": "コピーできませんでした"
+    },
+    "pwa": {
+        "installApp": "SyncVietアプリをインストール"
     }
 }

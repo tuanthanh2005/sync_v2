@@ -5,6 +5,7 @@ import {
     Bell,
     CheckCircle2,
     ChevronDown,
+    Download,
     FileText,
     Home,
     LayoutGrid,
@@ -31,6 +32,7 @@ import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue';
 import MobileBottomNav from '@/components/common/MobileBottomNav.vue';
+import NetworkStatusBanner from '@/components/common/NetworkStatusBanner.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
 import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import MiniFooter from '@/components/footer/MiniFooter.vue';
@@ -53,6 +55,8 @@ import { Toaster } from '@/components/ui/sonner';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { useInitials } from '@/composables/useInitials';
+import { useCompactScrollHeader } from '@/composables/useMobileViewport';
+import { usePwa } from '@/composables/usePwa';
 import { formatVnd } from '@/lib/currency';
 import { toUrl } from '@/lib/utils';
 import { dashboard, home, login, register } from '@/routes';
@@ -119,6 +123,8 @@ const headerSearch = ref('');
 let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 const { isCurrentUrl, isCurrentOrParentUrl } = useCurrentUrl();
 const { getInitials } = useInitials();
+const { headerHidden } = useCompactScrollHeader();
+const { canInstallApp, promptInstallApp } = usePwa();
 
 function handleHeaderSearchInput(): void {
     if (searchDebounceTimer !== null) {
@@ -282,18 +288,25 @@ function isItemActive(item: NavItem): boolean {
             {{ t('nav.skipToContent') }}
         </a>
 
-        <!-- Top Sticky Header (64px) -->
-        <header class="sticky top-0 z-40 h-16 border-b border-border bg-card">
+        <!-- Top Sticky Header (56px mobile / 64px desktop + Safe Area) -->
+        <header
+            :class="[
+                'safe-pt sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md transition-transform duration-200',
+                headerHidden && !mobileMenuOpen
+                    ? '-translate-y-full lg:translate-y-0'
+                    : 'translate-y-0',
+            ]"
+        >
             <div
-                class="mx-auto flex h-full max-w-[1360px] items-center justify-between gap-4 px-4 lg:px-6"
+                class="mx-auto flex h-14 max-w-[1360px] items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4 lg:px-6"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex min-w-0 items-center gap-1.5 sm:gap-3">
                     <Sheet v-model:open="mobileMenuOpen">
                         <SheetTrigger as-child>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="size-9 rounded-lg lg:hidden"
+                                class="size-11 shrink-0 rounded-xl lg:hidden"
                                 :aria-label="t('nav.openMobileMenu')"
                             >
                                 <Menu class="size-5" />
@@ -301,9 +314,9 @@ function isItemActive(item: NavItem): boolean {
                         </SheetTrigger>
                         <SheetContent
                             side="left"
-                            class="flex w-72 flex-col justify-between p-0"
+                            class="flex w-[85vw] max-w-72 flex-col justify-between p-0"
                         >
-                            <div>
+                            <div class="min-h-0 flex-1 overflow-y-auto">
                                 <SheetHeader
                                     class="border-b border-border px-5 py-4 text-left"
                                 >
@@ -324,7 +337,7 @@ function isItemActive(item: NavItem): boolean {
                                         :href="item.href"
                                         @click="mobileMenuOpen = false"
                                         :class="[
-                                            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                                            'flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
                                             isItemActive(item)
                                                 ? 'bg-primary-soft text-accent-foreground'
                                                 : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
@@ -351,10 +364,30 @@ function isItemActive(item: NavItem): boolean {
                                         </span>
                                     </Link>
                                 </nav>
+
+                                <!-- Optional non-intrusive PWA Install entry -->
+                                <div v-if="canInstallApp" class="px-3 pb-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        class="min-h-11 w-full justify-start gap-2.5 rounded-xl border-primary/30 bg-primary-soft/50 text-xs font-semibold text-primary"
+                                        @click="
+                                            promptInstallApp();
+                                            mobileMenuOpen = false;
+                                        "
+                                    >
+                                        <Download class="size-4 shrink-0" />
+                                        <span class="truncate">{{
+                                            t('pwa.installApp')
+                                        }}</span>
+                                    </Button>
+                                </div>
                             </div>
 
                             <!-- Mobile Drawer Footer Links & Controls -->
-                            <div class="space-y-3 border-t border-border p-4">
+                            <div
+                                class="shrink-0 space-y-3 border-t border-border p-4"
+                            >
                                 <p
                                     class="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase"
                                 >
@@ -385,7 +418,7 @@ function isItemActive(item: NavItem): boolean {
 
                     <Link
                         :href="home()"
-                        class="flex items-center focus-visible:outline-none"
+                        class="flex min-w-0 items-center focus-visible:outline-none"
                     >
                         <AppLogo />
                     </Link>
@@ -398,7 +431,7 @@ function isItemActive(item: NavItem): boolean {
                     </div>
                 </div>
 
-                <!-- Debounced Global Search Bar -->
+                <!-- Debounced Global Search Bar (Tablet/Desktop) -->
                 <form
                     @submit.prevent="submitHeaderSearch"
                     class="hidden max-w-md flex-1 items-center gap-2 rounded-full border border-border bg-muted/50 px-3.5 py-1.5 transition-colors focus-within:border-primary/50 focus-within:bg-card md:flex"
@@ -410,23 +443,41 @@ function isItemActive(item: NavItem): boolean {
                     <input
                         v-model="headerSearch"
                         type="search"
+                        inputmode="search"
+                        enterkeyhint="search"
                         :placeholder="t('nav.searchPlaceholder')"
                         class="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
                         @input="handleHeaderSearchInput"
                     />
                 </form>
 
-                <div class="flex items-center gap-2">
+                <div class="flex shrink-0 items-center gap-0.5 sm:gap-2">
+                    <!-- Mobile Quick Search Action -->
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        class="size-10 rounded-full md:hidden"
+                        :aria-label="t('search.title')"
+                        as-child
+                    >
+                        <Link :href="SearchController.url()">
+                            <Search class="size-5" aria-hidden="true" />
+                        </Link>
+                    </Button>
+
                     <template v-if="user">
                         <Button
                             variant="ghost"
                             size="icon"
-                            class="relative size-9 rounded-full"
+                            class="relative size-10 rounded-full sm:size-9"
                             :aria-label="t('nav.notifications')"
                             as-child
                         >
                             <Link :href="notificationsIndex()">
-                                <Bell class="size-4.5" aria-hidden="true" />
+                                <Bell
+                                    class="size-5 sm:size-4.5"
+                                    aria-hidden="true"
+                                />
                                 <span
                                     v-if="unreadNotificationsCount > 0"
                                     class="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
@@ -443,13 +494,13 @@ function isItemActive(item: NavItem): boolean {
                         <Button
                             variant="ghost"
                             size="icon"
-                            class="relative size-9 rounded-full"
+                            class="relative size-10 rounded-full sm:size-9"
                             :aria-label="t('nav.messages')"
                             as-child
                         >
                             <Link :href="messagesIndex()">
                                 <MessageSquare
-                                    class="size-4.5"
+                                    class="size-5 sm:size-4.5"
                                     aria-hidden="true"
                                 />
                                 <span
@@ -469,14 +520,16 @@ function isItemActive(item: NavItem): boolean {
                     <div class="hidden sm:block">
                         <LocaleSwitcher compact />
                     </div>
-                    <ThemeToggle />
+                    <div class="hidden sm:block">
+                        <ThemeToggle />
+                    </div>
 
                     <template v-if="user">
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
                                 <Button
                                     variant="ghost"
-                                    class="h-10 gap-2 rounded-full px-2 pr-3 hover:bg-surface-hover"
+                                    class="h-10 gap-1.5 rounded-full px-1.5 hover:bg-surface-hover sm:gap-2 sm:px-2 sm:pr-3"
                                     data-test="user-menu-trigger"
                                 >
                                     <Avatar class="size-8 rounded-full">
@@ -504,7 +557,7 @@ function isItemActive(item: NavItem): boolean {
                                         </p>
                                     </div>
                                     <ChevronDown
-                                        class="size-4 text-muted-foreground"
+                                        class="hidden size-4 text-muted-foreground sm:block"
                                         aria-hidden="true"
                                     />
                                 </Button>
@@ -522,12 +575,16 @@ function isItemActive(item: NavItem): boolean {
                         <Button
                             variant="ghost"
                             size="sm"
-                            class="rounded-lg"
+                            class="min-h-10 rounded-lg px-2.5 sm:min-h-9 sm:px-3"
                             as-child
                         >
                             <Link :href="login()">{{ t('nav.login') }}</Link>
                         </Button>
-                        <Button size="sm" class="rounded-lg" as-child>
+                        <Button
+                            size="sm"
+                            class="hidden min-h-9 rounded-lg sm:inline-flex"
+                            as-child
+                        >
                             <Link :href="register()">{{
                                 t('nav.register')
                             }}</Link>
@@ -537,9 +594,11 @@ function isItemActive(item: NavItem): boolean {
             </div>
         </header>
 
-        <!-- Desktop 3-Column Shell -->
+        <NetworkStatusBanner />
+
+        <!-- Desktop 3-Column Shell / Mobile 1-Column Full-Width Shell -->
         <div
-            class="mx-auto flex w-full max-w-[1360px] items-start gap-6 px-4 py-6 pb-24 lg:px-6 lg:pb-10"
+            class="mx-auto flex w-full max-w-[1360px] items-start gap-6 px-2.5 py-4 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-4 sm:py-6 lg:px-6 lg:pb-10"
         >
             <!-- Left Sidebar (~240px) -->
             <aside
@@ -1155,6 +1214,6 @@ function isItemActive(item: NavItem): boolean {
         </div>
 
         <MobileBottomNav />
-        <Toaster position="top-right" rich-colors />
+        <Toaster />
     </div>
 </template>

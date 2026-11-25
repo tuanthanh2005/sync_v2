@@ -27,7 +27,9 @@
         "skipToContent": "Aller au contenu principal",
         "openMobileMenu": "Ouvrir le menu de navigation",
         "mobileNavLabel": "Navigation mobile",
-        "searchPlaceholder": "Rechercher des publications, communautés, personnes..."
+        "searchPlaceholder": "Rechercher des publications, communautés, personnes...",
+        "explore": "Explorer",
+        "createPostShort": "Publier"
     },
     "theme": {
         "light": "Clair",
@@ -106,7 +108,8 @@
                 "finance": "Revenus",
                 "qa": "Questions et réponses",
                 "marketplace": "Place de marché"
-            }
+            },
+            "newPostsAvailable": "Nouvelles publications disponibles"
         },
         "composer": {
             "placeholder": "Que souhaitez-vous partager ?",
@@ -125,7 +128,10 @@
             "addOption": "Ajouter une option",
             "submit": "Publier",
             "publishing": "Publication...",
-            "signInPrompt": "Veuillez vous connecter pour partager des publications et participer aux discussions."
+            "signInPrompt": "Veuillez vous connecter pour partager des publications et participer aux discussions.",
+            "discardTitle": "Supprimer le brouillon non enregistré ?",
+            "discardDescription": "Votre brouillon non enregistré sera définitivement supprimé.",
+            "discardConfirm": "Supprimer le brouillon"
         },
         "empty": {
             "title": "Explorez la communauté {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Écrire une réponse...",
         "reply": "Répondre",
         "sendComment": "Envoyer",
-        "noComments": "Aucun commentaire pour le moment. Lancez la conversation !"
+        "noComments": "Aucun commentaire pour le moment. Lancez la conversation !",
+        "copyText": "Copier le texte de la publication",
+        "copiedText": "Texte de la publication copié"
     },
     "profile": {
         "postsTab": "Publications",
@@ -753,5 +761,16 @@
             "checksum": "Empreinte SHA-256",
             "size": "Taille"
         }
+    },
+    "common": {
+        "offlineBanner": "Vous êtes hors ligne. Certaines fonctionnalités sont indisponibles.",
+        "backOnline": "De nouveau en ligne",
+        "retry": "Réessayer",
+        "copy": "Copier",
+        "copied": "Copié dans le presse-papiers",
+        "copyFailed": "Impossible de copier"
+    },
+    "pwa": {
+        "installApp": "Installer l’application SyncViet"
     }
 }

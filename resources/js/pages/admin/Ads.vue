@@ -105,7 +105,7 @@ function manageStatus(
         </div>
 
         <div
-            class="flex flex-wrap gap-1.5 rounded-xl border border-border bg-card p-3"
+            class="no-scrollbar flex flex-nowrap gap-1.5 overflow-x-auto rounded-xl border border-border bg-card p-3 sm:flex-wrap sm:overflow-visible"
         >
             <Button
                 v-for="st in [
@@ -120,7 +120,7 @@ function manageStatus(
                 :key="st"
                 size="sm"
                 :variant="(statusFilter || 'all') === st ? 'default' : 'ghost'"
-                class="h-8 rounded-lg text-xs"
+                class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap sm:min-h-8"
                 @click="filterStatus(st)"
             >
                 {{ st }}

@@ -68,7 +68,13 @@ Service / Action Layer (DB::transaction, Sanitizer, AuditLogger, Cache Invalidat
 - `BrowserSessionService`: Liệt kê phiên trình duyệt an toàn và thu hồi mọi phiên/thiết bị khác (`Auth::logoutOtherDevices` + xóa `sessions` DB).
 - `AuditLogger` & `RecordAuthSecurityEvents`: Ghi `audit_logs` bất biến (ẩn trường nhạy cảm) và `login_histories` cho `Login`, `Failed`, `Logout`, `2FA`, thay đổi mật khẩu, quản trị nội dung/tài chính/hệ thống.
 
-### 2.6 Server Portability Abstraction
+### 2.6 Mobile Native Web Experience, Performance & PWA
+
+- **Dynamic Locale Code-Splitting**: `resources/js/i18n/index.ts` chỉ đóng gói đồng bộ tiếng Anh (`en`) làm fallback; 14 ngôn ngữ còn lại nạp động qua Vite `import()` theo nhu cầu nhằm giảm kích thước bundle `app.js` cho mạng di động 3G/4G.
+- **Mobile Viewport & Network Composables**: `useMobileViewport.ts` (Visual Viewport API nhận diện bàn phím ảo + `useCompactScrollHeader`), `useMobileComposer.ts` (mở trình soạn thảo toàn màn hình từ Bottom Nav), `useNetworkStatus.ts` (`NetworkStatusBanner.vue` báo ngoại tuyến/kết nối lại), và `usePwa.ts` (đăng ký `public/sw.js`, thông báo cập nhật và nút cài đặt không gây phiền).
+- **PWA Assets an toàn**: `public/manifest.webmanifest`, bộ icon cục bộ `public/icons/icon-{192,512,maskable-512}.png`, `public/apple-touch-icon.png`, `public/offline.html`, và `public/sw.js` chỉ cache tài nguyên tĩnh trong `/build/*` và `/icons/*`. Chi tiết xem [docs/MOBILE_UI_UX.md](MOBILE_UI_UX.md), [docs/PWA_GUIDE.md](PWA_GUIDE.md), và [docs/PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md).
+
+### 2.7 Server Portability Abstraction
 
 - **Storage**: Sử dụng `config('syncviet.media_disk')` ánh xạ qua `config/filesystems.php` (`local`, `public`, hoặc `s3` cho Cloudflare R2).
 - **Cache & Queue & Session**: Chạy `database` trên Hostinger Shared Hosting; chuyển sang `redis` trên VPS chỉ bằng `.env` (`CACHE_STORE=redis`, `QUEUE_CONNECTION=redis`, `SESSION_DRIVER=redis`).

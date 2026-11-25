@@ -27,7 +27,9 @@
         "skipToContent": "Lumaktaw sa pangunahing nilalaman",
         "openMobileMenu": "Buksan ang menu ng nabigasyon",
         "mobileNavLabel": "Nabigasyon sa mobile",
-        "searchPlaceholder": "Maghanap ng mga paskil, komunidad, tao..."
+        "searchPlaceholder": "Maghanap ng mga paskil, komunidad, tao...",
+        "explore": "Tuklasin",
+        "createPostShort": "Mag-post"
     },
     "theme": {
         "light": "Maliwanag",
@@ -106,7 +108,8 @@
                 "finance": "Kita",
                 "qa": "Tanong at Sagot",
                 "marketplace": "Pamilihan"
-            }
+            },
+            "newPostsAvailable": "May mga bagong post"
         },
         "composer": {
             "placeholder": "Ano ang nais mong ibahagi?",
@@ -125,7 +128,10 @@
             "addOption": "Magdagdag ng pagpipilian",
             "submit": "Ipaskil",
             "publishing": "Inilalathala...",
-            "signInPrompt": "Mangyaring mag-sign in upang makapagbahagi ng paskil at makilahok sa talakayan."
+            "signInPrompt": "Mangyaring mag-sign in upang makapagbahagi ng paskil at makilahok sa talakayan.",
+            "discardTitle": "Itapon ang hindi na-save na draft?",
+            "discardDescription": "Permanenteng mabubura ang hindi mo na-save na draft ng post.",
+            "discardConfirm": "Itapon ang draft"
         },
         "empty": {
             "title": "Tuklasin ang komunidad ng {brand}",
@@ -161,7 +167,9 @@
         "replyPlaceholder": "Sumulat ng tugon...",
         "reply": "Tumugon",
         "sendComment": "Ipadala",
-        "noComments": "Wala pang komento. Simulan ang usapan!"
+        "noComments": "Wala pang komento. Simulan ang usapan!",
+        "copyText": "Kopyahin ang teksto ng post",
+        "copiedText": "Nakopya ang teksto ng post"
     },
     "profile": {
         "postsTab": "Mga Paskil",
@@ -753,5 +761,16 @@
             "checksum": "Checksum ng SHA-256",
             "size": "Laki"
         }
+    },
+    "common": {
+        "offlineBanner": "Offline ka ngayon. Hindi magagamit ang ilang feature.",
+        "backOnline": "Online na muli",
+        "retry": "Subukan muli",
+        "copy": "Kopyahin",
+        "copied": "Nakopya sa clipboard",
+        "copyFailed": "Hindi makopya sa clipboard"
+    },
+    "pwa": {
+        "installApp": "I-install ang SyncViet App"
     }
 }

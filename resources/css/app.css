@@ -192,9 +192,73 @@
         @apply border-border outline-ring/50;
     }
 
+    html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        scroll-behavior: smooth;
+        overflow-x: clip;
+    }
+
     body {
         @apply bg-background text-foreground;
+        overflow-x: clip;
+        overscroll-behavior-y: auto;
+        -webkit-tap-highlight-color: transparent;
     }
+
+    button,
+    a,
+    [role='button'],
+    [role='tab'] {
+        touch-action: manipulation;
+    }
+
+    /* Prevent unwanted iOS Safari auto-zoom on input focus while preserving accessibility pinch-zoom */
+    @media (max-width: 767px) {
+        input:not([type='checkbox']):not([type='radio']):not(
+                [type='range']
+            ):not([type='file']),
+        textarea,
+        select {
+            font-size: 16px !important;
+            line-height: 1.45;
+        }
+    }
+}
+
+/* Cross-browser hidden decorative scrollbars without disabling touch/wheel/keyboard scroll */
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    .mobile-no-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .mobile-no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Safe-area utility classes for notched / Dynamic Island / gesture-bar devices */
+.safe-pt {
+    padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-px {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
 }
 
 @keyframes syncviet-toast-progress {
@@ -233,38 +297,27 @@
     left: 0.5rem !important;
 }
 
-@keyframes syncviet-toast-progress {
-    from {
-        transform: scaleX(1);
+/* Ensure mobile toasts never sit underneath notch/status bar or overflow narrow 320px viewports */
+@media (max-width: 639px) {
+    [data-sonner-toaster] {
+        top: calc(0.75rem + env(safe-area-inset-top, 0px)) !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        width: auto !important;
+        max-width: calc(100vw - 1.5rem) !important;
     }
-    to {
-        transform: scaleX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
     }
-}
 
-.syncviet-toast.syncviet-toast-timed::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 2.5px;
-    background: var(--primary);
-    opacity: 0.7;
-    transform-origin: left center;
-    animation: syncviet-toast-progress var(--toast-duration, 4500ms) linear
-        forwards;
-}
-
-[dir='rtl'] .syncviet-toast.syncviet-toast-timed::after {
-    transform-origin: right center;
-}
-
-.syncviet-toast:hover::after,
-.syncviet-toast:focus-within::after {
-    animation-play-state: paused;
-}
-
-[dir='rtl'] .syncviet-toast [data-close-button] {
-    right: auto !important;
-    left: 0.5rem !important;
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

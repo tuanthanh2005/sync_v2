@@ -8,7 +8,7 @@ import {
     TriangleAlertIcon,
     XIcon,
 } from '@lucide/vue';
-import { computed, onBeforeUnmount, onMounted } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Toaster as Sonner, toast } from 'vue-sonner';
 import { usePage } from '@inertiajs/vue3';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ import 'vue-sonner/style.css';
 
 const props = withDefaults(defineProps<ToasterProps>(), {
     closeButton: true,
-    visibleToasts: 4,
+    visibleToasts: 3,
     richColors: false,
     expand: false,
     duration: 4500,
@@ -25,9 +25,21 @@ const props = withDefaults(defineProps<ToasterProps>(), {
 
 const page = usePage();
 const isRtl = computed(() => Boolean(page.props.isRtl));
+const isMobile = ref(false);
+
+function updateIsMobile(): void {
+    if (typeof window !== 'undefined') {
+        isMobile.value = window.innerWidth < 640;
+    }
+}
+
 const resolvedPosition = computed(() => {
     if (props.position) {
         return props.position;
+    }
+
+    if (isMobile.value) {
+        return 'top-center';
     }
 
     return isRtl.value ? 'top-left' : 'top-right';
@@ -40,10 +52,13 @@ function handleKeydown(event: KeyboardEvent): void {
 }
 
 onMounted(() => {
+    updateIsMobile();
+    window.addEventListener('resize', updateIsMobile, { passive: true });
     window.addEventListener('keydown', handleKeydown);
 });
 
 onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateIsMobile);
     window.removeEventListener('keydown', handleKeydown);
 });
 </script>

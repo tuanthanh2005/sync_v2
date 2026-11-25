@@ -34,11 +34,13 @@ class SecurityHeaders
             "object-src 'none'",
             "frame-ancestors 'self'",
             "form-action 'self'",
-            "img-src 'self' data: https:",
+            "img-src 'self' data: blob: https:",
             "font-src 'self' data:",
             "style-src 'self' 'unsafe-inline'",
             "script-src {$scriptSrc}",
             "connect-src {$connectSrc}",
+            "worker-src 'self'",
+            "manifest-src 'self'",
         ]);
 
         $response->headers->set('Content-Security-Policy', $csp);

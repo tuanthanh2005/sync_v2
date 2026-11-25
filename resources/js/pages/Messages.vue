@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { MessageSquare, Send } from '@lucide/vue';
+import { ArrowLeft, MessageSquare, Send } from '@lucide/vue';
 import { onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MessageController from '@/actions/App/Http/Controllers/Messaging/MessageController';
@@ -10,7 +10,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInitials } from '@/composables/useInitials';
-import { show as showConversation } from '@/routes/messages';
+import { formatDateTime } from '@/lib/formatters';
+import {
+    index as messagesIndex,
+    show as showConversation,
+} from '@/routes/messages';
 import type { ActiveConversation, ConversationSummary } from '@/types';
 
 const props = defineProps<{
@@ -18,7 +22,7 @@ const props = defineProps<{
     activeConversation: ActiveConversation | null;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { getInitials } = useInitials();
 
 const form = useForm({
@@ -28,7 +32,7 @@ const form = useForm({
 let pollTimer: ReturnType<typeof setInterval> | null = null;
 
 function submitMessage(): void {
-    if (!props.activeConversation || !form.body.trim()) {
+    if (!props.activeConversation || !form.body.trim() || form.processing) {
         return;
     }
 
@@ -42,14 +46,14 @@ function submitMessage(): void {
 
 onMounted(() => {
     pollTimer = setInterval(() => {
-        if (document.hidden || !props.activeConversation) {
+        if (document.hidden || !navigator.onLine || !props.activeConversation) {
             return;
         }
 
         router.reload({
             only: ['conversations', 'activeConversation'],
         });
-    }, 8000);
+    }, 10_000);
 });
 
 onBeforeUnmount(() => {
@@ -64,13 +68,16 @@ onBeforeUnmount(() => {
         <Head :title="t('messages.title')" />
 
         <div
-            class="grid min-h-[540px] overflow-hidden rounded-xl border border-border bg-card shadow-xs md:grid-cols-12"
+            class="grid h-[calc(100dvh-10rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] min-h-[420px] overflow-hidden rounded-xl border border-border bg-card shadow-xs md:h-[600px] md:grid-cols-12"
         >
-            <!-- Conversations list -->
+            <!-- Conversations list (hidden on mobile when a thread is open) -->
             <aside
-                class="border-b border-border md:col-span-4 md:border-r md:border-b-0"
+                :class="[
+                    'flex min-h-0 flex-col border-b border-border md:col-span-4 md:flex md:border-r md:border-b-0',
+                    activeConversation ? 'hidden' : 'flex',
+                ]"
             >
-                <div class="border-b border-border px-4 py-3.5">
+                <div class="shrink-0 border-b border-border px-4 py-3.5">
                     <h1 class="text-base font-bold text-foreground">
                         {{ t('messages.title') }}
                     </h1>
@@ -78,21 +85,21 @@ onBeforeUnmount(() => {
 
                 <div
                     v-if="conversations.length > 0"
-                    class="divide-y divide-border"
+                    class="min-h-0 flex-1 divide-y divide-border overflow-y-auto"
                 >
                     <Link
                         v-for="conv in conversations"
                         :key="conv.id"
                         :href="showConversation(conv.id)"
                         :class="[
-                            'flex items-center justify-between gap-2.5 px-4 py-3 transition-colors hover:bg-muted/60',
+                            'flex min-h-14 items-center justify-between gap-2.5 px-4 py-3 transition-colors hover:bg-muted/60',
                             activeConversation?.id === conv.id
                                 ? 'bg-accent/50'
                                 : '',
                         ]"
                     >
                         <div class="flex min-w-0 items-center gap-2.5">
-                            <Avatar class="size-9 shrink-0 rounded-full">
+                            <Avatar class="size-10 shrink-0 rounded-full">
                                 <AvatarImage
                                     v-if="conv.other_user?.avatar"
                                     :src="conv.other_user.avatar"
@@ -136,13 +143,29 @@ onBeforeUnmount(() => {
                 </p>
             </aside>
 
-            <!-- Active Thread -->
-            <section class="flex flex-col md:col-span-8">
+            <!-- Active Thread (full-width on mobile when selected) -->
+            <section
+                :class="[
+                    'min-h-0 flex-col md:col-span-8 md:flex',
+                    activeConversation ? 'flex' : 'hidden',
+                ]"
+            >
                 <template v-if="activeConversation">
                     <header
-                        class="flex items-center gap-3 border-b border-border px-4 py-3"
+                        class="flex shrink-0 items-center gap-2.5 border-b border-border px-3 py-2.5 sm:px-4 sm:py-3"
                     >
-                        <Avatar class="size-8 rounded-full">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            class="size-10 shrink-0 rounded-full md:hidden"
+                            :aria-label="t('messages.title')"
+                            as-child
+                        >
+                            <Link :href="messagesIndex()">
+                                <ArrowLeft class="size-5" />
+                            </Link>
+                        </Button>
+                        <Avatar class="size-9 shrink-0 rounded-full">
                             <AvatarImage
                                 v-if="activeConversation.other_user?.avatar"
                                 :src="activeConversation.other_user.avatar"
@@ -159,17 +182,21 @@ onBeforeUnmount(() => {
                                 }}
                             </AvatarFallback>
                         </Avatar>
-                        <div>
-                            <p class="text-sm font-semibold text-foreground">
+                        <div class="min-w-0">
+                            <p
+                                class="truncate text-sm font-semibold text-foreground"
+                            >
                                 {{ activeConversation.other_user?.name }}
                             </p>
-                            <p class="text-xs text-muted-foreground">
+                            <p class="truncate text-xs text-muted-foreground">
                                 @{{ activeConversation.other_user?.username }}
                             </p>
                         </div>
                     </header>
 
-                    <div class="flex-1 space-y-3 overflow-y-auto p-4">
+                    <div
+                        class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-3.5 sm:p-4"
+                    >
                         <div
                             v-for="msg in activeConversation.messages"
                             :key="msg.id"
@@ -180,7 +207,7 @@ onBeforeUnmount(() => {
                         >
                             <div
                                 :class="[
-                                    'max-w-[78%] rounded-2xl px-3.5 py-2 text-sm',
+                                    'max-w-[82%] rounded-2xl px-3.5 py-2 text-sm [overflow-wrap:anywhere] break-words',
                                     msg.is_mine
                                         ? 'bg-primary text-primary-foreground'
                                         : 'bg-muted text-foreground',
@@ -197,11 +224,7 @@ onBeforeUnmount(() => {
                                             : 'text-muted-foreground',
                                     ]"
                                 >
-                                    {{
-                                        new Date(
-                                            msg.created_at,
-                                        ).toLocaleTimeString()
-                                    }}
+                                    {{ formatDateTime(msg.created_at, locale) }}
                                 </p>
                             </div>
                         </div>
@@ -209,24 +232,27 @@ onBeforeUnmount(() => {
 
                     <form
                         @submit.prevent="submitMessage"
-                        class="flex items-center gap-2 border-t border-border p-3"
+                        class="flex shrink-0 items-center gap-2 border-t border-border p-2.5 sm:p-3"
                     >
                         <Input
                             v-model="form.body"
                             type="text"
                             maxlength="2000"
+                            enterkeyhint="send"
                             required
                             :placeholder="t('messages.placeholder')"
-                            class="flex-1"
+                            class="min-w-0 flex-1"
                         />
                         <Button
                             type="submit"
                             size="sm"
-                            :disabled="form.processing"
-                            class="rounded-lg"
+                            :disabled="form.processing || !form.body.trim()"
+                            class="min-h-10 shrink-0 rounded-lg px-3.5 sm:min-h-9"
                         >
                             <Send class="size-4" />
-                            <span>{{ t('messages.send') }}</span>
+                            <span class="hidden sm:inline">{{
+                                t('messages.send')
+                            }}</span>
                         </Button>
                     </form>
                 </template>

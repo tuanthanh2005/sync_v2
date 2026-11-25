@@ -5,6 +5,7 @@ import {
     BadgeCheck,
     Bookmark,
     Check,
+    Copy,
     ExternalLink,
     Flag,
     Heart,
@@ -21,7 +22,7 @@ import {
     Users,
     Zap,
 } from '@lucide/vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ReportController from '@/actions/App/Http/Controllers/Moderation/ReportController';
@@ -30,7 +31,9 @@ import PostInteractionController from '@/actions/App/Http/Controllers/Social/Pos
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
+import ImageLightbox from '@/components/common/ImageLightbox.vue';
 import InputError from '@/components/InputError.vue';
+import { formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -71,7 +74,7 @@ const props = withDefaults(
     },
 );
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const { getInitials } = useInitials();
@@ -80,6 +83,46 @@ const isContentExpanded = ref(false);
 const isEditing = ref(false);
 const showReactionMenu = ref(false);
 const reportOpen = ref(false);
+const lightboxOpen = ref(false);
+const lightboxIndex = ref(0);
+
+// Optimistic local interaction state with rollback on network/server failure
+const optimisticReaction = ref(props.post.viewer_reaction);
+const optimisticReactionsCount = ref(props.post.reactions_count);
+const optimisticBookmarked = ref(props.post.is_bookmarked);
+const reacting = ref(false);
+const bookmarking = ref(false);
+
+watch(
+    () => [
+        props.post.viewer_reaction,
+        props.post.reactions_count,
+        props.post.is_bookmarked,
+    ],
+    ([reaction, count, bookmarked]) => {
+        optimisticReaction.value = reaction as typeof optimisticReaction.value;
+        optimisticReactionsCount.value = count as number;
+        optimisticBookmarked.value = Boolean(bookmarked);
+    },
+);
+
+function openImageViewer(index: number): void {
+    lightboxIndex.value = index;
+    lightboxOpen.value = true;
+}
+
+async function copyPostContent(): Promise<void> {
+    const text = [props.post.title, props.post.content]
+        .filter(Boolean)
+        .join('\n\n');
+
+    try {
+        await navigator.clipboard.writeText(text);
+        appToast.success(t('post.copiedText'));
+    } catch {
+        appToast.error(t('common.copyFailed'));
+    }
+}
 
 const editForm = useForm({
     title: props.post.title ?? '',
@@ -127,26 +170,62 @@ function requireUser(): boolean {
 function submitReaction(type: 'like' | 'love' | 'insightful'): void {
     showReactionMenu.value = false;
 
-    if (!requireUser()) {
+    if (!requireUser() || reacting.value) {
         return;
     }
+
+    const previousReaction = optimisticReaction.value;
+    const previousCount = optimisticReactionsCount.value;
+
+    if (previousReaction === type) {
+        optimisticReaction.value = null;
+        optimisticReactionsCount.value = Math.max(0, previousCount - 1);
+    } else if (previousReaction === null) {
+        optimisticReaction.value = type;
+        optimisticReactionsCount.value = previousCount + 1;
+    } else {
+        optimisticReaction.value = type;
+    }
+
+    reacting.value = true;
 
     router.post(
         PostInteractionController.react.url(props.post.id),
         { type },
-        { preserveScroll: true },
+        {
+            preserveScroll: true,
+            onError: () => {
+                optimisticReaction.value = previousReaction;
+                optimisticReactionsCount.value = previousCount;
+            },
+            onFinish: () => {
+                reacting.value = false;
+            },
+        },
     );
 }
 
 function submitBookmark(): void {
-    if (!requireUser()) {
+    if (!requireUser() || bookmarking.value) {
         return;
     }
+
+    const previousBookmarked = optimisticBookmarked.value;
+    optimisticBookmarked.value = !previousBookmarked;
+    bookmarking.value = true;
 
     router.post(
         PostInteractionController.bookmark.url(props.post.id),
         {},
-        { preserveScroll: true },
+        {
+            preserveScroll: true,
+            onError: () => {
+                optimisticBookmarked.value = previousBookmarked;
+            },
+            onFinish: () => {
+                bookmarking.value = false;
+            },
+        },
     );
 }
 
@@ -245,13 +324,13 @@ function submitReport(): void {
 
 <template>
     <article
-        class="rounded-xl border border-border bg-card p-5 shadow-xs transition-colors"
+        class="rounded-xl border border-border bg-card p-3.5 shadow-xs transition-colors sm:p-5"
     >
         <!-- Header -->
-        <header class="flex items-start justify-between gap-3">
-            <div class="flex min-w-0 items-center gap-3">
+        <header class="flex items-start justify-between gap-2.5 sm:gap-3">
+            <div class="flex min-w-0 items-center gap-2.5 sm:gap-3">
                 <Link :href="profileHref" class="shrink-0">
-                    <Avatar class="size-10 rounded-full">
+                    <Avatar class="size-10 shrink-0 rounded-full">
                         <AvatarImage
                             v-if="post.author?.avatar"
                             :src="post.author.avatar"
@@ -269,7 +348,7 @@ function submitReport(): void {
                     <div class="flex flex-wrap items-center gap-1.5">
                         <Link
                             :href="profileHref"
-                            class="truncate text-sm font-semibold text-foreground hover:text-primary"
+                            class="max-w-full truncate text-sm font-semibold text-foreground hover:text-primary"
                         >
                             {{ post.author?.name ?? 'Member' }}
                         </Link>
@@ -303,10 +382,12 @@ function submitReport(): void {
                         >
                             <Badge
                                 variant="soft"
-                                class="h-5 gap-1 rounded-md border border-primary/20 px-2 text-[10px] font-medium transition-colors hover:bg-primary/15"
+                                class="h-5 max-w-[160px] gap-1 truncate rounded-md border border-primary/20 px-2 text-[10px] font-medium transition-colors hover:bg-primary/15"
                             >
-                                <Users class="size-2.5" />
-                                {{ post.community.name }}
+                                <Users class="size-2.5 shrink-0" />
+                                <span class="truncate">{{
+                                    post.community.name
+                                }}</span>
                             </Badge>
                         </Link>
                         <Badge
@@ -337,9 +418,7 @@ function submitReport(): void {
                         >
                             {{
                                 post.published_at
-                                    ? new Date(
-                                          post.published_at,
-                                      ).toLocaleString()
+                                    ? formatDateTime(post.published_at, locale)
                                     : ''
                             }}
                         </Link>
@@ -347,23 +426,28 @@ function submitReport(): void {
                 </div>
             </div>
 
-            <DropdownMenu
-                v-if="user || post.can_edit || post.can_delete || canPin"
-            >
+            <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                     <Button
                         variant="ghost"
                         size="icon"
-                        class="size-8 shrink-0 rounded-lg text-muted-foreground"
+                        class="size-10 shrink-0 rounded-full text-muted-foreground sm:size-8 sm:rounded-lg"
                         aria-label="Post options"
                     >
                         <MoreHorizontal class="size-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" class="w-48 rounded-xl">
+                <DropdownMenuContent align="end" class="w-52 rounded-xl">
+                    <DropdownMenuItem
+                        class="min-h-10 cursor-pointer"
+                        @click="copyPostContent"
+                    >
+                        <Copy class="mr-2 size-4" />
+                        <span>{{ t('post.copyText') }}</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="canPin && (communitySlug || post.community?.slug)"
-                        class="cursor-pointer"
+                        class="min-h-10 cursor-pointer"
                         @click="togglePin"
                     >
                         <PinOff v-if="post.is_pinned" class="mr-2 size-4" />
@@ -374,7 +458,7 @@ function submitReport(): void {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="post.can_edit"
-                        class="cursor-pointer"
+                        class="min-h-10 cursor-pointer"
                         @click="isEditing = !isEditing"
                     >
                         <Pencil class="mr-2 size-4" />
@@ -382,7 +466,7 @@ function submitReport(): void {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="user && user.id !== post.author?.id"
-                        class="cursor-pointer"
+                        class="min-h-10 cursor-pointer"
                         @click="openReportDialog"
                     >
                         <Flag class="mr-2 size-4" />
@@ -390,7 +474,7 @@ function submitReport(): void {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="post.can_delete"
-                        class="cursor-pointer text-destructive focus:text-destructive"
+                        class="min-h-10 cursor-pointer text-destructive focus:text-destructive"
                         @click="deletePost"
                     >
                         <Trash2 class="mr-2 size-4" />
@@ -451,10 +535,10 @@ function submitReport(): void {
             </div>
         </div>
 
-        <div v-else class="mt-3.5 space-y-3">
+        <div v-else class="mt-3 space-y-3">
             <h2
                 v-if="post.title"
-                class="text-base leading-snug font-bold text-foreground sm:text-lg"
+                class="text-base leading-snug font-bold [overflow-wrap:anywhere] break-words text-foreground sm:text-lg"
             >
                 <Link
                     :href="PostController.show.url(post.id)"
@@ -465,13 +549,13 @@ function submitReport(): void {
             </h2>
 
             <div
-                class="text-sm leading-relaxed whitespace-pre-line text-foreground/90"
+                class="text-[15px] leading-relaxed [overflow-wrap:anywhere] break-words whitespace-pre-line text-foreground/90 sm:text-sm"
             >
                 {{ displayedContent }}
                 <button
                     v-if="truncate && post.content.length > 280"
                     type="button"
-                    class="ml-1.5 font-medium text-primary hover:underline"
+                    class="ml-1.5 inline-flex min-h-8 items-center font-medium text-primary hover:underline"
                     @click="isContentExpanded = !isContentExpanded"
                 >
                     {{
@@ -485,7 +569,7 @@ function submitReport(): void {
             <!-- Hashtags -->
             <div
                 v-if="post.hashtags && post.hashtags.length > 0"
-                class="flex flex-wrap gap-1.5"
+                class="no-scrollbar flex flex-nowrap gap-1.5 overflow-x-auto sm:flex-wrap"
             >
                 <Link
                     v-for="tag in post.hashtags"
@@ -493,32 +577,58 @@ function submitReport(): void {
                     :href="
                         SearchController.url({ query: { hashtag: tag.slug } })
                     "
-                    class="rounded-md bg-primary-soft px-2 py-0.5 text-xs font-medium text-accent-foreground transition-colors hover:bg-primary/15"
+                    class="shrink-0 rounded-md bg-primary-soft px-2.5 py-1 text-xs font-medium text-accent-foreground transition-colors hover:bg-primary/15"
                 >
                     #{{ tag.name }}
                 </Link>
             </div>
 
-            <!-- Images -->
+            <!-- Responsive Images (Swipe Snap Gallery on Mobile + Fullscreen Lightbox) -->
             <div
-                v-if="post.media.length > 0"
-                :class="[
-                    'grid gap-2 overflow-hidden rounded-xl',
-                    post.media.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
-                ]"
+                v-if="post.media.length === 1"
+                class="overflow-hidden rounded-xl border border-border bg-muted/40"
             >
-                <div
-                    v-for="media in post.media"
+                <button
+                    type="button"
+                    class="block w-full cursor-zoom-in focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    @click="openImageViewer(0)"
+                >
+                    <img
+                        :src="post.media[0].url"
+                        :alt="
+                            post.media[0].alt_text || post.title || 'Post image'
+                        "
+                        loading="lazy"
+                        decoding="async"
+                        class="max-h-[420px] w-full object-cover"
+                    />
+                </button>
+            </div>
+
+            <div
+                v-else-if="post.media.length > 1"
+                class="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto sm:grid sm:grid-cols-2 sm:overflow-visible"
+            >
+                <button
+                    v-for="(media, idx) in post.media"
                     :key="media.id"
-                    class="overflow-hidden rounded-lg border border-border bg-muted/40"
+                    type="button"
+                    class="relative aspect-[4/3] w-[82%] shrink-0 cursor-zoom-in snap-center overflow-hidden rounded-xl border border-border bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:w-full"
+                    @click="openImageViewer(idx)"
                 >
                     <img
                         :src="media.url"
                         :alt="media.alt_text || post.title || 'Post image'"
                         loading="lazy"
-                        class="max-h-96 w-full object-cover"
+                        decoding="async"
+                        class="size-full object-cover"
                     />
-                </div>
+                    <span
+                        class="absolute right-2 bottom-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white sm:hidden"
+                    >
+                        {{ idx + 1 }}/{{ post.media.length }}
+                    </span>
+                </button>
             </div>
 
             <!-- Link Preview -->
@@ -641,43 +751,43 @@ function submitReport(): void {
             </a>
         </div>
 
-        <!-- Engagement Footer -->
+        <!-- Engagement Footer (44px mobile touch targets + Optimistic UI) -->
         <footer
-            class="mt-4 flex items-center justify-between gap-2 border-t border-border pt-3 text-xs text-muted-foreground"
+            class="mt-3.5 flex items-center justify-between gap-1 border-t border-border pt-2 text-xs text-muted-foreground select-none"
         >
-            <div class="flex flex-wrap items-center gap-1 sm:gap-2">
-                <div class="relative">
+            <div class="flex items-center gap-0.5 sm:gap-2">
+                <div class="relative flex items-center">
                     <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         :class="[
-                            'h-8 gap-1.5 rounded-lg px-2.5 text-xs',
-                            post.viewer_reaction
+                            'min-h-10 gap-1.5 rounded-lg px-2.5 text-xs active:scale-95 sm:min-h-9',
+                            optimisticReaction
                                 ? 'bg-primary-soft font-semibold text-accent-foreground'
                                 : 'text-muted-foreground hover:text-foreground',
                         ]"
-                        @click="submitReaction(post.viewer_reaction || 'like')"
+                        @click="submitReaction(optimisticReaction || 'like')"
                         @contextmenu.prevent="
                             showReactionMenu = !showReactionMenu
                         "
                     >
                         <Heart
-                            v-if="post.viewer_reaction === 'love'"
+                            v-if="optimisticReaction === 'love'"
                             class="size-4 text-destructive"
                         />
                         <Lightbulb
-                            v-else-if="post.viewer_reaction === 'insightful'"
+                            v-else-if="optimisticReaction === 'insightful'"
                             class="size-4 text-warning"
                         />
                         <ThumbsUp v-else class="size-4" />
-                        <span>{{ post.reactions_count }}</span>
+                        <span>{{ optimisticReactionsCount }}</span>
                     </Button>
 
                     <!-- Reaction quick picker toggle -->
                     <button
                         type="button"
-                        class="ml-0.5 rounded px-1 py-1 text-[10px] text-muted-foreground hover:bg-muted"
+                        class="flex size-9 items-center justify-center rounded-lg text-xs text-muted-foreground hover:bg-muted sm:size-8"
                         aria-label="Choose reaction"
                         @click="showReactionMenu = !showReactionMenu"
                     >
@@ -686,13 +796,13 @@ function submitReport(): void {
 
                     <div
                         v-if="showReactionMenu"
-                        class="absolute bottom-full left-0 z-20 mb-1.5 flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-sm"
+                        class="absolute bottom-full left-0 z-20 mb-1.5 flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-md"
                     >
                         <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            class="h-7 rounded-full px-2.5 text-xs"
+                            class="min-h-9 rounded-full px-3 text-xs"
                             @click="submitReaction('like')"
                         >
                             <ThumbsUp class="mr-1 size-3.5 text-primary" />
@@ -702,7 +812,7 @@ function submitReport(): void {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            class="h-7 rounded-full px-2.5 text-xs"
+                            class="min-h-9 rounded-full px-3 text-xs"
                             @click="submitReaction('love')"
                         >
                             <Heart class="mr-1 size-3.5 text-destructive" />
@@ -712,7 +822,7 @@ function submitReport(): void {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            class="h-7 rounded-full px-2.5 text-xs"
+                            class="min-h-9 rounded-full px-3 text-xs"
                             @click="submitReaction('insightful')"
                         >
                             <Lightbulb class="mr-1 size-3.5 text-warning" />
@@ -724,7 +834,7 @@ function submitReport(): void {
                 <Button
                     variant="ghost"
                     size="sm"
-                    class="h-8 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground"
+                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground active:scale-95 sm:min-h-9"
                     as-child
                 >
                     <Link :href="PostController.show.url(post.id)">
@@ -737,7 +847,7 @@ function submitReport(): void {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    class="h-8 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground"
+                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground active:scale-95 sm:min-h-9"
                     @click="handleShare"
                 >
                     <Share2 class="size-4" />
@@ -750,13 +860,13 @@ function submitReport(): void {
                 variant="ghost"
                 size="icon"
                 :class="[
-                    'size-8 rounded-lg',
-                    post.is_bookmarked
+                    'size-10 rounded-lg active:scale-95 sm:size-9',
+                    optimisticBookmarked
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground',
                 ]"
                 :aria-label="
-                    post.is_bookmarked
+                    optimisticBookmarked
                         ? t('post.bookmarked')
                         : t('post.bookmark')
                 "
@@ -764,10 +874,23 @@ function submitReport(): void {
             >
                 <Bookmark
                     class="size-4"
-                    :fill="post.is_bookmarked ? 'currentColor' : 'none'"
+                    :fill="optimisticBookmarked ? 'currentColor' : 'none'"
                 />
             </Button>
         </footer>
+
+        <ImageLightbox
+            v-if="post.media.length > 0"
+            v-model:open="lightboxOpen"
+            :images="
+                post.media.map((m) => ({
+                    id: m.id,
+                    url: m.url,
+                    alt: m.alt_text || post.title || 'Post image',
+                }))
+            "
+            :initial-index="lightboxIndex"
+        />
 
         <Dialog v-model:open="reportOpen">
             <DialogContent class="max-w-md">
