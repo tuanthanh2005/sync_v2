@@ -38,7 +38,7 @@ class SocialAuthController extends Controller
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Throwable) {
             return redirect()->route('login')
-                ->withErrors(['email' => __('auth.social_failed')]);
+                ->withErrors(['email' => __('Unable to sign in with Google. Please try again.')]);
         }
 
         $user = DB::transaction(function () use ($socialUser, $provider) {
@@ -49,10 +49,10 @@ class SocialAuthController extends Controller
                 // Merge OAuth identity into existing account
                 if (! $existing->social_provider) {
                     $existing->forceFill([
-                        'social_provider'    => $provider,
+                        'social_provider' => $provider,
                         'social_provider_id' => $socialUser->getId(),
-                        'avatar_url'         => $existing->avatar_url ?? $socialUser->getAvatar(),
-                        'email_verified_at'  => $existing->email_verified_at ?? now(),
+                        'avatar_url' => $existing->avatar_url ?? $socialUser->getAvatar(),
+                        'email_verified_at' => $existing->email_verified_at ?? now(),
                     ])->save();
                 }
 
@@ -60,25 +60,25 @@ class SocialAuthController extends Controller
             }
 
             // Create a new user
-            $name     = $socialUser->getName() ?? $socialUser->getNickname() ?? 'User';
+            $name = $socialUser->getName() ?? $socialUser->getNickname() ?? 'User';
             $username = $this->generateUsername($name);
 
             return User::create([
-                'name'               => $name,
-                'username'           => $username,
-                'email'              => $socialUser->getEmail(),
-                'password'           => null,
-                'email_verified_at'  => now(),
-                'social_provider'    => $provider,
+                'name' => $name,
+                'username' => $username,
+                'email' => $socialUser->getEmail(),
+                'password' => Str::random(40),
+                'email_verified_at' => now(),
+                'social_provider' => $provider,
                 'social_provider_id' => $socialUser->getId(),
-                'avatar_url'         => $socialUser->getAvatar(),
+                'avatar_url' => $socialUser->getAvatar(),
             ]);
         });
 
         // Block suspended / banned accounts
         if ($user->status?->value === 'banned') {
             return redirect()->route('login')
-                ->withErrors(['email' => __('auth.account_banned')]);
+                ->withErrors(['email' => __('Your account has been suspended.')]);
         }
 
         Auth::login($user, remember: true);
@@ -97,10 +97,10 @@ class SocialAuthController extends Controller
         $base = preg_replace('/[^a-z0-9_]/', '', strtolower($base)) ?: 'user';
 
         $username = $base;
-        $counter  = 1;
+        $counter = 1;
 
         while (User::where('username', $username)->exists()) {
-            $username = $base . '_' . $counter++;
+            $username = $base.'_'.$counter++;
         }
 
         return $username;
