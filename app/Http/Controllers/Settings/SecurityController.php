@@ -30,6 +30,7 @@ class SecurityController extends Controller
 
         $props = [
             'canManageTwoFactor' => Features::canManageTwoFactorAuthentication(),
+            'hasPassword' => (bool) $user->has_password,
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
             'sessions' => $this->browserSessionService->activeSessions($user, $request),
             'loginHistory' => $this->browserSessionService->recentLoginHistory($user),
@@ -54,7 +55,11 @@ class SecurityController extends Controller
         $user = $request->user();
         $user->update([
             'password' => $request->password,
+            'has_password' => true,
         ]);
+
+        // Mark password as confirmed in session so OAuth users can enable 2FA right after setting their first password
+        $request->session()->put('auth.password_confirmed_at', time());
 
         $this->auditLogger->log('auth.password_updated', $user, [], $user, $request);
 

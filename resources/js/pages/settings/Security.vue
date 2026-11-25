@@ -26,6 +26,7 @@ import type { BrowserSessionItem, LoginHistoryItem } from '@/types';
 
 // oxfmt-ignore
 type Props = {
+    hasPassword?: boolean;
     passwordRules: string;
     sessions?: BrowserSessionItem[];
     loginHistory?: LoginHistoryItem[];
@@ -34,6 +35,7 @@ type Props = {
     ManageTwoFactorProps;
 
 const props = withDefaults(defineProps<Props>(), {
+    hasPassword: true,
     sessions: () => [],
     loginHistory: () => [],
     requiresAdminTwoFactor: false,
@@ -79,8 +81,12 @@ defineOptions({
         <div class="space-y-6">
             <Heading
                 variant="small"
-                title="Cập nhật mật khẩu"
-                description="Sử dụng mật khẩu mạnh và duy nhất để bảo vệ tài khoản của bạn"
+                :title="hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu lần đầu'"
+                :description="
+                    hasPassword
+                        ? 'Sử dụng mật khẩu mạnh và duy nhất để bảo vệ tài khoản của bạn'
+                        : 'Tạo mật khẩu cho tài khoản Google của bạn để bật xác thực 2 lớp (2FA) và quản lý phiên đăng nhập'
+                "
             />
 
             <Form
@@ -97,7 +103,7 @@ defineOptions({
                 class="space-y-5"
                 v-slot="{ errors, processing }"
             >
-                <div class="grid gap-2">
+                <div v-if="hasPassword" class="grid gap-2">
                     <Label for="current_password">Mật khẩu hiện tại</Label>
                     <PasswordInput
                         id="current_password"
@@ -143,17 +149,32 @@ defineOptions({
                         :disabled="processing"
                         data-test="update-password-button"
                     >
-                        Cập nhật mật khẩu
+                        {{ hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu' }}
                     </Button>
                 </div>
             </Form>
         </div>
 
         <ManageTwoFactor
+            v-if="hasPassword"
             :canManageTwoFactor="canManageTwoFactor"
             :requiresConfirmation="requiresConfirmation"
             :twoFactorEnabled="twoFactorEnabled"
         />
+        <div
+            v-else-if="canManageTwoFactor"
+            class="space-y-3 rounded-xl border border-border bg-muted/40 p-4"
+        >
+            <Heading
+                variant="small"
+                title="Xác thực 2 lớp (2FA)"
+                description="Bảo vệ tài khoản bằng mã TOTP từ ứng dụng xác thực"
+            />
+            <p class="text-sm text-muted-foreground">
+                Vui lòng đặt mật khẩu ở mục bên trên trước, sau đó bạn có thể bật
+                xác thực 2 lớp (2FA) ngay tại đây.
+            </p>
+        </div>
 
         <!-- Active Browser Sessions & Logout All Devices -->
         <div class="space-y-4">

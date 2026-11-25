@@ -68,6 +68,7 @@ class SocialAuthController extends Controller
                 'username' => $username,
                 'email' => $socialUser->getEmail(),
                 'password' => Str::random(40),
+                'has_password' => false,
                 'email_verified_at' => now(),
                 'social_provider' => $provider,
                 'social_provider_id' => $socialUser->getId(),
