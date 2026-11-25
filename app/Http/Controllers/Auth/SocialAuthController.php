@@ -82,6 +82,16 @@ class SocialAuthController extends Controller
                 ->withErrors(['email' => __('Your account has been suspended.')]);
         }
 
+        // Enforce 2FA challenge even when signing in via Google OAuth
+        if ($user->hasEnabledTwoFactorAuthentication()) {
+            request()->session()->put([
+                'login.id' => $user->getKey(),
+                'login.remember' => true,
+            ]);
+
+            return redirect()->route('two-factor.login');
+        }
+
         Auth::login($user, remember: true);
 
         request()->session()->regenerate();
