@@ -1,0 +1,75 @@
+# SyncViet — Security Architecture (OWASP Top 10:2025 & ASVS Level 2)
+
+SyncViet áp dụng **Security by Design** và **Defense in Depth** ngay từ Phase 0, tuân thủ **OWASP Top 10:2025** và hướng tới **OWASP ASVS Level 2**.
+
+---
+
+## 1. Authentication Security
+
+- **Framework**: Laravel Fortify (`config/fortify.php`).
+- **Password Hashing**: `Argon2id` mặc định (`HASH_DRIVER=argon2id` trong `config/hashing.php`, `rehash_on_login = true`).
+- **Email Verification**: `MustVerifyEmail` bắt buộc cho trang cá nhân, bảo mật, cài đặt và quản trị.
+- **Two-Factor Authentication (TOTP 2FA)**: Hỗ trợ QR code + recovery codes + xác nhận mật khẩu (`RequirePassword`).
+- **Mandatory Admin 2FA**: Middleware `EnsureAdminHasTwoFactor` (`admin.2fa`) bắt buộc mọi tài khoản `admin` kích hoạt 2FA trước khi truy cập `/admin` hoặc `/admin/policies`.
+- **Rate Limiting**: Giới hạn tốc độ đăng nhập (`login`: 5/phút theo `email|IP`), 2FA (`two-factor`: 5/phút), đăng ký (`register`: 5/phút theo IP) và gửi email xác minh.
+- **Session Management**: Session regeneration mặc định của Fortify, hỗ trợ **Đăng xuất tất cả thiết bị khác** (`BrowserSessionService::logoutOtherSessions`), cookie `HttpOnly=true`, `SameSite=Lax`, và `Secure=true` khi chạy HTTPS.
+
+## 2. Authorization Security
+
+- **Policies & Gates**: `AccountPolicy`, `PolicyPagePolicy`, `Gate::define('access-admin')`, `Gate::define('access-moderation')`.
+- **Deny by Default & Least Privilege**: Mọi endpoint không công khai đều yêu cầu middleware xác thực + phân quyền backend (`auth`, `verified`, `active`, `role:...`).
+- **Anti-IDOR & Anti-Privilege Escalation**: Kiểm tra quyền sở hữu tài nguyên trong Policy; loại trừ `role`, `status` và số dư khỏi `#[Fillable]`; bỏ qua `role`/`status` gửi từ client; không tin `user_id` hoặc giá tiền từ frontend.
+
+## 3. Input & Output Security
+
+- **Validation**: Form Request cho mọi mutation (`ProfileUpdateRequest`, `PolicyPageUpdateRequest`, `FooterLinkStoreRequest`, `LocaleUpdateRequest`, `LogoutOtherSessionsRequest`).
+- **SQL Injection Defense**: Eloquent ORM và Parameterized Query; không nối chuỗi SQL thô với đầu vào người dùng.
+- **XSS & CSRF Defense**: CSRF token mặc định của Laravel; Vue auto-escape; `PolicySanitizer` dùng `DOMDocument` allowlist lọc bỏ `<script>`, `<iframe>`, `on*` và scheme `javascript:`/`data:` trước khi lưu; cấm tuyệt đối `v-html` với dữ liệu chưa sanitize.
+- **Mass Assignment & SSRF**: Bảo vệ `#[Fillable]` chặt chẽ; ở Phase 1+, mọi chức năng link preview phải chặn dải IP nội bộ/private/loopback/metadata (`127.0.0.0/8`, `10.0.0.0/8`, `169.254.169.254`, v.v.).
+
+## 4. File Upload Security (Áp dụng đầy đủ từ Phase 1+)
+
+- Chỉ cho phép định dạng ảnh trong whitelist (JPEG, PNG, WebP).
+- Kiểm tra MIME Type thật (`finfo`) và kích thước/độ phân giải ảnh.
+- Tạo tên file ngẫu nhiên (`Str::uuid()`), không dùng tên file gốc từ client.
+- Re-encode ảnh qua thư viện xử lý ảnh trước khi lưu và loại bỏ metadata EXIF không cần thiết.
+- Chặn tuyệt đối PHP, file thực thi hoặc SVG chưa sanitize.
+- Lưu trữ ngoài vùng thực thi PHP (`storage/app/private` hoặc S3/R2), dùng Signed URL cho tài nguyên riêng tư.
+
+## 5. Payment & Advertising Security (Áp dụng đầy đủ từ Phase 3+)
+
+- Mọi phép tính tài chính thực hiện hoàn toàn ở backend bằng **integer** theo đơn vị nhỏ nhất (VND), tuyệt đối không dùng `float`.
+- Bao bọc mọi cập nhật số dư trong `DB::transaction` kết hợp pessimistic locking (`lockForUpdate()`).
+- Chống Race Condition, Double Spending, Replay Attack và Duplicate Transaction bằng `idempotency_key` + unique constraint trên `provider_reference`.
+- Xác minh chữ ký HMAC/RSA webhook cổng thanh toán; không cho phép số dư âm.
+- Sổ cái tài chính (`ad_credit_entries`) chỉ ghi thêm (append-only), có khả năng kiểm toán và ghi Audit Log mọi biến động.
+- Chống gian lận hiển thị/nhấp quảng cáo (dedupe, rate limit, bot filter).
+
+## 6. Server & Deployment Security
+
+- `APP_DEBUG=false` trên production; chỉ expose `public/` (không lộ `.env`, `.git`, `storage/`, `vendor/`, log hay file backup).
+- Bắt buộc HTTPS với Cloudflare **Full (strict)**.
+- Middleware `SecurityHeaders` áp dụng: `Content-Security-Policy` (`frame-ancestors 'self'`, `object-src 'none'`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`, và `HSTS` trên HTTPS production.
+- Tách riêng database credentials theo nguyên tắc Least Privilege; không cache trang cá nhân hóa trên Cloudflare; backup mã hóa ra ngoài hosting và kiểm thử khôi phục định kỳ.
+
+## 7. Dependency Security
+
+- Chạy `composer audit` và `npm audit` định kỳ và trước mỗi release.
+- Duy trì `composer.lock` và `package-lock.json`; chỉ sử dụng package chính thức/uy tín còn duy trì.
+
+## 8. Security Testing
+
+- Duy trì bộ automated test trong `tests/Feature/` kiểm tra: phân quyền chéo user (anti-IDOR), chặn truy cập Admin/Policy API, chống tự nâng `role`/`status`/số dư, bắt buộc Admin 2FA, XSS sanitization, URL validation, đăng xuất mọi thiết bị, security headers, rate limiting, và từ Phase 1–3 bổ sung test upload độc hại, webhook replay và race condition chi tiêu.
+
+## 9. Security Monitoring
+
+- `AuditLogger` (`audit_logs`): Ghi nhận đăng nhập, bật/tắt 2FA, đăng xuất thiết bị khác, đổi mật khẩu, thay đổi chính sách/footer và mọi tác vụ quản trị/tài chính nhạy cảm (tự động redact `password`, `token`, `secret`, `code`).
+- `RecordAuthSecurityEvents` (`login_histories`): Ghi nhận đăng nhập thành công, thất bại và đăng xuất kèm IP và User-Agent.
+- Không bao giờ ghi mật khẩu, token hoặc secret vào application logs.
+
+## 10. Quy chuẩn phát triển bắt buộc
+
+- Không tắt cơ chế bảo mật để xử lý lỗi tạm thời.
+- Không bypass Authorization hoặc Form Request Validation.
+- Không tạo backdoor hay tài khoản Admin mặc định có mật khẩu cố định trong mã nguồn.
+- Mọi module chỉ được đánh dấu hoàn thành sau khi vượt qua `docs/SECURITY_CHECKLIST.md` và test tự động.
