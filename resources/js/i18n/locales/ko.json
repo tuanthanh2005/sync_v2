@@ -801,7 +801,7 @@
             "monthShort": "개월"
         },
         "benefits": {
-            "blue_badge": "게시물, 댓글, 프로필 및 메시지에 SyncViet Premium 블루 배지(#1D9BF0) 표시",
+            "blue_badge": "게시물, 댓글, 프로필, 메시지에 표시되는 SyncViet Premium 블루 배지",
             "post_analytics": "게시물 도달률 및 참여 성과 분석",
             "reduced_ads": "피드 내 스폰서 광고 노출 감소",
             "ad_free": "SyncViet 전역 광고 없는 탐색 환경",
@@ -840,7 +840,32 @@
             "extendButton": "요금제 연장",
             "moderationRuleTitle": "동일한 안전 및 운영 기준",
             "moderationRuleDesc": "Premium 회원도 모든 SyncViet 커뮤니티 가이드라인, 스팸 방지 규칙 및 보안 검사를 동일하게 준수해야 합니다.",
-            "manualConfirmHint": "주문은 자동으로 생성되지 않습니다. 결제 주문이 생성되기 전에 항상 세부 정보를 확인하고 예/아니오로 직접 확정하게 됩니다."
+            "manualConfirmHint": "주문은 자동으로 생성되지 않습니다. 결제 주문이 생성되기 전에 항상 세부 정보를 확인하고 예/아니오로 직접 확정하게 됩니다.",
+            "slogan": "더 선명한 존재감과 쾌적한 SyncViet 경험을 만나보세요.",
+            "chooseDurationTitle": "멤버십 기간 선택",
+            "chooseDurationSubtitle": "하나의 선불 멤버십으로 원하는 기간을 선택하세요. 기간이 길수록 할인율이 높아집니다.",
+            "bestValue": "최고의 혜택",
+            "savePercent": "{percent}% 할인",
+            "perMonth": "월 {price}",
+            "billedOnce": "1회 선불 결제",
+            "durationOneMonth": "1개월",
+            "durationMonths": "{count}개월",
+            "durationDays": "{count}일",
+            "adFreeTag": "광고 완전 제거",
+            "reducedAdsTag": "광고 축소",
+            "benefitsHeading": "SyncViet Premium 포함 혜택",
+            "adFreeUpgradeHint": "{duration} 플랜은 광고 축소 대신 광고가 전혀 표시되지 않는 환경을 제공합니다.",
+            "switchToAdFree": "{duration} 선택",
+            "adFreeIncludedBadge": "광고 없음 포함",
+            "summaryTitle": "결제 요약",
+            "summarySelectedPlan": "선택한 플랜",
+            "summaryDuration": "이용 기간",
+            "summaryOriginalPrice": "정상가",
+            "summarySavings": "절약 금액",
+            "summaryTotal": "총 결제 금액",
+            "renewalPolicy": "자동 갱신이나 정기 결제가 없는 1회 선불 결제입니다. 연장 시 남은 기간에 그대로 합산됩니다.",
+            "upgradeCta": "Premium 업그레이드",
+            "signInToUpgrade": "로그인하여 업그레이드"
         },
         "accountPremium": {
             "pageTitle": "내 SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "SyncViet을 이용하려면 비용을 내야 하나요?",
             "a1": "아니요. 게시물 작성, 댓글, 반응, 팔로우, 메시지 및 커뮤니티 가입은 모두 완전 무료입니다.",
             "q2": "SyncViet Premium 배지는 본인 인증과 같은 것인가요?",
-            "a2": "아니요. #1D9BF0 파란색 체크 표시는 활성화된 유료 SyncViet Premium 멤버십을 나타냅니다. 본인 인증 및 운영진 배지와는 엄격히 구분됩니다.",
+            "a2": "아니요. 파란색 체크 표시는 활성화된 유료 SyncViet Premium 멤버십을 나타냅니다. 본인 인증 및 운영진 배지와는 엄격히 구분됩니다.",
             "q3": "만료 전에 Premium 요금제를 연장하면 어떻게 되나요?",
             "a3": "새 기간이 기존 만료 일시에 바로 합산되므로 남은 일수를 단 하루도 잃지 않습니다.",
             "q4": "광고 잔액을 출금하거나 다른 사용자에게 이체할 수 있나요?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "선불 광고 예치금과 확정된 직접 서비스 수익을 엄격히 구분하여 집계하는 이중 통화(VND 및 USD) 리포트입니다.",
             "recognizedRevenue": "확정 서비스 수익",
             "prepaidDeposits": "선불 광고 잔액 입금액"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Premium 블루 배지",
+                "desc": "게시물, 댓글, 프로필, 검색 결과, 메시지에서 이름 옆에 SyncViet Premium 블루 배지를 표시합니다."
+            },
+            "post_analytics": {
+                "title": "게시물 성과 분석",
+                "desc": "작성한 게시물의 실제 도달률과 참여 지표를 한눈에 확인할 수 있습니다."
+            },
+            "profile_highlights": {
+                "title": "고급 프로필 꾸미기",
+                "desc": "커뮤니티 전반에서 더 돋보이고 신뢰감 있는 프로필을 구성하세요."
+            },
+            "reduced_ads": {
+                "title": "피드 광고 축소",
+                "desc": "스폰서 콘텐츠 노출을 줄여 더 깔끔한 피드 환경을 제공합니다."
+            },
+            "ad_free": {
+                "title": "광고 없는 브라우징",
+                "desc": "SyncViet 피드와 커뮤니티를 스폰서 광고 없이 완전히 쾌적하게 이용하세요."
+            },
+            "priority_support": {
+                "title": "우선 고객 지원",
+                "desc": "계정 관련 문의를 SyncViet 지원팀이 우선적으로 검토하고 빠르게 응답합니다."
+            }
         }
     }
 }

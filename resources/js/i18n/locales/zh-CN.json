@@ -801,7 +801,7 @@
             "monthShort": "月"
         },
         "benefits": {
-            "blue_badge": "在帖子、评论、个人主页及私信中展示 SyncViet Premium 蓝标（#1D9BF0）",
+            "blue_badge": "在帖子、评论、个人主页与私信中显示的 SyncViet Premium 蓝标徽章",
             "post_analytics": "帖子触达与互动表现数据分析",
             "reduced_ads": "减少信息流中的赞助广告干扰",
             "ad_free": "在 SyncViet 全站畅享无广告浏览体验",
@@ -840,7 +840,32 @@
             "extendButton": "续期套餐",
             "moderationRuleTitle": "平等的安全与审核标准",
             "moderationRuleDesc": "Premium 会员仍需严格遵守 SyncViet 社区准则、反垃圾信息规则及所有安全检查。",
-            "manualConfirmHint": "系统绝不会自动生成订单。在生成任何付款订单前，您都必须先核对详情并点击“是/否”确认。"
+            "manualConfirmHint": "系统绝不会自动生成订单。在生成任何付款订单前，您都必须先核对详情并点击“是/否”确认。",
+            "slogan": "脱颖而出，畅享更专注清爽的 SyncViet 体验。",
+            "chooseDurationTitle": "选择会员时长",
+            "chooseDurationSubtitle": "统一预付费会员方案，时长越长，平均每月越优惠。",
+            "bestValue": "超值推荐",
+            "savePercent": "立省 {percent}%",
+            "perMonth": "约 {price} / 月",
+            "billedOnce": "单次预付",
+            "durationOneMonth": "1 个月",
+            "durationMonths": "{count} 个月",
+            "durationDays": "{count} 天",
+            "adFreeTag": "全程免广告",
+            "reducedAdsTag": "减少广告展示",
+            "benefitsHeading": "SyncViet Premium 会员权益",
+            "adFreeUpgradeHint": "{duration}方案将“减少广告”升级为全程免广告浏览体验。",
+            "switchToAdFree": "选择 {duration}",
+            "adFreeIncludedBadge": "含全程免广告",
+            "summaryTitle": "订单摘要",
+            "summarySelectedPlan": "已选方案",
+            "summaryDuration": "有效时长",
+            "summaryOriginalPrice": "原价参考",
+            "summarySavings": "已节省",
+            "summaryTotal": "应付总额",
+            "renewalPolicy": "单次预付，无自动续费或隐藏扣款。续费时新时长将直接顺延至当前剩余天数之后。",
+            "upgradeCta": "升级至 Premium",
+            "signInToUpgrade": "登录后升级"
         },
         "accountPremium": {
             "pageTitle": "我的 SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "使用 SyncViet 需要付费吗？",
             "a1": "不需要。发帖、评论、互动、关注、发送私信以及加入社区完全免费。",
             "q2": "SyncViet Premium 徽章等同于身份认证吗？",
-            "a2": "不是。#1D9BF0 蓝色对勾仅代表有效付费期内的 SyncViet Premium 会员身份，与身份认证徽章和官方工作人员标识严格独立。",
+            "a2": "不是。蓝色对勾仅代表有效付费期内的 SyncViet Premium 会员身份，与身份认证徽章和官方工作人员标识严格独立。",
             "q3": "如果在到期前续费 Premium 套餐会怎样？",
             "a3": "新购买的时长会直接叠加到您原有的到期时间点之后，您不会损失任何一天剩余有效期。",
             "q4": "我可以将广告余额提现或转账给其他用户吗？",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "双币种（VND 与 USD）财务报表，严格区分预付广告充值资金与已确认的直接服务营收。",
             "recognizedRevenue": "已确认服务营收",
             "prepaidDeposits": "预付广告余额充值额"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Premium 蓝标徽章",
+                "desc": "在帖子、评论、个人资料、搜索与私信中于姓名旁展示专属 SyncViet Premium 蓝标。"
+            },
+            "post_analytics": {
+                "title": "帖子表现数据统计",
+                "desc": "查看所发布帖子的真实触达人数与互动表现趋势。"
+            },
+            "profile_highlights": {
+                "title": "进阶个人主页展示",
+                "desc": "在各大社区中打造更具辨识度与专业感的个人主页。"
+            },
+            "reduced_ads": {
+                "title": "减少信息流广告",
+                "desc": "减少赞助内容打扰，让阅读与讨论体验更加流畅。"
+            },
+            "ad_free": {
+                "title": "纯净免广告体验",
+                "desc": "在 SyncViet 信息流与社区中享受完全无赞助广告的浏览环境。"
+            },
+            "priority_support": {
+                "title": "优先客服支持",
+                "desc": "您的账号支持请求将获得 SyncViet 团队优先受理与更快响应。"
+            }
         }
     }
 }

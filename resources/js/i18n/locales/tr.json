@@ -801,7 +801,7 @@
             "monthShort": "ay"
         },
         "benefits": {
-            "blue_badge": "Gönderilerde, yorumlarda, profillerde ve mesajlarda SyncViet Premium mavi rozeti (#1D9BF0)",
+            "blue_badge": "Gönderiler, yorumlar, profiller ve mesajlarda SyncViet Premium mavi rozeti",
             "post_analytics": "Gönderi erişimi ve etkileşim performansı analizleri",
             "reduced_ads": "Akışta daha az sponsorlu içerik gösterimi",
             "ad_free": "SyncViet genelinde reklamsız gezinme deneyimi",
@@ -840,7 +840,32 @@
             "extendButton": "Planı Uzat",
             "moderationRuleTitle": "Eşit Güvenlik ve Moderasyon Standartları",
             "moderationRuleDesc": "Premium üyeler de tüm SyncViet Topluluk Kurallarına, spam önleme kurallarına ve güvenlik kontrollerine tabidir.",
-            "manualConfirmHint": "Siparişler hiçbir zaman otomatik oluşturulmaz. Herhangi bir ödeme siparişi oluşturulmadan önce ayrıntıları her zaman inceleyip Evet/Hayır ile onaylarsınız."
+            "manualConfirmHint": "Siparişler hiçbir zaman otomatik oluşturulmaz. Herhangi bir ödeme siparişi oluşturulmadan önce ayrıntıları her zaman inceleyip Evet/Hayır ile onaylarsınız.",
+            "slogan": "SyncViet’te net bir şekilde öne çıkın ve daha sade bir deneyim yaşayın.",
+            "chooseDurationTitle": "Üyelik süresini seçin",
+            "chooseDurationSubtitle": "Tek ön ödemeli üyelik — daha uzun süreler daha yüksek tasarruf sağlar.",
+            "bestValue": "En Avantajlı",
+            "savePercent": "%{percent} tasarruf",
+            "perMonth": "Aylık {price}",
+            "billedOnce": "Tek seferlik ön ödeme",
+            "durationOneMonth": "1 ay",
+            "durationMonths": "{count} ay",
+            "durationDays": "{count} gün",
+            "adFreeTag": "Reklamsız deneyim",
+            "reducedAdsTag": "Daha az reklam",
+            "benefitsHeading": "SyncViet Premium ayrıcalıkları",
+            "adFreeUpgradeHint": "{duration} planı, daha az reklam yerine tamamen reklamsız gezinme deneyimi sunar.",
+            "switchToAdFree": "{duration} seç",
+            "adFreeIncludedBadge": "Reklamsız dahil",
+            "summaryTitle": "Sipariş Özeti",
+            "summarySelectedPlan": "Seçilen Plan",
+            "summaryDuration": "Süre",
+            "summaryOriginalPrice": "Standart Değer",
+            "summarySavings": "Tasarrufunuz",
+            "summaryTotal": "Ödenecek Toplam",
+            "renewalPolicy": "Otomatik yenileme olmayan tek seferlik ön ödeme. Süre uzattığınızda yeni günler kalan sürenize doğrudan eklenir.",
+            "upgradeCta": "Premium’a Yükselt",
+            "signInToUpgrade": "Yükseltmek için Giriş Yap"
         },
         "accountPremium": {
             "pageTitle": "SyncViet Premium Üyeliğim",
@@ -960,7 +985,7 @@
             "q1": "SyncViet kullanmak için ödeme yapmam gerekiyor mu?",
             "a1": "Hayır. Gönderi paylaşmak, yorum yapmak, tepki vermek, takip etmek, mesajlaşmak ve topluluklara katılmak tamamen ücretsizdir.",
             "q2": "SyncViet Premium rozeti Kimlik Doğrulama ile aynı şey mi?",
-            "a2": "Hayır. #1D9BF0 mavi onay işareti aktif ücretli bir SyncViet Premium üyeliğini gösterir. Kimlik doğrulama ve personel rozetleri tamamen ayrıdır.",
+            "a2": "Hayır. Mavi onay işareti aktif ücretli bir SyncViet Premium üyeliğini gösterir. Kimlik doğrulama ve personel rozetleri tamamen ayrıdır.",
             "q3": "Süresi dolmadan önce Premium planımı uzatırsam ne olur?",
             "a3": "Yeni süreniz doğrudan mevcut bitiş zaman damganızın üzerine eklenir; böylece tek bir kalan gününüzü bile kaybetmezsiniz.",
             "q4": "Reklam Bakiyemi çekebilir veya başka bir kullanıcıya aktarabilir miyim?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Ön ödemeli reklam yüklemelerini muhasebeleştirilmiş doğrudan hizmet gelirinden kesin olarak ayıran çift para birimli (VND ve USD) raporlama.",
             "recognizedRevenue": "Muhasebeleştirilmiş Hizmet Geliri",
             "prepaidDeposits": "Ön Ödemeli Reklam Bakiyesi Yüklemeleri"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Premium Mavi Rozet",
+                "desc": "Gönderiler, yorumlar, profil, arama ve mesajlarda adınızın yanında SyncViet Premium mavi rozetini gösterin."
+            },
+            "post_analytics": {
+                "title": "Gönderi Performans Analitiği",
+                "desc": "Paylaştığınız gönderilerin gerçek erişim ve etkileşim verilerini takip edin."
+            },
+            "profile_highlights": {
+                "title": "Gelişmiş Profil Görünümü",
+                "desc": "Topluluklarda daha düzenli ve öne çıkan bir profil sunun."
+            },
+            "reduced_ads": {
+                "title": "Akışta Daha Az Reklam",
+                "desc": "Daha az sponsorlu kesintiyle akıcı bir okuma ve tartışma deneyimi yaşayın."
+            },
+            "ad_free": {
+                "title": "Reklamsız Deneyim",
+                "desc": "SyncViet akışını ve topluluklarını sponsorlu reklamlar olmadan gezin."
+            },
+            "priority_support": {
+                "title": "Öncelikli Destek",
+                "desc": "Hesap destek talepleriniz SyncViet ekibi tarafından öncelikli olarak yanıtlanır."
+            }
         }
     }
 }

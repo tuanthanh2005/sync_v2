@@ -801,7 +801,7 @@
             "monthShort": "mois"
         },
         "benefits": {
-            "blue_badge": "Badge bleu SyncViet Premium (#1D9BF0) sur les publications, commentaires, profils et messages",
+            "blue_badge": "Badge bleu SyncViet Premium sur les publications, commentaires, profils et messages",
             "post_analytics": "Statistiques de portée et d'engagement des publications",
             "reduced_ads": "Réduction des contenus sponsorisés dans le fil",
             "ad_free": "Navigation sans publicité sur tout SyncViet",
@@ -840,7 +840,32 @@
             "extendButton": "Prolonger l'offre",
             "moderationRuleTitle": "Mêmes normes de sécurité et de modération",
             "moderationRuleDesc": "Les membres Premium restent soumis à toutes les Règles de la communauté SyncViet, aux règles anti-spam et aux contrôles de sécurité.",
-            "manualConfirmHint": "Aucune commande n'est jamais créée automatiquement. Vous vérifiez et confirmez toujours par Oui/Non avant la création d'une commande de paiement."
+            "manualConfirmHint": "Aucune commande n'est jamais créée automatiquement. Vous vérifiez et confirmez toujours par Oui/Non avant la création d'une commande de paiement.",
+            "slogan": "Démarquez-vous et profitez d’une expérience SyncViet plus sereine.",
+            "chooseDurationTitle": "Choisissez la durée de votre abonnement",
+            "chooseDurationSubtitle": "Un seul abonnement prépayé — plus la durée est longue, plus vous économisez.",
+            "bestValue": "Meilleure offre",
+            "savePercent": "Économisez {percent}%",
+            "perMonth": "{price} / mois",
+            "billedOnce": "Prépayé en une fois",
+            "durationOneMonth": "1 mois",
+            "durationMonths": "{count} mois",
+            "durationDays": "{count} jours",
+            "adFreeTag": "Sans publicité",
+            "reducedAdsTag": "Publicités réduites",
+            "benefitsHeading": "Inclus dans SyncViet Premium",
+            "adFreeUpgradeHint": "La formule {duration} offre une navigation totalement sans publicité au lieu de publicités réduites.",
+            "switchToAdFree": "Choisir {duration}",
+            "adFreeIncludedBadge": "Sans publicité inclus",
+            "summaryTitle": "Récapitulatif de commande",
+            "summarySelectedPlan": "Formule sélectionnée",
+            "summaryDuration": "Durée",
+            "summaryOriginalPrice": "Valeur standard",
+            "summarySavings": "Économie",
+            "summaryTotal": "Total à payer",
+            "renewalPolicy": "Paiement prépayé unique, sans renouvellement automatique. Toute prolongation s’ajoute directement aux jours restants.",
+            "upgradeCta": "Passer à Premium",
+            "signInToUpgrade": "Se connecter pour passer à Premium"
         },
         "accountPremium": {
             "pageTitle": "Mon SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "Dois-je payer pour utiliser SyncViet ?",
             "a1": "Non. Publier, commenter, réagir, suivre, envoyer des messages et rejoindre des communautés est entièrement gratuit.",
             "q2": "Le badge SyncViet Premium est-il identique à la Vérification d'identité ?",
-            "a2": "Non. La coche bleue #1D9BF0 indique un abonnement payant SyncViet Premium actif. La vérification d'identité et les badges du personnel sont strictement distincts.",
+            "a2": "Non. La coche bleue indique un abonnement payant SyncViet Premium actif. La vérification d'identité et les badges du personnel sont strictement distincts.",
             "q3": "Que se passe-t-il si je prolonge mon offre Premium avant son expiration ?",
             "a3": "La nouvelle durée s'ajoute directement à votre date d'expiration existante afin que vous ne perdiez aucun jour restant.",
             "q4": "Puis-je retirer ou transférer mon Solde publicitaire vers un autre utilisateur ?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Rapports bi-devises (VND et USD) séparant strictement les dépôts publicitaires prépayés des revenus directs reconnus pour les services.",
             "recognizedRevenue": "Revenus de services reconnus",
             "prepaidDeposits": "Dépôts prépayés de solde publicitaire"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Badge bleu Premium",
+                "desc": "Affichez le badge bleu SyncViet Premium à côté de votre nom sur les publications, commentaires, profils, recherches et messages."
+            },
+            "post_analytics": {
+                "title": "Statistiques de publications",
+                "desc": "Suivez la portée réelle et l’engagement de vos publications."
+            },
+            "profile_highlights": {
+                "title": "Mise en valeur du profil",
+                "desc": "Présentez un profil soigné qui met en avant votre présence dans les communautés."
+            },
+            "reduced_ads": {
+                "title": "Publicités réduites",
+                "desc": "Profitez d’un fil plus fluide avec moins de contenus sponsorisés."
+            },
+            "ad_free": {
+                "title": "Navigation sans publicité",
+                "desc": "Parcourez SyncViet et ses communautés entièrement sans annonces sponsorisées."
+            },
+            "priority_support": {
+                "title": "Support prioritaire",
+                "desc": "Bénéficiez d’un traitement prioritaire et de réponses plus rapides de l’équipe SyncViet."
+            }
         }
     }
 }

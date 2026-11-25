@@ -92,6 +92,7 @@ import type {
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
+    hideRightSidebar?: boolean;
 };
 
 type SidebarNavItem = NavItem & {
@@ -106,6 +107,7 @@ type SidebarGroup = {
 
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
+    hideRightSidebar: false,
 });
 
 const { t, locale } = useI18n();
@@ -752,7 +754,7 @@ function isItemActive(item: NavItem): boolean {
 
                 <!-- Left Sidebar Guide / Tablet Promo Card (avoids duplicating Right Sidebar card on xl+) -->
                 <div
-                    v-if="isAdsOrWalletPage"
+                    v-if="!hideRightSidebar && isAdsOrWalletPage"
                     class="rounded-xl border border-border bg-card p-4 text-center"
                 >
                     <div
@@ -799,7 +801,7 @@ function isItemActive(item: NavItem): boolean {
                 </div>
 
                 <div
-                    v-else-if="!isCommunityPage || !user"
+                    v-else-if="!hideRightSidebar && (!isCommunityPage || !user)"
                     class="rounded-xl border border-border bg-card p-4 text-center xl:hidden"
                 >
                     <div
@@ -847,18 +849,25 @@ function isItemActive(item: NavItem): boolean {
                         </Link>
                     </Button>
                 </div>
+
+                <!-- Compact Footer below Left Sidebar on wide ServiceLayout pages -->
+                <MiniFooter v-if="hideRightSidebar" />
             </aside>
 
-            <!-- Main Content Column (600-760px) -->
+            <!-- Main Content Column (760px on 3-column Feed / 1060px on 2-column ServiceLayout) -->
             <main
                 id="main-content"
-                class="mx-auto w-full max-w-[760px] min-w-0 flex-1"
+                :class="[
+                    'mx-auto w-full min-w-0 flex-1',
+                    hideRightSidebar ? 'max-w-[1060px]' : 'max-w-[760px]',
+                ]"
             >
                 <slot />
             </main>
 
-            <!-- Right Sidebar (~320px) + MiniFooter -->
+            <!-- Right Sidebar (~320px) + MiniFooter (hidden on ServiceLayout pages) -->
             <aside
+                v-if="!hideRightSidebar"
                 aria-label="Thông tin bổ trợ"
                 class="sticky top-22 hidden w-[320px] shrink-0 space-y-4 xl:block"
             >

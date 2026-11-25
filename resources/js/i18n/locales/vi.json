@@ -801,7 +801,7 @@
             "monthShort": "tháng"
         },
         "benefits": {
-            "blue_badge": "Huy hiệu tích xanh SyncViet Premium (#1D9BF0) tại bài viết, bình luận, hồ sơ & tin nhắn",
+            "blue_badge": "Huy hiệu tích xanh SyncViet Premium tại bài viết, bình luận, hồ sơ & tin nhắn",
             "post_analytics": "Thống kê hiệu suất tiếp cận & tương tác bài viết",
             "reduced_ads": "Giảm tần suất hiển thị quảng cáo trên bảng tin",
             "ad_free": "Trải nghiệm duyệt SyncViet không quảng cáo",
@@ -840,7 +840,32 @@
             "extendButton": "Gia hạn gói",
             "moderationRuleTitle": "Tiêu chuẩn kiểm duyệt & an toàn bình đẳng",
             "moderationRuleDesc": "Thành viên Premium vẫn tuân thủ đầy đủ Quy tắc cộng đồng, chống spam và mọi giới hạn bảo mật của SyncViet.",
-            "manualConfirmHint": "Hệ thống không bao giờ tự tạo đơn khi mở trang. Bạn luôn xem chi tiết và bấm xác nhận Có/Không trước khi tạo đơn thanh toán."
+            "manualConfirmHint": "Hệ thống không bao giờ tự tạo đơn khi mở trang. Bạn luôn xem chi tiết và bấm xác nhận Có/Không trước khi tạo đơn thanh toán.",
+            "slogan": "Trải nghiệm trọn vẹn, tập trung và nổi bật hơn trên SyncViet.",
+            "chooseDurationTitle": "Chọn thời hạn thành viên",
+            "chooseDurationSubtitle": "Cùng một gói thành viên SyncViet Premium — thời hạn càng dài, mức tiết kiệm càng cao.",
+            "bestValue": "Tiết kiệm nhất",
+            "savePercent": "Tiết kiệm {percent}%",
+            "perMonth": "{price} / tháng",
+            "billedOnce": "Trả trước 1 lần",
+            "durationOneMonth": "1 tháng",
+            "durationMonths": "{count} tháng",
+            "durationDays": "{count} ngày",
+            "adFreeTag": "Không quảng cáo",
+            "reducedAdsTag": "Giảm quảng cáo",
+            "benefitsHeading": "Quyền lợi thành viên SyncViet Premium",
+            "adFreeUpgradeHint": "Gói {duration} bao gồm trải nghiệm không quảng cáo hoàn toàn thay vì chỉ giảm quảng cáo.",
+            "switchToAdFree": "Chọn gói {duration}",
+            "adFreeIncludedBadge": "Không quảng cáo",
+            "summaryTitle": "Tóm tắt thanh toán",
+            "summarySelectedPlan": "Gói đang chọn",
+            "summaryDuration": "Thời hạn",
+            "summaryOriginalPrice": "Giá gốc",
+            "summarySavings": "Tiết kiệm",
+            "summaryTotal": "Tổng thanh toán",
+            "renewalPolicy": "Thanh toán trả trước theo kỳ, không tự động gia hạn hay trừ tiền ngầm. Khi gia hạn, thời gian mới được cộng dồn trực tiếp vào số ngày còn lại.",
+            "upgradeCta": "Nâng cấp Premium",
+            "signInToUpgrade": "Đăng nhập để nâng cấp"
         },
         "accountPremium": {
             "pageTitle": "SyncViet Premium của tôi",
@@ -960,7 +985,7 @@
             "q1": "Tôi có phải trả tiền để dùng mạng xã hội SyncViet không?",
             "a1": "Không. Đăng bài, bình luận, thả cảm xúc, theo dõi, nhắn tin và tham gia cộng đồng luôn hoàn toàn miễn phí.",
             "q2": "Huy hiệu SyncViet Premium có phải Xác minh danh tính không?",
-            "a2": "Không. Tích xanh #1D9BF0 biểu thị thành viên trả phí SyncViet Premium đang hoạt động, hoàn toàn tách biệt với Xác minh danh tính và Quản trị viên.",
+            "a2": "Không. Tích xanh biểu thị thành viên trả phí SyncViet Premium đang hoạt động, hoàn toàn tách biệt với Xác minh danh tính và Quản trị viên.",
             "q3": "Gia hạn Premium trước khi hết hạn có bị mất ngày còn lại không?",
             "a3": "Không. Thời hạn mới luôn được cộng dồn trực tiếp vào mốc hết hạn hiện tại của bạn.",
             "q4": "Tôi có thể rút tiền hoặc chuyển Số dư quảng cáo sang tài khoản khác không?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Báo cáo tách bạch VND & USD, phân tách rõ tiền nạp trả trước (Số dư quảng cáo) và doanh thu dịch vụ đã ghi nhận.",
             "recognizedRevenue": "Doanh thu dịch vụ ghi nhận",
             "prepaidDeposits": "Tiền nạp Số dư quảng cáo"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Huy hiệu tích xanh Premium",
+                "desc": "Hiển thị huy hiệu tích xanh riêng của SyncViet cạnh tên bạn tại bài viết, bình luận, hồ sơ, tìm kiếm và tin nhắn."
+            },
+            "post_analytics": {
+                "title": "Thống kê hiệu suất bài viết",
+                "desc": "Theo dõi lượt tiếp cận và mức độ tương tác thực tế của các bài viết bạn chia sẻ."
+            },
+            "profile_highlights": {
+                "title": "Tùy chỉnh hồ sơ nâng cao",
+                "desc": "Làm nổi bật hồ sơ cá nhân chuyên nghiệp và đáng tin cậy hơn trong mọi cộng đồng."
+            },
+            "reduced_ads": {
+                "title": "Giảm quảng cáo trên bảng tin",
+                "desc": "Hạn chế nội dung tài trợ xuất hiện trên bảng tin để đọc và trao đổi liền mạch hơn."
+            },
+            "ad_free": {
+                "title": "Trải nghiệm không quảng cáo",
+                "desc": "Duyệt bảng tin và các cộng đồng SyncViet hoàn toàn không bị gián đoạn bởi quảng cáo tài trợ."
+            },
+            "priority_support": {
+                "title": "Hỗ trợ ưu tiên",
+                "desc": "Các yêu cầu hỗ trợ tài khoản được đội ngũ SyncViet ưu tiên tiếp nhận và phản hồi nhanh hơn."
+            }
         }
     }
 }

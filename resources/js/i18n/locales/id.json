@@ -801,7 +801,7 @@
             "monthShort": "bln"
         },
         "benefits": {
-            "blue_badge": "Lencana biru SyncViet Premium (#1D9BF0) di postingan, komentar, profil & pesan",
+            "blue_badge": "Lencana biru SyncViet Premium di postingan, komentar, profil, dan pesan",
             "post_analytics": "Analitik jangkauan & performa interaksi postingan",
             "reduced_ads": "Lebih sedikit tampilan konten bersponsor di beranda",
             "ad_free": "Pengalaman menjelajah bebas iklan di seluruh SyncViet",
@@ -840,7 +840,32 @@
             "extendButton": "Perpanjang Paket",
             "moderationRuleTitle": "Standar Keamanan & Moderasi yang Setara",
             "moderationRuleDesc": "Anggota Premium tetap tunduk pada seluruh Pedoman Komunitas SyncViet, aturan anti-spam, dan pemeriksaan keamanan.",
-            "manualConfirmHint": "Pesanan tidak pernah dibuat secara otomatis. Anda akan selalu meninjau dan mengonfirmasi Ya/Tidak sebelum pesanan pembayaran dibuat."
+            "manualConfirmHint": "Pesanan tidak pernah dibuat secara otomatis. Anda akan selalu meninjau dan mengonfirmasi Ya/Tidak sebelum pesanan pembayaran dibuat.",
+            "slogan": "Tampil lebih menonjol dengan pengalaman SyncViet yang lebih nyaman.",
+            "chooseDurationTitle": "Pilih durasi keanggotaan",
+            "chooseDurationSubtitle": "Satu keanggotaan prabayar yang fleksibel — durasi lebih panjang lebih hemat.",
+            "bestValue": "Paling Hemat",
+            "savePercent": "Hemat {percent}%",
+            "perMonth": "{price} / bln",
+            "billedOnce": "Prabayar sekali bayar",
+            "durationOneMonth": "1 bulan",
+            "durationMonths": "{count} bulan",
+            "durationDays": "{count} hari",
+            "adFreeTag": "Bebas iklan",
+            "reducedAdsTag": "Iklan lebih sedikit",
+            "benefitsHeading": "Keuntungan SyncViet Premium",
+            "adFreeUpgradeHint": "Paket {duration} menghadirkan pengalaman bebas iklan sepenuhnya, bukan sekadar pengurangan iklan.",
+            "switchToAdFree": "Pilih {duration}",
+            "adFreeIncludedBadge": "Termasuk bebas iklan",
+            "summaryTitle": "Ringkasan Pesanan",
+            "summarySelectedPlan": "Paket Dipilih",
+            "summaryDuration": "Durasi",
+            "summaryOriginalPrice": "Harga Normal",
+            "summarySavings": "Penghematan",
+            "summaryTotal": "Total Pembayaran",
+            "renewalPolicy": "Pembayaran prabayar satu kali tanpa perpanjangan otomatis. Perpanjangan akan menambahkan hari langsung ke masa aktif tersisa.",
+            "upgradeCta": "Upgrade ke Premium",
+            "signInToUpgrade": "Masuk untuk Upgrade"
         },
         "accountPremium": {
             "pageTitle": "SyncViet Premium Saya",
@@ -960,7 +985,7 @@
             "q1": "Apakah saya harus membayar untuk menggunakan SyncViet?",
             "a1": "Tidak. Memposting, berkomentar, memberi reaksi, mengikuti, berkirim pesan, dan bergabung dengan komunitas sepenuhnya gratis.",
             "q2": "Apakah lencana SyncViet Premium sama dengan Verifikasi Identitas?",
-            "a2": "Tidak. Centang biru #1D9BF0 menunjukkan keanggotaan berbayar SyncViet Premium yang aktif. Verifikasi identitas dan lencana staf terpisah sepenuhnya.",
+            "a2": "Tidak. Centang biru menunjukkan keanggotaan berbayar SyncViet Premium yang aktif. Verifikasi identitas dan lencana staf terpisah sepenuhnya.",
             "q3": "Apa yang terjadi jika saya memperpanjang paket Premium sebelum kedaluwarsa?",
             "a3": "Durasi baru Anda ditambahkan langsung ke waktu kedaluwarsa yang ada sehingga Anda tidak akan kehilangan satu hari pun yang tersisa.",
             "q4": "Dapatkah saya menarik atau mentransfer Saldo Iklan saya ke pengguna lain?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Pelaporan dua mata uang (VND & USD) yang memisahkan secara ketat setoran iklan prabayar dari pendapatan layanan langsung yang diakui.",
             "recognizedRevenue": "Pendapatan Layanan Diakui",
             "prepaidDeposits": "Setoran Saldo Iklan Prabayar"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Lencana Biru Premium",
+                "desc": "Tampilkan centang biru SyncViet Premium di samping nama Anda pada postingan, komentar, profil, pencarian, dan pesan."
+            },
+            "post_analytics": {
+                "title": "Analitik Performa Postingan",
+                "desc": "Pantau jangkauan dan interaksi nyata dari setiap postingan yang Anda terbitkan."
+            },
+            "profile_highlights": {
+                "title": "Kustomisasi Profil Lanjutan",
+                "desc": "Tampilkan profil yang lebih rapi dan menonjol di seluruh komunitas."
+            },
+            "reduced_ads": {
+                "title": "Pengurangan Iklan di Beranda",
+                "desc": "Nikmati beranda yang lebih bersih dengan lebih sedikit gangguan konten bersponsor."
+            },
+            "ad_free": {
+                "title": "Pengalaman Bebas Iklan",
+                "desc": "Jelajahi beranda dan komunitas SyncViet sepenuhnya tanpa iklan bersponsor."
+            },
+            "priority_support": {
+                "title": "Dukungan Prioritas",
+                "desc": "Permintaan bantuan akun Anda diprioritaskan oleh tim dukungan SyncViet."
+            }
         }
     }
 }

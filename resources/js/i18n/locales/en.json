@@ -801,7 +801,7 @@
             "monthShort": "mo"
         },
         "benefits": {
-            "blue_badge": "SyncViet Premium blue badge (#1D9BF0) across posts, comments, profiles & messages",
+            "blue_badge": "SyncViet Premium blue badge across posts, comments, profiles & messages",
             "post_analytics": "Post reach & engagement performance analytics",
             "reduced_ads": "Reduced sponsored feed clutter",
             "ad_free": "Ad-free browsing experience across SyncViet",
@@ -840,7 +840,32 @@
             "extendButton": "Extend Plan",
             "moderationRuleTitle": "Equal Safety & Moderation Standards",
             "moderationRuleDesc": "Premium members remain subject to all SyncViet Community Guidelines, anti-spam rules, and security checks.",
-            "manualConfirmHint": "Orders are never created automatically. You will always review and confirm Yes/No before any payment order is generated."
+            "manualConfirmHint": "Orders are never created automatically. You will always review and confirm Yes/No before any payment order is generated.",
+            "slogan": "Stand out with clarity and a calmer SyncViet experience.",
+            "chooseDurationTitle": "Choose your membership duration",
+            "chooseDurationSubtitle": "One membership, flexible prepaid terms — longer durations unlock deeper savings.",
+            "bestValue": "Best Value",
+            "savePercent": "Save {percent}%",
+            "perMonth": "{price} / mo",
+            "billedOnce": "One-time prepaid",
+            "durationOneMonth": "1 month",
+            "durationMonths": "{count} months",
+            "durationDays": "{count} days",
+            "adFreeTag": "Ad-free browsing",
+            "reducedAdsTag": "Reduced ads",
+            "benefitsHeading": "What's included in SyncViet Premium",
+            "adFreeUpgradeHint": "The {duration} plan upgrades Reduced Ads to a completely ad-free experience.",
+            "switchToAdFree": "Select {duration}",
+            "adFreeIncludedBadge": "Ad-free included",
+            "summaryTitle": "Order Summary",
+            "summarySelectedPlan": "Selected Plan",
+            "summaryDuration": "Duration",
+            "summaryOriginalPrice": "Standard Value",
+            "summarySavings": "You Save",
+            "summaryTotal": "Total Payable",
+            "renewalPolicy": "One-time prepaid billing with no automatic recurring charges. Extending an active membership adds directly onto your remaining days.",
+            "upgradeCta": "Upgrade to Premium",
+            "signInToUpgrade": "Sign in to Upgrade"
         },
         "accountPremium": {
             "pageTitle": "My SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "Do I need to pay to use SyncViet?",
             "a1": "No. Posting, commenting, reacting, following, messaging, and joining communities are completely free.",
             "q2": "Is the SyncViet Premium badge the same as Identity Verification?",
-            "a2": "No. The #1D9BF0 blue checkmark indicates an active paid SyncViet Premium membership. Identity verification and staff badges are strictly separate.",
+            "a2": "No. The blue checkmark indicates an active paid SyncViet Premium membership. Identity verification and staff badges are strictly separate.",
             "q3": "What happens if I extend my Premium plan before it expires?",
             "a3": "Your new duration is added directly onto your existing expiration timestamp so you never lose a single remaining day.",
             "q4": "Can I withdraw or transfer my Advertising Balance to another user?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Dual-currency (VND & USD) reporting strictly separating prepaid advertising deposits from recognized direct service revenue.",
             "recognizedRevenue": "Recognized Service Revenue",
             "prepaidDeposits": "Prepaid Ad Balance Deposits"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Premium Blue Badge",
+                "desc": "Display the SyncViet Premium blue checkmark beside your name across posts, comments, profiles, search, and messages."
+            },
+            "post_analytics": {
+                "title": "Post Performance Analytics",
+                "desc": "Track real reach, engagement, and audience insights for your published posts."
+            },
+            "profile_highlights": {
+                "title": "Enhanced Profile Presentation",
+                "desc": "Present a refined profile that highlights your work and identity across communities."
+            },
+            "reduced_ads": {
+                "title": "Reduced Feed Ads",
+                "desc": "Enjoy a cleaner feed with fewer sponsored interruptions while browsing and discussing."
+            },
+            "ad_free": {
+                "title": "Ad-Free Experience",
+                "desc": "Browse SyncViet feeds and communities completely free from sponsored ad placements."
+            },
+            "priority_support": {
+                "title": "Priority Support",
+                "desc": "Receive prioritized review and faster assistance from the SyncViet support team."
+            }
         }
     }
 }

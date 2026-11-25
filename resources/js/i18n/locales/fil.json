@@ -801,7 +801,7 @@
             "monthShort": "buwan"
         },
         "benefits": {
-            "blue_badge": "Asul na badge ng SyncViet Premium (#1D9BF0) sa mga paskil, komento, propayl at mensahe",
+            "blue_badge": "SyncViet Premium blue badge sa mga post, komento, profile, at mensahe",
             "post_analytics": "Pagsusuri sa abot at pakikipag-ugnayan ng paskil",
             "reduced_ads": "Mas kaunting nakakagambalang mga naka-sponsor na paskil sa daloy",
             "ad_free": "Walang anunsyong karanasan sa pag-browse sa buong SyncViet",
@@ -840,7 +840,32 @@
             "extendButton": "Pahabain ang Plan",
             "moderationRuleTitle": "Pantay na Pamantayan sa Kaligtasan at Moderasyon",
             "moderationRuleDesc": "Ang mga kasaping Premium ay saklaw pa rin ng lahat ng Alituntunin ng Komunidad ng SyncViet, mga panuntunan laban sa spam, at mga pagsusuri sa seguridad.",
-            "manualConfirmHint": "Hindi kailanman awtomatikong ginagawa ang mga order. Palagi mong susuriin at kukumpirmahin ang Oo/Hindi bago makagawa ng anumang order sa pagbabayad."
+            "manualConfirmHint": "Hindi kailanman awtomatikong ginagawa ang mga order. Palagi mong susuriin at kukumpirmahin ang Oo/Hindi bago makagawa ng anumang order sa pagbabayad.",
+            "slogan": "Mangibabaw nang may linaw at mas payapang karanasan sa SyncViet.",
+            "chooseDurationTitle": "Piliin ang tagal ng iyong membership",
+            "chooseDurationSubtitle": "Isang prepaid na membership — mas mahabang tagal, mas malaking tipid.",
+            "bestValue": "Pinakasulit",
+            "savePercent": "Makatipid ng {percent}%",
+            "perMonth": "{price} / buwan",
+            "billedOnce": "Isang beses na bayad",
+            "durationOneMonth": "1 buwan",
+            "durationMonths": "{count} buwan",
+            "durationDays": "{count} araw",
+            "adFreeTag": "Walang ads",
+            "reducedAdsTag": "Mas kaunting ads",
+            "benefitsHeading": "Mga kasama sa SyncViet Premium",
+            "adFreeUpgradeHint": "Kasama sa {duration} plan ang ganap na ad-free na karanasan sa halip na mas kaunting ads lamang.",
+            "switchToAdFree": "Piliin ang {duration}",
+            "adFreeIncludedBadge": "Kasama ang walang ads",
+            "summaryTitle": "Buod ng Order",
+            "summarySelectedPlan": "Napiling Plan",
+            "summaryDuration": "Tagal",
+            "summaryOriginalPrice": "Regular na Halaga",
+            "summarySavings": "Matitipid",
+            "summaryTotal": "Kabuuang Babayaran",
+            "renewalPolicy": "Isang beses na prepaid na bayad at walang awtomatikong pag-renew. Idinadagdag nang buo ang bagong tagal sa natitirang araw mo.",
+            "upgradeCta": "Mag-upgrade sa Premium",
+            "signInToUpgrade": "Mag-sign in upang mag-upgrade"
         },
         "accountPremium": {
             "pageTitle": "Aking SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "Kailangan ko bang magbayad para magamit ang SyncViet?",
             "a1": "Hindi. Ang pagpapaskil, pagkokomento, pagbibigay ng reaksyon, pagsubaybay, pagmemensahe, at pagsali sa mga komunidad ay ganap na libre.",
             "q2": "Pareho ba ang badge ng SyncViet Premium sa Beripikasyon ng Pagkakakilanlan?",
-            "a2": "Hindi. Ang #1D9BF0 na asul na tsek ay nagpapahiwatig ng aktibong bayad na kasaping SyncViet Premium. Ganap na magkahiwalay ang beripikasyon ng pagkakakilanlan at mga badge ng kawani.",
+            "a2": "Hindi. Ang asul na tsek ay nagpapahiwatig ng aktibong bayad na kasaping SyncViet Premium. Ganap na magkahiwalay ang beripikasyon ng pagkakakilanlan at mga badge ng kawani.",
             "q3": "Ano ang mangyayari kapag pinahaba ko ang aking Premium plan bago ito mag-expire?",
             "a3": "Direktang idinaragdag ang iyong bagong tagal sa kasalukuyang petsa at oras ng pagtatapos upang hindi ka mawalan ng kahit isang natitirang araw.",
             "q4": "Maaari ko bang i-withdraw o ilipat ang aking Balanse sa Pag-aanunsyo sa ibang user?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Dalawahang-salaping pag-uulat (VND at USD) na mahigpit na naghihiwalay sa mga prepaid na deposito sa pag-aanunsyo mula sa kinikilalang direktang kita ng serbisyo.",
             "recognizedRevenue": "Kinikilalang Kita ng Serbisyo",
             "prepaidDeposits": "Mga Prepaid na Deposito sa Balanse ng Anunsyo"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Premium Blue Badge",
+                "desc": "Ipakita ang asul na badge ng SyncViet Premium sa tabi ng iyong pangalan sa mga post, komento, profile, paghahanap, at mensahe."
+            },
+            "post_analytics": {
+                "title": "Analytics ng Performance ng Post",
+                "desc": "Subaybayan ang tunay na abot at pakikipag-ugnayan ng iyong mga na-publish na post."
+            },
+            "profile_highlights": {
+                "title": "Pinahusay na Profile",
+                "desc": "Ipakita nang mas malinis at kapansin-pansin ang iyong profile sa mga komunidad."
+            },
+            "reduced_ads": {
+                "title": "Mas Kaunting Ads sa Feed",
+                "desc": "Mag-browse nang mas maayos na may mas kaunting naka-sponsor na abala."
+            },
+            "ad_free": {
+                "title": "Karanasang Walang Ads",
+                "desc": "Mag-browse sa feed at mga komunidad ng SyncViet nang ganap na walang sponsored ads."
+            },
+            "priority_support": {
+                "title": "Priyoridad na Suporta",
+                "desc": "Makatanggap ng mas mabilis na pagsusuri at tulong mula sa koponan ng SyncViet."
+            }
         }
     }
 }

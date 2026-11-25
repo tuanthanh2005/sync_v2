@@ -801,7 +801,7 @@
             "monthShort": "Mon."
         },
         "benefits": {
-            "blue_badge": "Blaues SyncViet-Premium-Abzeichen (#1D9BF0) bei Beiträgen, Kommentaren, Profilen & Nachrichten",
+            "blue_badge": "Blaues SyncViet-Premium-Abzeichen in Beiträgen, Kommentaren, Profilen und Nachrichten",
             "post_analytics": "Analysen zu Beitragsreichweite und Interaktionen",
             "reduced_ads": "Weniger gesponserte Beiträge im Feed",
             "ad_free": "Werbefreies Surfen auf ganz SyncViet",
@@ -840,7 +840,32 @@
             "extendButton": "Tarif verlängern",
             "moderationRuleTitle": "Gleiche Sicherheits- & Moderationsstandards",
             "moderationRuleDesc": "Premium-Mitglieder unterliegen weiterhin allen SyncViet-Community-Richtlinien, Anti-Spam-Regeln und Sicherheitsprüfungen.",
-            "manualConfirmHint": "Bestellungen werden niemals automatisch erstellt. Sie prüfen immer alle Angaben und bestätigen mit Ja/Nein, bevor ein Zahlungsauftrag erzeugt wird."
+            "manualConfirmHint": "Bestellungen werden niemals automatisch erstellt. Sie prüfen immer alle Angaben und bestätigen mit Ja/Nein, bevor ein Zahlungsauftrag erzeugt wird.",
+            "slogan": "Heben Sie sich klar ab und erleben Sie SyncViet noch ruhiger.",
+            "chooseDurationTitle": "Mitgliedschaftsdauer wählen",
+            "chooseDurationSubtitle": "Eine Prepaid-Mitgliedschaft — längere Laufzeiten sparen deutlich mehr.",
+            "bestValue": "Bestes Angebot",
+            "savePercent": "{percent}% sparen",
+            "perMonth": "{price} / Monat",
+            "billedOnce": "Einmalige Vorauszahlung",
+            "durationOneMonth": "1 Monat",
+            "durationMonths": "{count} Monate",
+            "durationDays": "{count} Tage",
+            "adFreeTag": "Werbefrei",
+            "reducedAdsTag": "Weniger Werbung",
+            "benefitsHeading": "Enthalten in SyncViet Premium",
+            "adFreeUpgradeHint": "Der Tarif für {duration} bietet komplett werbefreies Surfen statt nur reduzierter Werbung.",
+            "switchToAdFree": "{duration} wählen",
+            "adFreeIncludedBadge": "Werbefrei enthalten",
+            "summaryTitle": "Bestellübersicht",
+            "summarySelectedPlan": "Gewählter Tarif",
+            "summaryDuration": "Laufzeit",
+            "summaryOriginalPrice": "Standardwert",
+            "summarySavings": "Ersparnis",
+            "summaryTotal": "Gesamtbetrag",
+            "renewalPolicy": "Einmalige Vorauszahlung ohne automatische Verlängerung. Eine Verlängerung wird direkt an Ihre verbleibenden Tage angehängt.",
+            "upgradeCta": "Auf Premium upgraden",
+            "signInToUpgrade": "Anmelden für Upgrade"
         },
         "accountPremium": {
             "pageTitle": "Mein SyncViet Premium",
@@ -960,7 +985,7 @@
             "q1": "Muss ich bezahlen, um SyncViet zu nutzen?",
             "a1": "Nein. Beiträge schreiben, kommentieren, reagieren, folgen, Nachrichten senden und Communitys beitreten ist vollkommen kostenlos.",
             "q2": "Ist das SyncViet-Premium-Abzeichen dasselbe wie die Identitätsprüfung?",
-            "a2": "Nein. Das blaue Häkchen #1D9BF0 zeigt eine aktive kostenpflichtige SyncViet-Premium-Mitgliedschaft an. Identitätsprüfung und Team-Abzeichen sind strikt getrennt.",
+            "a2": "Nein. Das blaue Häkchen zeigt eine aktive kostenpflichtige SyncViet-Premium-Mitgliedschaft an. Identitätsprüfung und Team-Abzeichen sind strikt getrennt.",
             "q3": "Was passiert, wenn ich meinen Premium-Tarif vor Ablauf verlängere?",
             "a3": "Ihre neue Laufzeit wird direkt an Ihren bestehenden Ablaufzeitpunkt angehängt, sodass kein einziger verbleibender Tag verloren geht.",
             "q4": "Kann ich mein Werbeguthaben auszahlen lassen oder an andere Nutzer übertragen?",
@@ -970,6 +995,32 @@
             "revenueSubtitle": "Zweiwährungsberichte (VND & USD) mit strikter Trennung von vorausbezahlten Werbeeinzahlungen und erfassten direkten Dienstleistungserlösen.",
             "recognizedRevenue": "Erfasste Dienstleistungserlöse",
             "prepaidDeposits": "Vorausbezahlte Werbeguthaben-Einzahlungen"
+        },
+        "benefitDetails": {
+            "blue_badge": {
+                "title": "Blaues Premium-Abzeichen",
+                "desc": "Zeigen Sie das blaue SyncViet-Premium-Abzeichen neben Ihrem Namen in Beiträgen, Kommentaren, Profilen, der Suche und Nachrichten."
+            },
+            "post_analytics": {
+                "title": "Beitragsanalysen",
+                "desc": "Verfolgen Sie echte Reichweite und Interaktionen Ihrer veröffentlichten Beiträge."
+            },
+            "profile_highlights": {
+                "title": "Erweiterte Profilgestaltung",
+                "desc": "Präsentieren Sie ein professionelles Profil mit klarer Hervorhebung in Communities."
+            },
+            "reduced_ads": {
+                "title": "Weniger Werbung im Feed",
+                "desc": "Genießen Sie einen ruhigeren Feed mit deutlich weniger gesponserten Unterbrechungen."
+            },
+            "ad_free": {
+                "title": "Werbefreies Erlebnis",
+                "desc": "Nutzen Sie SyncViet und alle Communities vollständig ohne gesponserte Werbung."
+            },
+            "priority_support": {
+                "title": "Priorisierter Support",
+                "desc": "Ihre Supportanfragen werden vom SyncViet-Team vorrangig bearbeitet."
+            }
         }
     }
 }

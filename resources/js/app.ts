@@ -6,6 +6,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import PublicLayout from '@/layouts/PublicLayout.vue';
+import ServiceLayout from '@/layouts/ServiceLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
 
@@ -33,6 +34,10 @@ void createInertiaApp({
                 return AuthLayout;
             case name.startsWith('policies/'):
                 return PublicLayout;
+            case name.startsWith('monetization/'):
+            case name === 'Wallet':
+            case name === 'Ads':
+                return ServiceLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
             default:
