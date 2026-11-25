@@ -18,7 +18,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(PolicyFoundationSeeder::class);
+        $this->call([
+            PolicyFoundationSeeder::class,
+            RbacSeeder::class,
+            LanguageSeeder::class,
+        ]);
 
         if (app()->isProduction()) {
             return;

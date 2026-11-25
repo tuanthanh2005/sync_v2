@@ -7,6 +7,33 @@ export type UserPermissions = {
     accessModeration: boolean;
     reviewAds: boolean;
     managePolicies: boolean;
+    viewAnalytics?: boolean;
+    viewSystemHealth?: boolean;
+    manageUsers?: boolean;
+    manageRoles?: boolean;
+    manageVerifications?: boolean;
+    managePosts?: boolean;
+    manageComments?: boolean;
+    manageCommunities?: boolean;
+    managePolls?: boolean;
+    manageHashtags?: boolean;
+    manageMedia?: boolean;
+    manageAppeals?: boolean;
+    manageKeywords?: boolean;
+    manageFinance?: boolean;
+    manageSettings?: boolean;
+    manageLanguages?: boolean;
+    manageNotifications?: boolean;
+    viewSecurity?: boolean;
+    manageBackups?: boolean;
+};
+
+export type UserRestrictions = {
+    post: boolean;
+    comment: boolean;
+    community: boolean;
+    message: boolean;
+    advertise: boolean;
 };
 
 export type User = {
@@ -17,13 +44,17 @@ export type User = {
     avatar?: string;
     role: UserRole;
     role_label: string;
+    rbac_role?: string;
+    hierarchy_level?: number;
     status: UserStatus;
     status_label: string;
     timezone: string;
+    preferred_locale?: string | null;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
     created_at: string | null;
     updated_at: string | null;
+    restrictions?: UserRestrictions;
     can: UserPermissions;
 };
 

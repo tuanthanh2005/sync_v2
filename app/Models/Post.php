@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
+use Carbon\CarbonInterface;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -28,14 +28,20 @@ use Illuminate\Support\Carbon;
  * @property array<string, string|null>|null $link_meta
  * @property PostVisibility $visibility
  * @property bool $is_pinned
+ * @property bool $comments_locked
+ * @property string|null $content_warning
  * @property ModerationStatus $moderation_status
+ * @property bool $is_spam
+ * @property string|null $moderation_reason
+ * @property int|null $moderated_by
+ * @property CarbonInterface|null $moderated_at
  * @property int $reactions_count
  * @property int $comments_count
  * @property int $shares_count
- * @property Carbon|null $published_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property CarbonInterface|null $published_at
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
+ * @property CarbonInterface|null $deleted_at
  */
 #[Fillable([
     'category',
@@ -62,6 +68,9 @@ class Post extends Model
             'moderation_status' => ModerationStatus::class,
             'link_meta' => 'array',
             'is_pinned' => 'boolean',
+            'comments_locked' => 'boolean',
+            'is_spam' => 'boolean',
+            'moderated_at' => 'datetime',
             'reactions_count' => 'integer',
             'comments_count' => 'integer',
             'shares_count' => 'integer',
@@ -131,6 +140,22 @@ class Post extends Model
     public function bookmarks(): HasMany
     {
         return $this->hasMany(Bookmark::class);
+    }
+
+    /**
+     * @return HasMany<PostEditHistory, $this>
+     */
+    public function editHistories(): HasMany
+    {
+        return $this->hasMany(PostEditHistory::class)->latest('id');
+    }
+
+    /**
+     * @return HasMany<AdCampaign, $this>
+     */
+    public function adCampaigns(): HasMany
+    {
+        return $this->hasMany(AdCampaign::class);
     }
 
     /**

@@ -2,38 +2,63 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\System\LanguageService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
     /** @var list<string> */
-    public const SUPPORTED_LOCALES = ['vi', 'en'];
+    public const SUPPORTED_LOCALES = [
+        'en', 'vi', 'es', 'pt-BR', 'id', 'hi', 'th', 'fil',
+        'fr', 'de', 'ja', 'ko', 'zh-CN', 'ar', 'tr',
+    ];
+
+    public function __construct(
+        private readonly LanguageService $languageService,
+    ) {}
 
     /**
-     * Apply the user's preferred locale from session or cookie.
+     * Resolve and activate the interface locale with English as default and fallback.
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $enabledCodes = $this->languageService->enabledCodes();
+
+        if ($enabledCodes === []) {
+            $enabledCodes = self::SUPPORTED_LOCALES;
+        }
+
         $candidate = $request->hasSession()
             ? $request->session()->get('locale')
             : null;
 
-        if (! is_string($candidate)) {
-            $candidate = $request->cookie('syncviet_locale');
+        if (! is_string($candidate) || ! in_array($candidate, $enabledCodes, true)) {
+            $cookieLocale = $request->cookie('syncviet_locale');
+            $candidate = is_string($cookieLocale) ? $cookieLocale : null;
         }
 
-        $locale = is_string($candidate) && in_array($candidate, self::SUPPORTED_LOCALES, true)
+        if (! is_string($candidate) || ! in_array($candidate, $enabledCodes, true)) {
+            $userLocale = $request->user()?->preferred_locale;
+            $candidate = is_string($userLocale) ? $userLocale : null;
+        }
+
+        if (! is_string($candidate) || ! in_array($candidate, $enabledCodes, true)) {
+            $candidate = $this->languageService->detectFromAcceptLanguage(
+                $request->header('Accept-Language'),
+            );
+        }
+
+        $defaultLocale = $this->languageService->defaultCode();
+        $locale = is_string($candidate) && in_array($candidate, $enabledCodes, true)
             ? $candidate
-            : (string) config('app.locale', 'vi');
-
-        if (! in_array($locale, self::SUPPORTED_LOCALES, true)) {
-            $locale = 'vi';
-        }
+            : (in_array($defaultLocale, $enabledCodes, true) ? $defaultLocale : 'en');
 
         App::setLocale($locale);
+        View::share('isRtl', $this->languageService->isRtl($locale));
 
         return $next($request);
     }

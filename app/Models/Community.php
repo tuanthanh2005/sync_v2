@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,17 +26,23 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $cover_path
  * @property list<string>|null $rules
  * @property string $visibility
+ * @property string $status
  * @property bool $is_verified_badge
+ * @property bool $is_featured
+ * @property bool $allow_new_members
+ * @property bool $allow_posting
+ * @property string|null $moderation_reason
  * @property int $members_count
  * @property int $posts_count
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  */
 #[Fillable(['name', 'slug', 'category', 'description', 'rules', 'visibility'])]
 class Community extends Model
 {
     /** @use HasFactory<CommunityFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -46,6 +53,9 @@ class Community extends Model
             'category' => PostCategory::class,
             'rules' => 'array',
             'is_verified_badge' => 'boolean',
+            'is_featured' => 'boolean',
+            'allow_new_members' => 'boolean',
+            'allow_posting' => 'boolean',
             'members_count' => 'integer',
             'posts_count' => 'integer',
         ];

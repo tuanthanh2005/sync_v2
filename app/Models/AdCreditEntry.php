@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $account_id
  * @property int|null $payment_id
  * @property int|null $ad_campaign_id
+ * @property int|null $actor_id
  * @property CreditEntryType $type
+ * @property string $wallet_bucket
  * @property int $amount
  * @property int $balance_after
  * @property int $held_after
@@ -21,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $description
  * @property CarbonInterface $created_at
  */
-#[Fillable(['type', 'amount', 'balance_after', 'held_after', 'idempotency_key', 'description'])]
+#[Fillable(['type', 'wallet_bucket', 'amount', 'balance_after', 'held_after', 'idempotency_key', 'description'])]
 class AdCreditEntry extends Model
 {
     public $timestamps = false;
@@ -54,5 +56,13 @@ class AdCreditEntry extends Model
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function actor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'actor_id');
     }
 }

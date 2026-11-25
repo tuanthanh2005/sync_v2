@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
 use App\Services\Security\AuditLogger;
+use App\Services\Social\PostService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -21,6 +22,7 @@ class ModerationService
 {
     public function __construct(
         private readonly AuditLogger $auditLogger,
+        private readonly PostService $postService,
     ) {}
 
     public function submitReport(
@@ -127,6 +129,9 @@ class ModerationService
                         'details' => $report->details,
                         'status' => $report->status->value,
                         'status_label' => $report->status->label(),
+                        'priority' => $report->priority,
+                        'assigned_to' => $report->assigned_to,
+                        'internal_note' => $report->internal_note,
                         'reporter_username' => $report->reporter?->username,
                         'reviewer_username' => $report->reviewer?->username,
                         'resolution_note' => $report->resolution_note,
@@ -166,10 +171,30 @@ class ModerationService
             } elseif ($decision === 'hide_content') {
                 if ($target instanceof Post) {
                     $target->moderation_status = ModerationStatus::Hidden;
+                    $target->moderation_reason = $cleanNote;
+                    $target->moderated_by = $moderator->id;
+                    $target->moderated_at = now();
                     $target->save();
+
+                    $this->postService->stopCampaignsForPost(
+                        $target,
+                        __('Promoted post was hidden during moderation; remaining ad budget refunded.'),
+                    );
                 } elseif ($target instanceof Comment) {
                     $target->moderation_status = ModerationStatus::Hidden;
+                    $target->moderation_reason = $cleanNote;
+                    $target->moderated_by = $moderator->id;
+                    $target->moderated_at = now();
                     $target->save();
+
+                    $parentPost = Post::query()->whereKey($target->post_id)->first();
+                    if ($parentPost !== null) {
+                        $parentPost->comments_count = Comment::query()
+                            ->where('post_id', $parentPost->id)
+                            ->where('moderation_status', ModerationStatus::Approved->value)
+                            ->count();
+                        $parentPost->save();
+                    }
                 }
 
                 $lockedReport->status = ReportStatus::Resolved;

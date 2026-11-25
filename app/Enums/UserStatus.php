@@ -11,9 +11,9 @@ enum UserStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Active => 'Đang hoạt động',
-            self::Suspended => 'Tạm khóa',
-            self::Banned => 'Bị cấm',
+            self::Active => __('Active'),
+            self::Suspended => __('Suspended'),
+            self::Banned => __('Banned'),
         };
     }
 

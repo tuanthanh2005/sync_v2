@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ModerationStatus;
+use Carbon\CarbonInterface;
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -19,9 +19,13 @@ use Illuminate\Support\Carbon;
  * @property int|null $parent_id
  * @property string $content
  * @property ModerationStatus $moderation_status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property bool $is_spam
+ * @property string|null $moderation_reason
+ * @property int|null $moderated_by
+ * @property CarbonInterface|null $moderated_at
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
+ * @property CarbonInterface|null $deleted_at
  */
 #[Fillable(['parent_id', 'content'])]
 class Comment extends Model
@@ -36,6 +40,8 @@ class Comment extends Model
     {
         return [
             'moderation_status' => ModerationStatus::class,
+            'is_spam' => 'boolean',
+            'moderated_at' => 'datetime',
         ];
     }
 

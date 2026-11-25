@@ -8,8 +8,10 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Services\Account\UsernameGenerator;
+use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
@@ -18,6 +20,7 @@ class CreateNewUser implements CreatesNewUsers
 
     public function __construct(
         private readonly UsernameGenerator $usernameGenerator,
+        private readonly SystemSettingService $settings,
     ) {}
 
     /**
@@ -27,6 +30,11 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        if (! $this->settings->featureEnabled('feature_registration')) {
+            throw ValidationException::withMessages([
+                'email' => [__('New account registrations are currently paused by the administrator.')],
+            ]);
+        }
         if (isset($input['username'])) {
             $input['username'] = Str::lower(trim($input['username']));
         }

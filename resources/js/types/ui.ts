@@ -4,8 +4,45 @@ export type ResolvedAppearance = 'light' | 'dark';
 export type AppVariant = 'header' | 'sidebar';
 
 export type FlashToast = {
-    type: 'success' | 'info' | 'warning' | 'error';
+    type: 'success' | 'info' | 'warning' | 'error' | 'loading';
     message: string;
+    description?: string;
+    duration?: number;
+    persistent?: boolean;
+    actionLabel?: string;
+    actionUrl?: string;
+};
+
+export type PublicLanguageItem = {
+    code: string;
+    native_name: string;
+    english_name: string;
+    flag_code: string;
+    is_rtl: boolean;
+};
+
+export type AdminPendingCounts = {
+    reports: number;
+    ads: number;
+    appeals: number;
+    verifications: number;
+};
+
+export type SystemSettingsPublic = {
+    siteName: string;
+    siteSlogan: string;
+    siteDescription: string;
+    contactEmail: string;
+    defaultTheme: string;
+    maintenanceEnabled: boolean;
+    maintenanceMessage: string;
+    features: Record<string, boolean>;
+    limits: {
+        postMaxLength: number;
+        postMaxImages: number;
+        uploadMaxMb: number;
+        commentMaxLength: number;
+    };
 };
 
 export type SocialAuthor = {
@@ -140,8 +177,17 @@ export type ReportQueueItem = {
     reason: string;
     reason_label: string;
     details: string | null;
-    status: 'pending' | 'resolved' | 'dismissed';
+    status:
+        | 'pending'
+        | 'under_review'
+        | 'resolved'
+        | 'rejected'
+        | 'dismissed'
+        | 'appealed';
     status_label: string;
+    priority?: string;
+    assigned_to?: number | null;
+    internal_note?: string | null;
     reporter_username: string | null;
     reviewer_username: string | null;
     resolution_note: string | null;

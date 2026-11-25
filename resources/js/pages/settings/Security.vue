@@ -81,7 +81,9 @@ defineOptions({
         <div class="space-y-6">
             <Heading
                 variant="small"
-                :title="hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu lần đầu'"
+                :title="
+                    hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu lần đầu'
+                "
                 :description="
                     hasPassword
                         ? 'Sử dụng mật khẩu mạnh và duy nhất để bảo vệ tài khoản của bạn'
@@ -171,8 +173,8 @@ defineOptions({
                 description="Bảo vệ tài khoản bằng mã TOTP từ ứng dụng xác thực"
             />
             <p class="text-sm text-muted-foreground">
-                Vui lòng đặt mật khẩu ở mục bên trên trước, sau đó bạn có thể bật
-                xác thực 2 lớp (2FA) ngay tại đây.
+                Vui lòng đặt mật khẩu ở mục bên trên trước, sau đó bạn có thể
+                bật xác thực 2 lớp (2FA) ngay tại đây.
             </p>
         </div>
 

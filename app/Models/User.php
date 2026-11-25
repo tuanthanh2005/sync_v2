@@ -4,16 +4,18 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Carbon;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 /**
@@ -22,27 +24,47 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $username
  * @property string $email
  * @property UserRole $role
+ * @property int|null $rbac_role_id
  * @property UserStatus $status
+ * @property CarbonInterface|null $suspended_until
+ * @property string|null $ban_reason
+ * @property int $warnings_count
+ * @property int $violations_count
+ * @property bool $can_post
+ * @property bool $can_comment
+ * @property bool $can_create_community
+ * @property bool $can_message
+ * @property bool $can_advertise
+ * @property CarbonInterface|null $post_restricted_until
+ * @property CarbonInterface|null $comment_restricted_until
+ * @property CarbonInterface|null $community_restricted_until
+ * @property CarbonInterface|null $message_restricted_until
+ * @property CarbonInterface|null $ad_restricted_until
+ * @property CarbonInterface|null $deactivated_at
  * @property string $timezone
+ * @property string|null $preferred_locale
+ * @property CarbonInterface|null $last_login_at
+ * @property CarbonInterface|null $last_activity_at
  * @property string|null $social_provider
  * @property string|null $social_provider_id
  * @property string|null $avatar_url
- * @property Carbon|null $email_verified_at
+ * @property CarbonInterface|null $email_verified_at
  * @property string|null $password
  * @property bool $has_password
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
- * @property Carbon|null $two_factor_confirmed_at
+ * @property CarbonInterface|null $two_factor_confirmed_at
  * @property string|null $remember_token
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
+ * @property CarbonInterface|null $deleted_at
  */
-#[Fillable(['name', 'username', 'email', 'password', 'has_password', 'timezone', 'social_provider', 'social_provider_id', 'avatar_url', 'email_verified_at'])]
+#[Fillable(['name', 'username', 'email', 'password', 'has_password', 'timezone', 'preferred_locale', 'social_provider', 'social_provider_id', 'avatar_url', 'email_verified_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
 
     /**
      * Default attribute values.
@@ -51,6 +73,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $attributes = [
         'has_password' => true,
+        'can_post' => true,
+        'can_comment' => true,
+        'can_create_community' => true,
+        'can_message' => true,
+        'can_advertise' => true,
+        'warnings_count' => 0,
+        'violations_count' => 0,
     ];
 
     /**
@@ -65,6 +94,22 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'has_password' => 'boolean',
             'two_factor_confirmed_at' => 'datetime',
+            'suspended_until' => 'datetime',
+            'last_login_at' => 'datetime',
+            'last_activity_at' => 'datetime',
+            'post_restricted_until' => 'datetime',
+            'comment_restricted_until' => 'datetime',
+            'community_restricted_until' => 'datetime',
+            'message_restricted_until' => 'datetime',
+            'ad_restricted_until' => 'datetime',
+            'deactivated_at' => 'datetime',
+            'warnings_count' => 'integer',
+            'violations_count' => 'integer',
+            'can_post' => 'boolean',
+            'can_comment' => 'boolean',
+            'can_create_community' => 'boolean',
+            'can_message' => 'boolean',
+            'can_advertise' => 'boolean',
             'role' => UserRole::class,
             'status' => UserStatus::class,
         ];
@@ -77,7 +122,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin(): bool
     {
+        if ($this->rbacRole?->slug === 'super_admin' || $this->rbacRole?->slug === 'admin') {
+            return true;
+        }
+
         return $this->role->isAdmin();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->rbacRole?->slug === 'super_admin';
     }
 
     public function isModerator(): bool
@@ -87,12 +141,136 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isStaff(): bool
     {
-        return $this->role->isStaff();
+        return $this->role->isStaff() || ($this->rbacRole !== null && $this->rbacRole->slug !== 'user');
     }
 
     public function isActive(): bool
     {
+        if ($this->deleted_at !== null || $this->deactivated_at !== null) {
+            return false;
+        }
+
+        if ($this->status === UserStatus::Suspended && $this->suspended_until !== null && $this->suspended_until->isPast()) {
+            return true;
+        }
+
         return $this->status->canAuthenticate();
+    }
+
+    public function isRestrictedFrom(string $capability): bool
+    {
+        return match ($capability) {
+            'post' => ! $this->can_post && ($this->post_restricted_until === null || $this->post_restricted_until->isFuture()),
+            'comment' => ! $this->can_comment && ($this->comment_restricted_until === null || $this->comment_restricted_until->isFuture()),
+            'community' => ! $this->can_create_community && ($this->community_restricted_until === null || $this->community_restricted_until->isFuture()),
+            'message' => ! $this->can_message && ($this->message_restricted_until === null || $this->message_restricted_until->isFuture()),
+            'advertise' => ! $this->can_advertise && ($this->ad_restricted_until === null || $this->ad_restricted_until->isFuture()),
+            default => false,
+        };
+    }
+
+    public function hierarchyLevel(): int
+    {
+        if ($this->rbacRole !== null) {
+            return $this->rbacRole->hierarchy_level;
+        }
+
+        return match ($this->role) {
+            UserRole::Admin => 80,
+            UserRole::Moderator => 40,
+            UserRole::User => 0,
+        };
+    }
+
+    public function hasPermission(string $permissionSlug): bool
+    {
+        if (! $this->isActive()) {
+            return false;
+        }
+
+        if ($this->rbacRole !== null) {
+            if ($this->rbacRole->slug === 'super_admin') {
+                return true;
+            }
+
+            return $this->rbacRole->permissions->contains('slug', $permissionSlug);
+        }
+
+        if ($this->role === UserRole::Admin) {
+            return true;
+        }
+
+        if ($this->role === UserRole::Moderator) {
+            return in_array($permissionSlug, [
+                'dashboard.view',
+                'analytics.view',
+                'users.view',
+                'users.suspend',
+                'posts.view',
+                'posts.update',
+                'posts.delete',
+                'comments.view',
+                'comments.update',
+                'comments.delete',
+                'communities.view',
+                'communities.update',
+                'polls.view',
+                'polls.update',
+                'hashtags.view',
+                'hashtags.update',
+                'media.view',
+                'media.update',
+                'moderation.view',
+                'moderation.approve',
+                'moderation.reject',
+                'moderation.manage',
+                'ads.view',
+                'ads.approve',
+                'ads.reject',
+            ], true);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return BelongsTo<Role, $this>
+     */
+    public function rbacRole(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'rbac_role_id');
+    }
+
+    /**
+     * @return HasMany<UserSanction, $this>
+     */
+    public function sanctions(): HasMany
+    {
+        return $this->hasMany(UserSanction::class);
+    }
+
+    /**
+     * @return HasMany<VerificationRequest, $this>
+     */
+    public function verificationRequests(): HasMany
+    {
+        return $this->hasMany(VerificationRequest::class);
+    }
+
+    /**
+     * @return HasMany<Appeal, $this>
+     */
+    public function appeals(): HasMany
+    {
+        return $this->hasMany(Appeal::class);
+    }
+
+    /**
+     * @return HasMany<LoginHistory, $this>
+     */
+    public function loginHistories(): HasMany
+    {
+        return $this->hasMany(LoginHistory::class);
     }
 
     /**
@@ -185,6 +363,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function avatarUrl(): ?string
     {
-        return $this->profile?->avatarUrl();
+        return $this->profile?->avatarUrl() ?? $this->avatar_url;
     }
 }

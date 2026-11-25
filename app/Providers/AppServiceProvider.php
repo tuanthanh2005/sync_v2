@@ -19,6 +19,10 @@ use App\Policies\PolicyPagePolicy;
 use App\Policies\PostPolicy;
 use App\Services\Billing\HmacPaymentWebhookService;
 use App\Services\Billing\PaymentGatewayInterface;
+use App\Services\Moderation\ContentFilterService;
+use App\Services\Security\RbacService;
+use App\Services\System\LanguageService;
+use App\Services\System\SystemSettingService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +40,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentGatewayInterface::class, HmacPaymentWebhookService::class);
+        $this->app->singleton(RbacService::class);
+        $this->app->singleton(SystemSettingService::class);
+        $this->app->singleton(LanguageService::class);
+        $this->app->singleton(ContentFilterService::class);
     }
 
     /**

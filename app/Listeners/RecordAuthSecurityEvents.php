@@ -34,6 +34,11 @@ class RecordAuthSecurityEvents
         ]);
 
         if ($user !== null) {
+            $user->forceFill([
+                'last_login_at' => now(),
+                'last_activity_at' => now(),
+            ])->saveQuietly();
+
             $this->auditLogger->log('auth.login', $user, [], $user, $request);
         }
     }

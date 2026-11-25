@@ -11,6 +11,7 @@ use App\Models\AdCreditEntry;
 use App\Models\Payment;
 use App\Models\User;
 use App\Services\Security\AuditLogger;
+use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -19,6 +20,7 @@ class WalletService
 {
     public function __construct(
         private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
     ) {}
 
     public function getOrCreateAccount(User $user): AdCreditAccount
@@ -33,6 +35,7 @@ class WalletService
         $account = new AdCreditAccount(['currency' => 'VND']);
         $account->user_id = $user->id;
         $account->balance = 0;
+        $account->promo_balance = 0;
         $account->held_balance = 0;
         $account->total_deposited = 0;
         $account->total_spent = 0;
@@ -43,8 +46,14 @@ class WalletService
 
     public function createTopUpCheckout(User $user, int $amountVnd, string $provider, string $idempotencyKey): Payment
     {
-        $minAmount = (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000);
-        $maxAmount = (int) config('syncviet.ad_pricing.max_total_budget_vnd', 50_000_000);
+        if (! $this->settings->featureEnabled('feature_payments')) {
+            throw ValidationException::withMessages([
+                'amount' => [__('Wallet top-ups and payments are currently disabled.')],
+            ]);
+        }
+
+        $minAmount = (int) $this->settings->get('ad_min_daily_budget_vnd', (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000));
+        $maxAmount = (int) $this->settings->get('ad_max_total_budget_vnd', (int) config('syncviet.ad_pricing.max_total_budget_vnd', 50_000_000));
 
         if ($amountVnd < $minAmount || $amountVnd > $maxAmount) {
             throw ValidationException::withMessages([
@@ -391,6 +400,198 @@ class WalletService
         ];
     }
 
+    /**
+     * Atomically adjust a user's paid or promotional credit bucket with full ledger + audit trail.
+     * Enforces non-negative balance invariants and row locking (no direct DB balance overrides).
+     */
+    public function adminAdjustLedger(
+        User $actor,
+        User $target,
+        int $signedAmountVnd,
+        string $bucket,
+        string $reason,
+        string $idempotencyKey,
+    ): AdCreditEntry {
+        if ($signedAmountVnd === 0) {
+            throw ValidationException::withMessages([
+                'amount' => [__('Adjustment amount must be non-zero.')],
+            ]);
+        }
+
+        $cleanBucket = $bucket === 'promo' ? 'promo' : 'paid';
+        $cleanReason = trim($reason);
+
+        if ($cleanReason === '') {
+            throw ValidationException::withMessages([
+                'reason' => [__('An adjustment reason is required.')],
+            ]);
+        }
+
+        return DB::transaction(function () use ($actor, $target, $signedAmountVnd, $cleanBucket, $cleanReason, $idempotencyKey): AdCreditEntry {
+            $existing = AdCreditEntry::query()
+                ->where('idempotency_key', $idempotencyKey)
+                ->first();
+
+            if ($existing !== null) {
+                return $existing;
+            }
+
+            $this->getOrCreateAccount($target);
+
+            /** @var AdCreditAccount $lockedAccount */
+            $lockedAccount = AdCreditAccount::query()
+                ->where('user_id', $target->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($cleanBucket === 'promo') {
+                $nextPromo = $lockedAccount->promo_balance + $signedAmountVnd;
+                if ($nextPromo < 0) {
+                    throw ValidationException::withMessages([
+                        'amount' => [__('Promotional balance cannot become negative.')],
+                    ]);
+                }
+                $lockedAccount->promo_balance = $nextPromo;
+                $entryType = $signedAmountVnd > 0 ? CreditEntryType::PromoGrant : CreditEntryType::AdminAdjustment;
+            } else {
+                $nextBalance = $lockedAccount->balance + $signedAmountVnd;
+                if ($nextBalance < 0) {
+                    throw ValidationException::withMessages([
+                        'amount' => [__('Account balance cannot become negative.')],
+                    ]);
+                }
+                $lockedAccount->balance = $nextBalance;
+                $entryType = CreditEntryType::AdminAdjustment;
+            }
+
+            $lockedAccount->save();
+
+            $entry = $this->appendEntry(
+                account: $lockedAccount,
+                type: $entryType,
+                amount: abs($signedAmountVnd),
+                idempotencyKey: $idempotencyKey,
+                description: ($signedAmountVnd > 0 ? '[+]' : '[-]')." {$cleanReason}",
+                actorId: $actor->id,
+                walletBucket: $cleanBucket,
+            );
+
+            $this->auditLogger->log(
+                'finance.ledger_adjusted',
+                $lockedAccount,
+                [
+                    'target_user_id' => $target->id,
+                    'bucket' => $cleanBucket,
+                    'signed_amount_vnd' => $signedAmountVnd,
+                    'balance_after' => $lockedAccount->balance,
+                    'promo_balance_after' => $lockedAccount->promo_balance,
+                    'reason' => $cleanReason,
+                ],
+                $actor,
+            );
+
+            return $entry;
+        });
+    }
+
+    /**
+     * Atomically record a full or partial refund against a settled payment.
+     */
+    public function adminRefundPayment(
+        User $actor,
+        Payment $payment,
+        int $amountVnd,
+        string $reason,
+        string $idempotencyKey,
+    ): Payment {
+        if ($amountVnd <= 0) {
+            throw ValidationException::withMessages([
+                'amount' => [__('Refund amount must be greater than zero.')],
+            ]);
+        }
+
+        $cleanReason = trim($reason);
+
+        if ($cleanReason === '') {
+            throw ValidationException::withMessages([
+                'reason' => [__('A refund reason is required.')],
+            ]);
+        }
+
+        return DB::transaction(function () use ($actor, $payment, $amountVnd, $cleanReason, $idempotencyKey): Payment {
+            /** @var Payment $lockedPayment */
+            $lockedPayment = Payment::query()->whereKey($payment->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedPayment->status !== PaymentStatus::Paid) {
+                throw ValidationException::withMessages([
+                    'payment' => [__('Only settled paid transactions can be refunded.')],
+                ]);
+            }
+
+            $remaining = $lockedPayment->amount - $lockedPayment->refunded_amount;
+
+            if ($amountVnd > $remaining) {
+                throw ValidationException::withMessages([
+                    'amount' => [__('Refund amount exceeds the remaining refundable payment amount.')],
+                ]);
+            }
+
+            if (AdCreditEntry::query()->where('idempotency_key', $idempotencyKey)->exists()) {
+                return $lockedPayment;
+            }
+
+            /** @var User $owner */
+            $owner = User::query()->findOrFail($lockedPayment->user_id);
+            $this->getOrCreateAccount($owner);
+
+            /** @var AdCreditAccount $lockedAccount */
+            $lockedAccount = AdCreditAccount::query()
+                ->where('user_id', $owner->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($lockedAccount->balance < $amountVnd) {
+                throw ValidationException::withMessages([
+                    'amount' => [__('User available paid balance is lower than the requested refund amount.')],
+                ]);
+            }
+
+            $lockedAccount->balance -= $amountVnd;
+            $lockedAccount->save();
+
+            $lockedPayment->refunded_amount += $amountVnd;
+            $lockedPayment->refunded_at = now();
+            $lockedPayment->refund_reason = $cleanReason;
+            $lockedPayment->refunded_by = $actor->id;
+            $lockedPayment->save();
+
+            $this->appendEntry(
+                account: $lockedAccount,
+                type: CreditEntryType::AdminRefund,
+                amount: $amountVnd,
+                idempotencyKey: $idempotencyKey,
+                description: __('Payment #:id refund: :reason', ['id' => $lockedPayment->id, 'reason' => $cleanReason]),
+                paymentId: $lockedPayment->id,
+                actorId: $actor->id,
+                walletBucket: 'paid',
+            );
+
+            $this->auditLogger->log(
+                'finance.payment_refunded',
+                $lockedPayment,
+                [
+                    'target_user_id' => $owner->id,
+                    'refund_amount_vnd' => $amountVnd,
+                    'total_refunded_vnd' => $lockedPayment->refunded_amount,
+                    'reason' => $cleanReason,
+                ],
+                $actor,
+            );
+
+            return $lockedPayment;
+        });
+    }
+
     private function appendEntry(
         AdCreditAccount $account,
         CreditEntryType $type,
@@ -399,9 +600,12 @@ class WalletService
         string $description,
         ?int $paymentId = null,
         ?int $adCampaignId = null,
+        ?int $actorId = null,
+        string $walletBucket = 'paid',
     ): AdCreditEntry {
         $entry = new AdCreditEntry([
             'type' => $type->value,
+            'wallet_bucket' => $walletBucket,
             'amount' => $amount,
             'balance_after' => $account->balance,
             'held_after' => $account->held_balance,
@@ -411,6 +615,7 @@ class WalletService
         $entry->account_id = $account->id;
         $entry->payment_id = $paymentId;
         $entry->ad_campaign_id = $adCampaignId;
+        $entry->actor_id = $actorId;
         $entry->created_at = now();
         $entry->save();
 

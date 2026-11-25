@@ -14,6 +14,9 @@ use Illuminate\Support\Carbon;
  * @property string $question
  * @property Carbon|null $ends_at
  * @property bool $allows_multiple
+ * @property bool $is_closed
+ * @property string $moderation_status
+ * @property string|null $moderation_reason
  * @property int $total_votes
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -29,6 +32,7 @@ class PostPoll extends Model
         return [
             'ends_at' => 'datetime',
             'allows_multiple' => 'boolean',
+            'is_closed' => 'boolean',
             'total_votes' => 'integer',
         ];
     }

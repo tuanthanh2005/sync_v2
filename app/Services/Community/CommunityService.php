@@ -14,6 +14,7 @@ use App\Services\Media\SafeImageUploadService;
 use App\Services\Security\AuditLogger;
 use App\Services\Social\FeedService;
 use App\Services\Social\HashtagService;
+use App\Services\System\SystemSettingService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class CommunityService
         private readonly FeedService $feedService,
         private readonly HashtagService $hashtagService,
         private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
     ) {}
 
     /**
@@ -40,7 +42,8 @@ class CommunityService
     public function directoryPayload(?User $viewer, string $filter = 'all', ?string $search = null): array
     {
         $query = Community::query()
-            ->where('visibility', 'public');
+            ->where('visibility', 'public')
+            ->where('status', 'active');
 
         if ($viewer !== null && $filter === 'joined') {
             $query->whereHas('members', static function (Builder $memberQuery) use ($viewer): void {
@@ -87,6 +90,8 @@ class CommunityService
     {
         $communities = Community::query()
             ->where('visibility', 'public')
+            ->where('status', 'active')
+            ->orderByDesc('is_featured')
             ->orderByDesc('members_count')
             ->orderByDesc('id')
             ->limit($limit)
@@ -117,6 +122,17 @@ class CommunityService
         ?UploadedFile $avatar = null,
         ?UploadedFile $cover = null,
     ): Community {
+        if (! $this->settings->featureEnabled('feature_communities')) {
+            throw ValidationException::withMessages([
+                'name' => [__('Creating new communities is currently disabled.')],
+            ]);
+        }
+
+        if ($owner->isRestrictedFrom('community')) {
+            throw ValidationException::withMessages([
+                'name' => [__('Your account is currently restricted from creating communities.')],
+            ]);
+        }
         $storedAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'communities/avatars') : null;
         $storedCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'communities/covers') : null;
 
@@ -275,6 +291,12 @@ class CommunityService
                 $existing->delete();
                 $joined = false;
             } else {
+                if ($locked->status !== 'active' || ! $locked->allow_new_members) {
+                    throw ValidationException::withMessages([
+                        'community' => [__('This community is not accepting new members right now.')],
+                    ]);
+                }
+
                 CommunityMember::query()->create([
                     'community_id' => $locked->id,
                     'user_id' => $user->id,

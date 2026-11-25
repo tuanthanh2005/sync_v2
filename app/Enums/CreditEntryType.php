@@ -9,6 +9,10 @@ enum CreditEntryType: string
     case Release = 'release';
     case Spend = 'spend';
     case Refund = 'refund';
+    case PromoGrant = 'promo_grant';
+    case PromoSpend = 'promo_spend';
+    case AdminAdjustment = 'admin_adjustment';
+    case AdminRefund = 'admin_refund';
 
     public function label(): string
     {
@@ -18,6 +22,10 @@ enum CreditEntryType: string
             self::Release => __('Budget release'),
             self::Spend => __('Ad spend'),
             self::Refund => __('Campaign refund'),
+            self::PromoGrant => __('Promotional credit grant'),
+            self::PromoSpend => __('Promotional credit spend'),
+            self::AdminAdjustment => __('Admin ledger adjustment'),
+            self::AdminRefund => __('Payment refund'),
         };
     }
 }

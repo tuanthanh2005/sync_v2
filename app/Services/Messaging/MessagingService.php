@@ -7,13 +7,31 @@ use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\User;
 use App\Models\UserBlock;
+use App\Services\Moderation\ContentFilterService;
+use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class MessagingService
 {
+    public function __construct(
+        private readonly SystemSettingService $settings,
+        private readonly ContentFilterService $contentFilter,
+    ) {}
+
     public function startOrOpenDirect(User $sender, User $recipient): Conversation
     {
+        if (! $this->settings->featureEnabled('feature_messaging')) {
+            throw ValidationException::withMessages([
+                'recipient' => [__('Messaging is currently disabled.')],
+            ]);
+        }
+
+        if ($sender->isRestrictedFrom('message')) {
+            throw ValidationException::withMessages([
+                'recipient' => [__('Your account is currently restricted from sending messages.')],
+            ]);
+        }
         if ($sender->id === $recipient->id) {
             throw ValidationException::withMessages([
                 'recipient' => [__('You cannot message your own account.')],
@@ -39,6 +57,20 @@ class MessagingService
 
     public function sendMessage(User $sender, Conversation $conversation, string $body): Message
     {
+        if (! $this->settings->featureEnabled('feature_messaging')) {
+            throw ValidationException::withMessages([
+                'body' => [__('Messaging is currently disabled.')],
+            ]);
+        }
+
+        if ($sender->isRestrictedFrom('message')) {
+            throw ValidationException::withMessages([
+                'body' => [__('Your account is currently restricted from sending messages.')],
+            ]);
+        }
+
+        $filteredBody = $this->contentFilter->assertAllowedOrMask(trim($body), 'body');
+
         $recipient = $conversation->otherUserFor($sender);
 
         if ($recipient === null || $recipient->status !== UserStatus::Active) {
@@ -49,9 +81,9 @@ class MessagingService
 
         $this->ensureNotBlocked($sender, $recipient);
 
-        return DB::transaction(function () use ($sender, $conversation, $body): Message {
+        return DB::transaction(function () use ($sender, $conversation, $filteredBody): Message {
             $message = new Message([
-                'body' => trim($body),
+                'body' => $filteredBody,
             ]);
             $message->conversation_id = $conversation->id;
             $message->sender_id = $sender->id;

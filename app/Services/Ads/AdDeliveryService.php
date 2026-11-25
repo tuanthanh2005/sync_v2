@@ -12,6 +12,7 @@ use App\Models\AdDailyStat;
 use App\Models\User;
 use App\Services\Billing\WalletService;
 use App\Services\Social\FeedService;
+use App\Services\System\SystemSettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +21,7 @@ class AdDeliveryService
     public function __construct(
         private readonly FeedService $feedService,
         private readonly WalletService $walletService,
+        private readonly SystemSettingService $settings,
     ) {}
 
     /**
@@ -29,6 +31,9 @@ class AdDeliveryService
      */
     public function pickSponsoredPostForFeed(?User $viewer, Request $request): ?array
     {
+        if (! $this->settings->featureEnabled('feature_ads')) {
+            return null;
+        }
         $now = now();
         $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
@@ -98,7 +103,7 @@ class AdDeliveryService
         }
 
         $cost = $campaign->objective === AdObjective::Reach
-            ? (int) config('syncviet.ad_pricing.impression_cost_vnd', 25)
+            ? (int) $this->settings->get('ad_impression_cost_vnd', (int) config('syncviet.ad_pricing.impression_cost_vnd', 25))
             : 0;
 
         $this->recordUniqueEvent($campaign, $viewer, $request, 'impression', 'Y-m-d-H', $cost);
@@ -117,7 +122,7 @@ class AdDeliveryService
             return $destination;
         }
 
-        $cost = (int) config('syncviet.ad_pricing.click_cost_vnd', 1_250);
+        $cost = (int) $this->settings->get('ad_click_cost_vnd', (int) config('syncviet.ad_pricing.click_cost_vnd', 1_250));
         $this->recordUniqueEvent($campaign, $viewer, $request, 'click', 'Y-m-d', $cost);
 
         return $destination;

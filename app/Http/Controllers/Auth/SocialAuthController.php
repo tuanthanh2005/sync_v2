@@ -4,14 +4,20 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\System\SystemSettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class SocialAuthController extends Controller
 {
+    public function __construct(
+        private readonly SystemSettingService $settings,
+    ) {}
+
     /**
      * Supported OAuth providers.
      */
@@ -20,9 +26,14 @@ class SocialAuthController extends Controller
     /**
      * Redirect to the OAuth provider.
      */
-    public function redirect(string $provider): RedirectResponse
+    public function redirect(string $provider): SymfonyRedirectResponse
     {
         abort_unless(in_array($provider, self::ALLOWED_PROVIDERS, true), 404);
+
+        if (! $this->settings->featureEnabled('feature_google_login')) {
+            return redirect()->route('login')
+                ->withErrors(['email' => __('Google sign-in is currently disabled.')]);
+        }
 
         return Socialite::driver($provider)->redirect();
     }
@@ -33,6 +44,11 @@ class SocialAuthController extends Controller
     public function callback(string $provider): RedirectResponse
     {
         abort_unless(in_array($provider, self::ALLOWED_PROVIDERS, true), 404);
+
+        if (! $this->settings->featureEnabled('feature_google_login')) {
+            return redirect()->route('login')
+                ->withErrors(['email' => __('Google sign-in is currently disabled.')]);
+        }
 
         try {
             $socialUser = Socialite::driver($provider)->user();
@@ -76,8 +92,8 @@ class SocialAuthController extends Controller
             ]);
         });
 
-        // Block suspended / banned accounts
-        if ($user->status?->value === 'banned') {
+        // Block suspended / banned / deactivated accounts
+        if (! $user->isActive()) {
             return redirect()->route('login')
                 ->withErrors(['email' => __('Your account has been suspended.')]);
         }

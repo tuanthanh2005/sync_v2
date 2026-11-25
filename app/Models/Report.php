@@ -18,9 +18,14 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property ReportReason $reason
  * @property string|null $details
  * @property ReportStatus $status
+ * @property int|null $assigned_to
+ * @property string $priority
  * @property int|null $reviewed_by
  * @property CarbonInterface|null $reviewed_at
  * @property string|null $resolution_note
+ * @property string|null $internal_note
+ * @property array<string, mixed>|null $evidence_snapshot
+ * @property string|null $duplicate_group_key
  * @property CarbonInterface|null $created_at
  * @property CarbonInterface|null $updated_at
  */
@@ -36,6 +41,7 @@ class Report extends Model
             'reason' => ReportReason::class,
             'status' => ReportStatus::class,
             'reviewed_at' => 'datetime',
+            'evidence_snapshot' => 'array',
         ];
     }
 
@@ -45,6 +51,14 @@ class Report extends Model
     public function reporter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reporter_id');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function assignee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     /**

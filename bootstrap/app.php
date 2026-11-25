@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\EnsureAdminHasTwoFactor;
+use App\Http\Middleware\EnsureUserHasPermission;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\HandleAppearance;
@@ -26,11 +28,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'active' => EnsureUserIsActive::class,
             'admin.2fa' => EnsureAdminHasTwoFactor::class,
+            'permission' => EnsureUserHasPermission::class,
             'role' => EnsureUserHasRole::class,
         ]);
 
         $middleware->web(append: [
             SetLocale::class,
+            CheckMaintenanceMode::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

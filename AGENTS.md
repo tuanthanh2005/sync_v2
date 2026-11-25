@@ -198,12 +198,12 @@ Vue components must have a single root element.
 
 # SyncViet Project Engineering Rules (Mandatory)
 
-Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/BUSINESS_RULES.md`, `docs/SECURITY.md`, `docs/SECURITY_CHECKLIST.md`, `docs/DESIGN_SYSTEM.md`, `docs/DEPLOYMENT_HOSTINGER.md`, `docs/DEPLOYMENT_VPS.md`, `docs/MIGRATION_GUIDE.md`, and `docs/TASKS.md` before starting any task.
+Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/BUSINESS_RULES.md`, `docs/SECURITY.md`, `docs/SECURITY_CHECKLIST.md`, `docs/DESIGN_SYSTEM.md`, `docs/ADMINISTRATION.md`, `docs/PERMISSION_MATRIX.md`, `docs/MODERATION_GUIDE.md`, `docs/LOCALIZATION.md`, `docs/FEATURE_MANAGEMENT.md`, `docs/DEPLOYMENT_HOSTINGER.md`, `docs/DEPLOYMENT_VPS.md`, `docs/MIGRATION_GUIDE.md`, and `docs/TASKS.md` before starting any task.
 
 ## 1. Fixed Technology Stack
 
 - **PHP 8.4**, **Laravel 13**, **MySQL / MariaDB** (InnoDB, `utf8mb4_unicode_ci`).
-- **Vue 3** (`<script setup lang="ts">`), **TypeScript** (strict, zero arbitrary `any`), **Inertia.js 3**, **Tailwind CSS 4**, **shadcn-vue** (`reka-ui`), **@lucide/vue**, **vue-i18n**, **Vite** (`vite-plus`), **Laravel Fortify**, **Laravel Wayfinder**, **Pest PHP 5**, **Laravel Boost** (dev only).
+- **Vue 3** (`<script setup lang="ts">`), **TypeScript** (strict, zero arbitrary `any`), **Inertia.js 3**, **Tailwind CSS 4**, **shadcn-vue** (`reka-ui`), **@lucide/vue**, **vue-i18n**, **chart.js**, **Vite** (`vite-plus`), **Laravel Fortify**, **Laravel Wayfinder**, **Pest PHP 5**, **Laravel Boost** (dev only).
 - **Do not** downgrade or swap stack components, do not install redundant packages, and do not add Docker-only runtime requirements, Supervisor-only assumptions, Node SSR daemon, jQuery, Bootstrap, React, or Livewire.
 
 ## 2. Server Portability & Production Constraints
@@ -221,13 +221,14 @@ Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/BUSINESS_RULES.md`, `
 - **Controllers**: Handle HTTP request/response and Inertia/JSON rendering only.
 - **Form Requests**: Validate and normalize all incoming user input (`app/Http/Requests`).
 - **Services / Actions**: Encapsulate reusable domain logic (`app/Services/{Domain}`, `app/Actions/{Domain}`).
-- **Policies / Gates**: Authorize every non-public resource, mutation, and staff route in backend (`app/Policies`, `EnsureUserHasRole`, `EnsureUserIsActive`, `EnsureAdminHasTwoFactor`).
-- **Models**: Relationships, casts, scopes, and explicit `#[Fillable]` excluding privilege/financial columns (`role`, `status`, balances).
-- **Localization**: Bilingual `vi` / `en` via Laravel Localization (`lang/*.json`, `SetLocale`) and `vue-i18n` (`resources/js/i18n/`). Never hardcode brand names or URLs in components.
+- **Policies / Gates / RBAC**: Authorize every non-public resource, mutation, and staff route in backend (`app/Policies`, `EnsureUserHasRole`, `EnsureUserHasPermission`, `EnsureUserIsActive`, `EnsureAdminHasTwoFactor`, `CheckMaintenanceMode`, `RbacService`).
+- **Models**: Relationships, casts, scopes, and explicit `#[Fillable]` excluding privilege/financial columns (`role`, `rbac_role_id`, `status`, balances).
+- **Localization**: Global 15-language system (`en` default/fallback, `vi`, `es`, `pt-BR`, `id`, `hi`, `th`, `fil`, `fr`, `de`, `ja`, `ko`, `zh-CN`, `ar` full RTL, `tr`) via Laravel Localization (`lang/*.json`, `SetLocale`) and `vue-i18n` (`resources/js/i18n/`), with local inline SVG flags (`FlagIcon.vue`), searchable `LocaleSwitcher.vue`, DB/cookie persistence, and Admin language activation controls. Never hardcode brand names or URLs in components.
 
-## 4. UI / UX & Footer Standards
+## 4. UI / UX, Toast System & Footer Standards
 
-- Light Palette: Primary `#4F46E5` (Hover `#4338CA`, Active `#3730A3`, Soft `#EEF2FF`), Background `#F3F5F9`, Surface `#FFFFFF`, Text `#0F172A` / `#64748B`, Border `#E2E8F0`, Semantic `#16A34A` / `#D97706` / `#DC2626`. Dark Palette: Primary `#818CF8` (`primary-foreground: #0B0F17`, Hover `#A5B4FC`, Soft `#25264A`), Background `#0B0F17`, Surface `#161B26` (Hover `#1E293B`), Text `#F1F5F9` / `#94A3B8`, Border `#273244`, Semantic `#4ADE80` / `#FBBF24` / `#F87171`. Enforce ~90% neutral / 10% Indigo brand (no purple gradients, no duplicate sidebar promo cards at desktop widths), font `Be Vietnam Pro`, `@lucide/vue` icons, Loading Skeleton, Empty State, Error State, and Sonner Toast states.
+- Light Palette: Primary `#4F46E5` (Hover `#4338CA`, Active `#3730A3`, Soft `#EEF2FF`), Background `#F3F5F9`, Surface `#FFFFFF`, Text `#0F172A` / `#64748B`, Border `#E2E8F0`, Semantic `#16A34A` / `#D97706` / `#DC2626`. Dark Palette: Primary `#818CF8` (`primary-foreground: #0B0F17`, Hover `#A5B4FC`, Soft `#25264A`), Background `#0B0F17`, Surface `#161B26` (Hover `#1E293B`), Text `#F1F5F9` / `#94A3B8`, Border `#273244`, Semantic `#4ADE80` / `#FBBF24` / `#F87171`. Enforce ~90% neutral / 10% Indigo brand (no purple gradients, no duplicate sidebar promo cards at desktop widths), font `Be Vietnam Pro`, `@lucide/vue` icons, Loading Skeleton, Empty State, Error State, `ConfirmActionDialog`/`ReasonDialog` (zero browser `alert()`/`confirm()`), and unified `appToast` + `Sonner.vue` (X close button, Escape key close, hover-pausing progress bar, deduplication, Light/Dark & RTL support).
+- **Administration Center**: Dedicated collapsible, responsive `AdminLayout.vue` grouped into 7 modules (`Overview`, `User Management`, `Content Management`, `Moderation`, `Advertising`, `Finance`, `System`), automatically applied to all `admin/*` Inertia pages.
 - **Footer architecture**:
     - **No large footer at the end of Infinite Scroll News Feed**.
     - **MiniFooter** placed below the Right Sidebar (`ConnectHubLayout`).
@@ -240,10 +241,10 @@ Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/BUSINESS_RULES.md`, `
 
 Apply **Security by Design** and **Defense in Depth** across every phase (full details in `docs/SECURITY.md` & `docs/SECURITY_CHECKLIST.md`):
 
-- **Authentication**: Fortify, `argon2id` hashing (`HASH_DRIVER=argon2id`), email verification, TOTP 2FA, **mandatory 2FA for Admin (`EnsureAdminHasTwoFactor`)**, rate limiting on login/register/2FA, session regeneration, logout all other devices (`BrowserSessionService`), `HttpOnly`, `SameSite=Lax`, and HTTPS `Secure` cookies.
-- **Authorization**: Deny by default, Least Privilege, Policies & Gates on all backend endpoints, ownership checks, anti-IDOR, never trust `role`/`user_id`/price from client.
-- **Input & Output**: Form Request validation, Eloquent/parameterized queries, CSRF, Mass Assignment protection, backend HTML sanitization (`PolicySanitizer`), SSRF protection (no arbitrary URL fetching), never use `v-html` on unsanitized input.
+- **Authentication**: Fortify, `argon2id` hashing (`HASH_DRIVER=argon2id`), email verification, TOTP 2FA, **mandatory 2FA for Admin (`EnsureAdminHasTwoFactor`)**, rate limiting on login/register/2FA, session regeneration, logout all other devices (`BrowserSessionService`), instant session revocation on ban/suspend, `HttpOnly`, `SameSite=Lax`, and HTTPS `Secure` cookies.
+- **Authorization**: Deny by default, Least Privilege, granular RBAC (`permission:*`, 8 hierarchical roles, anti-privilege-escalation, last `super_admin` protection), Policies & Gates on all backend endpoints, ownership checks, anti-IDOR, never trust `role`/`user_id`/price from client.
+- **Input & Output**: Form Request validation, Eloquent/parameterized queries, CSRF, Mass Assignment protection, backend HTML sanitization (`PolicySanitizer`), SSRF protection (no arbitrary URL fetching), formula-safe CSV exports, never use `v-html` on unsanitized input, never leak stack traces or exceptions in Toast notifications.
 - **File Uploads**: Strict extension/MIME allowlist + real file inspection, size/dimension limits, random filenames, re-encode images, strip EXIF, forbid PHP/executables/unsanitized SVG, store outside executable paths, signed URLs for private files.
-- **Payments & Advertising**: Backend-only integer arithmetic (smallest currency unit, no float), `DB::transaction`, `lockForUpdate`, signed webhooks, replay/duplicate/race-condition protection (`idempotency_key` + unique constraint), non-negative balance invariants, auditable ledger, anti-fraud ad event validation.
-- **Headers & Monitoring**: `SecurityHeaders` (`CSP` with `frame-ancestors 'self'`, `HSTS`, `X-Content-Type-Options`, `Referrer-Policy`), `AuditLogger` (redacting secrets), `RecordAuthSecurityEvents` (`LoginHistory`), no secrets/passwords in logs or Git, no default hardcoded admin credentials.
+- **Payments & Advertising**: Backend-only integer arithmetic (smallest currency unit, no float), `DB::transaction`, `lockForUpdate`, signed webhooks, replay/duplicate/race-condition protection (`idempotency_key` + unique constraint), password-confirmed financial refunds/adjustments, strict paid vs promotional credit bucket isolation, non-negative balance invariants, automatic ad cancellation & 100% refund when a promoted post is hidden/deleted, auditable ledger, anti-fraud ad event validation.
+- **Headers, Backups & Monitoring**: `SecurityHeaders` (`CSP` with `frame-ancestors 'self'`, `HSTS`, `X-Content-Type-Options`, `Referrer-Policy`), immutable `AuditLogger` (redacting secrets), `RecordAuthSecurityEvents` (`LoginHistory`), Hostinger-safe SHA-256 snapshot backups (`AdminSecurityService`), no secrets/passwords in logs or Git, no default hardcoded admin credentials.
 - **Dependency & Testing**: Run `composer audit`, `npm audit`, Pint, PHPStan level 7, `vue-tsc`, `vp check`, Pest security tests, and Vite build before marking any module complete. Never disable security controls or bypass validation/authorization as a workaround.

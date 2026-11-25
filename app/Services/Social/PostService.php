@@ -2,14 +2,18 @@
 
 namespace App\Services\Social;
 
+use App\Enums\AdCampaignStatus;
+use App\Enums\CreditEntryType;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
 use App\Enums\ReactionType;
+use App\Models\AdCampaign;
 use App\Models\Bookmark;
 use App\Models\Community;
 use App\Models\CommunityMember;
 use App\Models\Post;
+use App\Models\PostEditHistory;
 use App\Models\PostMedia;
 use App\Models\PostPoll;
 use App\Models\PostPollOption;
@@ -17,9 +21,12 @@ use App\Models\PostPollVote;
 use App\Models\PostReaction;
 use App\Models\User;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Billing\WalletService;
 use App\Services\Media\SafeImageUploadService;
+use App\Services\Moderation\ContentFilterService;
 use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
+use App\Services\System\SystemSettingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -32,6 +39,9 @@ class PostService
         private readonly HashtagService $hashtagService,
         private readonly NotificationService $notificationService,
         private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
+        private readonly ContentFilterService $contentFilter,
+        private readonly WalletService $walletService,
     ) {}
 
     /**
@@ -52,15 +62,52 @@ class PostService
      */
     public function create(User $author, array $data, array $images = []): Post
     {
+        if (! $this->settings->featureEnabled('feature_posting')) {
+            throw ValidationException::withMessages([
+                'content' => [__('Posting is currently disabled by the administrator.')],
+            ]);
+        }
+
+        if ($author->isRestrictedFrom('post')) {
+            throw ValidationException::withMessages([
+                'content' => [__('Your account is currently restricted from publishing new posts.')],
+            ]);
+        }
+
+        if ($images !== [] && ! $this->settings->featureEnabled('feature_image_upload')) {
+            throw ValidationException::withMessages([
+                'images' => [__('Image uploads are currently disabled.')],
+            ]);
+        }
+
+        $maxLength = max(100, (int) $this->settings->get('content_post_max_length', 3000));
+        if (mb_strlen(trim($data['content'])) > $maxLength) {
+            throw ValidationException::withMessages([
+                'content' => [__('Post content exceeds the maximum allowed length of :max characters.', ['max' => $maxLength])],
+            ]);
+        }
+
+        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
+        $filteredTitle = isset($data['title']) && trim($data['title']) !== ''
+            ? $this->contentFilter->assertAllowedOrMask(trim($data['title']), 'title')
+            : null;
+        $filterCheck = $this->contentFilter->evaluate(trim($data['content']).' '.(string) ($filteredTitle ?? ''));
+
         $community = null;
 
         if (isset($data['community_id']) && (int) $data['community_id'] > 0) {
             /** @var Community|null $community */
             $community = Community::query()->find((int) $data['community_id']);
 
-            if ($community === null) {
+            if ($community === null || $community->status !== 'active') {
                 throw ValidationException::withMessages([
-                    'community_id' => [__('The selected community was not found.')],
+                    'community_id' => [__('The selected community was not found or is currently unavailable.')],
+                ]);
+            }
+
+            if (! $community->allow_posting) {
+                throw ValidationException::withMessages([
+                    'community_id' => [__('Posting is currently restricted in this community.')],
                 ]);
             }
 
@@ -93,14 +140,15 @@ class PostService
             $linkMeta = $this->linkPreviewService->fetch($linkUrl);
         }
 
+        $maxImages = max(1, min(10, (int) $this->settings->get('content_post_max_images', 4)));
         $storedImages = [];
 
         try {
-            foreach (array_slice($images, 0, 4) as $image) {
+            foreach (array_slice($images, 0, $maxImages) as $image) {
                 $storedImages[] = $this->imageUploadService->storeImage($image, 'posts');
             }
 
-            $post = DB::transaction(function () use ($author, $data, $community, $linkUrl, $linkMeta, $storedImages): Post {
+            $post = DB::transaction(function () use ($author, $data, $community, $linkUrl, $linkMeta, $storedImages, $filteredContent, $filteredTitle, $filterCheck): Post {
                 $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? PostCategory::General;
                 $visibility = $community !== null
                     ? ($community->visibility === 'private' ? PostVisibility::Community : PostVisibility::Public)
@@ -108,8 +156,8 @@ class PostService
 
                 $post = new Post([
                     'category' => $category->value,
-                    'title' => isset($data['title']) && trim($data['title']) !== '' ? trim($data['title']) : null,
-                    'content' => trim($data['content']),
+                    'title' => $filteredTitle,
+                    'content' => $filteredContent,
                     'link_url' => $linkUrl,
                     'link_meta' => $linkMeta,
                     'visibility' => $visibility->value,
@@ -117,7 +165,7 @@ class PostService
                 ]);
                 $post->user_id = $author->id;
                 $post->community_id = $community?->id;
-                $post->moderation_status = ModerationStatus::Approved;
+                $post->moderation_status = $filterCheck['flagged'] ? ModerationStatus::Pending : ModerationStatus::Approved;
                 $post->save();
 
                 foreach ($storedImages as $index => $mediaInfo) {
@@ -131,6 +179,7 @@ class PostService
                         'sort_order' => $index,
                     ]);
                     $media->post_id = $post->id;
+                    $media->user_id = $author->id;
                     $media->save();
                 }
 
@@ -140,7 +189,7 @@ class PostService
                     static fn (string $opt): bool => $opt !== '',
                 ));
 
-                if ($pollQuestion !== '' && count($pollOptions) >= 2) {
+                if ($pollQuestion !== '' && count($pollOptions) >= 2 && $this->settings->featureEnabled('feature_polls')) {
                     $hours = (int) ($data['poll_duration_hours'] ?? 72);
                     $poll = new PostPoll([
                         'question' => $pollQuestion,
@@ -197,11 +246,23 @@ class PostService
      */
     public function update(User $actor, Post $post, array $data): Post
     {
+        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
+        $filteredTitle = isset($data['title']) && trim($data['title']) !== ''
+            ? $this->contentFilter->assertAllowedOrMask(trim($data['title']), 'title')
+            : null;
         $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? $post->category;
 
+        PostEditHistory::query()->create([
+            'post_id' => $post->id,
+            'editor_id' => $actor->id,
+            'previous_title' => $post->title,
+            'previous_content' => $post->content,
+            'created_at' => now(),
+        ]);
+
         $post->forceFill([
-            'title' => isset($data['title']) && trim($data['title']) !== '' ? trim($data['title']) : null,
-            'content' => trim($data['content']),
+            'title' => $filteredTitle,
+            'content' => $filteredContent,
             'category' => $category->value,
         ])->save();
 
@@ -216,6 +277,35 @@ class PostService
         return $post->fresh(['author.profile', 'community', 'hashtags', 'media', 'poll.options']) ?? $post;
     }
 
+    public function stopCampaignsForPost(Post $post, string $reason): int
+    {
+        $campaigns = AdCampaign::query()
+            ->where('post_id', $post->id)
+            ->whereIn('status', [
+                AdCampaignStatus::PendingReview->value,
+                AdCampaignStatus::Active->value,
+                AdCampaignStatus::Paused->value,
+            ])
+            ->get();
+
+        $stopped = 0;
+
+        foreach ($campaigns as $campaign) {
+            $campaign->status = AdCampaignStatus::Cancelled;
+            $campaign->rejection_reason = $reason;
+            $campaign->save();
+
+            $this->walletService->releaseCampaignHold(
+                $campaign,
+                CreditEntryType::Refund,
+                $reason,
+            );
+            $stopped++;
+        }
+
+        return $stopped;
+    }
+
     public function delete(User $actor, Post $post): void
     {
         $mediaItems = $post->media()->get(['disk', 'path']);
@@ -223,6 +313,8 @@ class PostService
         $communityId = $post->community_id;
 
         DB::transaction(function () use ($post, $communityId): void {
+            $this->stopCampaignsForPost($post, __('Promoted post was deleted; remaining ad budget refunded.'));
+
             $post->delete();
 
             if ($communityId !== null) {
@@ -258,6 +350,11 @@ class PostService
      */
     public function toggleReaction(User $user, Post $post, ReactionType $type): array
     {
+        if (! $this->settings->featureEnabled('feature_reactions')) {
+            throw ValidationException::withMessages([
+                'type' => [__('Reactions are currently disabled.')],
+            ]);
+        }
         $result = DB::transaction(function () use ($user, $post, $type): array {
             /** @var Post $lockedPost */
             $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
@@ -360,9 +457,9 @@ class PostService
             /** @var PostPoll $lockedPoll */
             $lockedPoll = PostPoll::query()->whereKey($poll->id)->lockForUpdate()->firstOrFail();
 
-            if ($lockedPoll->isExpired()) {
+            if ($lockedPoll->is_closed || $lockedPoll->moderation_status !== 'approved' || $lockedPoll->isExpired()) {
                 throw ValidationException::withMessages([
-                    'option_id' => [__('This poll has already ended.')],
+                    'option_id' => [__('This poll is closed or has already ended.')],
                 ]);
             }
 

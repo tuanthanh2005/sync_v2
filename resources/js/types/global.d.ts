@@ -1,6 +1,12 @@
 import type { Directive } from 'vue';
 import type { Auth } from '@/types/auth';
-import type { FooterSharedData, SidebarHighlights } from '@/types/ui';
+import type {
+    AdminPendingCounts,
+    FooterSharedData,
+    PublicLanguageItem,
+    SidebarHighlights,
+    SystemSettingsPublic,
+} from '@/types/ui';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -20,13 +26,18 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             appUrl: string;
-            locale: 'vi' | 'en';
+            locale: string;
+            isRtl: boolean;
+            languages: PublicLanguageItem[];
+            translationOverrides: Record<string, string>;
             supportedLocales: string[];
+            systemSettings: SystemSettingsPublic;
             footer: FooterSharedData;
             sidebarHighlights: SidebarHighlights;
             unreadNotificationsCount: number;
             unreadMessagesCount: number;
             walletBalance: number;
+            adminPendingCounts: AdminPendingCounts | null;
             auth: Auth;
             sidebarOpen: boolean;
             [key: string]: unknown;

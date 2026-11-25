@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Middleware\SetLocale;
+use App\Services\System\LanguageService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -19,8 +19,10 @@ class LocaleUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $enabledCodes = app(LanguageService::class)->enabledCodes();
+
         return [
-            'locale' => ['required', 'string', Rule::in(SetLocale::SUPPORTED_LOCALES)],
+            'locale' => ['required', 'string', Rule::in($enabledCodes)],
         ];
     }
 }

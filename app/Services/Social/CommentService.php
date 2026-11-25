@@ -8,7 +8,9 @@ use App\Models\CommunityMember;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Moderation\ContentFilterService;
 use App\Services\Notification\NotificationService;
+use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -17,6 +19,8 @@ class CommentService
     public function __construct(
         private readonly FeedService $feedService,
         private readonly NotificationService $notificationService,
+        private readonly SystemSettingService $settings,
+        private readonly ContentFilterService $contentFilter,
     ) {}
 
     /**
@@ -106,9 +110,43 @@ class CommentService
      */
     public function create(User $author, Post $post, array $data): Comment
     {
-        $created = DB::transaction(function () use ($author, $post, $data): Comment {
+        if (! $this->settings->featureEnabled('feature_comments')) {
+            throw ValidationException::withMessages([
+                'content' => [__('Commenting is currently disabled by the administrator.')],
+            ]);
+        }
+
+        if ($author->isRestrictedFrom('comment')) {
+            throw ValidationException::withMessages([
+                'content' => [__('Your account is currently restricted from commenting.')],
+            ]);
+        }
+
+        if ($post->comments_locked) {
+            throw ValidationException::withMessages([
+                'content' => [__('Comments have been locked on this post.')],
+            ]);
+        }
+
+        $maxLength = max(100, (int) $this->settings->get('content_comment_max_length', 1500));
+        if (mb_strlen(trim($data['content'])) > $maxLength) {
+            throw ValidationException::withMessages([
+                'content' => [__('Comment exceeds the maximum length of :max characters.', ['max' => $maxLength])],
+            ]);
+        }
+
+        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
+        $filterCheck = $this->contentFilter->evaluate(trim($data['content']));
+
+        $created = DB::transaction(function () use ($author, $post, $data, $filteredContent, $filterCheck): Comment {
             /** @var Post $lockedPost */
             $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedPost->comments_locked) {
+                throw ValidationException::withMessages([
+                    'content' => [__('Comments have been locked on this post.')],
+                ]);
+            }
 
             $parentId = isset($data['parent_id']) ? (int) $data['parent_id'] : null;
 
@@ -133,11 +171,11 @@ class CommentService
 
             $comment = new Comment([
                 'parent_id' => $parentId,
-                'content' => trim($data['content']),
+                'content' => $filteredContent,
             ]);
             $comment->post_id = $lockedPost->id;
             $comment->user_id = $author->id;
-            $comment->moderation_status = ModerationStatus::Approved;
+            $comment->moderation_status = $filterCheck['flagged'] ? ModerationStatus::Pending : ModerationStatus::Approved;
             $comment->save();
 
             $lockedPost->comments_count = Comment::query()

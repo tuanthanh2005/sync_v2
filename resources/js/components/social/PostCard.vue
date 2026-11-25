@@ -23,14 +23,15 @@ import {
 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { toast } from 'vue-sonner';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ReportController from '@/actions/App/Http/Controllers/Moderation/ReportController';
 import PostController from '@/actions/App/Http/Controllers/Social/PostController';
 import PostInteractionController from '@/actions/App/Http/Controllers/Social/PostInteractionController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
+import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import InputError from '@/components/InputError.vue';
+import { appToast } from '@/lib/toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -114,7 +115,7 @@ const profileHref = computed(() =>
 
 function requireUser(): boolean {
     if (!user.value) {
-        toast.info(t('home.composer.signInPrompt'));
+        appToast.info(t('home.composer.signInPrompt'));
         router.visit(login());
 
         return false;
@@ -170,7 +171,7 @@ async function handleShare(): Promise<void> {
         // Fallback silently if clipboard access is unavailable
     }
 
-    toast.success(t('post.shareCopied'));
+    appToast.success(t('post.shareCopied'));
 
     if (user.value) {
         router.post(
@@ -190,13 +191,21 @@ function saveEdit(): void {
     });
 }
 
-function deletePost(): void {
-    if (!window.confirm(t('post.confirmDelete'))) {
-        return;
-    }
+const confirmDeleteOpen = ref(false);
+const deletingPost = ref(false);
 
+function deletePost(): void {
+    confirmDeleteOpen.value = true;
+}
+
+function executeDeletePost(): void {
+    deletingPost.value = true;
     router.delete(PostController.destroy.url(props.post.id), {
         preserveScroll: true,
+        onFinish: () => {
+            deletingPost.value = false;
+            confirmDeleteOpen.value = false;
+        },
     });
 }
 
@@ -819,5 +828,15 @@ function submitReport(): void {
                 </form>
             </DialogContent>
         </Dialog>
+
+        <ConfirmActionDialog
+            v-model:open="confirmDeleteOpen"
+            :title="t('post.delete')"
+            :description="t('post.confirmDelete')"
+            :confirm-label="t('post.delete')"
+            :processing="deletingPost"
+            destructive
+            @confirm="executeDeletePost"
+        />
     </article>
 </template>

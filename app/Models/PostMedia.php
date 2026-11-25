@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @property int $id
  * @property int $post_id
+ * @property int|null $user_id
  * @property string $disk
  * @property string $path
  * @property string $mime_type
@@ -19,6 +20,9 @@ use Illuminate\Support\Facades\Storage;
  * @property int $size_bytes
  * @property string|null $alt_text
  * @property int $sort_order
+ * @property string $moderation_status
+ * @property string|null $moderation_reason
+ * @property int|null $moderated_by
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -44,6 +48,14 @@ class PostMedia extends Model
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function url(): string

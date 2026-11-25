@@ -29,19 +29,27 @@ Tham chiếu thẩm mỹ từ 4 mockup giao diện cộng đồng kết hợp Sa
 - **Sidebar & Quảng cáo**: Tránh hiển thị hai card quảng bá trùng lặp cùng lúc giữa Left Sidebar và Right Sidebar trên desktop (`xl+`); bài viết tài trợ hòa hợp với Feed nhưng giữ rõ nhãn `"Được tài trợ"` / `"Sponsored"` và CTA Indigo rõ ràng.
 - **Bo góc (Radius)**: Card `12px` (`--radius: 0.75rem`, `rounded-xl`), Button/Control `8px` (`rounded-lg`).
 
-## 3. Typography, Icons & Song ngữ (i18n)
+## 3. Typography, Icons & Đa ngôn ngữ Toàn cầu (15 Ngôn ngữ + RTL)
 
-- **Font chữ**: `Be Vietnam Pro` (weights 400, 500, 600, 700) cấu hình tự host qua `laravel-vite-plugin/fonts` (`bunny('Be Vietnam Pro')`).
+- **Font chữ**: `Be Vietnam Pro` (weights 400, 500, 600, 700) cấu hình tự host qua `laravel-vite-plugin/fonts` (`bunny('Be Vietnam Pro')`), kết hợp fallback hệ thống cho chữ Ả Rập, CJK, Thái và Devanagari.
 - **Icons**: `@lucide/vue` cho toàn bộ điều hướng, trạng thái và thao tác (không dùng emoji làm icon điều hướng).
-- **Song ngữ VI / EN**: Đồng bộ `Laravel Localization` (`SetLocale`, `LocaleController`, `lang/*.json`) và `vue-i18n` (`resources/js/i18n/`). Tên thương hiệu lấy từ `page.props.name` (`config('app.name')`).
+- **15 Ngôn ngữ & Cờ SVG nội bộ**: Hỗ trợ `en` (mặc định/fallback), `vi`, `es`, `pt-BR`, `id`, `hi`, `th`, `fil`, `fr`, `de`, `ja`, `ko`, `zh-CN`, `ar` (RTL), `tr`. Lá cờ sử dụng `FlagIcon.vue` (inline SVG nội bộ, không phụ thuộc CDN).
+- **Language Switcher tìm kiếm**: `LocaleSwitcher.vue` hiển thị cờ SVG + tên bản địa + ô tìm kiếm nhanh, đồng bộ reactive với `Laravel Localization` (`SetLocale`, `LocaleController`, `lang/*.json`), `vue-i18n` (`resources/js/i18n/`) và `document.documentElement.dir` (`rtl`/`ltr`). Tên thương hiệu lấy từ `page.props.name` (`config('app.name')`).
 
-## 4. Bố cục & Hệ thống Footer tái sử dụng
+## 4. Bố cục Người dùng, Administration Center & Hệ thống Footer
 
-### Bố cục Desktop & Mobile
+### Bố cục Người dùng (`ConnectHubLayout.vue`)
 
 - **Top Header (`64px`)**: Sticky top, nút mở Drawer mobile, Logo thương hiệu động (`AppLogo.vue`), Breadcrumbs, `LocaleSwitcher`, `ThemeToggle`, User Dropdown hoặc Đăng nhập/Đăng ký.
 - **Desktop (`xl+`, `max-w-[1360px]`)**: Left Sidebar (`240px`) + Main Content (`max-w-[760px]`) + Right Sidebar (`320px`).
 - **Mobile (`< lg`)**: 1 cột + Left Drawer (`Sheet`) + `MobileBottomNav` (`min-h-14`).
+
+### Bố cục Administration Center (`AdminLayout.vue`)
+
+- Tách biệt hoàn toàn với News Feed người dùng, áp dụng tự động cho mọi trang `admin/*`.
+- **Collapsible Sidebar**: Chia 7 phân hệ rõ ràng (`Overview`, `User Management`, `Content Management`, `Moderation`, `Advertising`, `Finance`, `System`), hiển thị huy hiệu số mục chờ duyệt thời gian thực (`adminPendingCounts`), ẩn tự động mục không có quyền RBAC, hỗ trợ thu gọn trên Desktop và Drawer trên Mobile.
+- **Admin Topbar**: Breadcrumb ngữ cảnh, thanh tìm kiếm nhanh, chuông thông báo chờ xử lý, `LocaleSwitcher`, `ThemeToggle` và Account Menu (kèm nút quay lại giao diện người dùng).
+- **Biểu đồ & Dữ liệu**: Component `AdminChart.vue` (`chart.js`), `AdminStatCard.vue` và `AdminPagination.vue` tuân thủ token màu Indigo/Neutral và tự thích ứng Light/Dark Mode.
 
 ### Hệ thống Footer (3 biến thể tái sử dụng, không trùng lặp code)
 
@@ -57,11 +65,10 @@ Dùng chung `FooterLinkList.vue` đọc từ Inertia shared prop `footer` (`Foot
 - Hỗ trợ đủ 10 trang tiêu chuẩn: `about-us`, `terms-of-service`, `privacy-policy`, `cookie-policy`, `community-guidelines`, `advertising-policy`, `refund-policy`, `copyright-policy`, `help-center`, `contact-us`.
 - Tất cả trang chưa được Admin phê duyệt mặc định ở trạng thái **`draft`** (`is_visible = false`), trả `404` với người dùng công khai và tự động ẩn khỏi Footer.
 
-## 5. Thành phần UI States tái sử dụng
+## 5. Hệ thống Toast Toàn cục & Thành phần UI States tái sử dụng
 
-- `LoadingSkeleton.vue` (`feed`, `card`, `profile`)
-- `EmptyState.vue`
-- `ErrorState.vue`
-- `RoleBadge.vue`
-- `ThemeToggle.vue` & `LocaleSwitcher.vue`
-- `Sonner.vue` (`Toaster`)
+- **Global Toast (`appToast` + `Sonner.vue` + `flashToast.ts`)**:
+    - Hỗ trợ đầy đủ 6 loại: `success`, `error`, `warning`, `info`, `loading`, `action`.
+    - Mọi toast đều có nút `X` đóng rõ ràng, hỗ trợ đóng bằng phím `Escape`, có thanh tiến trình tự động đếm ngược và tạm dừng khi hover/focus, chống hiển thị trùng lặp, hỗ trợ ARIA/Light/Dark/RTL và tự động loại bỏ stack trace/dữ liệu nhạy cảm.
+- **Dialog xác nhận & nhập lý do**: `ConfirmActionDialog.vue` và `ReasonDialog.vue` (tuyệt đối không sử dụng `window.alert()` hoặc `window.confirm()`).
+- **UI States khác**: `LoadingSkeleton.vue` (`feed`, `card`, `profile`), `EmptyState.vue`, `ErrorState.vue`, `RoleBadge.vue`, `FlagIcon.vue`, `ThemeToggle.vue`, `LocaleSwitcher.vue`.

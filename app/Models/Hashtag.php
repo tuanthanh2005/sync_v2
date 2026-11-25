@@ -12,6 +12,10 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string $slug
  * @property int $posts_count
+ * @property bool $is_featured
+ * @property bool $is_restricted
+ * @property bool $is_trending_blocked
+ * @property bool $is_spam
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -25,6 +29,10 @@ class Hashtag extends Model
     {
         return [
             'posts_count' => 'integer',
+            'is_featured' => 'boolean',
+            'is_restricted' => 'boolean',
+            'is_trending_blocked' => 'boolean',
+            'is_spam' => 'boolean',
         ];
     }
 

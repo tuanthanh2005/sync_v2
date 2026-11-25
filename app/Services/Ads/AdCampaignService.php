@@ -17,6 +17,7 @@ use App\Notifications\SocialActivityNotification;
 use App\Services\Billing\WalletService;
 use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
+use App\Services\System\SystemSettingService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -27,6 +28,7 @@ class AdCampaignService
         private readonly WalletService $walletService,
         private readonly NotificationService $notificationService,
         private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
     ) {}
 
     /**
@@ -136,6 +138,18 @@ class AdCampaignService
      */
     public function createCampaign(User $user, array $data): AdCampaign
     {
+        if (! $this->settings->featureEnabled('feature_ads')) {
+            throw ValidationException::withMessages([
+                'post_id' => [__('Advertising campaigns are currently disabled by the administrator.')],
+            ]);
+        }
+
+        if ($user->isRestrictedFrom('advertise')) {
+            throw ValidationException::withMessages([
+                'post_id' => [__('Your account is currently restricted from running advertisements.')],
+            ]);
+        }
+
         /** @var Post|null $post */
         $post = Post::query()->find((int) $data['post_id']);
 
@@ -155,10 +169,10 @@ class AdCampaignService
         $budgetType = AdBudgetType::tryFrom($data['budget_type']) ?? AdBudgetType::Daily;
         $durationDays = max(1, min(90, (int) ($data['duration_days'] ?? 7)));
 
-        $minDaily = (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000);
-        $maxDaily = (int) config('syncviet.ad_pricing.max_daily_budget_vnd', 10_000_000);
-        $minTotal = (int) config('syncviet.ad_pricing.min_total_budget_vnd', 100_000);
-        $maxTotal = (int) config('syncviet.ad_pricing.max_total_budget_vnd', 50_000_000);
+        $minDaily = (int) $this->settings->get('ad_min_daily_budget_vnd', (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000));
+        $maxDaily = (int) $this->settings->get('ad_max_daily_budget_vnd', (int) config('syncviet.ad_pricing.max_daily_budget_vnd', 10_000_000));
+        $minTotal = (int) $this->settings->get('ad_min_total_budget_vnd', (int) config('syncviet.ad_pricing.min_total_budget_vnd', 100_000));
+        $maxTotal = (int) $this->settings->get('ad_max_total_budget_vnd', (int) config('syncviet.ad_pricing.max_total_budget_vnd', 50_000_000));
 
         $dailyBudget = null;
 

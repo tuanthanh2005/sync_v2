@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $user_id
  * @property string $currency
  * @property int $balance
+ * @property int $promo_balance
  * @property int $held_balance
  * @property int $total_deposited
  * @property int $total_spent
@@ -23,12 +24,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class AdCreditAccount extends Model
 {
     /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'balance' => 0,
+        'promo_balance' => 0,
+        'held_balance' => 0,
+        'total_deposited' => 0,
+        'total_spent' => 0,
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'balance' => 'integer',
+            'promo_balance' => 'integer',
             'held_balance' => 'integer',
             'total_deposited' => 'integer',
             'total_spent' => 'integer',
