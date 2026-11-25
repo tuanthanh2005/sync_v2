@@ -523,7 +523,7 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
         <!-- Desktop Collapsible Admin Sidebar -->
         <aside
             :class="[
-                'sticky top-0 hidden h-screen shrink-0 flex-col border-e border-border bg-card transition-all duration-200 lg:flex',
+                'sticky top-0 hidden h-screen shrink-0 flex-col border-e border-border bg-card transition-[width] duration-200 lg:flex',
                 collapsed ? 'w-[72px]' : 'w-[264px]',
             ]"
         >
@@ -567,7 +567,9 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                 </Button>
             </div>
 
-            <nav class="flex-1 space-y-5 overflow-y-auto px-2.5 py-4">
+            <nav
+                class="flex-1 space-y-5 overflow-y-auto overscroll-contain px-2.5 py-4"
+            >
                 <div
                     v-for="group in navGroups"
                     :key="group.id"
@@ -770,7 +772,7 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                     </form>
 
                     <!-- Right Controls -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex shrink-0 items-center gap-2">
                         <LocaleSwitcher compact />
                         <ThemeToggle />
 
@@ -825,7 +827,7 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
             <NetworkStatusBanner />
 
             <main
-                class="safe-pb mx-auto w-full max-w-[1440px] flex-1 p-3 sm:p-4 lg:p-6"
+                class="safe-pb mx-auto w-full max-w-[1440px] min-w-0 flex-1 p-3 sm:p-4 lg:p-6"
             >
                 <slot />
             </main>

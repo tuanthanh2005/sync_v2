@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import type { DropdownMenuRootEmits, DropdownMenuRootProps } from "reka-ui"
-import { DropdownMenuRoot, useForwardPropsEmits } from "reka-ui"
+import type { DropdownMenuRootEmits, DropdownMenuRootProps } from 'reka-ui';
+import { DropdownMenuRoot, useForwardPropsEmits } from 'reka-ui';
 
-const props = defineProps<DropdownMenuRootProps>()
-const emits = defineEmits<DropdownMenuRootEmits>()
+/**
+ * Dropdowns are non-modal by default so opening a Language Switcher, Account
+ * Menu, or 3-dot Menu never locks page scroll or mutates `document.body` styles.
+ * Escape / outside-click dismissal and keyboard navigation remain fully intact.
+ */
+const props = withDefaults(defineProps<DropdownMenuRootProps>(), {
+    modal: false,
+});
+const emits = defineEmits<DropdownMenuRootEmits>();
 
-const forwarded = useForwardPropsEmits(props, emits)
+const forwarded = useForwardPropsEmits(props, emits);
 </script>
 
 <template>
-  <DropdownMenuRoot
-    v-slot="slotProps"
-    data-slot="dropdown-menu"
-    v-bind="forwarded"
-  >
-    <slot v-bind="slotProps" />
-  </DropdownMenuRoot>
+    <DropdownMenuRoot
+        v-slot="slotProps"
+        data-slot="dropdown-menu"
+        v-bind="forwarded"
+        :modal="props.modal"
+    >
+        <slot v-bind="slotProps" />
+    </DropdownMenuRoot>
 </template>

@@ -192,16 +192,25 @@
         @apply border-border outline-ring/50;
     }
 
+    /*
+     * Layout stability: the root element is the ONLY page scroll container.
+     * - `scrollbar-gutter: stable` permanently reserves the vertical scrollbar
+     *   gutter so the App Shell width never changes when content height changes,
+     *   when Inertia swaps pages, or when an overlay locks scrolling.
+     * - Do NOT set `overflow` on html/body here: any non-visible value on <html>
+     *   stops body overflow from propagating to the viewport, which turns <body>
+     *   into its own scroll container during Reka UI scroll-lock (breaking sticky
+     *   headers/sidebars and squeezing the layout with double padding).
+     */
     html {
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
         scroll-behavior: smooth;
-        overflow-x: clip;
+        scrollbar-gutter: stable;
     }
 
     body {
         @apply bg-background text-foreground;
-        overflow-x: clip;
         overscroll-behavior-y: auto;
         -webkit-tap-highlight-color: transparent;
     }
@@ -304,7 +313,7 @@
         left: 0.75rem !important;
         right: 0.75rem !important;
         width: auto !important;
-        max-width: calc(100vw - 1.5rem) !important;
+        max-width: calc(100% - 1.5rem) !important;
     }
 }
 

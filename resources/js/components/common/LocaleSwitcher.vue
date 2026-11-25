@@ -118,19 +118,21 @@ function switchLocale(lang: PublicLanguageItem): void {
         <DropdownMenuContent align="end" class="w-64 rounded-xl p-2">
             <div class="relative mb-2">
                 <Search
-                    class="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
+                    class="pointer-events-none absolute start-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground"
                     aria-hidden="true"
                 />
                 <input
                     v-model="query"
                     type="search"
                     :placeholder="t('locale.search')"
-                    class="h-8 w-full rounded-lg border border-input bg-background pr-2.5 pl-8 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                    class="min-h-9 w-full rounded-lg border border-input bg-background ps-8 pe-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none sm:h-8 sm:min-h-0"
                     @keydown.stop
                 />
             </div>
 
-            <div class="max-h-64 space-y-0.5 overflow-y-auto pr-0.5">
+            <div
+                class="max-h-64 space-y-0.5 overflow-y-auto overscroll-contain pe-0.5"
+            >
                 <button
                     v-for="lang in filteredLanguages"
                     :key="lang.code"
@@ -140,7 +142,7 @@ function switchLocale(lang: PublicLanguageItem): void {
                         currentLocale === lang.code ? 'true' : undefined
                     "
                     :class="[
-                        'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs transition-colors',
+                        'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-start text-xs transition-colors',
                         currentLocale === lang.code
                             ? 'bg-primary-soft font-semibold text-accent-foreground'
                             : 'text-foreground hover:bg-surface-hover',

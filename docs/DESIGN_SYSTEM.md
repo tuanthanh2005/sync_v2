@@ -74,4 +74,24 @@ Dùng chung `FooterLinkList.vue` đọc từ Inertia shared prop `footer` (`Foot
 - **Dialog xác nhận & nhập lý do**: `ConfirmActionDialog.vue` và `ReasonDialog.vue` (tuyệt đối không sử dụng `window.alert()` hoặc `window.confirm()`).
 - **UI States khác**: `LoadingSkeleton.vue` (`feed`, `card`, `profile`), `EmptyState.vue`, `ErrorState.vue`, `RoleBadge.vue`, `FlagIcon.vue`, `ThemeToggle.vue`, `LocaleSwitcher.vue`.
 
-- **Monetization UI & Sidebar (`docs/MONETIZATION.md`)**: `PremiumBadge.vue` (`#1D9BF0`, 15px feed/comments, 20px profile, accessible identity-distinction tooltip), auto-collapsing `BannerSlot.vue` with Sponsored label & 3-dot hide/report menu, controlled `AdSenseSlot.vue`, manual Yes/No `PaymentConfirmModal.vue`, `PendingLimitModal.vue`, `BoostPostModal.vue`, and grouped Website Sidebar (`Discover`, `Services`, `Account`, `Administration`) in `ConnectHubLayout.vue` plus `Monetization` module in `AdminLayout.vue`.
+- **Monetization UI & Sidebar (`docs/MONETIZATION.md`)**: `PremiumBadge.vue` (`#1D9BF0`, 15px feed/comments, 20px profile, 48px hero, accessible identity-distinction tooltip), auto-collapsing `BannerSlot.vue` with reserved aspect-ratio space (zero CLS when active), Sponsored label & 3-dot hide/report menu, controlled `AdSenseSlot.vue`, manual Yes/No `PaymentConfirmModal.vue`, `PendingLimitModal.vue`, `BoostPostModal.vue`, and grouped Website Sidebar (`Discover`, `Services`, `Account`, `Administration`) in `ConnectHubLayout.vue` plus `Monetization` module in `AdminLayout.vue`.
+
+## 6. Global Layout Stability & Interaction Isolation Guidelines
+
+Mọi tương tác UI trên SyncViet bắt buộc tuân thủ nguyên tắc **Component Isolation** và **Zero Unintended Horizontal Layout Shift**:
+
+1. **Global Scrollbar Reservation (`resources/css/app.css`)**:
+    - Đặt `html { scrollbar-gutter: stable; }` trên root scroll container duy nhất (`<html>`).
+    - Tuyệt đối **không** đặt `overflow-x: hidden` hoặc `overflow-x: clip` lên `html`/`body` (gây chặn lan truyền `body { overflow: hidden }` lên viewport khi Modal khóa cuộn và làm vỡ sticky Header/Sidebar).
+    - Không hardcode `padding-right: 15px/17px` và không dùng `w-screen` / `100vw` cho container thông thường hoặc overlay `fixed inset-0`.
+2. **Single Scroll-Lock & No Double Compensation (`AppProviders.vue`)**:
+    - Bọc toàn bộ Inertia layouts trong persistent `AppProviders.vue` với Reka UI `<ConfigProvider :scroll-body="false" :dir="direction">`.
+    - Modal (`Dialog`, `Sheet`) vẫn giữ đầy đủ `overflow: hidden` scroll-lock, Focus Trap, Escape & khôi phục vị trí cuộn khi đóng, nhưng **không** tự tiêm `padding-right` trùng lặp lên `<body>` vì `scrollbar-gutter: stable` đã giữ chỗ ổn định.
+3. **Non-Modal Floating Controls (`DropdownMenu`, `Select`, `Tooltip`)**:
+    - `DropdownMenu.vue` mặc định `modal: false`; `SelectContent.vue` mặc định `bodyLock: false`; mọi floating overlay dùng Portal + `collisionPadding: 8` + `overscroll-contain` + animation cục bộ `150ms` (`opacity`/`transform`), không bao giờ khóa cuộn trang hay làm dịch chuyển Header/Sidebar/Main Content.
+    - Danh sách dài (ví dụ `LocaleSwitcher` 15 ngôn ngữ) cuộn hoàn toàn nội bộ (`max-h-64 overflow-y-auto overscroll-contain`).
+4. **Persistent Inertia Shell (`app.ts` & `ConnectHubLayout.vue`)**:
+    - `AppProviders` và `ConnectHubLayout` giữ nguyên instance xuyên suốt các lần chuyển trang Inertia (kể cả giữa News Feed 3 cột và chế độ Service 2 cột rộng `max-w-[1060px]` cho `/premium`, `/services`, `/advertising/*`, `/wallet`, `/payments`) — không unmount/remount Header và Sidebar.
+5. **Scoped Transitions & Space Reservation (CLS ≈ 0)**:
+    - Không dùng `transition-all`; chỉ animate thuộc tính cụ thể (`opacity`, `transform`, `colors`, `width` có chủ đích như thu gọn Admin Sidebar), tôn trọng `prefers-reduced-motion`.
+    - Mọi flex/grid column dùng `min-w-0`, số tiền/thống kê dùng `tabular-nums`, card đang chọn dùng `border` cố định độ dày + `ring` (không đổi box dimensions), và banner đang hoạt động đặt trước `aspect-ratio` theo `placement.aspect_ratio`.

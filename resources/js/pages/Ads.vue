@@ -861,7 +861,7 @@ function updateCampaignStatus(
                     <div
                         v-if="selectedPost"
                         :class="[
-                            'rounded-xl border border-border bg-background p-4 transition-all',
+                            'rounded-xl border border-border bg-background p-4 transition-[max-width] duration-200',
                             previewMode === 'mobile'
                                 ? 'mx-auto max-w-[300px]'
                                 : 'w-full',
@@ -1065,7 +1065,7 @@ function updateCampaignStatus(
                     <div class="h-2 overflow-hidden rounded-full bg-muted">
                         <div
                             :class="[
-                                'h-full transition-all',
+                                'h-full transition-[width] duration-200',
                                 hasSufficientWallet
                                     ? 'bg-primary'
                                     : 'bg-destructive',

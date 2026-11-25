@@ -4,9 +4,9 @@ import { initializePwa } from '@/composables/usePwa';
 import { i18n, syncI18nLocale } from '@/i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import AppProviders from '@/layouts/AppProviders.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import PublicLayout from '@/layouts/PublicLayout.vue';
-import ServiceLayout from '@/layouts/ServiceLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
 
@@ -26,22 +26,22 @@ function syncPageLocale(props: Record<string, unknown> | undefined): void {
 
 void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
+    // Persistent layouts: AppProviders + the same shell component stay mounted
+    // across Inertia visits, so Header/Sidebar never remount or flash. Service
+    // pages reuse AppLayout (ConnectHubLayout switches to its wide 2-column mode
+    // by page component) instead of a separate layout that would remount the shell.
     layout: (name) => {
         switch (true) {
             case name.startsWith('admin/'):
-                return AdminLayout;
+                return [AppProviders, AdminLayout];
             case name.startsWith('auth/'):
-                return AuthLayout;
+                return [AppProviders, AuthLayout];
             case name.startsWith('policies/'):
-                return PublicLayout;
-            case name.startsWith('monetization/'):
-            case name === 'Wallet':
-            case name === 'Ads':
-                return ServiceLayout;
+                return [AppProviders, PublicLayout];
             case name.startsWith('settings/'):
-                return [AppLayout, SettingsLayout];
+                return [AppProviders, AppLayout, SettingsLayout];
             default:
-                return AppLayout;
+                return [AppProviders, AppLayout];
         }
     },
     withApp: (app, { page }) => {

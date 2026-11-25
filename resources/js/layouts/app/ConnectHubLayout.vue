@@ -105,7 +105,7 @@ type SidebarGroup = {
     items: SidebarNavItem[];
 };
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
     hideRightSidebar: false,
 });
@@ -124,6 +124,19 @@ const unreadMessagesCount = computed(() => page.props.unreadMessagesCount ?? 0);
 const walletBalance = computed(() => page.props.walletBalance ?? 0);
 
 const isCommunityPage = computed(() => page.component === 'communities/Show');
+/**
+ * Wide 2-column service mode (no Right Sidebar) for Premium, Advertising,
+ * Banner, Boost, Advertising Balance, and Payment History. Resolved dynamically
+ * on the persistent ConnectHubLayout instance so Header & Left Sidebar never
+ * unmount or flash across Inertia page navigations.
+ */
+const isWideServiceLayout = computed(
+    () =>
+        props.hideRightSidebar ||
+        page.component.startsWith('monetization/') ||
+        page.component === 'Wallet' ||
+        page.component === 'Ads',
+);
 const isAdsOrWalletPage = computed(
     () => page.component === 'Ads' || page.component === 'Wallet',
 );
@@ -754,7 +767,7 @@ function isItemActive(item: NavItem): boolean {
 
                 <!-- Left Sidebar Guide / Tablet Promo Card (avoids duplicating Right Sidebar card on xl+) -->
                 <div
-                    v-if="!hideRightSidebar && isAdsOrWalletPage"
+                    v-if="!isWideServiceLayout && isAdsOrWalletPage"
                     class="rounded-xl border border-border bg-card p-4 text-center"
                 >
                     <div
@@ -801,7 +814,9 @@ function isItemActive(item: NavItem): boolean {
                 </div>
 
                 <div
-                    v-else-if="!hideRightSidebar && (!isCommunityPage || !user)"
+                    v-else-if="
+                        !isWideServiceLayout && (!isCommunityPage || !user)
+                    "
                     class="rounded-xl border border-border bg-card p-4 text-center xl:hidden"
                 >
                     <div
@@ -850,24 +865,24 @@ function isItemActive(item: NavItem): boolean {
                     </Button>
                 </div>
 
-                <!-- Compact Footer below Left Sidebar on wide ServiceLayout pages -->
-                <MiniFooter v-if="hideRightSidebar" />
+                <!-- Compact Footer below Left Sidebar on wide Service Layout pages -->
+                <MiniFooter v-if="isWideServiceLayout" />
             </aside>
 
-            <!-- Main Content Column (760px on 3-column Feed / 1060px on 2-column ServiceLayout) -->
+            <!-- Main Content Column (760px on 3-column Feed / 1060px on 2-column Service mode) -->
             <main
                 id="main-content"
                 :class="[
                     'mx-auto w-full min-w-0 flex-1',
-                    hideRightSidebar ? 'max-w-[1060px]' : 'max-w-[760px]',
+                    isWideServiceLayout ? 'max-w-[1060px]' : 'max-w-[760px]',
                 ]"
             >
                 <slot />
             </main>
 
-            <!-- Right Sidebar (~320px) + MiniFooter (hidden on ServiceLayout pages) -->
+            <!-- Right Sidebar (~320px) + MiniFooter (hidden on Service Layout pages) -->
             <aside
-                v-if="!hideRightSidebar"
+                v-if="!isWideServiceLayout"
                 aria-label="Thông tin bổ trợ"
                 class="sticky top-22 hidden w-[320px] shrink-0 space-y-4 xl:block"
             >

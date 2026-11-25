@@ -37,7 +37,7 @@ const brandName = computed(() => page.props.name);
         </header>
 
         <main
-            class="mx-auto grid w-full max-w-6xl flex-1 items-center gap-6 px-3 py-6 sm:px-4 sm:py-8 lg:grid-cols-12 lg:gap-8 lg:px-6 lg:py-12"
+            class="mx-auto grid w-full max-w-6xl min-w-0 flex-1 items-center gap-6 px-3 py-6 sm:px-4 sm:py-8 lg:grid-cols-12 lg:gap-8 lg:px-6 lg:py-12"
         >
             <section
                 class="hidden space-y-6 rounded-xl border border-border bg-card p-8 lg:col-span-5 lg:block"

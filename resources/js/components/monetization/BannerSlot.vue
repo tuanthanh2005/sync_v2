@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { ExternalLink, EyeOff, Flag, Info, MoreHorizontal } from '@lucide/vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +26,20 @@ const props = withDefaults(
 const { t } = useI18n();
 const dismissed = ref(false);
 const showInfo = ref(false);
+
+const reservedAspectRatio = computed<string | undefined>(() => {
+    const raw = props.banner?.aspect_ratio;
+    if (!raw) {
+        return undefined;
+    }
+
+    const match = /^(\d+)\s*[xX/:]\s*(\d+)$/.exec(raw.trim());
+    if (!match) {
+        return undefined;
+    }
+
+    return `${match[1]} / ${match[2]}`;
+});
 
 function sendFeedback(eventType: 'hide' | 'report'): void {
     if (!props.banner) {
@@ -94,21 +108,21 @@ function sendFeedback(eventType: 'hide' | 'report'): void {
                         class="cursor-pointer text-xs"
                         @click="showInfo = !showInfo"
                     >
-                        <Info class="mr-2 size-3.5" />
+                        <Info class="me-2 size-3.5" />
                         <span>{{ t('monetization.banner.adInfo') }}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         class="cursor-pointer text-xs"
                         @click="sendFeedback('hide')"
                     >
-                        <EyeOff class="mr-2 size-3.5" />
+                        <EyeOff class="me-2 size-3.5" />
                         <span>{{ t('monetization.banner.hideAd') }}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         class="cursor-pointer text-xs text-destructive focus:text-destructive"
                         @click="sendFeedback('report')"
                     >
-                        <Flag class="mr-2 size-3.5" />
+                        <Flag class="me-2 size-3.5" />
                         <span>{{ t('monetization.banner.reportAd') }}</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -128,17 +142,22 @@ function sendFeedback(eventType: 'hide' | 'report'): void {
             rel="noopener noreferrer sponsored"
             class="group block focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
-            <div class="relative overflow-hidden bg-muted/30">
+            <div
+                class="relative w-full overflow-hidden bg-muted/30"
+                :style="
+                    reservedAspectRatio
+                        ? { aspectRatio: reservedAspectRatio }
+                        : undefined
+                "
+                :class="compact ? 'max-h-[260px]' : 'max-h-[140px]'"
+            >
                 <img
                     v-if="banner.desktop_image_url"
                     :src="banner.desktop_image_url"
                     :alt="banner.alt_text"
                     loading="lazy"
                     decoding="async"
-                    :class="[
-                        'hidden w-full object-cover transition-transform duration-200 group-hover:scale-[1.01] sm:block',
-                        compact ? 'max-h-[260px]' : 'max-h-[140px]',
-                    ]"
+                    class="hidden h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.01] sm:block"
                 />
                 <img
                     v-if="banner.mobile_image_url || banner.desktop_image_url"
@@ -150,7 +169,7 @@ function sendFeedback(eventType: 'hide' | 'report'): void {
                     :alt="banner.alt_text"
                     loading="lazy"
                     decoding="async"
-                    class="block max-h-[140px] w-full object-cover sm:hidden"
+                    class="block h-full w-full object-cover sm:hidden"
                 />
             </div>
 

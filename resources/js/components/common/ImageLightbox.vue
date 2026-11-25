@@ -229,7 +229,7 @@ onBeforeUnmount(() => {
             role="dialog"
             aria-modal="true"
             aria-label="Image viewer"
-            class="fixed inset-0 z-[70] flex h-[100dvh] w-screen flex-col bg-black/95 text-white select-none"
+            class="fixed inset-0 z-[70] flex h-[100dvh] w-full flex-col bg-black/95 text-white select-none"
         >
             <!-- Top Safe-Area Controls -->
             <div
