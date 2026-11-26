@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
                 title: 'text-sm font-medium leading-snug',
                 description: 'text-xs text-muted-foreground',
                 closeButton:
-                    '!left-auto !right-2 !top-2 !border-border !bg-card !text-muted-foreground hover:!bg-surface-hover hover:!text-foreground focus-visible:!ring-2 focus-visible:!ring-primary',
+                    '!border-border !bg-card !text-muted-foreground hover:!bg-surface-hover hover:!text-foreground focus-visible:!ring-2 focus-visible:!ring-primary',
                 actionButton:
                     '!rounded-lg !bg-primary !text-primary-foreground !text-xs !font-medium',
                 cancelButton:
