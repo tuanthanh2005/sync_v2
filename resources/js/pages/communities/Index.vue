@@ -179,7 +179,9 @@ function submitCreate(): void {
                                 </select>
                             </div>
                             <div class="grid gap-1.5">
-                                <Label for="community-vis">Visibility</Label>
+                                <Label for="community-vis">{{
+                                    t('communities.extra.visibility')
+                                }}</Label>
                                 <select
                                     id="community-vis"
                                     v-model="createForm.visibility"
@@ -225,7 +227,9 @@ function submitCreate(): void {
 
                         <div class="grid gap-3 sm:grid-cols-2">
                             <div class="grid gap-1">
-                                <Label for="comm-avatar">Avatar</Label>
+                                <Label for="comm-avatar">{{
+                                    t('communities.extra.avatar')
+                                }}</Label>
                                 <input
                                     id="comm-avatar"
                                     type="file"
@@ -235,7 +239,9 @@ function submitCreate(): void {
                                 />
                             </div>
                             <div class="grid gap-1">
-                                <Label for="comm-cover">Cover</Label>
+                                <Label for="comm-cover">{{
+                                    t('communities.extra.cover')
+                                }}</Label>
                                 <input
                                     id="comm-cover"
                                     type="file"

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * @property int $id
@@ -87,16 +88,28 @@ class PolicyPage extends Model
 
     public function titleForLocale(string $locale): string
     {
-        return $locale === 'en' ? $this->title_en : $this->title_vi;
+        if ($locale === 'vi') {
+            return $this->title_vi ?: $this->title_en;
+        }
+
+        return (string) Lang::get($this->title_en, [], $locale);
     }
 
     public function summaryForLocale(string $locale): ?string
     {
-        return $locale === 'en' ? $this->summary_en : $this->summary_vi;
+        if ($locale === 'vi') {
+            return $this->summary_vi ?: $this->summary_en;
+        }
+
+        return $this->summary_en ?: $this->summary_vi;
     }
 
     public function contentForLocale(string $locale): ?string
     {
-        return $locale === 'en' ? $this->content_en : $this->content_vi;
+        if ($locale === 'vi') {
+            return $this->content_vi ?: $this->content_en;
+        }
+
+        return $this->content_en ?: $this->content_vi;
     }
 }

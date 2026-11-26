@@ -29,7 +29,7 @@ class SetLocale
         $enabledCodes = $this->languageService->enabledCodes();
 
         if ($enabledCodes === []) {
-            $enabledCodes = self::SUPPORTED_LOCALES;
+            $enabledCodes = LanguageService::allCodes();
         }
 
         // Respect explicit URL locale prefix (e.g., /vi/posts/..., /ja/topics/...) without IP-redirecting bots.

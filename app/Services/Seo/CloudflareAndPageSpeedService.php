@@ -82,7 +82,7 @@ class CloudflareAndPageSpeedService
             return [
                 'ok' => $ok,
                 'purged' => $ok ? count($cleanUrls) : 0,
-                'message' => $ok ? __('Cloudflare cache purged for selected URLs.') : 'Cloudflare API returned HTTP '.$response->status(),
+                'message' => $ok ? __('Cloudflare cache purged for selected URLs.') : __('Cloudflare API returned HTTP :status.', ['status' => $response->status()]),
             ];
         } catch (\Throwable $e) {
             return ['ok' => false, 'purged' => 0, 'message' => Str::limit($e->getMessage(), 180)];
@@ -121,7 +121,7 @@ class CloudflareAndPageSpeedService
                 return [
                     'configured' => true,
                     'status' => 'error',
-                    'message' => 'PageSpeed Insights API returned HTTP '.$response->status(),
+                    'message' => __('PageSpeed Insights API returned HTTP :status.', ['status' => $response->status()]),
                     'lab_data' => null,
                     'field_data_crux' => null,
                 ];

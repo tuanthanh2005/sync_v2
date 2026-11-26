@@ -58,6 +58,34 @@ const activeCommunity = ref<CommunityRow | null>(null);
 const activeAction = ref('suspend');
 const nextOwnerUsername = ref('');
 
+function communityStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        active: 'admin.contentExtra.communityFilters.active',
+        suspended: 'admin.contentExtra.communityFilters.suspended',
+        hidden: 'admin.contentExtra.communityFilters.hidden',
+        deleted: 'admin.contentExtra.communityFilters.deleted',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
+function communityActionLabel(action: string): string {
+    const map: Record<string, string> = {
+        toggle_verified: 'admin.contentExtra.actions.toggle_verified',
+        toggle_featured: 'admin.contentExtra.actions.toggle_featured',
+        toggle_posting: 'admin.contentExtra.actions.toggle_posting',
+        toggle_new_members: 'admin.contentExtra.actions.toggle_new_members',
+        transfer_owner: 'admin.contentExtra.actions.transfer_owner',
+        restore: 'admin.contentExtra.actions.restore',
+        suspend: 'admin.contentExtra.actions.suspend',
+        activate: 'admin.contentExtra.actions.activate',
+    };
+    const key = map[action];
+
+    return key ? t(key) : action;
+}
+
 function applyFilter(nextStatus = props.filters.status): void {
     router.get(
         communitiesRoute.url(),
@@ -128,10 +156,10 @@ function submitAction(reason: string): void {
                     :key="st"
                     size="sm"
                     :variant="filters.status === st ? 'default' : 'ghost'"
-                    class="h-8 rounded-lg text-xs capitalize"
+                    class="h-8 rounded-lg text-xs"
                     @click="applyFilter(st)"
                 >
-                    {{ st }}
+                    {{ t(`admin.contentExtra.communityFilters.${st}`) }}
                 </Button>
             </div>
             <form
@@ -186,28 +214,39 @@ function submitAction(reason: string): void {
                                 class="size-3.5 text-warning"
                             />
                             <Badge variant="secondary" class="text-[10px]">{{
-                                c.status
+                                communityStatusLabel(c.status)
                             }}</Badge>
                             <Badge
                                 v-if="!c.allow_posting"
                                 variant="outline"
                                 class="text-[10px]"
-                                >No Posting</Badge
+                                >{{
+                                    t('admin.contentExtra.badgeNoPosting')
+                                }}</Badge
                             >
                             <Badge
                                 v-if="!c.allow_new_members"
                                 variant="outline"
                                 class="text-[10px]"
-                                >Closed Joins</Badge
+                                >{{
+                                    t('admin.contentExtra.badgeClosedJoins')
+                                }}</Badge
                             >
                         </div>
                         <p class="text-muted-foreground">
-                            /{{ c.slug }} · Owner: @{{
-                                c.owner?.username || 'unknown'
+                            {{
+                                t('admin.contentExtra.communityMeta', {
+                                    slug: c.slug,
+                                    owner: c.owner?.username
+                                        ? `@${c.owner.username}`
+                                        : t('admin.contentExtra.unknownAuthor'),
+                                    members: formatNumber(
+                                        c.members_count,
+                                        locale,
+                                    ),
+                                    posts: formatNumber(c.posts_count, locale),
+                                })
                             }}
-                            ·
-                            {{ formatNumber(c.members_count, locale) }} members
-                            · {{ formatNumber(c.posts_count, locale) }} posts
                         </p>
                     </div>
                     <div class="flex flex-wrap gap-1.5">
@@ -215,6 +254,12 @@ function submitAction(reason: string): void {
                             size="sm"
                             variant="outline"
                             class="h-7 px-2 text-[11px]"
+                            :title="
+                                t('admin.contentExtra.actions.toggle_verified')
+                            "
+                            :aria-label="
+                                t('admin.contentExtra.actions.toggle_verified')
+                            "
                             @click="openAction(c, 'toggle_verified')"
                         >
                             <BadgeCheck class="size-3.5" />
@@ -223,6 +268,12 @@ function submitAction(reason: string): void {
                             size="sm"
                             variant="outline"
                             class="h-7 px-2 text-[11px]"
+                            :title="
+                                t('admin.contentExtra.actions.toggle_featured')
+                            "
+                            :aria-label="
+                                t('admin.contentExtra.actions.toggle_featured')
+                            "
                             @click="openAction(c, 'toggle_featured')"
                         >
                             <Star class="size-3.5" />
@@ -247,6 +298,12 @@ function submitAction(reason: string): void {
                             size="sm"
                             variant="outline"
                             class="h-7 gap-1 px-2 text-[11px]"
+                            :title="
+                                t('admin.contentExtra.actions.transfer_owner')
+                            "
+                            :aria-label="
+                                t('admin.contentExtra.actions.transfer_owner')
+                            "
                             @click="openAction(c, 'transfer_owner')"
                         >
                             <UserCog class="size-3.5" />
@@ -255,6 +312,10 @@ function submitAction(reason: string): void {
                             v-if="c.deleted_at"
                             size="sm"
                             class="h-7 gap-1 px-2 text-[11px]"
+                            :title="t('admin.contentExtra.actions.restore')"
+                            :aria-label="
+                                t('admin.contentExtra.actions.restore')
+                            "
                             @click="openAction(c, 'restore')"
                         >
                             <RotateCcw class="size-3.5" />
@@ -275,7 +336,9 @@ function submitAction(reason: string): void {
                         >
                             <ShieldBan class="size-3.5" />
                             <span>{{
-                                c.status === 'active' ? 'Suspend' : 'Activate'
+                                c.status === 'active'
+                                    ? t('admin.contentExtra.actions.suspend')
+                                    : t('admin.contentExtra.actions.activate')
                             }}</span>
                         </Button>
                     </div>
@@ -295,7 +358,12 @@ function submitAction(reason: string): void {
 
         <ReasonDialog
             v-model:open="dialogOpen"
-            :title="`${t('admin.content.communitiesTitle')} · ${activeAction}`"
+            :title="
+                t('admin.contentExtra.actionDialogTitle', {
+                    section: t('admin.content.communitiesTitle'),
+                    action: communityActionLabel(activeAction),
+                })
+            "
             :description="activeCommunity?.name || ''"
             @submit="submitAction"
         >
@@ -303,12 +371,12 @@ function submitAction(reason: string): void {
                 v-if="activeAction === 'transfer_owner'"
                 class="mt-2 space-y-1"
             >
-                <Label class="text-xs"
-                    >{{ t('admin.content.transferOwner') }} (@username)</Label
-                >
+                <Label class="text-xs">{{
+                    t('admin.contentExtra.transferOwnerUsernameLabel')
+                }}</Label>
                 <Input
                     v-model="nextOwnerUsername"
-                    placeholder="username"
+                    :placeholder="t('admin.contentExtra.usernamePlaceholder')"
                     class="h-9 text-xs"
                 />
             </div>

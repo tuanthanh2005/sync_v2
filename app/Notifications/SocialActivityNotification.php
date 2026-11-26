@@ -8,6 +8,7 @@ class SocialActivityNotification extends Notification
 {
     /**
      * @param  array<string, mixed>  $meta
+     * @param  array<string, scalar>  $titleParams
      */
     public function __construct(
         private readonly string $eventKey,
@@ -17,6 +18,8 @@ class SocialActivityNotification extends Notification
         private readonly ?string $actorName = null,
         private readonly ?string $actorUsername = null,
         private readonly array $meta = [],
+        private readonly ?string $titleKey = null,
+        private readonly array $titleParams = [],
     ) {}
 
     /**
@@ -34,6 +37,8 @@ class SocialActivityNotification extends Notification
     {
         return [
             'event' => $this->eventKey,
+            'title_key' => $this->titleKey,
+            'title_params' => $this->titleParams,
             'title_vi' => $this->titleVi,
             'title_en' => $this->titleEn,
             'url' => $this->url,

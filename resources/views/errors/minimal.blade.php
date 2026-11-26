@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ (($isRtl ?? false) || app()->getLocale() === 'ar') ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -153,10 +153,10 @@
             <p>@yield('message')</p>
             <div class="actions">
                 <a href="{{ url('/') }}" class="btn btn-primary">
-                    {{ app()->isLocale('vi') ? 'Về trang chủ' : 'Back to home' }}
+                    {{ __('Back to home') }}
                 </a>
                 <button type="button" onclick="window.history.back()" class="btn btn-secondary">
-                    {{ app()->isLocale('vi') ? 'Quay lại' : 'Go back' }}
+                    {{ __('Go back') }}
                 </button>
             </div>
         </main>

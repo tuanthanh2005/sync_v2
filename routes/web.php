@@ -56,6 +56,7 @@ use App\Http\Controllers\Social\PostController;
 use App\Http\Controllers\Social\PostInteractionController;
 use App\Http\Controllers\Social\ProfileViewController;
 use App\Http\Controllers\Social\SearchController;
+use App\Services\System\LanguageService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -127,7 +128,7 @@ Route::get('/{key}.txt', [SeoPublicController::class, 'indexNowKeyFile'])
     ->name('seo.indexnow-key');
 
 // ─── Public Topic Clusters & Localized International SEO Routes ──────────────
-$seoLocaleRegex = 'en|vi|es|pt-BR|id|hi|th|fil|fr|de|ja|ko|zh-CN|ar|tr';
+$seoLocaleRegex = implode('|', LanguageService::allCodes());
 
 Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
 Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.show');
@@ -805,6 +806,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::get('/languages', [LanguageManagementController::class, 'index'])
                 ->middleware('permission:languages.view')
                 ->name('languages.index');
+            Route::get('/languages/audit/report', [LanguageManagementController::class, 'exportReport'])
+                ->middleware('permission:languages.export')
+                ->name('languages.audit-report');
             Route::post('/languages/{code}/update', [LanguageManagementController::class, 'update'])
                 ->middleware('permission:languages.update')
                 ->name('languages.update');
@@ -814,6 +818,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::post('/languages/{code}/import', [LanguageManagementController::class, 'import'])
                 ->middleware('permission:languages.update')
                 ->name('languages.import');
+            Route::post('/languages/{code}/rollback', [LanguageManagementController::class, 'rollback'])
+                ->middleware('permission:languages.update')
+                ->name('languages.rollback');
 
             Route::get('/settings', [SystemSettingsController::class, 'index'])
                 ->middleware('permission:settings.view')
@@ -865,6 +872,12 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
                     ->name('footer-links.destroy');
             });
         });
+});
+
+// Ensure unmatched URLs still execute the `web` middleware stack (StartSession + SetLocale)
+// so 404 error pages render in the user's selected locale and RTL direction.
+Route::fallback(static function (): never {
+    abort(404);
 });
 
 require __DIR__.'/settings.php';

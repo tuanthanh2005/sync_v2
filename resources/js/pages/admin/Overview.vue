@@ -317,7 +317,9 @@ const chartDatasets = computed(() => [
                     <div
                         class="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
                     >
-                        <dt class="text-muted-foreground">Hashing</dt>
+                        <dt class="text-muted-foreground">
+                            {{ t('admin.overviewExtra.hashing') }}
+                        </dt>
                         <dd class="font-mono font-semibold">
                             {{ platform_status.hashing_driver }}
                         </dd>
@@ -325,7 +327,9 @@ const chartDatasets = computed(() => [
                     <div
                         class="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
                     >
-                        <dt class="text-muted-foreground">Session / Cache</dt>
+                        <dt class="text-muted-foreground">
+                            {{ t('admin.overviewExtra.sessionCache') }}
+                        </dt>
                         <dd class="font-mono font-semibold">
                             {{ platform_status.session_driver }} /
                             {{ platform_status.cache_store }}
@@ -334,7 +338,9 @@ const chartDatasets = computed(() => [
                     <div
                         class="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
                     >
-                        <dt class="text-muted-foreground">Queue / Disk</dt>
+                        <dt class="text-muted-foreground">
+                            {{ t('admin.overviewExtra.queueDisk') }}
+                        </dt>
                         <dd class="font-mono font-semibold">
                             {{ platform_status.queue_connection }} /
                             {{ platform_status.media_disk }}
@@ -343,7 +349,9 @@ const chartDatasets = computed(() => [
                     <div
                         class="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
                     >
-                        <dt class="text-muted-foreground">Admin 2FA</dt>
+                        <dt class="text-muted-foreground">
+                            {{ t('admin.overviewExtra.admin2fa') }}
+                        </dt>
                         <dd class="font-semibold text-success">
                             {{ t('admin.common.enabled') }}
                         </dd>
@@ -495,7 +503,9 @@ const chartDatasets = computed(() => [
                                     {{
                                         audit.actor_username
                                             ? `@${audit.actor_username}`
-                                            : 'system'
+                                            : t(
+                                                  'admin.overviewExtra.systemActor',
+                                              )
                                     }}
                                 </td>
                                 <td class="py-2.5 text-muted-foreground">

@@ -2,6 +2,7 @@
 import { Form } from '@inertiajs/vue3';
 import { ShieldCheck } from '@lucide/vue';
 import { onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import Heading from '@/components/Heading.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
@@ -21,6 +22,7 @@ withDefaults(defineProps<Props>(), {
     twoFactorEnabled: false,
 });
 
+const { t } = useI18n();
 const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
 
@@ -31,8 +33,8 @@ onUnmounted(() => clearTwoFactorAuthData());
     <div v-if="canManageTwoFactor" class="space-y-6">
         <Heading
             variant="small"
-            title="Xác thực 2 lớp (2FA)"
-            description="Bảo vệ tài khoản bằng mã TOTP từ ứng dụng xác thực"
+            :title="t('settings.twoFactor.headingTitle')"
+            :description="t('settings.twoFactor.headingDescription')"
         />
 
         <div
@@ -40,8 +42,7 @@ onUnmounted(() => clearTwoFactorAuthData());
             class="flex flex-col items-start justify-start space-y-4"
         >
             <p class="text-sm text-muted-foreground">
-                Khi bật xác thực 2 lớp, bạn sẽ cần nhập mã pin bảo mật 6 chữ số
-                mỗi khi đăng nhập trên thiết bị mới.
+                {{ t('settings.twoFactor.disabledDescription') }}
             </p>
 
             <div>
@@ -50,7 +51,9 @@ onUnmounted(() => clearTwoFactorAuthData());
                     class="rounded-lg"
                     @click="showSetupModal = true"
                 >
-                    <ShieldCheck class="size-4" />Tiếp tục thiết lập
+                    <ShieldCheck class="size-4" />{{
+                        t('settings.twoFactor.continueSetup')
+                    }}
                 </Button>
                 <Form
                     v-else
@@ -63,7 +66,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                         class="rounded-lg"
                         :disabled="processing"
                     >
-                        Bật xác thực 2FA
+                        {{ t('settings.twoFactor.enableButton') }}
                     </Button>
                 </Form>
             </div>
@@ -71,8 +74,7 @@ onUnmounted(() => clearTwoFactorAuthData());
 
         <div v-else class="flex flex-col items-start justify-start space-y-4">
             <p class="text-sm text-muted-foreground">
-                Xác thực 2 lớp đang được kích hoạt. Hãy lưu giữ mã khôi phục ở
-                nơi an toàn.
+                {{ t('settings.twoFactor.enabledDescription') }}
             </p>
 
             <div class="relative inline">
@@ -83,7 +85,7 @@ onUnmounted(() => clearTwoFactorAuthData());
                         class="rounded-lg"
                         :disabled="processing"
                     >
-                        Tắt xác thực 2FA
+                        {{ t('settings.twoFactor.disableButton') }}
                     </Button>
                 </Form>
             </div>

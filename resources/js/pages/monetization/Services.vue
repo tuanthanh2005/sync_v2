@@ -15,7 +15,7 @@ import { useI18n } from 'vue-i18n';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatMoney } from '@/lib/currency';
+import { defaultCurrencyForLocale, formatMoney } from '@/lib/currency';
 import {
     advertising as advertisingRoute,
     banner as bannerRoute,
@@ -38,7 +38,7 @@ const props = defineProps<{
 }>();
 
 const { t, locale } = useI18n();
-const currency = ref<'VND' | 'USD'>(locale.value === 'vi' ? 'VND' : 'USD');
+const currency = ref<'VND' | 'USD'>(defaultCurrencyForLocale(locale.value));
 
 const minPremiumPrice = computed(() => {
     if (props.plans.length === 0) {
@@ -117,7 +117,7 @@ const minBoostPrice = computed(() => {
                         ]"
                         @click="currency = 'VND'"
                     >
-                        VND (₫)
+                        {{ t('monetization.checkout.currencyVnd') }}
                     </button>
                     <button
                         type="button"
@@ -129,7 +129,7 @@ const minBoostPrice = computed(() => {
                         ]"
                         @click="currency = 'USD'"
                     >
-                        USD ($)
+                        {{ t('monetization.checkout.currencyUsd') }}
                     </button>
                 </div>
             </div>
@@ -338,7 +338,7 @@ const minBoostPrice = computed(() => {
                             <span
                                 class="text-xs font-normal text-muted-foreground"
                             >
-                                / 24h
+                                / {{ t('monetization.checkout.hours24') }}
                             </span>
                         </p>
                     </div>

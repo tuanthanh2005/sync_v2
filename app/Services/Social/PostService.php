@@ -419,6 +419,8 @@ class PostService
                     url: route('posts.show', $post, false),
                     actorName: $user->name,
                     actorUsername: $user->username,
+                    titleKey: ':name reacted to your post.',
+                    titleParams: ['name' => $user->name],
                 ),
             );
         }

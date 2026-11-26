@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n';
 import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatMoney } from '@/lib/currency';
+import { defaultCurrencyForLocale, formatMoney } from '@/lib/currency';
 import { login } from '@/routes';
 import { index as walletIndex } from '@/routes/wallet';
 import type {
@@ -34,7 +34,7 @@ const props = defineProps<{
 const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
-const currency = ref<'VND' | 'USD'>(locale.value === 'vi' ? 'VND' : 'USD');
+const currency = ref<'VND' | 'USD'>(defaultCurrencyForLocale(locale.value));
 
 const modalOpen = ref(false);
 const activePostId = ref<number>(props.eligiblePosts[0]?.id ?? 0);
@@ -63,7 +63,9 @@ function startBoostForPost(postId: number, excerpt: string): void {
             <div class="max-w-2xl space-y-2">
                 <Badge variant="soft" class="gap-1.5 text-xs">
                     <Zap class="size-3.5" />
-                    <span>SyncViet Boost Post</span>
+                    <span>{{
+                        t('monetization.checkout.boostBadgeTitle')
+                    }}</span>
                 </Badge>
                 <h1 class="text-2xl font-bold text-foreground">
                     {{ t('monetization.boost.heading') }}
@@ -87,7 +89,7 @@ function startBoostForPost(postId: number, excerpt: string): void {
                         ]"
                         @click="currency = 'VND'"
                     >
-                        VND (₫)
+                        {{ t('monetization.checkout.currencyVnd') }}
                     </button>
                     <button
                         type="button"
@@ -99,7 +101,7 @@ function startBoostForPost(postId: number, excerpt: string): void {
                         ]"
                         @click="currency = 'USD'"
                     >
-                        USD ($)
+                        {{ t('monetization.checkout.currencyUsd') }}
                     </button>
                 </div>
                 <Button v-if="user" variant="outline" size="sm" as-child>

@@ -205,7 +205,12 @@ function saveRobots(): void {
                     {{ t('admin.seo.urlsTitle') }}
                 </h1>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    {{ urls.total.toLocaleString() }} URLs tracked ·
+                    {{
+                        t('admin.seoCenter.urlsTracked', {
+                            count: urls.total.toLocaleString(),
+                        })
+                    }}
+                    ·
                     <a
                         :href="sitemapIndexUrl"
                         target="_blank"
@@ -225,7 +230,7 @@ function saveRobots(): void {
                         "
                     >
                         <Download class="size-3.5" />
-                        <span>Export CSV</span>
+                        <span>{{ t('admin.seoCenter.exportCsv') }}</span>
                     </a>
                 </Button>
                 <Button
@@ -234,10 +239,10 @@ function saveRobots(): void {
                     @click="rebuildSitemaps(true)"
                 >
                     <RefreshCw class="size-3.5" />
-                    <span>Rebuild All Sitemaps</span>
+                    <span>{{ t('admin.seoCenter.rebuildAllSitemaps') }}</span>
                 </Button>
                 <Button size="sm" @click="backfillAll">
-                    Sync All Entities
+                    {{ t('admin.seoCenter.syncAllEntities') }}
                 </Button>
             </div>
         </div>
@@ -252,26 +257,44 @@ function saveRobots(): void {
             >
                 <Input
                     v-model="searchQuery"
-                    placeholder="Search URL or path..."
+                    :placeholder="t('admin.seoCenter.searchUrlPlaceholder')"
                 />
                 <select
                     v-model="entityFilter"
                     class="h-10 rounded-lg border border-input bg-background px-3 text-xs text-foreground"
                 >
-                    <option value="">All entity types</option>
-                    <option value="page">Page</option>
-                    <option value="post">Post</option>
-                    <option value="translation">Translation</option>
-                    <option value="community">Community</option>
-                    <option value="topic">Topic</option>
-                    <option value="profile">Profile</option>
-                    <option value="policy">Policy</option>
+                    <option value="">
+                        {{ t('admin.seoCenter.allEntityTypes') }}
+                    </option>
+                    <option value="page">
+                        {{ t('admin.seoCenter.entityPage') }}
+                    </option>
+                    <option value="post">
+                        {{ t('admin.seoCenter.entityPost') }}
+                    </option>
+                    <option value="translation">
+                        {{ t('admin.seoCenter.entityTranslation') }}
+                    </option>
+                    <option value="community">
+                        {{ t('admin.seoCenter.entityCommunity') }}
+                    </option>
+                    <option value="topic">
+                        {{ t('admin.seoCenter.entityTopic') }}
+                    </option>
+                    <option value="profile">
+                        {{ t('admin.seoCenter.entityProfile') }}
+                    </option>
+                    <option value="policy">
+                        {{ t('admin.seoCenter.entityPolicy') }}
+                    </option>
                 </select>
                 <select
                     v-model="localeFilter"
                     class="h-10 rounded-lg border border-input bg-background px-3 text-xs text-foreground"
                 >
-                    <option value="">All locales</option>
+                    <option value="">
+                        {{ t('admin.seoCenter.allLocales') }}
+                    </option>
                     <option
                         v-for="code in enabledLocales"
                         :key="code"
@@ -284,16 +307,22 @@ function saveRobots(): void {
                     v-model="eligibilityFilter"
                     class="h-10 rounded-lg border border-input bg-background px-3 text-xs text-foreground"
                 >
-                    <option value="">All eligibility</option>
-                    <option value="eligible">Eligible</option>
-                    <option value="excluded">Excluded</option>
+                    <option value="">
+                        {{ t('admin.seoCenter.allEligibility') }}
+                    </option>
+                    <option value="eligible">
+                        {{ t('admin.seoCenter.eligible') }}
+                    </option>
+                    <option value="excluded">
+                        {{ t('admin.seoCenter.excluded') }}
+                    </option>
                     <option value="pending_quality_review">
-                        Pending Quality Review
+                        {{ t('admin.seoCenter.pendingQualityReview') }}
                     </option>
                 </select>
                 <Button type="submit" size="sm" class="h-10">
                     <Search class="size-3.5" />
-                    <span>Filter</span>
+                    <span>{{ t('admin.seoCenter.filter') }}</span>
                 </Button>
             </form>
 
@@ -301,36 +330,38 @@ function saveRobots(): void {
                 v-if="selectedIds.length > 0"
                 class="flex flex-wrap items-center gap-2 rounded-lg bg-primary-soft/50 p-3 text-xs"
             >
-                <span class="font-semibold text-primary"
-                    >{{ selectedIds.length }} selected:</span
-                >
+                <span class="font-semibold text-primary">{{
+                    t('admin.seoCenter.selectedCount', {
+                        count: selectedIds.length,
+                    })
+                }}</span>
                 <Button
                     type="button"
                     size="sm"
                     variant="outline"
                     @click="runBulk('force_noindex')"
-                    >Force Noindex</Button
+                    >{{ t('admin.seoCenter.forceNoindex') }}</Button
                 >
                 <Button
                     type="button"
                     size="sm"
                     variant="outline"
                     @click="runBulk('allow_index')"
-                    >Allow Index</Button
+                    >{{ t('admin.seoCenter.allowIndex') }}</Button
                 >
                 <Button
                     type="button"
                     size="sm"
                     variant="outline"
                     @click="runBulk('queue_inspection')"
-                    >Queue Inspection</Button
+                    >{{ t('admin.seoCenter.queueInspection') }}</Button
                 >
                 <Button
                     type="button"
                     size="sm"
                     variant="outline"
                     @click="runBulk('queue_indexnow')"
-                    >Queue IndexNow</Button
+                    >{{ t('admin.seoCenter.queueIndexNow') }}</Button
                 >
             </div>
 
@@ -339,15 +370,23 @@ function saveRobots(): void {
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
                             <th class="py-2 pr-2" />
-                            <th class="py-2 pr-3 font-medium">Path / Type</th>
-                            <th class="px-2 py-2 font-medium">Locale</th>
-                            <th class="px-2 py-2 font-medium">Eligibility</th>
-                            <th class="px-2 py-2 font-medium">Status</th>
+                            <th class="py-2 pr-3 font-medium">
+                                {{ t('admin.seoCenter.pathType') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.locale') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.eligibility') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.status') }}
+                            </th>
                             <th class="px-2 py-2 text-right font-medium">
-                                Quality
+                                {{ t('admin.seoCenter.quality') }}
                             </th>
                             <th class="py-2 pl-2 text-right font-medium">
-                                Sitemap
+                                {{ t('admin.seoCenter.sitemap') }}
                             </th>
                         </tr>
                     </thead>
@@ -365,8 +404,12 @@ function saveRobots(): void {
                                     {{ row.path }}
                                 </p>
                                 <p class="text-[11px] text-muted-foreground">
-                                    {{ row.entity_type }} · HTTP
-                                    {{ row.http_status }}
+                                    {{ row.entity_type }} ·
+                                    {{
+                                        t('admin.seoCenter.httpStatus', {
+                                            code: row.http_status,
+                                        })
+                                    }}
                                     <span v-if="row.exclusion_reason">
                                         · {{ row.exclusion_reason }}</span
                                     >
@@ -399,7 +442,9 @@ function saveRobots(): void {
                                     "
                                 >
                                     {{
-                                        row.is_in_sitemap ? 'In Sitemap' : 'No'
+                                        row.is_in_sitemap
+                                            ? t('admin.seoCenter.inSitemap')
+                                            : t('admin.seoCenter.no')
                                     }}
                                 </Badge>
                             </td>
@@ -419,14 +464,14 @@ function saveRobots(): void {
                         class="flex items-center gap-2 text-sm font-semibold text-foreground"
                     >
                         <FileCode2 class="size-4 text-primary" />
-                        <span>Sharded Sitemaps</span>
+                        <span>{{ t('admin.seoCenter.shardedSitemaps') }}</span>
                     </h2>
                     <Button
                         size="sm"
                         variant="outline"
                         @click="rebuildSitemaps(false)"
                     >
-                        Rebuild Dirty
+                        {{ t('admin.seoCenter.rebuildDirty') }}
                     </Button>
                 </div>
                 <div class="max-h-72 space-y-2 overflow-y-auto pr-1">
@@ -442,12 +487,20 @@ function saveRobots(): void {
                                 {{ sm.name }}
                             </p>
                             <p class="text-[11px] text-muted-foreground">
-                                {{ sm.total_urls }} URLs ·
-                                {{ sm.total_shards }} shard(s)
+                                {{
+                                    t('admin.seoCenter.sitemapUrlsAndShards', {
+                                        urls: sm.total_urls,
+                                        shards: sm.total_shards,
+                                    })
+                                }}
                             </p>
                         </div>
                         <Badge :variant="sm.is_dirty ? 'secondary' : 'default'">
-                            {{ sm.is_dirty ? 'Dirty' : 'Ready' }}
+                            {{
+                                sm.is_dirty
+                                    ? t('admin.seoCenter.dirty')
+                                    : t('admin.seoCenter.ready')
+                            }}
                         </Badge>
                     </div>
                 </div>
@@ -458,21 +511,21 @@ function saveRobots(): void {
             >
                 <div class="flex items-center justify-between">
                     <h2 class="text-sm font-semibold text-foreground">
-                        URL Inspection Queue
+                        {{ t('admin.seoCenter.urlInspectionQueue') }}
                     </h2>
                     <Button
                         size="sm"
                         variant="outline"
                         @click="runInspectionBatch"
                     >
-                        Run Priority Batch
+                        {{ t('admin.seoCenter.runPriorityBatch') }}
                     </Button>
                 </div>
                 <p
                     v-if="recentInspections.length === 0"
                     class="text-xs text-muted-foreground"
                 >
-                    No Google URL Inspection calls logged yet.
+                    {{ t('admin.seoCenter.noInspectionsYet') }}
                 </p>
                 <ul v-else class="max-h-72 space-y-2 overflow-y-auto text-xs">
                     <li
@@ -508,47 +561,71 @@ function saveRobots(): void {
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Link2 class="size-4 text-primary" />
-                    <span>Managed SEO Redirects (Anti-Loop Guarded)</span>
+                    <span>{{
+                        t('admin.seoCenter.managedRedirectsTitle')
+                    }}</span>
                 </h2>
                 <form
                     @submit.prevent="saveRedirect"
                     class="grid gap-3 sm:grid-cols-2"
                 >
                     <div class="space-y-1">
-                        <Label for="redir-src">Source Path</Label>
+                        <Label for="redir-src">{{
+                            t('admin.seoCenter.sourcePath')
+                        }}</Label>
                         <Input
                             id="redir-src"
                             v-model="redirectForm.source_path"
-                            placeholder="/old-path"
+                            :placeholder="
+                                t('admin.seoCenter.sourcePathPlaceholder')
+                            "
                         />
                     </div>
                     <div class="space-y-1">
-                        <Label for="redir-dst">Target Path</Label>
+                        <Label for="redir-dst">{{
+                            t('admin.seoCenter.targetPath')
+                        }}</Label>
                         <Input
                             id="redir-dst"
                             v-model="redirectForm.target_url"
-                            placeholder="/new-canonical-path"
+                            :placeholder="
+                                t('admin.seoCenter.targetPathPlaceholder')
+                            "
                         />
                     </div>
                     <div class="space-y-1">
-                        <Label for="redir-code">HTTP Code</Label>
+                        <Label for="redir-code">{{
+                            t('admin.seoCenter.httpCode')
+                        }}</Label>
                         <select
                             id="redir-code"
                             v-model.number="redirectForm.status_code"
                             class="h-10 w-full rounded-lg border border-input bg-background px-3 text-xs"
                         >
-                            <option :value="301">301 Permanent</option>
-                            <option :value="302">302 Temporary</option>
-                            <option :value="307">307 Temporary</option>
-                            <option :value="308">308 Permanent</option>
+                            <option :value="301">
+                                {{ t('admin.seoCenter.http301') }}
+                            </option>
+                            <option :value="302">
+                                {{ t('admin.seoCenter.http302') }}
+                            </option>
+                            <option :value="307">
+                                {{ t('admin.seoCenter.http307') }}
+                            </option>
+                            <option :value="308">
+                                {{ t('admin.seoCenter.http308') }}
+                            </option>
                         </select>
                     </div>
                     <div class="space-y-1">
-                        <Label for="redir-reason">Reason</Label>
+                        <Label for="redir-reason">{{
+                            t('admin.seoCenter.reason')
+                        }}</Label>
                         <Input
                             id="redir-reason"
                             v-model="redirectForm.reason"
-                            placeholder="Slug migration"
+                            :placeholder="
+                                t('admin.seoCenter.redirectReasonPlaceholder')
+                            "
                         />
                     </div>
                     <div class="sm:col-span-2">
@@ -556,7 +633,7 @@ function saveRobots(): void {
                             type="submit"
                             size="sm"
                             :disabled="redirectForm.processing"
-                            >Save Redirect</Button
+                            >{{ t('admin.seoCenter.saveRedirect') }}</Button
                         >
                     </div>
                 </form>
@@ -572,8 +649,12 @@ function saveRobots(): void {
                                 {{ r.source_path }} → {{ r.target_url }}
                             </p>
                             <p class="text-[11px] text-muted-foreground">
-                                HTTP {{ r.status_code }} ·
-                                {{ r.hit_count }} hits
+                                {{
+                                    t('admin.seoCenter.redirectMeta', {
+                                        code: r.status_code,
+                                        hits: r.hit_count,
+                                    })
+                                }}
                             </p>
                         </div>
                         <Button
@@ -581,6 +662,7 @@ function saveRobots(): void {
                             variant="ghost"
                             size="icon"
                             class="size-7 text-muted-foreground hover:text-destructive"
+                            :aria-label="t('admin.seoCenter.deleteRedirect')"
                             @click="deleteRedirect(r.id)"
                         >
                             <Trash2 class="size-3.5" />
@@ -593,27 +675,29 @@ function saveRobots(): void {
                 class="space-y-4 rounded-xl border border-border bg-card p-5 shadow-xs"
             >
                 <h2 class="text-sm font-semibold text-foreground">
-                    Dynamic robots.txt
+                    {{ t('admin.seoCenter.dynamicRobotsTitle') }}
                 </h2>
                 <pre
                     class="max-h-52 overflow-auto rounded-lg bg-muted/40 p-3 font-mono text-[11px] text-foreground"
                     >{{ robotsPreview }}</pre>
                 <form @submit.prevent="saveRobots" class="space-y-2">
-                    <Label for="robots-extra"
-                        >Additional Disallow Paths (one path per line)</Label
-                    >
+                    <Label for="robots-extra">{{
+                        t('admin.seoCenter.additionalDisallowPaths')
+                    }}</Label>
                     <textarea
                         id="robots-extra"
                         v-model="robotsForm.robots_extra_disallow"
                         rows="3"
                         class="w-full rounded-lg border border-input bg-background p-2.5 font-mono text-xs"
-                        placeholder="/private-staging/"
+                        :placeholder="
+                            t('admin.seoCenter.robotsExtraPlaceholder')
+                        "
                     />
                     <Button
                         type="submit"
                         size="sm"
                         :disabled="robotsForm.processing"
-                        >Save robots.txt Rules</Button
+                        >{{ t('admin.seoCenter.saveRobotsRules') }}</Button
                     >
                 </form>
             </section>

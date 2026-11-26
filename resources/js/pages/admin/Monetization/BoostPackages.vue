@@ -73,7 +73,11 @@ function createPkg(): void {
             <Button variant="outline" size="sm" as-child>
                 <Link :href="adminAdsIndex()">
                     <Megaphone class="size-4" />
-                    <span>Review Boost Campaigns</span>
+                    <span>{{
+                        t(
+                            'admin.monetizationCenter.boostPackages.reviewCampaigns',
+                        )
+                    }}</span>
                 </Link>
             </Button>
         </div>
@@ -90,12 +94,19 @@ function createPkg(): void {
                         class="h-8 text-xs font-semibold"
                     />
                     <Badge :variant="pkg.is_active ? 'success' : 'outline'">
-                        {{ pkg.duration_hours }}h
+                        {{
+                            t(
+                                'admin.monetizationCenter.boostPackages.hoursShort',
+                                { hours: pkg.duration_hours },
+                            )
+                        }}
                     </Badge>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <Label class="text-[10px]">Hours</Label>
+                        <Label class="text-[10px]">{{
+                            t('admin.monetizationCenter.boostPackages.hours')
+                        }}</Label>
                         <Input
                             v-model.number="pkg.duration_hours"
                             type="number"
@@ -103,7 +114,9 @@ function createPkg(): void {
                         />
                     </div>
                     <div>
-                        <Label class="text-[10px]">VND</Label>
+                        <Label class="text-[10px]">{{
+                            t('admin.monetizationCenter.common.vnd')
+                        }}</Label>
                         <Input
                             v-model.number="pkg.price_vnd"
                             type="number"
@@ -111,7 +124,9 @@ function createPkg(): void {
                         />
                     </div>
                     <div>
-                        <Label class="text-[10px]">USD Cents</Label>
+                        <Label class="text-[10px]">{{
+                            t('admin.monetizationCenter.common.usdCents')
+                        }}</Label>
                         <Input
                             v-model.number="pkg.price_usd_cents"
                             type="number"
@@ -123,14 +138,18 @@ function createPkg(): void {
                     <div class="flex items-center gap-3">
                         <label class="flex items-center gap-1.5">
                             <input v-model="pkg.is_active" type="checkbox" />
-                            <span>Active</span>
+                            <span>{{
+                                t('admin.monetizationCenter.common.active')
+                            }}</span>
                         </label>
                         <label class="flex items-center gap-1.5">
                             <input
                                 v-model="pkg.is_featured_slot"
                                 type="checkbox"
                             />
-                            <span>Featured</span>
+                            <span>{{
+                                t('admin.monetizationCenter.common.featured')
+                            }}</span>
                         </label>
                     </div>
                     <Button
@@ -140,7 +159,9 @@ function createPkg(): void {
                         @click="savePkg(pkg)"
                     >
                         <Save class="size-3" />
-                        <span>Save</span>
+                        <span>{{
+                            t('admin.monetizationCenter.common.save')
+                        }}</span>
                     </Button>
                 </div>
             </div>
@@ -152,7 +173,9 @@ function createPkg(): void {
                 class="flex items-center gap-2 text-sm font-bold text-foreground"
             >
                 <Plus class="size-4 text-primary" />
-                <span>Add Boost Package</span>
+                <span>{{
+                    t('admin.monetizationCenter.boostPackages.addPackageTitle')
+                }}</span>
             </h2>
             <form
                 @submit.prevent="createPkg"
@@ -160,25 +183,31 @@ function createPkg(): void {
             >
                 <Input
                     v-model="createForm.name"
-                    placeholder="Package Name"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.boostPackages.packageNamePlaceholder',
+                        )
+                    "
                     required
                 />
                 <Input
                     v-model.number="createForm.duration_hours"
                     type="number"
-                    placeholder="Hours"
+                    :placeholder="
+                        t('admin.monetizationCenter.boostPackages.hours')
+                    "
                     required
                 />
                 <Input
                     v-model.number="createForm.price_vnd"
                     type="number"
-                    placeholder="Price VND"
+                    :placeholder="t('admin.monetizationCenter.common.priceVnd')"
                     required
                 />
                 <Input
                     v-model.number="createForm.price_usd_cents"
                     type="number"
-                    placeholder="USD Cents"
+                    :placeholder="t('admin.monetizationCenter.common.usdCents')"
                     required
                 />
                 <Button
@@ -186,7 +215,7 @@ function createPkg(): void {
                     size="sm"
                     :disabled="createForm.processing"
                 >
-                    Create
+                    {{ t('admin.monetizationCenter.boostPackages.create') }}
                 </Button>
             </form>
         </section>
@@ -194,9 +223,12 @@ function createPkg(): void {
         <!-- Recent Boost Campaigns -->
         <section class="space-y-3 rounded-2xl border border-border bg-card p-5">
             <h2 class="text-sm font-bold text-foreground">
-                Recent Fixed-Package Boost Campaigns ({{
-                    boostCampaigns.length
-                }})
+                {{
+                    t(
+                        'admin.monetizationCenter.boostPackages.recentCampaignsTitle',
+                        { count: boostCampaigns.length },
+                    )
+                }}
             </h2>
             <div
                 v-if="boostCampaigns.length > 0"
@@ -213,9 +245,22 @@ function createPkg(): void {
                         </p>
                         <p class="text-muted-foreground">
                             @{{ c.owner_username }} ·
-                            {{ c.package_name || 'Boost' }} ·
-                            {{ c.impressions_count }} imp /
-                            {{ c.clicks_count }} clicks
+                            {{
+                                c.package_name ||
+                                t(
+                                    'admin.monetizationCenter.boostPackages.defaultPackageFallback',
+                                )
+                            }}
+                            ·
+                            {{
+                                t(
+                                    'admin.monetizationCenter.common.impressionsClicks',
+                                    {
+                                        impressions: c.impressions_count,
+                                        clicks: c.clicks_count,
+                                    },
+                                )
+                            }}
                         </p>
                     </div>
                     <div class="flex items-center gap-2">
@@ -228,7 +273,7 @@ function createPkg(): void {
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No fixed-package boost campaigns yet.
+                {{ t('admin.monetizationCenter.boostPackages.emptyCampaigns') }}
             </p>
         </section>
     </div>

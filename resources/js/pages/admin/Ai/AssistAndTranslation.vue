@@ -183,7 +183,7 @@ function resolveAssessment(
                 class="grid gap-3 sm:grid-cols-3"
             >
                 <div class="space-y-1">
-                    <Label for="tr_post">Post</Label>
+                    <Label for="tr_post">{{ t('admin.aiCenter.post') }}</Label>
                     <select
                         id="tr_post"
                         v-model.number="translateForm.post_id"
@@ -199,7 +199,9 @@ function resolveAssessment(
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="tr_locale">Target Language</Label>
+                    <Label for="tr_locale">{{
+                        t('admin.aiCenter.targetLanguage')
+                    }}</Label>
                     <select
                         id="tr_locale"
                         v-model="translateForm.target_locale"
@@ -237,10 +239,18 @@ function resolveAssessment(
                         <tr
                             class="border-b border-border text-muted-foreground"
                         >
-                            <th class="py-2 pr-2">Entity</th>
-                            <th class="px-2 py-2">Locale</th>
-                            <th class="px-2 py-2">Title</th>
-                            <th class="py-2 pl-2 text-right">SEO Status</th>
+                            <th class="py-2 pr-2">
+                                {{ t('admin.aiCenter.entity') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.locale') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.title') }}
+                            </th>
+                            <th class="py-2 pl-2 text-right">
+                                {{ t('admin.aiCenter.seoStatus') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -320,7 +330,7 @@ function resolveAssessment(
                                 agents.length === 0
                             "
                         >
-                            Draft Reply
+                            {{ t('admin.aiCenter.draftReply') }}
                         </Button>
                     </div>
                 </form>
@@ -338,7 +348,12 @@ function resolveAssessment(
                             <Badge variant="outline">{{ r.status }}</Badge>
                         </div>
                         <p class="mt-1 text-muted-foreground">
-                            Post #{{ r.post_id }}: {{ r.post_title }}
+                            {{
+                                t('admin.aiCenter.postWithTitle', {
+                                    id: r.post_id,
+                                    title: r.post_title,
+                                })
+                            }}
                         </p>
                         <p v-if="r.draft_reply" class="mt-1 text-foreground">
                             {{ r.draft_reply }}
@@ -353,7 +368,9 @@ function resolveAssessment(
                                 @click="approveReply(r.id)"
                             >
                                 <Check class="size-3.5" />
-                                <span>Approve & Post</span>
+                                <span>{{
+                                    t('admin.aiCenter.approveAndPost')
+                                }}</span>
                             </Button>
                             <Button
                                 size="sm"
@@ -361,7 +378,7 @@ function resolveAssessment(
                                 @click="rejectReply(r.id)"
                             >
                                 <X class="size-3.5" />
-                                <span>Reject</span>
+                                <span>{{ t('admin.aiCenter.reject') }}</span>
                             </Button>
                         </div>
                     </div>
@@ -392,7 +409,12 @@ function resolveAssessment(
                             :key="p.id"
                             :value="p.id"
                         >
-                            Post #{{ p.id }}: {{ p.title }}
+                            {{
+                                t('admin.aiCenter.postWithTitle', {
+                                    id: p.id,
+                                    title: p.title,
+                                })
+                            }}
                         </option>
                     </select>
                     <Button
@@ -400,7 +422,7 @@ function resolveAssessment(
                         size="sm"
                         :disabled="modForm.processing || control.emergency_stop"
                     >
-                        Assess Risk
+                        {{ t('admin.aiCenter.assessRisk') }}
                     </Button>
                 </form>
 
@@ -428,7 +450,12 @@ function resolveAssessment(
                         </div>
                         <p class="mt-1 text-foreground/90">{{ a.reason }}</p>
                         <p class="mt-0.5 text-muted-foreground">
-                            Suggested: {{ a.suggested_action }} ({{ a.status }})
+                            {{
+                                t('admin.aiCenter.suggestedActionStatus', {
+                                    action: a.suggested_action,
+                                    status: a.status,
+                                })
+                            }}
                         </p>
                         <div
                             v-if="a.status === 'pending_review'"
@@ -439,14 +466,14 @@ function resolveAssessment(
                                 variant="outline"
                                 @click="resolveAssessment(a.id, 'acknowledged')"
                             >
-                                Acknowledge
+                                {{ t('admin.aiCenter.acknowledge') }}
                             </Button>
                             <Button
                                 size="sm"
                                 variant="ghost"
                                 @click="resolveAssessment(a.id, 'dismissed')"
                             >
-                                Dismiss
+                                {{ t('admin.aiCenter.dismiss') }}
                             </Button>
                         </div>
                     </div>

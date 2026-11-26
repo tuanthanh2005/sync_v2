@@ -2,26 +2,22 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Facades\Lang;
+
 enum FooterGroup: string
 {
     case Platform = 'platform';
     case Legal = 'legal';
     case Support = 'support';
 
-    public function label(string $locale = 'vi'): string
+    public function label(?string $locale = null): string
     {
-        if ($locale === 'en') {
-            return match ($this) {
-                self::Platform => 'Platform',
-                self::Legal => 'Legal & Policies',
-                self::Support => 'Support',
-            };
-        }
+        $resolvedLocale = $locale ?? app()->getLocale();
 
         return match ($this) {
-            self::Platform => 'Nền tảng',
-            self::Legal => 'Pháp lý & Chính sách',
-            self::Support => 'Hỗ trợ',
+            self::Platform => (string) Lang::get('Platform', [], $resolvedLocale),
+            self::Legal => (string) Lang::get('Legal & Policies', [], $resolvedLocale),
+            self::Support => (string) Lang::get('Support', [], $resolvedLocale),
         };
     }
 

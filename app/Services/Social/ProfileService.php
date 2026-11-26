@@ -272,6 +272,8 @@ class ProfileService
                     url: route('users.show', $follower->username, false),
                     actorName: $follower->name,
                     actorUsername: $follower->username,
+                    titleKey: ':name started following you.',
+                    titleParams: ['name' => $follower->name],
                 ),
             );
         }

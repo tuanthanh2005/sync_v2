@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { ref, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
@@ -9,25 +10,26 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { update } from '@/routes/password';
 
-defineOptions({
-    layout: {
-        title: 'Đặt lại mật khẩu',
-        description: 'Vui lòng nhập mật khẩu mới cho tài khoản của bạn',
-    },
-});
-
 const props = defineProps<{
     token: string;
     email: string;
     passwordRules: string;
 }>();
 
+const { t } = useI18n();
 const inputEmail = ref(props.email);
+
+watchEffect(() => {
+    setLayoutProps({
+        title: t('auth.resetPassword.layoutTitle'),
+        description: t('auth.resetPassword.layoutDescription'),
+    });
+});
 </script>
 
 <template>
     <div>
-        <Head title="Đặt lại mật khẩu" />
+        <Head :title="t('auth.resetPassword.pageTitle')" />
 
         <Form
             v-bind="update.form()"
@@ -37,7 +39,7 @@ const inputEmail = ref(props.email);
         >
             <div class="grid gap-5">
                 <div class="grid gap-2">
-                    <Label for="email">Địa chỉ email</Label>
+                    <Label for="email">{{ t('auth.fields.email') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -51,29 +53,35 @@ const inputEmail = ref(props.email);
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Mật khẩu mới</Label>
+                    <Label for="password">{{
+                        t('auth.fields.newPassword')
+                    }}</Label>
                     <PasswordInput
                         id="password"
                         name="password"
                         autocomplete="new-password"
                         class="mt-1 block w-full"
                         autofocus
-                        placeholder="Nhập mật khẩu mới"
+                        :placeholder="
+                            t('auth.fields.enterNewPasswordPlaceholder')
+                        "
                         :passwordrules="passwordRules"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation"
-                        >Xác nhận mật khẩu mới</Label
-                    >
+                    <Label for="password_confirmation">{{
+                        t('auth.fields.confirmNewPassword')
+                    }}</Label>
                     <PasswordInput
                         id="password_confirmation"
                         name="password_confirmation"
                         autocomplete="new-password"
                         class="mt-1 block w-full"
-                        placeholder="Nhập lại mật khẩu mới"
+                        :placeholder="
+                            t('auth.fields.confirmNewPasswordPlaceholder')
+                        "
                         :passwordrules="passwordRules"
                     />
                     <InputError :message="errors.password_confirmation" />
@@ -86,7 +94,7 @@ const inputEmail = ref(props.email);
                     data-test="reset-password-button"
                 >
                     <Spinner v-if="processing" />
-                    Cập nhật mật khẩu
+                    {{ t('auth.resetPassword.submit') }}
                 </Button>
             </div>
         </Form>

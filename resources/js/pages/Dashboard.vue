@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, setLayoutProps, usePage } from '@inertiajs/vue3';
 import {
     AlertCircle,
     ArrowRight,
@@ -12,7 +12,8 @@ import {
     UserCheck,
     UserCog,
 } from '@lucide/vue';
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import RoleBadge from '@/components/common/RoleBadge.vue';
 import { Button } from '@/components/ui/button';
 import { dashboard, home } from '@/routes';
@@ -22,55 +23,60 @@ import { edit as editProfile } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import type { AccountChecklist } from '@/types';
 
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            {
-                title: 'Không gian cá nhân',
-                href: dashboard(),
-            },
-        ],
-    },
-});
-
 const props = defineProps<{
     accountChecklist: AccountChecklist;
 }>();
 
+const { t } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
+watchEffect(() => {
+    setLayoutProps({
+        breadcrumbs: [
+            {
+                title: t('dashboard.breadcrumb'),
+                href: dashboard(),
+            },
+        ],
+    });
+});
+
 const checklistItems = computed(() => [
     {
-        label: 'Xác minh địa chỉ email',
+        key: 'email',
+        label: t('dashboard.checklist.emailVerified'),
         completed: props.accountChecklist.emailVerified,
         href: editProfile(),
-        actionLabel: 'Kiểm tra email',
+        actionLabel: t('dashboard.checklist.checkEmail'),
     },
     {
-        label: 'Bảo mật 2 lớp (2FA)',
+        key: '2fa',
+        label: t('dashboard.checklist.twoFactor'),
         completed: props.accountChecklist.twoFactorEnabled,
         href: editSecurity(),
-        actionLabel: 'Cấu hình 2FA',
+        actionLabel: t('dashboard.checklist.configure2fa'),
     },
     {
-        label: 'Định danh @username duy nhất',
+        key: 'username',
+        label: t('dashboard.checklist.username'),
         completed: props.accountChecklist.usernameConfigured,
         href: editProfile(),
-        actionLabel: 'Cập nhật hồ sơ',
+        actionLabel: t('dashboard.checklist.updateProfile'),
     },
     {
-        label: 'Múi giờ hiển thị cá nhân',
+        key: 'timezone',
+        label: t('dashboard.checklist.timezone'),
         completed: props.accountChecklist.timezoneConfigured,
         href: editProfile(),
-        actionLabel: 'Tùy chỉnh múi giờ',
+        actionLabel: t('dashboard.checklist.customizeTimezone'),
     },
 ]);
 </script>
 
 <template>
     <div>
-        <Head title="Không gian cá nhân" />
+        <Head :title="t('dashboard.pageTitle')" />
 
         <div v-if="user" class="space-y-5">
             <!-- Member Identity Card -->
@@ -81,7 +87,9 @@ const checklistItems = computed(() => [
                     <div>
                         <div class="flex flex-wrap items-center gap-2.5">
                             <h1 class="text-xl font-bold text-foreground">
-                                Xin chào, {{ user.name }}
+                                {{
+                                    t('dashboard.greeting', { name: user.name })
+                                }}
                             </h1>
                             <RoleBadge
                                 :role="user.role"
@@ -96,11 +104,19 @@ const checklistItems = computed(() => [
                         >
                             <span class="inline-flex items-center gap-1.5">
                                 <UserCheck class="size-3.5 text-success" />
-                                Trạng thái: {{ user.status_label }}
+                                {{
+                                    t('dashboard.statusLabel', {
+                                        status: user.status_label,
+                                    })
+                                }}
                             </span>
                             <span class="inline-flex items-center gap-1.5">
                                 <Clock class="size-3.5 text-primary" />
-                                Múi giờ: {{ user.timezone }}
+                                {{
+                                    t('dashboard.timezoneLabel', {
+                                        timezone: user.timezone,
+                                    })
+                                }}
                             </span>
                         </div>
                     </div>
@@ -109,7 +125,7 @@ const checklistItems = computed(() => [
                         <Button size="sm" class="rounded-lg" as-child>
                             <Link :href="home()">
                                 <Newspaper class="size-4" />
-                                <span>Bảng tin</span>
+                                <span>{{ t('dashboard.feedButton') }}</span>
                                 <ArrowRight class="size-3.5" />
                             </Link>
                         </Button>
@@ -121,7 +137,9 @@ const checklistItems = computed(() => [
                         >
                             <Link :href="editProfile()">
                                 <UserCog class="size-4" />
-                                <span>Chỉnh sửa hồ sơ</span>
+                                <span>{{
+                                    t('dashboard.editProfileButton')
+                                }}</span>
                             </Link>
                         </Button>
                         <Button
@@ -133,7 +151,7 @@ const checklistItems = computed(() => [
                         >
                             <Link :href="adminOverview()">
                                 <Shield class="size-4" />
-                                <span>Quản trị hệ thống</span>
+                                <span>{{ t('dashboard.adminButton') }}</span>
                             </Link>
                         </Button>
                     </div>
@@ -145,11 +163,10 @@ const checklistItems = computed(() => [
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <h2 class="text-base font-semibold text-foreground">
-                            Hoàn thiện tài khoản của bạn
+                            {{ t('dashboard.checklistTitle') }}
                         </h2>
                         <p class="text-xs text-muted-foreground">
-                            Kiểm tra trạng thái xác minh và cài đặt bảo mật cá
-                            nhân
+                            {{ t('dashboard.checklistSubtitle') }}
                         </p>
                     </div>
                     <ShieldCheck
@@ -163,7 +180,7 @@ const checklistItems = computed(() => [
                 >
                     <div
                         v-for="item in checklistItems"
-                        :key="item.label"
+                        :key="item.key"
                         class="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
                     >
                         <div class="flex items-center gap-3">
@@ -211,13 +228,13 @@ const checklistItems = computed(() => [
                             <h3
                                 class="text-sm font-semibold text-foreground group-hover:text-primary"
                             >
-                                Mật khẩu & Xác thực 2 lớp
+                                {{ t('dashboard.securityCardTitle') }}
                             </h3>
                             <p class="text-xs text-muted-foreground">
                                 {{
                                     user.two_factor_enabled
-                                        ? '2FA đã được kích hoạt'
-                                        : 'Nên bật 2FA để tăng an toàn'
+                                        ? t('dashboard.securityCardEnabled')
+                                        : t('dashboard.securityCardDisabled')
                                 }}
                             </p>
                         </div>
@@ -238,11 +255,10 @@ const checklistItems = computed(() => [
                             <h3
                                 class="text-sm font-semibold text-foreground group-hover:text-primary"
                             >
-                                Giao diện Sáng / Tối
+                                {{ t('dashboard.appearanceCardTitle') }}
                             </h3>
                             <p class="text-xs text-muted-foreground">
-                                Tùy chỉnh Light Mode, Dark Mode hoặc theo hệ
-                                thống
+                                {{ t('dashboard.appearanceCardDesc') }}
                             </p>
                         </div>
                     </div>

@@ -218,7 +218,7 @@ function statusBadgeVariant(
                         ]"
                         @click="switchDays(d)"
                     >
-                        {{ d }}d
+                        {{ t('admin.seoCenter.daysShort', { count: d }) }}
                     </button>
                 </div>
                 <Button variant="outline" size="sm" @click="triggerBackfill">
@@ -282,7 +282,8 @@ function statusBadgeVariant(
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
                     {{ t('admin.seo.notIndexed') }}:
-                    {{ kpis.not_indexed_urls.toLocaleString() }} · GSC:
+                    {{ kpis.not_indexed_urls.toLocaleString() }} ·
+                    {{ t('admin.seoCenter.gscShort') }}:
                     <span class="font-medium">{{ gsc.status }}</span>
                 </p>
             </div>
@@ -352,7 +353,7 @@ function statusBadgeVariant(
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
                         <div class="rounded-lg bg-muted/40 p-3">
                             <p class="text-[11px] text-muted-foreground">
-                                Clicks
+                                {{ t('admin.seoCenter.clicks') }}
                             </p>
                             <p class="mt-1 text-lg font-bold text-foreground">
                                 {{ searchAnalytics.clicks.toLocaleString() }}
@@ -360,7 +361,7 @@ function statusBadgeVariant(
                         </div>
                         <div class="rounded-lg bg-muted/40 p-3">
                             <p class="text-[11px] text-muted-foreground">
-                                Impressions
+                                {{ t('admin.seoCenter.impressions') }}
                             </p>
                             <p class="mt-1 text-lg font-bold text-foreground">
                                 {{
@@ -369,14 +370,16 @@ function statusBadgeVariant(
                             </p>
                         </div>
                         <div class="rounded-lg bg-muted/40 p-3">
-                            <p class="text-[11px] text-muted-foreground">CTR</p>
+                            <p class="text-[11px] text-muted-foreground">
+                                {{ t('admin.seoCenter.ctr') }}
+                            </p>
                             <p class="mt-1 text-lg font-bold text-foreground">
                                 {{ searchAnalytics.ctr }}%
                             </p>
                         </div>
                         <div class="rounded-lg bg-muted/40 p-3">
                             <p class="text-[11px] text-muted-foreground">
-                                Avg Pos
+                                {{ t('admin.seoCenter.avgPosition') }}
                             </p>
                             <p class="mt-1 text-lg font-bold text-foreground">
                                 {{ searchAnalytics.avg_position }}
@@ -393,21 +396,27 @@ function statusBadgeVariant(
                                 class="border-b border-border text-muted-foreground"
                             >
                                 <tr>
-                                    <th class="py-2 pr-3 font-medium">Query</th>
-                                    <th
-                                        class="px-2 py-2 text-right font-medium"
-                                    >
-                                        Clicks
+                                    <th class="py-2 pr-3 font-medium">
+                                        {{ t('admin.seoCenter.query') }}
                                     </th>
                                     <th
                                         class="px-2 py-2 text-right font-medium"
                                     >
-                                        Impr.
+                                        {{ t('admin.seoCenter.clicks') }}
+                                    </th>
+                                    <th
+                                        class="px-2 py-2 text-right font-medium"
+                                    >
+                                        {{
+                                            t(
+                                                'admin.seoCenter.impressionsShort',
+                                            )
+                                        }}
                                     </th>
                                     <th
                                         class="py-2 pl-2 text-right font-medium"
                                     >
-                                        Pos
+                                        {{ t('admin.seoCenter.positionShort') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -458,7 +467,7 @@ function statusBadgeVariant(
                         class="rounded-lg border border-border/70 bg-muted/20 p-3"
                     >
                         <p class="text-[11px] text-muted-foreground">
-                            Organic Visits
+                            {{ t('admin.seoCenter.organicVisits') }}
                         </p>
                         <p class="mt-1 text-lg font-bold text-foreground">
                             {{
@@ -470,7 +479,7 @@ function statusBadgeVariant(
                         class="rounded-lg border border-border/70 bg-muted/20 p-3"
                     >
                         <p class="text-[11px] text-muted-foreground">
-                            Post Views
+                            {{ t('admin.seoCenter.postViews') }}
                         </p>
                         <p class="mt-1 text-lg font-bold text-foreground">
                             {{
@@ -482,7 +491,7 @@ function statusBadgeVariant(
                         class="rounded-lg border border-border/70 bg-muted/20 p-3"
                     >
                         <p class="text-[11px] text-muted-foreground">
-                            Registrations
+                            {{ t('admin.seoCenter.registrations') }}
                         </p>
                         <p class="mt-1 text-lg font-bold text-foreground">
                             {{
@@ -494,7 +503,7 @@ function statusBadgeVariant(
                         class="rounded-lg border border-border/70 bg-muted/20 p-3"
                     >
                         <p class="text-[11px] text-muted-foreground">
-                            Community Joins
+                            {{ t('admin.seoCenter.communityJoins') }}
                         </p>
                         <p class="mt-1 text-lg font-bold text-foreground">
                             {{
@@ -506,7 +515,7 @@ function statusBadgeVariant(
                         class="rounded-lg border border-border/70 bg-muted/20 p-3"
                     >
                         <p class="text-[11px] text-muted-foreground">
-                            Premium Conv.
+                            {{ t('admin.seoCenter.premiumConversions') }}
                         </p>
                         <p class="mt-1 text-lg font-bold text-foreground">
                             {{
@@ -517,7 +526,9 @@ function statusBadgeVariant(
                     <div
                         class="rounded-lg border border-primary/25 bg-primary-soft/50 p-3"
                     >
-                        <p class="text-[11px] text-primary">Visit → Signup</p>
+                        <p class="text-[11px] text-primary">
+                            {{ t('admin.seoCenter.visitToSignup') }}
+                        </p>
                         <p class="mt-1 text-lg font-bold text-primary">
                             {{ organicGrowth.visit_to_signup_rate }}%
                         </p>
@@ -606,18 +617,20 @@ function statusBadgeVariant(
                             class="border-b border-border text-muted-foreground"
                         >
                             <tr>
-                                <th class="py-2 pr-2 font-medium">Locale</th>
-                                <th class="px-2 py-2 text-right font-medium">
-                                    Total
+                                <th class="py-2 pr-2 font-medium">
+                                    {{ t('admin.seoCenter.locale') }}
                                 </th>
                                 <th class="px-2 py-2 text-right font-medium">
-                                    Eligible
+                                    {{ t('admin.seoCenter.total') }}
                                 </th>
                                 <th class="px-2 py-2 text-right font-medium">
-                                    Sitemap
+                                    {{ t('admin.seoCenter.eligible') }}
+                                </th>
+                                <th class="px-2 py-2 text-right font-medium">
+                                    {{ t('admin.seoCenter.sitemap') }}
                                 </th>
                                 <th class="py-2 pl-2 text-right font-medium">
-                                    Indexed
+                                    {{ t('admin.seoCenter.indexed') }}
                                 </th>
                             </tr>
                         </thead>
@@ -665,16 +678,20 @@ function statusBadgeVariant(
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-3 font-medium">Job</th>
-                            <th class="px-2 py-2 font-medium">Status</th>
-                            <th class="px-2 py-2 text-right font-medium">
-                                Processed
+                            <th class="py-2 pr-3 font-medium">
+                                {{ t('admin.seoCenter.job') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.status') }}
                             </th>
                             <th class="px-2 py-2 text-right font-medium">
-                                Duration
+                                {{ t('admin.seoCenter.processed') }}
+                            </th>
+                            <th class="px-2 py-2 text-right font-medium">
+                                {{ t('admin.seoCenter.duration') }}
                             </th>
                             <th class="py-2 pl-2 text-right font-medium">
-                                Started
+                                {{ t('admin.seoCenter.started') }}
                             </th>
                         </tr>
                     </thead>
@@ -696,7 +713,9 @@ function statusBadgeVariant(
                             <td class="px-2 py-2 text-right">
                                 {{
                                     job.duration_ms !== null
-                                        ? `${job.duration_ms}ms`
+                                        ? t('admin.seoCenter.durationMs', {
+                                              ms: job.duration_ms,
+                                          })
                                         : '—'
                                 }}
                             </td>

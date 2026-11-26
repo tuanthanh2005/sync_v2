@@ -213,6 +213,8 @@ class CommentService
                     url: route('posts.show', $post, false),
                     actorName: $author->name,
                     actorUsername: $author->username,
+                    titleKey: ':name commented on your post.',
+                    titleParams: ['name' => $author->name],
                 ),
             );
         }

@@ -125,7 +125,7 @@ class IndexNowService
     public function submitQueuedBatch(int $limit = 100): array
     {
         if (! $this->isEnabled()) {
-            return ['submitted' => 0, 'failed' => 0, 'http_status' => null, 'message' => 'IndexNow is disabled or indexing is blocked in this environment.'];
+            return ['submitted' => 0, 'failed' => 0, 'http_status' => null, 'message' => __('IndexNow is disabled or indexing is blocked in this environment.')];
         }
 
         $batch = SeoIndexNowSubmission::query()
@@ -136,7 +136,7 @@ class IndexNowService
             ->get();
 
         if ($batch->isEmpty()) {
-            return ['submitted' => 0, 'failed' => 0, 'http_status' => null, 'message' => 'No queued URLs pending IndexNow submission.'];
+            return ['submitted' => 0, 'failed' => 0, 'http_status' => null, 'message' => __('No queued URLs pending IndexNow submission.')];
         }
 
         $key = $this->getKey();
@@ -193,7 +193,7 @@ class IndexNowService
                 'submitted' => $ok ? $batch->count() : 0,
                 'failed' => $ok ? 0 : $batch->count(),
                 'http_status' => $status,
-                'message' => $ok ? 'IndexNow batch accepted.' : "IndexNow returned HTTP {$status}.",
+                'message' => $ok ? __('IndexNow batch accepted.') : __('IndexNow returned HTTP :status.', ['status' => $status]),
             ];
         } catch (\Throwable $e) {
             $this->recordApiUsage('bing_indexnow', 'indexnow_batch', true);
@@ -210,7 +210,7 @@ class IndexNowService
                 'submitted' => 0,
                 'failed' => $batch->count(),
                 'http_status' => null,
-                'message' => 'IndexNow request failed: '.Str::limit($e->getMessage(), 180),
+                'message' => __('IndexNow request failed: :error', ['error' => Str::limit($e->getMessage(), 180)]),
             ];
         }
     }

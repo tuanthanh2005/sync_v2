@@ -154,14 +154,18 @@ function saveSettings(): void {
                     {{ overview.kpis.total_human_users.toLocaleString() }}
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    Verified: {{ overview.kpis.verified_human_users }} ·
-                    Activated: {{ overview.kpis.activated_users }} · AI excl:
-                    {{ overview.kpis.ai_agents_excluded }}
+                    {{
+                        t('admin.growthCenter.overview.humanUsersBreakdown', {
+                            verified: overview.kpis.verified_human_users,
+                            activated: overview.kpis.activated_users,
+                            aiExcluded: overview.kpis.ai_agents_excluded,
+                        })
+                    }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-4">
                 <p class="text-xs text-muted-foreground">
-                    Human DAU / WAU / MAU
+                    {{ t('admin.growthCenter.overview.kpiHumanDauWauMau') }}
                 </p>
                 <p class="mt-1 text-2xl font-bold">
                     {{ overview.kpis.dau_human }} /
@@ -169,9 +173,13 @@ function saveSettings(): void {
                     {{ overview.kpis.mau_human }}
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    D1 {{ overview.kpis.d1_retention_rate }}% · D7
-                    {{ overview.kpis.d7_retention_rate }}% · D30
-                    {{ overview.kpis.d30_retention_rate }}%
+                    {{
+                        t('admin.growthCenter.overview.retentionSummary', {
+                            d1: overview.kpis.d1_retention_rate,
+                            d7: overview.kpis.d7_retention_rate,
+                            d30: overview.kpis.d30_retention_rate,
+                        })
+                    }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-4">
@@ -183,22 +191,31 @@ function saveSettings(): void {
                     {{ overview.kpis.referral_registrations }}
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    Conv: {{ overview.kpis.referral_conversion_rate }}% ·
-                    Organic: {{ overview.kpis.organic_registrations }}
+                    {{
+                        t('admin.growthCenter.overview.referralBreakdown', {
+                            conversionRate:
+                                overview.kpis.referral_conversion_rate,
+                            organic: overview.kpis.organic_registrations,
+                        })
+                    }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-4">
                 <p class="text-xs text-muted-foreground">
-                    Promotional vs Paid Premium
+                    {{ t('admin.growthCenter.overview.kpiPromoVsPaidPremium') }}
                 </p>
                 <p class="mt-1 text-2xl font-bold">
                     {{ overview.kpis.promotional_premium_users }} /
                     {{ overview.kpis.paid_premium_users }}
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    Reward Days:
-                    {{ overview.kpis.premium_rewards_granted_days }}d · Early:
-                    {{ overview.kpis.early_members_count }}
+                    {{
+                        t('admin.growthCenter.overview.premiumBreakdown', {
+                            rewardDays:
+                                overview.kpis.premium_rewards_granted_days,
+                            earlyMembers: overview.kpis.early_members_count,
+                        })
+                    }}
                 </p>
             </div>
         </div>
@@ -232,7 +249,7 @@ function saveSettings(): void {
                     v-if="Object.keys(overview.activationFunnel).length === 0"
                     class="py-4 text-center text-xs text-muted-foreground"
                 >
-                    No activation milestones recorded yet.
+                    {{ t('admin.growthCenter.overview.emptyActivationFunnel') }}
                 </div>
                 <ul v-else class="space-y-1.5 text-xs">
                     <li
@@ -261,8 +278,15 @@ function saveSettings(): void {
                     >
                         <span class="truncate">{{ c.name }}</span>
                         <span class="shrink-0 text-muted-foreground">
-                            {{ c.human_members_count }} humans ·
-                            {{ c.posts_count }} posts
+                            {{
+                                t(
+                                    'admin.growthCenter.overview.communityStats',
+                                    {
+                                        humans: c.human_members_count,
+                                        posts: c.posts_count,
+                                    },
+                                )
+                            }}
                         </span>
                     </li>
                 </ul>
@@ -288,7 +312,9 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Referral Program Enabled</span>
+                    <span>{{
+                        t('admin.growthCenter.overview.settingReferralEnabled')
+                    }}</span>
                     <input
                         v-model="form.referral_enabled"
                         type="checkbox"
@@ -298,7 +324,9 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Auto-Grant Referral Premium Rewards</span>
+                    <span>{{
+                        t('admin.growthCenter.overview.settingAutoGrantRewards')
+                    }}</span>
                     <input
                         v-model="form.referral_rewards_auto_grant"
                         type="checkbox"
@@ -308,7 +336,11 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Early Member 1,000 Program Enabled</span>
+                    <span>{{
+                        t(
+                            'admin.growthCenter.overview.settingEarlyMemberEnabled',
+                        )
+                    }}</span>
                     <input
                         v-model="form.early_member_enabled"
                         type="checkbox"
@@ -318,7 +350,11 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Founding Member Program Enabled</span>
+                    <span>{{
+                        t(
+                            'admin.growthCenter.overview.settingFoundingMemberEnabled',
+                        )
+                    }}</span>
                     <input
                         v-model="form.founding_member_enabled"
                         type="checkbox"
@@ -328,7 +364,11 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Inactive Re-engagement Notifications</span>
+                    <span>{{
+                        t(
+                            'admin.growthCenter.overview.settingReengagementEnabled',
+                        )
+                    }}</span>
                     <input
                         v-model="form.retention_reengagement_enabled"
                         type="checkbox"
@@ -338,7 +378,11 @@ function saveSettings(): void {
                 <label
                     class="flex items-center justify-between rounded-lg border border-border p-2.5"
                 >
-                    <span>Weekly Community Digest</span>
+                    <span>{{
+                        t(
+                            'admin.growthCenter.overview.settingWeeklyDigestEnabled',
+                        )
+                    }}</span>
                     <input
                         v-model="form.retention_digest_enabled"
                         type="checkbox"
@@ -349,7 +393,9 @@ function saveSettings(): void {
 
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="space-y-1">
-                    <Label for="attr_days">Attribution Window (days)</Label>
+                    <Label for="attr_days">{{
+                        t('admin.growthCenter.overview.settingAttributionDays')
+                    }}</Label>
                     <Input
                         id="attr_days"
                         v-model.number="form.referral_attribution_days"
@@ -359,7 +405,11 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label for="ver_hours">Verification Hold (hours)</Label>
+                    <Label for="ver_hours">{{
+                        t(
+                            'admin.growthCenter.overview.settingVerificationHours',
+                        )
+                    }}</Label>
                     <Input
                         id="ver_hours"
                         v-model.number="form.referral_verification_hours"
@@ -369,7 +419,11 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label for="em_max">Early Member Max Slots</Label>
+                    <Label for="em_max">{{
+                        t(
+                            'admin.growthCenter.overview.settingEarlyMemberMaxSlots',
+                        )
+                    }}</Label>
                     <Input
                         id="em_max"
                         v-model.number="form.early_member_max_slots"
@@ -378,7 +432,11 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label for="em_days">Early Member Free Days</Label>
+                    <Label for="em_days">{{
+                        t(
+                            'admin.growthCenter.overview.settingEarlyMemberFreeDays',
+                        )
+                    }}</Label>
                     <Input
                         id="em_days"
                         v-model.number="form.early_member_premium_days"
@@ -402,7 +460,10 @@ function saveSettings(): void {
                     class="flex items-center justify-between gap-2 py-2"
                 >
                     <span class="font-mono"
-                        >{{ l.action }} ({{ l.actor_username || 'system' }}
+                        >{{ l.action }} ({{
+                            l.actor_username ||
+                            t('admin.growthCenter.overview.actorSystem')
+                        }}
                         <span v-if="l.target_username"
                             >→ @{{ l.target_username }}</span
                         >)</span

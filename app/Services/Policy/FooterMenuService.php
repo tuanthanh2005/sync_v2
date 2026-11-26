@@ -6,6 +6,7 @@ use App\Enums\FooterGroup;
 use App\Enums\PolicyStatus;
 use App\Models\FooterLink;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
 class FooterMenuService
@@ -87,7 +88,9 @@ class FooterMenuService
             $groupLabel = $groupEnum->label($locale);
             $resolved = [
                 'id' => $item['id'],
-                'label' => $locale === 'en' ? $item['label_en'] : $item['label_vi'],
+                'label' => $locale === 'vi'
+                    ? ($item['label_vi'] ?: $item['label_en'])
+                    : (string) Lang::get($item['label_en'], [], $locale),
                 'href' => $item['href'],
                 'group' => $groupEnum->value,
                 'group_label' => $groupLabel,

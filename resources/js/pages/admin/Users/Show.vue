@@ -166,6 +166,64 @@ const props = defineProps<{
 const { t, locale } = useI18n();
 const { getInitials } = useInitials();
 
+function moderationStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        approved: 'admin.usersExtra.modStatus.approved',
+        visible: 'admin.usersExtra.modStatus.visible',
+        published: 'admin.usersExtra.modStatus.published',
+        pending: 'admin.usersExtra.modStatus.pending',
+        hidden: 'admin.usersExtra.modStatus.hidden',
+        removed: 'admin.usersExtra.modStatus.removed',
+        rejected: 'admin.usersExtra.modStatus.rejected',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
+function loginEventLabel(eventType: string): string {
+    const map: Record<string, string> = {
+        login: 'admin.usersExtra.loginEvent.login',
+        success: 'admin.usersExtra.loginEvent.success',
+        failed: 'admin.usersExtra.loginEvent.failed',
+        logout: 'admin.usersExtra.loginEvent.logout',
+        lockout: 'admin.usersExtra.loginEvent.lockout',
+    };
+    const key = map[eventType.toLowerCase()];
+
+    return key ? t(key) : eventType;
+}
+
+function bucketLabel(bucket: string): string {
+    const map: Record<string, string> = {
+        paid: 'admin.usersExtra.bucket.paid',
+        promo: 'admin.usersExtra.bucket.promo',
+        held: 'admin.usersExtra.bucket.held',
+    };
+    const key = map[bucket.toLowerCase()];
+
+    return key ? t(key) : bucket;
+}
+
+function sanctionActionLabel(action: string): string {
+    const map: Record<string, string> = {
+        warn: 'admin.usersExtra.sanctionActions.warn',
+        suspend: 'admin.usersExtra.sanctionActions.suspend',
+        ban: 'admin.usersExtra.sanctionActions.ban',
+        unban: 'admin.usersExtra.sanctionActions.unban',
+        restrict_post: 'admin.usersExtra.sanctionActions.restrict_post',
+        restrict_comment: 'admin.usersExtra.sanctionActions.restrict_comment',
+        restrict_community:
+            'admin.usersExtra.sanctionActions.restrict_community',
+        restrict_message: 'admin.usersExtra.sanctionActions.restrict_message',
+        restrict_ad: 'admin.usersExtra.sanctionActions.restrict_ad',
+        lift_restriction: 'admin.usersExtra.sanctionActions.lift_restriction',
+    };
+    const key = map[action];
+
+    return key ? t(key) : action;
+}
+
 const activeTab = ref<
     'overview' | 'activity' | 'security' | 'finance' | 'audits'
 >('overview');
@@ -386,9 +444,13 @@ function sendReset(): void {
                             {{ account.violations_count }}
                         </Badge>
                         <Badge v-if="account.suspended_until" variant="outline">
-                            Until:
                             {{
-                                formatDateTime(account.suspended_until, locale)
+                                t('admin.usersExtra.suspendedUntil', {
+                                    date: formatDateTime(
+                                        account.suspended_until,
+                                        locale,
+                                    ),
+                                })
                             }}
                         </Badge>
                     </div>
@@ -480,14 +542,18 @@ function sendReset(): void {
                         <Input v-model="editForm.name" class="h-9 text-xs" />
                     </div>
                     <div class="space-y-1">
-                        <Label class="text-xs">Username</Label>
+                        <Label class="text-xs">{{
+                            t('admin.usersExtra.usernameLabel')
+                        }}</Label>
                         <Input
                             v-model="editForm.username"
                             class="h-9 text-xs"
                         />
                     </div>
                     <div class="space-y-1">
-                        <Label class="text-xs">Timezone</Label>
+                        <Label class="text-xs">{{
+                            t('admin.usersExtra.timezoneLabel')
+                        }}</Label>
                         <Input
                             v-model="editForm.timezone"
                             class="h-9 text-xs"
@@ -532,7 +598,12 @@ function sendReset(): void {
                                 :key="r.slug"
                                 :value="r.slug"
                             >
-                                {{ r.name }} (L{{ r.hierarchy_level }})
+                                {{
+                                    t('admin.usersExtra.roleWithLevel', {
+                                        name: r.name,
+                                        level: r.hierarchy_level,
+                                    })
+                                }}
                             </option>
                         </select>
                         <Button
@@ -658,7 +729,12 @@ function sendReset(): void {
                         </div>
                         <p class="mt-1 text-muted-foreground">{{ s.reason }}</p>
                         <p class="mt-1 text-[11px] text-muted-foreground">
-                            @{{ s.actor_username || 'system' }} ·
+                            {{
+                                s.actor_username
+                                    ? `@${s.actor_username}`
+                                    : t('admin.usersExtra.systemActor')
+                            }}
+                            ·
                             {{ formatDateTime(s.starts_at, locale) }}
                             <span v-if="s.ends_at">
                                 → {{ formatDateTime(s.ends_at, locale) }}</span
@@ -691,7 +767,7 @@ function sendReset(): void {
                             {{ p.excerpt }}
                         </p>
                         <p class="mt-1 text-[11px] text-muted-foreground">
-                            {{ p.moderation_status }} ·
+                            {{ moderationStatusLabel(p.moderation_status) }} ·
                             {{ formatDateTime(p.created_at, locale) }}
                         </p>
                     </div>
@@ -709,7 +785,14 @@ function sendReset(): void {
                     >
                         <p class="text-foreground">{{ c.excerpt }}</p>
                         <p class="mt-1 text-[11px] text-muted-foreground">
-                            Post #{{ c.post_id }} · {{ c.moderation_status }}
+                            {{
+                                t('admin.usersExtra.commentPostMeta', {
+                                    id: c.post_id,
+                                    status: moderationStatusLabel(
+                                        c.moderation_status,
+                                    ),
+                                })
+                            }}
                         </p>
                     </div>
                 </div>
@@ -757,7 +840,7 @@ function sendReset(): void {
                     >
                         <div>
                             <span class="font-mono font-semibold">{{
-                                h.event_type
+                                loginEventLabel(h.event_type)
                             }}</span>
                             <span class="ms-2 text-muted-foreground">{{
                                 h.ip_address || '-'
@@ -846,7 +929,8 @@ function sendReset(): void {
                                 {{ e.description }}
                             </p>
                             <p class="text-[11px] text-muted-foreground">
-                                {{ e.type }} · {{ e.wallet_bucket }}
+                                {{ e.type }} ·
+                                {{ bucketLabel(e.wallet_bucket) }}
                             </p>
                         </div>
                         <span class="font-mono font-semibold">{{
@@ -873,7 +957,12 @@ function sendReset(): void {
                             {{ a.action }}
                         </p>
                         <p class="text-[11px] text-muted-foreground">
-                            @{{ a.actor_username || 'system' }} ·
+                            {{
+                                a.actor_username
+                                    ? `@${a.actor_username}`
+                                    : t('admin.usersExtra.systemActor')
+                            }}
+                            ·
                             {{ a.ip_address || '-' }}
                         </p>
                     </div>
@@ -887,11 +976,15 @@ function sendReset(): void {
         <!-- Sanction Reason + Duration Dialog -->
         <ReasonDialog
             v-model:open="sanctionDialogOpen"
-            :title="`${t('admin.users.sanctions')}: ${sanctionAction}`"
+            :title="
+                t('admin.usersExtra.sanctionDialogTitle', {
+                    action: sanctionActionLabel(sanctionAction),
+                })
+            "
             :description="`@${account.username} (${account.email})`"
             :consequence="
                 sanctionAction === 'ban'
-                    ? 'Permanent ban immediately revokes all sessions and blocks login.'
+                    ? t('admin.usersExtra.permanentBanConsequence')
                     : undefined
             "
             :processing="sanctionProcessing"
@@ -909,6 +1002,7 @@ function sendReset(): void {
                 <Label class="text-xs">{{ t('admin.common.duration') }}</Label>
                 <select
                     v-model="sanctionDuration"
+                    :aria-label="t('admin.common.duration')"
                     class="h-9 w-full rounded-lg border border-input bg-background px-3 text-xs"
                 >
                     <option value="1h">

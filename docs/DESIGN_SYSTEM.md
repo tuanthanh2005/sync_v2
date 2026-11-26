@@ -33,7 +33,7 @@ Tham chiếu thẩm mỹ từ 4 mockup giao diện cộng đồng kết hợp Sa
 
 - **Font chữ**: `Be Vietnam Pro` (weights 400, 500, 600, 700) cấu hình tự host qua `laravel-vite-plugin/fonts` (`bunny('Be Vietnam Pro')`), kết hợp fallback hệ thống cho chữ Ả Rập, CJK, Thái và Devanagari.
 - **Icons**: `@lucide/vue` cho toàn bộ điều hướng, trạng thái và thao tác (không dùng emoji làm icon điều hướng).
-- **15 Ngôn ngữ & Cờ SVG nội bộ**: Hỗ trợ `en` (mặc định/fallback), `vi`, `es`, `pt-BR`, `id`, `hi`, `th`, `fil`, `fr`, `de`, `ja`, `ko`, `zh-CN`, `ar` (RTL), `tr`. Lá cờ sử dụng `FlagIcon.vue` (inline SVG nội bộ, không phụ thuộc CDN).
+- **15 Ngôn ngữ & Cờ SVG nội bộ (Single Source of Truth `config/localization.php`)**: Hỗ trợ `en` (mặc định/fallback), `vi`, `es`, `pt-BR`, `id`, `hi`, `th`, `fil`, `fr`, `de`, `ja`, `ko`, `zh-CN`, `ar` (RTL), `tr`. Lá cờ sử dụng `FlagIcon.vue` (inline SVG nội bộ, không phụ thuộc CDN, không dùng cờ làm tín hiệu ép ngôn ngữ theo IP). Mọi UI text, modal, tooltip, `placeholder`, `aria-label` và `sr-only` bắt buộc dùng `vue-i18n` + CSS logical properties (`ms-*`/`me-*`/`ps-*`/`pe-*`/`text-start`/`text-end`) và đạt `php artisan localization:audit --strict` = 0 lỗi. Xem thêm `docs/LOCALIZATION_ARCHITECTURE.md`, `docs/INTERNATIONALIZATION_GUIDELINES.md` và `docs/TRANSLATION_GLOSSARY.md`.
 - **Language Switcher tìm kiếm**: `LocaleSwitcher.vue` hiển thị cờ SVG + tên bản địa + ô tìm kiếm nhanh, đồng bộ reactive với `Laravel Localization` (`SetLocale`, `LocaleController`, `lang/*.json`), `vue-i18n` (`resources/js/i18n/`) và `document.documentElement.dir` (`rtl`/`ltr`). Tên thương hiệu lấy từ `page.props.name` (`config('app.name')`).
 
 ## 4. Bố cục Người dùng, Administration Center & Hệ thống Footer

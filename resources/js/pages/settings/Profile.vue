@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Form, Head, Link, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { computed, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
@@ -11,19 +12,20 @@ import { Label } from '@/components/ui/label';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 
-defineOptions({
-    layout: {
+const { t } = useI18n();
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+
+watchEffect(() => {
+    setLayoutProps({
         breadcrumbs: [
             {
-                title: 'Hồ sơ cá nhân',
+                title: t('settings.profile.breadcrumb'),
                 href: edit(),
             },
         ],
-    },
+    });
 });
-
-const page = usePage();
-const user = computed(() => page.props.auth.user);
 
 const timezoneOptions = [
     { value: 'Asia/Ho_Chi_Minh', label: 'Asia/Ho_Chi_Minh (GMT+7)' },
@@ -35,15 +37,15 @@ const timezoneOptions = [
 
 <template>
     <div class="space-y-10">
-        <Head title="Hồ sơ cá nhân" />
+        <Head :title="t('settings.profile.pageTitle')" />
 
-        <h1 class="sr-only">Cài đặt hồ sơ cá nhân</h1>
+        <h1 class="sr-only">{{ t('settings.profile.srHeading') }}</h1>
 
         <div v-if="user" class="flex flex-col space-y-6">
             <Heading
                 variant="small"
-                title="Thông tin hồ sơ"
-                description="Cập nhật tên hiển thị, định danh @username, email và múi giờ của bạn"
+                :title="t('settings.profile.headingTitle')"
+                :description="t('settings.profile.headingDescription')"
             />
 
             <Form
@@ -52,7 +54,9 @@ const timezoneOptions = [
                 v-slot="{ errors, processing }"
             >
                 <div class="grid gap-2">
-                    <Label for="name">Họ và tên</Label>
+                    <Label for="name">{{
+                        t('settings.profile.nameLabel')
+                    }}</Label>
                     <Input
                         id="name"
                         class="mt-1 block w-full"
@@ -60,13 +64,15 @@ const timezoneOptions = [
                         :default-value="user.name"
                         required
                         autocomplete="name"
-                        placeholder="Nguyễn Minh Anh"
+                        :placeholder="t('settings.profile.namePlaceholder')"
                     />
                     <InputError class="mt-1" :message="errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="username">Tên người dùng (@username)</Label>
+                    <Label for="username">{{
+                        t('settings.profile.usernameLabel')
+                    }}</Label>
                     <Input
                         id="username"
                         class="mt-1 block w-full"
@@ -74,13 +80,15 @@ const timezoneOptions = [
                         :default-value="user.username"
                         required
                         autocomplete="username"
-                        placeholder="minh_anh"
+                        :placeholder="t('settings.profile.usernamePlaceholder')"
                     />
                     <InputError class="mt-1" :message="errors.username" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Địa chỉ email</Label>
+                    <Label for="email">{{
+                        t('settings.profile.emailLabel')
+                    }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -89,13 +97,15 @@ const timezoneOptions = [
                         :default-value="user.email"
                         required
                         autocomplete="email"
-                        placeholder="ban@example.com"
+                        :placeholder="t('settings.profile.emailPlaceholder')"
                     />
                     <InputError class="mt-1" :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="timezone">Múi giờ hiển thị</Label>
+                    <Label for="timezone">{{
+                        t('settings.profile.timezoneLabel')
+                    }}</Label>
                     <select
                         id="timezone"
                         name="timezone"
@@ -117,39 +127,21 @@ const timezoneOptions = [
                     v-if="page.props.mustVerifyEmail && !user.email_verified_at"
                 >
                     <p class="-mt-2 text-sm text-muted-foreground">
-                        Địa chỉ email của bạn chưa được xác minh.
+                        {{ t('settings.profile.emailUnverified') }}
                         <Link
                             :href="send()"
                             as="button"
                             class="font-medium text-primary underline underline-offset-4"
                         >
-                            Nhấn vào đây để gửi lại email xác minh.
+                            {{ t('settings.profile.resendVerification') }}
                         </Link>
                     </p>
 
                     <div
                         v-if="page.props.status === 'verification-link-sent'"
-                        class="mt-2 text-sm font-medium text-emerald-600 dark:text-emerald-400"
+                        class="mt-2 text-sm font-medium text-success"
                     >
-                        <p class="-mt-2 text-sm text-muted-foreground">
-                            Địa chỉ email của bạn chưa được xác minh.
-                            <Link
-                                :href="send()"
-                                as="button"
-                                class="font-medium text-primary underline underline-offset-4"
-                            >
-                                Nhấn vào đây để gửi lại email xác minh.
-                            </Link>
-                        </p>
-
-                        <div
-                            v-if="
-                                page.props.status === 'verification-link-sent'
-                            "
-                            class="mt-2 text-sm font-medium text-success"
-                        >
-                            Liên kết xác minh mới đã được gửi đến email của bạn.
-                        </div>
+                        {{ t('settings.profile.verificationLinkSent') }}
                     </div>
                 </div>
 
@@ -159,7 +151,7 @@ const timezoneOptions = [
                         :disabled="processing"
                         data-test="update-profile-button"
                     >
-                        Lưu thay đổi
+                        {{ t('settings.profile.saveChanges') }}
                     </Button>
                 </div>
             </Form>

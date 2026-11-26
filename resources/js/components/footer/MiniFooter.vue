@@ -15,7 +15,7 @@ const footer = computed(() => page.props.footer);
 
 <template>
     <footer
-        aria-label="Mini Footer"
+        :aria-label="t('accessibility.miniFooter')"
         class="rounded-xl border border-border bg-card p-4 shadow-xs"
     >
         <FooterLinkList

@@ -51,6 +51,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
 import { formatVnd } from '@/lib/currency';
+import { formatDate, formatNumber } from '@/lib/formatters';
 import { home } from '@/routes';
 import { index as walletIndex } from '@/routes/wallet';
 import type {
@@ -80,7 +81,6 @@ const props = defineProps<{
 }>();
 
 const { t, locale } = useI18n();
-const lang = computed<'vi' | 'en'>(() => (locale.value === 'en' ? 'en' : 'vi'));
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const { getInitials } = useInitials();
@@ -246,7 +246,7 @@ function updateCampaignStatus(
 
         <!-- Top Breadcrumb Strip (Mockup 3) -->
         <nav
-            aria-label="Breadcrumb"
+            :aria-label="t('accessibility.breadcrumb')"
             class="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground"
         >
             <Link :href="home()" class="hover:text-foreground">
@@ -388,7 +388,10 @@ function updateCampaignStatus(
                         <img
                             v-if="selectedPost.image"
                             :src="selectedPost.image"
-                            :alt="selectedPost.title || 'Post preview'"
+                            :alt="
+                                selectedPost.title ||
+                                t('ads.extra.postPreviewAlt')
+                            "
                             class="size-16 shrink-0 rounded-lg object-cover"
                         />
                         <div class="min-w-0 flex-1">
@@ -509,7 +512,9 @@ function updateCampaignStatus(
                                 <span>{{ topic }}</span>
                                 <button
                                     type="button"
-                                    :aria-label="`Remove ${topic}`"
+                                    :aria-label="
+                                        t('ads.extra.removeTopic', { topic })
+                                    "
                                     @click="removeTopic(topic)"
                                 >
                                     <X class="size-3" />
@@ -544,7 +549,7 @@ function updateCampaignStatus(
                                 id="ad-target-url"
                                 v-model="form.target_url"
                                 type="url"
-                                placeholder="https://..."
+                                :placeholder="t('ads.extra.urlPlaceholder')"
                             />
                             <InputError :message="form.errors.target_url" />
                         </div>
@@ -706,7 +711,7 @@ function updateCampaignStatus(
                                 :min="pricing.min_daily_budget_vnd"
                                 :max="pricing.max_daily_budget_vnd"
                                 step="10000"
-                                class="w-40 text-right font-semibold"
+                                class="w-40 text-end font-semibold"
                             />
                         </div>
                         <input
@@ -721,12 +726,12 @@ function updateCampaignStatus(
                             class="flex justify-between text-[11px] text-muted-foreground"
                         >
                             <span>{{
-                                formatVnd(pricing.min_daily_budget_vnd, lang)
+                                formatVnd(pricing.min_daily_budget_vnd, locale)
                             }}</span>
                             <span class="font-semibold text-foreground">{{
-                                formatVnd(form.daily_budget, lang)
+                                formatVnd(form.daily_budget, locale)
                             }}</span>
-                            <span>{{ formatVnd(1000000, lang) }}</span>
+                            <span>{{ formatVnd(1000000, locale) }}</span>
                         </div>
 
                         <div class="flex items-center justify-between gap-3">
@@ -777,14 +782,14 @@ function updateCampaignStatus(
                                         days: form.duration_days,
                                         amount: formatVnd(
                                             form.daily_budget,
-                                            lang,
+                                            locale,
                                         ),
                                     })
                                 }}
                             </p>
                         </div>
                         <p class="text-base font-bold text-primary">
-                            {{ formatVnd(effectiveTotalBudget, lang) }}
+                            {{ formatVnd(effectiveTotalBudget, locale) }}
                         </p>
                     </div>
 
@@ -879,7 +884,14 @@ function updateCampaignStatus(
                                     <AvatarFallback
                                         class="bg-primary-soft text-xs font-bold text-accent-foreground"
                                     >
-                                        {{ getInitials(user?.name ?? 'User') }}
+                                        {{
+                                            getInitials(
+                                                user?.name ??
+                                                    t(
+                                                        'common.extra.userFallback',
+                                                    ),
+                                            )
+                                        }}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
@@ -899,7 +911,7 @@ function updateCampaignStatus(
                                 variant="soft"
                                 class="text-[10px] font-semibold"
                             >
-                                <Zap class="mr-1 size-3" />
+                                <Zap class="me-1 size-3" />
                                 {{ t('ads.sponsoredTag') }}
                             </Badge>
                         </div>
@@ -917,7 +929,10 @@ function updateCampaignStatus(
                             <img
                                 v-if="selectedPost.image"
                                 :src="selectedPost.image"
-                                :alt="selectedPost.title || 'Ad creative'"
+                                :alt="
+                                    selectedPost.title ||
+                                    t('ads.extra.adCreativeAlt')
+                                "
                                 class="max-h-44 w-full rounded-lg object-cover"
                             />
                         </div>
@@ -961,8 +976,8 @@ function updateCampaignStatus(
                                 {{ t('ads.estReach') }}
                             </p>
                             <p class="mt-0.5 text-xs font-bold text-foreground">
-                                {{ estimatedReachMin.toLocaleString() }}–{{
-                                    estimatedReachMax.toLocaleString()
+                                {{ formatNumber(estimatedReachMin, locale) }}–{{
+                                    formatNumber(estimatedReachMax, locale)
                                 }}
                             </p>
                         </div>
@@ -976,8 +991,10 @@ function updateCampaignStatus(
                                 {{ t('ads.estClicks') }}
                             </p>
                             <p class="mt-0.5 text-xs font-bold text-foreground">
-                                {{ estimatedClicksMin.toLocaleString() }}–{{
-                                    estimatedClicksMax.toLocaleString()
+                                {{
+                                    formatNumber(estimatedClicksMin, locale)
+                                }}–{{
+                                    formatNumber(estimatedClicksMax, locale)
                                 }}
                             </p>
                         </div>
@@ -989,7 +1006,8 @@ function updateCampaignStatus(
                                 {{ t('ads.estAvgCpc') }}
                             </p>
                             <p class="mt-0.5 text-xs font-bold text-foreground">
-                                ~ {{ formatVnd(pricing.click_cost_vnd, lang) }}
+                                ~
+                                {{ formatVnd(pricing.click_cost_vnd, locale) }}
                             </p>
                         </div>
                     </div>
@@ -1014,7 +1032,7 @@ function updateCampaignStatus(
                                 <span>{{ t('ads.walletBoxTitle') }}</span>
                             </p>
                             <p class="mt-1 text-xl font-bold text-foreground">
-                                {{ formatVnd(wallet.balance, lang) }}
+                                {{ formatVnd(wallet.balance, locale) }}
                             </p>
                         </div>
                         <Button
@@ -1049,14 +1067,14 @@ function updateCampaignStatus(
                                     ? t('ads.sufficientWallet', {
                                           amount: formatVnd(
                                               effectiveTotalBudget,
-                                              lang,
+                                              locale,
                                           ),
                                       })
                                     : t('ads.insufficientWallet', {
                                           amount: formatVnd(
                                               effectiveTotalBudget -
                                                   wallet.balance,
-                                              lang,
+                                              locale,
                                           ),
                                       })
                             }}
@@ -1077,11 +1095,11 @@ function updateCampaignStatus(
 
                     <p
                         v-if="hasSufficientWallet"
-                        class="text-right text-[11px] text-muted-foreground"
+                        class="text-end text-[11px] text-muted-foreground"
                     >
                         {{
                             t('ads.remainingAfter', {
-                                amount: formatVnd(remainingWalletAfter, lang),
+                                amount: formatVnd(remainingWalletAfter, locale),
                             })
                         }}
                     </p>
@@ -1138,12 +1156,16 @@ function updateCampaignStatus(
                             </Badge>
                         </div>
                         <p class="mt-1 text-xs text-muted-foreground">
-                            {{ formatVnd(campaign.spent_amount, lang) }} /
-                            {{ formatVnd(campaign.total_budget, lang) }} ·
-                            {{ campaign.impressions_count.toLocaleString() }}
-                            views ·
-                            {{ campaign.clicks_count.toLocaleString() }} clicks
-                            ({{ campaign.ctr_percent }}% CTR)
+                            {{ formatVnd(campaign.spent_amount, locale) }} /
+                            {{ formatVnd(campaign.total_budget, locale) }} ·
+                            {{
+                                formatNumber(campaign.impressions_count, locale)
+                            }}
+                            {{ t('ads.extra.viewsUnit') }} ·
+                            {{ formatNumber(campaign.clicks_count, locale) }}
+                            {{ t('ads.extra.clicksUnit') }} ({{
+                                campaign.ctr_percent
+                            }}% {{ t('ads.extra.ctrUnit') }})
                         </p>
                         <p
                             v-if="campaign.rejection_reason"
@@ -1244,7 +1266,9 @@ function updateCampaignStatus(
                         {{ t('ads.totalImpressions') }}
                     </p>
                     <p class="mt-1.5 text-2xl font-bold text-foreground">
-                        {{ statsSummary.total_impressions.toLocaleString() }}
+                        {{
+                            formatNumber(statsSummary.total_impressions, locale)
+                        }}
                     </p>
                 </div>
                 <div
@@ -1256,7 +1280,7 @@ function updateCampaignStatus(
                         }}%)
                     </p>
                     <p class="mt-1.5 text-2xl font-bold text-foreground">
-                        {{ statsSummary.total_clicks.toLocaleString() }}
+                        {{ formatNumber(statsSummary.total_clicks, locale) }}
                     </p>
                 </div>
                 <div
@@ -1266,7 +1290,7 @@ function updateCampaignStatus(
                         {{ t('ads.totalSpent') }}
                     </p>
                     <p class="mt-1.5 text-2xl font-bold text-foreground">
-                        {{ formatVnd(statsSummary.total_spent, lang) }}
+                        {{ formatVnd(statsSummary.total_spent, locale) }}
                     </p>
                 </div>
             </div>
@@ -1290,10 +1314,16 @@ function updateCampaignStatus(
                         <div
                             class="flex items-center gap-4 text-muted-foreground"
                         >
-                            <span>{{ row.impressions }} views</span>
-                            <span>{{ row.clicks }} clicks</span>
+                            <span
+                                >{{ formatNumber(row.impressions, locale) }}
+                                {{ t('ads.extra.viewsUnit') }}</span
+                            >
+                            <span
+                                >{{ formatNumber(row.clicks, locale) }}
+                                {{ t('ads.extra.clicksUnit') }}</span
+                            >
                             <span class="font-semibold text-foreground">{{
-                                formatVnd(row.spent, lang)
+                                formatVnd(row.spent, locale)
                             }}</span>
                         </div>
                     </div>
@@ -1314,12 +1344,12 @@ function updateCampaignStatus(
                     <h2 class="text-sm font-bold text-foreground">
                         {{ t('wallet.balance') }}:
                         <span class="text-primary">{{
-                            formatVnd(wallet.balance, lang)
+                            formatVnd(wallet.balance, locale)
                         }}</span>
                     </h2>
                     <p class="text-xs text-muted-foreground">
                         {{ t('wallet.heldBalance') }}:
-                        {{ formatVnd(wallet.held_balance, lang) }}
+                        {{ formatVnd(wallet.held_balance, locale) }}
                     </p>
                 </div>
                 <Button size="sm" class="rounded-lg" as-child>
@@ -1344,16 +1374,16 @@ function updateCampaignStatus(
                             {{ entry.description }}
                         </p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-end">
                         <p class="font-bold text-foreground">
-                            {{ formatVnd(entry.amount, lang) }}
+                            {{ formatVnd(entry.amount, locale) }}
                         </p>
                         <p
                             class="flex items-center justify-end gap-1 text-[11px] text-muted-foreground"
                         >
                             <Clock class="size-3" />
                             <span>{{
-                                new Date(entry.created_at).toLocaleDateString()
+                                formatDate(entry.created_at, locale)
                             }}</span>
                         </p>
                     </div>
@@ -1391,7 +1421,7 @@ function updateCampaignStatus(
                         <img
                             v-if="item.image"
                             :src="item.image"
-                            :alt="item.title || 'Post'"
+                            :alt="item.title || t('ads.extra.postAlt')"
                             class="size-12 shrink-0 rounded-lg object-cover"
                         />
                         <div class="min-w-0 flex-1">

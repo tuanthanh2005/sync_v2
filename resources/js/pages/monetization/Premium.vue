@@ -17,7 +17,7 @@ import PaymentConfirmModal from '@/components/monetization/PaymentConfirmModal.v
 import PendingLimitModal from '@/components/monetization/PendingLimitModal.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import { Button } from '@/components/ui/button';
-import { formatMoney } from '@/lib/currency';
+import { defaultCurrencyForLocale, formatMoney } from '@/lib/currency';
 import { formatDate } from '@/lib/formatters';
 import { login } from '@/routes';
 import { premium as accountPremiumRoute } from '@/routes/account';
@@ -68,7 +68,7 @@ const { t, te, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-const currency = ref<'VND' | 'USD'>(locale.value === 'vi' ? 'VND' : 'USD');
+const currency = ref<'VND' | 'USD'>(defaultCurrencyForLocale(locale.value));
 const selectedProvider = ref<string>(props.paymentMethods[0]?.code ?? 'vietqr');
 const confirmOpen = ref(false);
 const limitOpen = ref(false);
@@ -120,7 +120,9 @@ function localizedPlanTitle(
     );
 
     if (isSeededEnglishName) {
-        return `SyncViet Premium · ${durationLabel}`;
+        return t('monetization.checkout.premiumPlanTitle', {
+            duration: durationLabel,
+        });
     }
 
     return plan.name;
@@ -487,7 +489,7 @@ function submitPurchase(): void {
                         ]"
                         @click="currency = 'VND'"
                     >
-                        VND (₫)
+                        {{ t('monetization.checkout.currencyVnd') }}
                     </button>
                     <button
                         type="button"
@@ -500,7 +502,7 @@ function submitPurchase(): void {
                         ]"
                         @click="currency = 'USD'"
                     >
-                        USD ($)
+                        {{ t('monetization.checkout.currencyUsd') }}
                     </button>
                 </div>
             </div>
@@ -516,7 +518,7 @@ function submitPurchase(): void {
                 <h1
                     class="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
                 >
-                    SyncViet Premium
+                    {{ t('monetization.services.premiumTitle') }}
                 </h1>
 
                 <p
@@ -1081,7 +1083,7 @@ function submitPurchase(): void {
         <PaymentConfirmModal
             v-if="selectedCard && activeMethod"
             v-model:open="confirmOpen"
-            service-name="SyncViet Premium"
+            :service-name="t('monetization.services.premiumTitle')"
             :item-name="selectedCard.displayTitle"
             :duration-label="selectedCard.durationLabel"
             :amount="selectedCard.effectivePrice"

@@ -17,7 +17,7 @@ const footer = computed(() => page.props.footer);
 
 <template>
     <footer
-        aria-label="Footer"
+        :aria-label="t('accessibility.footer')"
         class="border-t border-border bg-card text-card-foreground"
     >
         <div class="mx-auto max-w-[1360px] px-4 py-10 lg:px-6">

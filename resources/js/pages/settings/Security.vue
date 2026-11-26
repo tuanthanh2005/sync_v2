@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import { History, Laptop, LogOut, ShieldAlert } from '@lucide/vue';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -21,6 +22,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { formatDateTime } from '@/lib/formatters';
 import { edit } from '@/routes/security';
 import type { BrowserSessionItem, LoginHistoryItem } from '@/types';
 
@@ -41,25 +43,26 @@ const props = withDefaults(defineProps<Props>(), {
     requiresAdminTwoFactor: false,
 });
 
+const { t, locale } = useI18n();
 const logoutDialogOpen = ref(false);
 
-defineOptions({
-    layout: {
+watchEffect(() => {
+    setLayoutProps({
         breadcrumbs: [
             {
-                title: 'Bảo mật & 2FA',
+                title: t('settings.security.breadcrumb'),
                 href: edit(),
             },
         ],
-    },
+    });
 });
 </script>
 
 <template>
     <div class="space-y-10">
-        <Head title="Bảo mật & 2FA" />
+        <Head :title="t('settings.security.pageTitle')" />
 
-        <h1 class="sr-only">Cài đặt bảo mật</h1>
+        <h1 class="sr-only">{{ t('settings.security.srHeading') }}</h1>
 
         <div
             v-if="requiresAdminTwoFactor"
@@ -69,11 +72,10 @@ defineOptions({
             <ShieldAlert class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
             <div>
                 <p class="font-semibold">
-                    Quản trị viên bắt buộc bật xác thực 2 lớp (2FA)
+                    {{ t('settings.security.adminTwoFactorRequiredTitle') }}
                 </p>
                 <p class="mt-0.5 text-xs opacity-90">
-                    Vui lòng kích hoạt 2FA bên dưới để mở khóa toàn bộ chức năng
-                    quản trị hệ thống.
+                    {{ t('settings.security.adminTwoFactorRequiredDesc') }}
                 </p>
             </div>
         </div>
@@ -82,12 +84,14 @@ defineOptions({
             <Heading
                 variant="small"
                 :title="
-                    hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu lần đầu'
+                    hasPassword
+                        ? t('settings.security.updatePasswordTitle')
+                        : t('settings.security.setPasswordTitle')
                 "
                 :description="
                     hasPassword
-                        ? 'Sử dụng mật khẩu mạnh và duy nhất để bảo vệ tài khoản của bạn'
-                        : 'Tạo mật khẩu cho tài khoản Google của bạn để bật xác thực 2 lớp (2FA) và quản lý phiên đăng nhập'
+                        ? t('settings.security.updatePasswordDesc')
+                        : t('settings.security.setPasswordDesc')
                 "
             />
 
@@ -106,40 +110,50 @@ defineOptions({
                 v-slot="{ errors, processing }"
             >
                 <div v-if="hasPassword" class="grid gap-2">
-                    <Label for="current_password">Mật khẩu hiện tại</Label>
+                    <Label for="current_password">{{
+                        t('settings.security.currentPassword')
+                    }}</Label>
                     <PasswordInput
                         id="current_password"
                         name="current_password"
                         class="mt-1 block w-full"
                         autocomplete="current-password"
-                        placeholder="Nhập mật khẩu hiện tại"
+                        :placeholder="
+                            t('settings.security.currentPasswordPlaceholder')
+                        "
                     />
                     <InputError :message="errors.current_password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Mật khẩu mới</Label>
+                    <Label for="password">{{
+                        t('settings.security.newPassword')
+                    }}</Label>
                     <PasswordInput
                         id="password"
                         name="password"
                         class="mt-1 block w-full"
                         autocomplete="new-password"
-                        placeholder="Nhập mật khẩu mới"
+                        :placeholder="
+                            t('settings.security.newPasswordPlaceholder')
+                        "
                         :passwordrules="props.passwordRules"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation"
-                        >Xác nhận mật khẩu mới</Label
-                    >
+                    <Label for="password_confirmation">{{
+                        t('settings.security.confirmNewPassword')
+                    }}</Label>
                     <PasswordInput
                         id="password_confirmation"
                         name="password_confirmation"
                         class="mt-1 block w-full"
                         autocomplete="new-password"
-                        placeholder="Nhập lại mật khẩu mới"
+                        :placeholder="
+                            t('settings.security.confirmNewPasswordPlaceholder')
+                        "
                         :passwordrules="props.passwordRules"
                     />
                     <InputError :message="errors.password_confirmation" />
@@ -151,7 +165,11 @@ defineOptions({
                         :disabled="processing"
                         data-test="update-password-button"
                     >
-                        {{ hasPassword ? 'Cập nhật mật khẩu' : 'Đặt mật khẩu' }}
+                        {{
+                            hasPassword
+                                ? t('settings.security.updatePasswordBtn')
+                                : t('settings.security.setPasswordBtn')
+                        }}
                     </Button>
                 </div>
             </Form>
@@ -169,12 +187,11 @@ defineOptions({
         >
             <Heading
                 variant="small"
-                title="Xác thực 2 lớp (2FA)"
-                description="Bảo vệ tài khoản bằng mã TOTP từ ứng dụng xác thực"
+                :title="t('settings.twoFactor.headingTitle')"
+                :description="t('settings.twoFactor.headingDescription')"
             />
             <p class="text-sm text-muted-foreground">
-                Vui lòng đặt mật khẩu ở mục bên trên trước, sau đó bạn có thể
-                bật xác thực 2 lớp (2FA) ngay tại đây.
+                {{ t('settings.security.setPasswordFirstFor2fa') }}
             </p>
         </div>
 
@@ -182,8 +199,8 @@ defineOptions({
         <div class="space-y-4">
             <Heading
                 variant="small"
-                title="Phiên đăng nhập & Thiết bị"
-                description="Quản lý và thu hồi các phiên trình duyệt khác đang đăng nhập tài khoản của bạn"
+                :title="t('settings.security.sessionsTitle')"
+                :description="t('settings.security.sessionsDesc')"
             />
 
             <div
@@ -204,15 +221,21 @@ defineOptions({
                             <p class="truncate font-medium text-foreground">
                                 {{
                                     session.user_agent ||
-                                    'Trình duyệt không xác định'
+                                    t('settings.security.unknownBrowser')
                                 }}
                             </p>
                             <p class="text-muted-foreground">
-                                IP: {{ session.ip_address || '-' }} ·
                                 {{
-                                    new Date(
+                                    t('settings.security.ipLabel', {
+                                        ip: session.ip_address || '-',
+                                    })
+                                }}
+                                ·
+                                {{
+                                    formatDateTime(
                                         session.last_active_at,
-                                    ).toLocaleString()
+                                        locale,
+                                    )
                                 }}
                             </p>
                         </div>
@@ -222,7 +245,7 @@ defineOptions({
                         variant="secondary"
                         class="shrink-0 text-[10px]"
                     >
-                        Thiết bị hiện tại
+                        {{ t('settings.security.currentDevice') }}
                     </Badge>
                 </div>
             </div>
@@ -235,7 +258,9 @@ defineOptions({
                         data-test="logout-other-sessions-button"
                     >
                         <LogOut class="size-4" />
-                        <span>Đăng xuất khỏi tất cả thiết bị khác</span>
+                        <span>{{
+                            t('settings.security.logoutOtherSessionsBtn')
+                        }}</span>
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -248,24 +273,33 @@ defineOptions({
                     >
                         <DialogHeader>
                             <DialogTitle>
-                                Đăng xuất tất cả thiết bị khác
+                                {{
+                                    t(
+                                        'settings.security.logoutOtherSessionsTitle',
+                                    )
+                                }}
                             </DialogTitle>
                             <DialogDescription>
-                                Nhập mật khẩu hiện tại để xác nhận đăng xuất
-                                khỏi mọi trình duyệt và thiết bị khác.
+                                {{
+                                    t(
+                                        'settings.security.logoutOtherSessionsDesc',
+                                    )
+                                }}
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="grid gap-2">
-                            <Label for="logout_sessions_password"
-                                >Mật khẩu hiện tại</Label
-                            >
+                            <Label for="logout_sessions_password">{{
+                                t('settings.security.currentPassword')
+                            }}</Label>
                             <PasswordInput
                                 id="logout_sessions_password"
                                 name="password"
                                 required
                                 autocomplete="current-password"
-                                placeholder="Nhập mật khẩu"
+                                :placeholder="
+                                    t('settings.security.passwordPlaceholder')
+                                "
                             />
                             <InputError :message="errors.password" />
                         </div>
@@ -277,7 +311,7 @@ defineOptions({
                                     variant="secondary"
                                     class="rounded-lg"
                                 >
-                                    Hủy
+                                    {{ t('common.cancel') }}
                                 </Button>
                             </DialogClose>
                             <Button
@@ -286,7 +320,7 @@ defineOptions({
                                 :disabled="processing"
                                 data-test="confirm-logout-other-sessions-button"
                             >
-                                Xác nhận đăng xuất
+                                {{ t('settings.security.confirmLogoutBtn') }}
                             </Button>
                         </DialogFooter>
                     </Form>
@@ -300,8 +334,8 @@ defineOptions({
                 <History class="size-4 text-primary" aria-hidden="true" />
                 <Heading
                     variant="small"
-                    title="Lịch sử đăng nhập gần đây"
-                    description="Theo dõi các lần đăng nhập thành công, thất bại hoặc đăng xuất"
+                    :title="t('settings.security.loginHistoryTitle')"
+                    :description="t('settings.security.loginHistoryDesc')"
                 />
             </div>
 
@@ -326,16 +360,20 @@ defineOptions({
                             {{ entry.event_type }}
                         </Badge>
                         <span class="text-muted-foreground">
-                            IP: {{ entry.ip_address || '-' }}
+                            {{
+                                t('settings.security.ipLabel', {
+                                    ip: entry.ip_address || '-',
+                                })
+                            }}
                         </span>
                     </div>
                     <span class="text-muted-foreground">
-                        {{ new Date(entry.created_at).toLocaleString() }}
+                        {{ formatDateTime(entry.created_at, locale) }}
                     </span>
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                Chưa có bản ghi lịch sử đăng nhập nào cho phiên hiện tại.
+                {{ t('settings.security.emptyLoginHistory') }}
             </p>
         </div>
     </div>

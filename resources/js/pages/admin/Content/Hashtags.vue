@@ -83,7 +83,9 @@ function toggleFlag(
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-3">Hashtag</th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.contentExtra.colHashtag') }}
+                            </th>
                             <th class="py-2 pr-3">
                                 {{ t('admin.users.posts') }}
                             </th>
@@ -133,7 +135,11 @@ function toggleFlag(
                                             )
                                         "
                                     >
-                                        No Trend
+                                        {{
+                                            t(
+                                                'admin.contentExtra.hashtagNoTrend',
+                                            )
+                                        }}
                                     </Button>
                                     <Button
                                         size="sm"
@@ -147,7 +153,11 @@ function toggleFlag(
                                             toggleFlag(tag, 'is_restricted')
                                         "
                                     >
-                                        Restrict
+                                        {{
+                                            t(
+                                                'admin.contentExtra.hashtagRestrict',
+                                            )
+                                        }}
                                     </Button>
                                     <Button
                                         size="sm"
@@ -159,7 +169,7 @@ function toggleFlag(
                                         class="h-7 px-2 text-[11px]"
                                         @click="toggleFlag(tag, 'is_spam')"
                                     >
-                                        Spam
+                                        {{ t('admin.contentExtra.badgeSpam') }}
                                     </Button>
                                 </div>
                             </td>

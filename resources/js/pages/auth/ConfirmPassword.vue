@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
@@ -7,18 +9,19 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/password/confirm';
 
-defineOptions({
-    layout: {
-        title: 'Xác nhận mật khẩu',
-        description:
-            'Đây là khu vực bảo mật cao. Vui lòng nhập mật khẩu hiện tại để tiếp tục.',
-    },
+const { t } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
+        title: t('auth.confirmPassword.layoutTitle'),
+        description: t('auth.confirmPassword.layoutDescription'),
+    });
 });
 </script>
 
 <template>
     <div>
-        <Head title="Xác nhận mật khẩu" />
+        <Head :title="t('auth.confirmPassword.pageTitle')" />
 
         <Form
             v-bind="store.form()"
@@ -27,7 +30,9 @@ defineOptions({
         >
             <div class="space-y-6">
                 <div class="grid gap-2">
-                    <Label for="password">Mật khẩu</Label>
+                    <Label for="password">{{
+                        t('auth.fields.password')
+                    }}</Label>
                     <PasswordInput
                         id="password"
                         name="password"
@@ -47,7 +52,7 @@ defineOptions({
                         data-test="confirm-password-button"
                     >
                         <Spinner v-if="processing" />
-                        Xác nhận mật khẩu
+                        {{ t('auth.confirmPassword.submit') }}
                     </Button>
                 </div>
             </div>

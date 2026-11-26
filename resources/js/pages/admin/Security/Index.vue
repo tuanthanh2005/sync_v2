@@ -66,6 +66,32 @@ const { t, locale } = useI18n();
 const activeTab = ref(props.tab || 'audits');
 const searchInput = ref(props.filters.search);
 
+function loginEventLabel(eventType: string): string {
+    const map: Record<string, string> = {
+        login: 'admin.securityExtra.loginEvent.login',
+        success: 'admin.securityExtra.loginEvent.success',
+        failed: 'admin.securityExtra.loginEvent.failed',
+        logout: 'admin.securityExtra.loginEvent.logout',
+        lockout: 'admin.securityExtra.loginEvent.lockout',
+    };
+    const key = map[eventType.toLowerCase()];
+
+    return key ? t(key) : eventType;
+}
+
+function webhookStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        processed: 'admin.securityExtra.webhookStatus.processed',
+        received: 'admin.securityExtra.webhookStatus.received',
+        failed: 'admin.securityExtra.webhookStatus.failed',
+        ignored: 'admin.securityExtra.webhookStatus.ignored',
+        rejected: 'admin.securityExtra.webhookStatus.rejected',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
 function applySearch(): void {
     router.get(
         securityIndex.url(),
@@ -149,10 +175,18 @@ function revokeSession(sessionId: string): void {
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-3">Action</th>
-                            <th class="py-2 pr-3">Actor</th>
-                            <th class="py-2 pr-3">Target</th>
-                            <th class="py-2 pr-3">IP</th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.securityExtra.colAction') }}
+                            </th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.securityExtra.colActor') }}
+                            </th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.securityExtra.colTarget') }}
+                            </th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.securityExtra.colIp') }}
+                            </th>
                             <th class="py-2">
                                 {{ t('admin.common.createdAt') }}
                             </th>
@@ -164,7 +198,11 @@ function revokeSession(sessionId: string): void {
                                 {{ a.action }}
                             </td>
                             <td class="py-2.5 pr-3">
-                                @{{ a.actor_username || 'system' }}
+                                {{
+                                    a.actor_username
+                                        ? `@${a.actor_username}`
+                                        : t('admin.securityExtra.systemActor')
+                                }}
                             </td>
                             <td class="py-2.5 pr-3 text-muted-foreground">
                                 {{
@@ -217,7 +255,7 @@ function revokeSession(sessionId: string): void {
                                     : 'secondary'
                             "
                             class="text-[10px]"
-                            >{{ h.event_type }}</Badge
+                            >{{ loginEventLabel(h.event_type) }}</Badge
                         >
                         <span class="ms-2 font-semibold">{{
                             h.username
@@ -290,9 +328,11 @@ function revokeSession(sessionId: string): void {
                     <span class="font-mono font-semibold">{{
                         s.ip_address
                     }}</span>
-                    <Badge variant="destructive"
-                        >{{ s.attempts }} failed attempts (24h)</Badge
-                    >
+                    <Badge variant="destructive">{{
+                        t('admin.securityExtra.failedAttempts24h', {
+                            count: s.attempts,
+                        })
+                    }}</Badge>
                 </div>
             </div>
         </section>
@@ -322,10 +362,14 @@ function revokeSession(sessionId: string): void {
                             "
                             class="ms-2 text-[10px]"
                         >
-                            {{ w.signature_valid ? 'HMAC OK' : 'INVALID SIG' }}
+                            {{
+                                w.signature_valid
+                                    ? t('admin.securityExtra.hmacOk')
+                                    : t('admin.securityExtra.invalidSig')
+                            }}
                         </Badge>
                         <span class="ms-2 text-muted-foreground">{{
-                            w.status
+                            webhookStatusLabel(w.status)
                         }}</span>
                     </div>
                     <span class="text-muted-foreground">{{

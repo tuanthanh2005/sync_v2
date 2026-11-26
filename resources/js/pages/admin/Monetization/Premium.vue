@@ -163,7 +163,7 @@ function executeSubAction(reason: string): void {
         <!-- Editable Plans Table -->
         <section class="space-y-3 rounded-2xl border border-border bg-card p-5">
             <h2 class="text-sm font-bold text-foreground">
-                Premium Plans (Dynamic Pricing)
+                {{ t('admin.monetizationCenter.premium.plansTitle') }}
             </h2>
             <div class="grid gap-3 md:grid-cols-2">
                 <div
@@ -179,12 +179,22 @@ function executeSubAction(reason: string): void {
                         <Badge
                             :variant="plan.is_active ? 'success' : 'outline'"
                         >
-                            {{ plan.is_active ? 'Active' : 'Disabled' }}
+                            {{
+                                plan.is_active
+                                    ? t(
+                                          'admin.monetizationCenter.common.active',
+                                      )
+                                    : t(
+                                          'admin.monetizationCenter.common.disabled',
+                                      )
+                            }}
                         </Badge>
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <Label class="text-[11px]">Days</Label>
+                            <Label class="text-[11px]">{{
+                                t('admin.monetizationCenter.common.days')
+                            }}</Label>
                             <Input
                                 v-model.number="plan.duration_days"
                                 type="number"
@@ -192,7 +202,9 @@ function executeSubAction(reason: string): void {
                             />
                         </div>
                         <div>
-                            <Label class="text-[11px]">VND</Label>
+                            <Label class="text-[11px]">{{
+                                t('admin.monetizationCenter.common.vnd')
+                            }}</Label>
                             <Input
                                 v-model.number="plan.price_vnd"
                                 type="number"
@@ -200,7 +212,9 @@ function executeSubAction(reason: string): void {
                             />
                         </div>
                         <div>
-                            <Label class="text-[11px]">USD Cents</Label>
+                            <Label class="text-[11px]">{{
+                                t('admin.monetizationCenter.common.usdCents')
+                            }}</Label>
                             <Input
                                 v-model.number="plan.price_usd_cents"
                                 type="number"
@@ -217,14 +231,20 @@ function executeSubAction(reason: string): void {
                                     v-model="plan.is_active"
                                     type="checkbox"
                                 />
-                                <span>Active</span>
+                                <span>{{
+                                    t('admin.monetizationCenter.common.active')
+                                }}</span>
                             </label>
                             <label class="flex items-center gap-1.5">
                                 <input
                                     v-model="plan.is_featured"
                                     type="checkbox"
                                 />
-                                <span>Featured</span>
+                                <span>{{
+                                    t(
+                                        'admin.monetizationCenter.common.featured',
+                                    )
+                                }}</span>
                             </label>
                         </div>
                         <div class="flex items-center gap-2">
@@ -241,7 +261,9 @@ function executeSubAction(reason: string): void {
                                 @click="savePlan(plan)"
                             >
                                 <Save class="size-3.5" />
-                                <span>Save</span>
+                                <span>{{
+                                    t('admin.monetizationCenter.common.save')
+                                }}</span>
                             </Button>
                         </div>
                     </div>
@@ -258,24 +280,33 @@ function executeSubAction(reason: string): void {
                     class="flex items-center gap-2 text-sm font-bold text-foreground"
                 >
                     <Gift class="size-4 text-primary" />
-                    <span
-                        >Administrative Grant / Promotion (Zero Fake
-                        Payments)</span
-                    >
+                    <span>{{
+                        t('admin.monetizationCenter.premium.grantTitle')
+                    }}</span>
                 </h2>
                 <form @submit.prevent="submitGrant" class="space-y-3 text-xs">
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="grid gap-1">
-                            <Label>Username or Email</Label>
+                            <Label>{{
+                                t(
+                                    'admin.monetizationCenter.premium.usernameOrEmail',
+                                )
+                            }}</Label>
                             <Input
                                 v-model="grantForm.username"
-                                placeholder="username"
+                                :placeholder="
+                                    t(
+                                        'admin.monetizationCenter.premium.usernamePlaceholder',
+                                    )
+                                "
                                 required
                             />
                             <InputError :message="grantForm.errors.username" />
                         </div>
                         <div class="grid gap-1">
-                            <Label>Plan</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.premium.plan')
+                            }}</Label>
                             <select
                                 v-model.number="grantForm.premium_plan_id"
                                 class="h-9 rounded-lg border border-input bg-background px-2.5 text-xs"
@@ -292,7 +323,11 @@ function executeSubAction(reason: string): void {
                     </div>
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="grid gap-1">
-                            <Label>Duration (days)</Label>
+                            <Label>{{
+                                t(
+                                    'admin.monetizationCenter.common.durationDays',
+                                )
+                            }}</Label>
                             <Input
                                 v-model.number="grantForm.duration_days"
                                 type="number"
@@ -302,22 +337,42 @@ function executeSubAction(reason: string): void {
                             />
                         </div>
                         <div class="grid gap-1">
-                            <Label>Source</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.premium.source')
+                            }}</Label>
                             <select
                                 v-model="grantForm.source"
                                 class="h-9 rounded-lg border border-input bg-background px-2.5 text-xs"
                             >
-                                <option value="admin_grant">Admin Grant</option>
-                                <option value="promotion">Promotion</option>
+                                <option value="admin_grant">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.premium.sourceAdminGrant',
+                                        )
+                                    }}
+                                </option>
+                                <option value="promotion">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.premium.sourcePromotion',
+                                        )
+                                    }}
+                                </option>
                             </select>
                         </div>
                     </div>
                     <div class="grid gap-1">
-                        <Label>Audit Reason</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.premium.auditReason')
+                        }}</Label>
                         <Input
                             v-model="grantForm.reason"
                             required
-                            placeholder="Community contributor award / campaign prize"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.premium.auditReasonPlaceholder',
+                                )
+                            "
                         />
                         <InputError :message="grantForm.errors.reason" />
                     </div>
@@ -327,7 +382,9 @@ function executeSubAction(reason: string): void {
                         :disabled="grantForm.processing"
                     >
                         <Gift class="size-3.5" />
-                        <span>Grant Premium</span>
+                        <span>{{
+                            t('admin.monetizationCenter.premium.grantButton')
+                        }}</span>
                     </Button>
                 </form>
             </section>
@@ -339,16 +396,24 @@ function executeSubAction(reason: string): void {
                     class="flex items-center gap-2 text-sm font-bold text-foreground"
                 >
                     <Plus class="size-4 text-primary" />
-                    <span>Add New Premium Plan</span>
+                    <span>{{
+                        t('admin.monetizationCenter.premium.addPlanTitle')
+                    }}</span>
                 </h2>
                 <form @submit.prevent="createPlan" class="space-y-3 text-xs">
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="grid gap-1">
-                            <Label>Plan Name</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.premium.planName')
+                            }}</Label>
                             <Input v-model="newPlanForm.name" required />
                         </div>
                         <div class="grid gap-1">
-                            <Label>Duration (days)</Label>
+                            <Label>{{
+                                t(
+                                    'admin.monetizationCenter.common.durationDays',
+                                )
+                            }}</Label>
                             <Input
                                 v-model.number="newPlanForm.duration_days"
                                 type="number"
@@ -358,7 +423,9 @@ function executeSubAction(reason: string): void {
                     </div>
                     <div class="grid gap-3 sm:grid-cols-3">
                         <div class="grid gap-1">
-                            <Label>Price VND</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.common.priceVnd')
+                            }}</Label>
                             <Input
                                 v-model.number="newPlanForm.price_vnd"
                                 type="number"
@@ -366,7 +433,9 @@ function executeSubAction(reason: string): void {
                             />
                         </div>
                         <div class="grid gap-1">
-                            <Label>USD Cents</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.common.usdCents')
+                            }}</Label>
                             <Input
                                 v-model.number="newPlanForm.price_usd_cents"
                                 type="number"
@@ -374,14 +443,34 @@ function executeSubAction(reason: string): void {
                             />
                         </div>
                         <div class="grid gap-1">
-                            <Label>Ad Mode</Label>
+                            <Label>{{
+                                t('admin.monetizationCenter.premium.adMode')
+                            }}</Label>
                             <select
                                 v-model="newPlanForm.ad_reduction_mode"
                                 class="h-9 rounded-lg border border-input bg-background px-2 text-xs"
                             >
-                                <option value="none">Standard</option>
-                                <option value="reduced">Reduced Ads</option>
-                                <option value="ad_free">Ad-Free</option>
+                                <option value="none">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.premium.adModeStandard',
+                                        )
+                                    }}
+                                </option>
+                                <option value="reduced">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.premium.adModeReduced',
+                                        )
+                                    }}
+                                </option>
+                                <option value="ad_free">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.premium.adModeAdFree',
+                                        )
+                                    }}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -392,7 +481,11 @@ function executeSubAction(reason: string): void {
                         :disabled="newPlanForm.processing"
                     >
                         <Plus class="size-3.5" />
-                        <span>Create Plan</span>
+                        <span>{{
+                            t(
+                                'admin.monetizationCenter.premium.createPlanButton',
+                            )
+                        }}</span>
                     </Button>
                 </form>
             </section>
@@ -401,7 +494,11 @@ function executeSubAction(reason: string): void {
         <!-- Subscriptions Table -->
         <section class="space-y-3 rounded-2xl border border-border bg-card p-5">
             <h2 class="text-sm font-bold text-foreground">
-                Premium Subscriptions ({{ subscriptions.total }})
+                {{
+                    t('admin.monetizationCenter.premium.subscriptionsTitle', {
+                        count: subscriptions.total,
+                    })
+                }}
             </h2>
             <div
                 v-if="subscriptions.data.length > 0"
@@ -426,7 +523,9 @@ function executeSubAction(reason: string): void {
                                           sub.currency,
                                           locale,
                                       )
-                                    : 'Complimentary'
+                                    : t(
+                                          'admin.monetizationCenter.premium.complimentary',
+                                      )
                             }}
                             · {{ formatDate(sub.starts_at, locale) }} →
                             {{ formatDate(sub.expires_at, locale) }}
@@ -443,11 +542,17 @@ function executeSubAction(reason: string): void {
                                 openSubAction(
                                     sub.id,
                                     'extend',
-                                    'Extend +30 days',
+                                    t(
+                                        'admin.monetizationCenter.premium.extend30DaysTitle',
+                                    ),
                                 )
                             "
                         >
-                            +30d
+                            {{
+                                t(
+                                    'admin.monetizationCenter.premium.extend30DaysShort',
+                                )
+                            }}
                         </Button>
                         <Button
                             v-if="sub.status === 'active'"
@@ -459,11 +564,13 @@ function executeSubAction(reason: string): void {
                                 openSubAction(
                                     sub.id,
                                     'suspend',
-                                    'Suspend Premium',
+                                    t(
+                                        'admin.monetizationCenter.premium.suspendTitle',
+                                    ),
                                 )
                             "
                         >
-                            Suspend
+                            {{ t('admin.monetizationCenter.premium.suspend') }}
                         </Button>
                         <Button
                             v-if="sub.status === 'suspended'"
@@ -475,11 +582,13 @@ function executeSubAction(reason: string): void {
                                 openSubAction(
                                     sub.id,
                                     'restore',
-                                    'Restore Premium',
+                                    t(
+                                        'admin.monetizationCenter.premium.restoreTitle',
+                                    ),
                                 )
                             "
                         >
-                            Restore
+                            {{ t('admin.monetizationCenter.premium.restore') }}
                         </Button>
                         <Button
                             v-if="sub.status !== 'revoked'"
@@ -491,23 +600,28 @@ function executeSubAction(reason: string): void {
                                 openSubAction(
                                     sub.id,
                                     'revoke',
-                                    'Revoke Premium',
+                                    t(
+                                        'admin.monetizationCenter.premium.revokeTitle',
+                                    ),
                                 )
                             "
                         >
-                            Revoke
+                            {{ t('admin.monetizationCenter.premium.revoke') }}
                         </Button>
                     </div>
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No Premium subscriptions yet.
+                {{ t('admin.monetizationCenter.premium.emptySubscriptions') }}
             </p>
         </section>
 
         <ReasonDialog
             v-model:open="reasonOpen"
-            :title="pendingAction?.title || 'Subscription Action'"
+            :title="
+                pendingAction?.title ||
+                t('admin.monetizationCenter.premium.subscriptionActionFallback')
+            "
             :description="t('dialog.reasonPlaceholder')"
             :confirm-label="t('common.confirm')"
             @submit="executeSubAction"

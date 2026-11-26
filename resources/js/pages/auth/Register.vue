@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -14,17 +16,19 @@ defineProps<{
     passwordRules: string;
 }>();
 
-defineOptions({
-    layout: {
-        title: 'Tạo tài khoản mới',
-        description: 'Điền thông tin cá nhân để tham gia cộng đồng',
-    },
+const { t } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
+        title: t('auth.register.layoutTitle'),
+        description: t('auth.register.layoutDescription'),
+    });
 });
 </script>
 
 <template>
     <div>
-        <Head title="Đăng ký" />
+        <Head :title="t('auth.register.pageTitle')" />
 
         <!-- Google OAuth Button -->
         <a
@@ -49,14 +53,14 @@ defineOptions({
                     fill="#EA4335"
                 />
             </svg>
-            Đăng ký với Google
+            {{ t('auth.register.continueWithGoogle') }}
         </a>
 
         <div class="relative mb-5 flex items-center gap-3">
             <div class="h-px flex-1 bg-border" />
-            <span class="text-xs text-muted-foreground"
-                >hoặc tạo tài khoản</span
-            >
+            <span class="text-xs text-muted-foreground">{{
+                t('auth.register.orCreateAccount')
+            }}</span>
             <div class="h-px flex-1 bg-border" />
         </div>
 
@@ -68,7 +72,7 @@ defineOptions({
         >
             <div class="grid gap-4">
                 <div class="grid gap-2">
-                    <Label for="name">Họ và tên</Label>
+                    <Label for="name">{{ t('auth.fields.name') }}</Label>
                     <Input
                         id="name"
                         type="text"
@@ -77,26 +81,28 @@ defineOptions({
                         :tabindex="1"
                         autocomplete="name"
                         name="name"
-                        placeholder="Nguyễn Minh Anh"
+                        :placeholder="t('auth.fields.namePlaceholder')"
                     />
                     <InputError :message="errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="username">Tên người dùng (tùy chọn)</Label>
+                    <Label for="username">{{
+                        t('auth.fields.usernameOptional')
+                    }}</Label>
                     <Input
                         id="username"
                         type="text"
                         :tabindex="2"
                         autocomplete="username"
                         name="username"
-                        placeholder="minh_anh (chỉ gồm a-z, 0-9, _)"
+                        :placeholder="t('auth.fields.usernameHintPlaceholder')"
                     />
                     <InputError :message="errors.username" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Địa chỉ email</Label>
+                    <Label for="email">{{ t('auth.fields.email') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -104,34 +110,40 @@ defineOptions({
                         :tabindex="3"
                         autocomplete="email"
                         name="email"
-                        placeholder="ban@example.com"
+                        :placeholder="t('auth.fields.emailPlaceholder')"
                     />
                     <InputError :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Mật khẩu</Label>
+                    <Label for="password">{{
+                        t('auth.fields.password')
+                    }}</Label>
                     <PasswordInput
                         id="password"
                         required
                         :tabindex="4"
                         autocomplete="new-password"
                         name="password"
-                        placeholder="Tối thiểu 8–12 ký tự bảo mật"
+                        :placeholder="t('auth.fields.newPasswordPlaceholder')"
                         :passwordrules="passwordRules"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Xác nhận mật khẩu</Label>
+                    <Label for="password_confirmation">{{
+                        t('auth.fields.passwordConfirmation')
+                    }}</Label>
                     <PasswordInput
                         id="password_confirmation"
                         required
                         :tabindex="5"
                         autocomplete="new-password"
                         name="password_confirmation"
-                        placeholder="Nhập lại mật khẩu"
+                        :placeholder="
+                            t('auth.fields.confirmPasswordPlaceholder')
+                        "
                         :passwordrules="passwordRules"
                     />
                     <InputError :message="errors.password_confirmation" />
@@ -145,18 +157,18 @@ defineOptions({
                     data-test="register-user-button"
                 >
                     <Spinner v-if="processing" />
-                    Tạo tài khoản
+                    {{ t('auth.register.submit') }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Đã có tài khoản?
+                {{ t('auth.register.alreadyHaveAccount') }}
                 <TextLink
                     :href="login()"
                     class="font-medium text-primary underline underline-offset-4"
                     :tabindex="7"
                 >
-                    Đăng nhập
+                    {{ t('auth.register.loginLink') }}
                 </TextLink>
             </div>
         </Form>

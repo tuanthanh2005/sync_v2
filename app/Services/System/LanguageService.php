@@ -50,6 +50,34 @@ class LanguageService
      */
     public static function catalog(): array
     {
+        /** @var list<array{
+         *     code: string,
+         *     native_name: string,
+         *     english_name: string,
+         *     flag_code: string,
+         *     is_rtl: bool,
+         *     is_enabled: bool,
+         *     is_default: bool,
+         *     sort_order: int
+         * }>|null $configured */
+        $configured = function_exists('config') ? config('localization.locales') : null;
+
+        if (is_array($configured) && $configured !== []) {
+            return array_map(
+                static fn (array $item): array => [
+                    'code' => (string) $item['code'],
+                    'native_name' => (string) $item['native_name'],
+                    'english_name' => (string) $item['english_name'],
+                    'flag_code' => (string) $item['flag_code'],
+                    'is_rtl' => (bool) $item['is_rtl'],
+                    'is_enabled' => (bool) $item['is_enabled'],
+                    'is_default' => (bool) $item['is_default'],
+                    'sort_order' => (int) $item['sort_order'],
+                ],
+                $configured,
+            );
+        }
+
         return [
             ['code' => 'en', 'native_name' => 'English', 'english_name' => 'English', 'flag_code' => 'us', 'is_rtl' => false, 'is_enabled' => true, 'is_default' => true, 'sort_order' => 1],
             ['code' => 'vi', 'native_name' => 'Tiếng Việt', 'english_name' => 'Vietnamese', 'flag_code' => 'vn', 'is_rtl' => false, 'is_enabled' => true, 'is_default' => false, 'sort_order' => 2],
@@ -501,6 +529,51 @@ class LanguageService
         );
 
         return $language->fresh() ?? $language;
+    }
+
+    /**
+     * Roll back all custom DB translation overrides for a locale cleanly,
+     * recording a revision entry and invalidating only that locale's cache.
+     */
+    public function rollbackOverrides(Language $language, User $actor, AuditLogger $auditLogger): int
+    {
+        $deleted = 0;
+
+        DB::transaction(function () use ($language, $actor, &$deleted): void {
+            $deleted = TranslationOverride::query()
+                ->where('language_code', $language->code)
+                ->delete();
+
+            if ($deleted > 0) {
+                TranslationRevision::query()->create([
+                    'language_code' => $language->code,
+                    'actor_id' => $actor->id,
+                    'action' => 'rollback',
+                    'keys_count' => $deleted,
+                    'summary' => 'Rolled back '.$deleted.' custom overrides to bundled defaults',
+                    'created_at' => now(),
+                ]);
+            }
+        });
+
+        Cache::forget("syncviet.lang.overrides.{$language->code}");
+        $health = $this->translationHealth($language->code);
+        $language->forceFill([
+            'completion_percent' => $health['completion_percent'],
+            'missing_keys_count' => count($health['missing_keys']),
+        ])->save();
+        $this->flushCache();
+
+        if ($deleted > 0) {
+            $auditLogger->log(
+                'language.translations_rolled_back',
+                $language,
+                ['code' => $language->code, 'keys_removed' => $deleted],
+                $actor,
+            );
+        }
+
+        return $deleted;
     }
 
     public function flushCache(): void

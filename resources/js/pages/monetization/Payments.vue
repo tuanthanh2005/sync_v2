@@ -168,32 +168,40 @@ function runSandboxConfirm(paymentId: number): void {
         >
             <div class="relative min-w-[180px] flex-1">
                 <Search
-                    class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+                    class="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 />
                 <Input
                     v-model="searchInput"
                     type="search"
                     :placeholder="t('monetization.payments.searchPlaceholder')"
-                    class="pl-9 text-xs"
+                    class="ps-9 text-xs"
                 />
             </div>
             <select
                 v-model="serviceFilter"
+                :aria-label="t('monetization.payments.allServices')"
                 class="min-h-10 rounded-lg border border-input bg-background px-3 text-xs"
                 @change="applyFilters"
             >
                 <option value="all">
                     {{ t('monetization.payments.allServices') }}
                 </option>
-                <option value="premium">SyncViet Premium</option>
-                <option value="banner">Banner Ads</option>
-                <option value="boost">Boost Post</option>
+                <option value="premium">
+                    {{ t('monetization.paymentsExtra.servicePremium') }}
+                </option>
+                <option value="banner">
+                    {{ t('monetization.paymentsExtra.serviceBanner') }}
+                </option>
+                <option value="boost">
+                    {{ t('monetization.paymentsExtra.serviceBoost') }}
+                </option>
                 <option value="topup">
                     {{ t('monetization.wallet.title') }}
                 </option>
             </select>
             <select
                 v-model="statusFilter"
+                :aria-label="t('monetization.payments.allStatuses')"
                 class="min-h-10 rounded-lg border border-input bg-background px-3 text-xs"
                 @change="applyFilters"
             >
@@ -275,7 +283,7 @@ function runSandboxConfirm(paymentId: number): void {
                         </p>
                     </div>
 
-                    <div class="text-right">
+                    <div class="text-end">
                         <p class="text-base font-bold text-foreground">
                             {{
                                 formatMoney(
@@ -314,7 +322,7 @@ function runSandboxConfirm(paymentId: number): void {
                                 vietQrImageUrl(p)
                             "
                             :src="vietQrImageUrl(p) || ''"
-                            alt="VietQR"
+                            :alt="t('monetization.paymentsExtra.vietQrAlt')"
                             class="size-36 rounded-lg border border-border bg-white object-contain p-1"
                         />
                         <div class="space-y-1 text-muted-foreground">
@@ -332,7 +340,11 @@ function runSandboxConfirm(paymentId: number): void {
                                 "
                             >
                                 <p v-if="instructionsFor(p).bank_name">
-                                    Ngân hàng:
+                                    {{
+                                        t(
+                                            'monetization.paymentsExtra.bankName',
+                                        )
+                                    }}:
                                     <strong class="text-foreground">{{
                                         instructionsFor(p).bank_name
                                     }}</strong>
@@ -341,12 +353,17 @@ function runSandboxConfirm(paymentId: number): void {
                                     v-if="instructionsFor(p).account_number"
                                     class="flex items-center gap-1.5"
                                 >
-                                    Số tài khoản:
+                                    {{
+                                        t(
+                                            'monetization.paymentsExtra.accountNumber',
+                                        )
+                                    }}:
                                     <strong class="font-mono text-foreground">{{
                                         instructionsFor(p).account_number
                                     }}</strong>
                                     <button
                                         type="button"
+                                        :aria-label="t('common.copy')"
                                         class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
                                         @click="
                                             copyText(
@@ -361,7 +378,11 @@ function runSandboxConfirm(paymentId: number): void {
                                     </button>
                                 </p>
                                 <p v-if="instructionsFor(p).account_holder">
-                                    Chủ tài khoản:
+                                    {{
+                                        t(
+                                            'monetization.paymentsExtra.accountHolder',
+                                        )
+                                    }}:
                                     <strong class="text-foreground">{{
                                         instructionsFor(p).account_holder
                                     }}</strong>
@@ -372,12 +393,17 @@ function runSandboxConfirm(paymentId: number): void {
                                     v-if="instructionsFor(p).merchant_email"
                                     class="flex items-center gap-1.5"
                                 >
-                                    PayPal:
+                                    {{
+                                        t(
+                                            'monetization.paymentsExtra.paypalEmail',
+                                        )
+                                    }}:
                                     <strong class="font-mono text-foreground">{{
                                         instructionsFor(p).merchant_email
                                     }}</strong>
                                     <button
                                         type="button"
+                                        :aria-label="t('common.copy')"
                                         class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
                                         @click="
                                             copyText(
@@ -403,7 +429,11 @@ function runSandboxConfirm(paymentId: number): void {
                                         rel="noopener noreferrer"
                                         class="font-semibold text-primary underline"
                                     >
-                                        Mở link thanh toán PayPal.Me
+                                        {{
+                                            t(
+                                                'monetization.paymentsExtra.openPaypalMe',
+                                            )
+                                        }}
                                     </a>
                                 </p>
                             </template>
@@ -418,6 +448,7 @@ function runSandboxConfirm(paymentId: number): void {
                                 }}</strong>
                                 <button
                                     type="button"
+                                    :aria-label="t('common.copy')"
                                     class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
                                     @click="
                                         copyText(p.order_code || `PAY-${p.id}`)

@@ -190,12 +190,19 @@ function rollbackVersion(templateId: number, versionId: number): void {
                             <Badge
                                 :variant="a.is_enabled ? 'default' : 'outline'"
                             >
-                                {{ a.is_enabled ? 'Active' : 'Paused' }}
+                                {{
+                                    a.is_enabled
+                                        ? t('admin.aiCenter.active')
+                                        : t('admin.aiCenter.paused')
+                                }}
                             </Badge>
                         </div>
                         <p class="text-xs text-muted-foreground">
                             @{{ a.username }} · {{ a.default_language }} ·
-                            {{ a.preferred_model_name || 'Default Model' }}
+                            {{
+                                a.preferred_model_name ||
+                                t('admin.aiCenter.defaultModel')
+                            }}
                         </p>
                         <p
                             v-if="a.expertise"
@@ -208,9 +215,13 @@ function rollbackVersion(templateId: number, versionId: number): void {
                         class="flex items-center justify-between border-t border-border/60 pt-2.5 text-xs text-muted-foreground"
                     >
                         <span>
-                            {{ a.drafts_count }} drafts · Max
-                            {{ a.daily_post_limit }} posts/d ·
-                            {{ a.daily_comment_limit }} replies/d
+                            {{
+                                t('admin.aiCenter.agentQuotaSummary', {
+                                    drafts: a.drafts_count,
+                                    posts: a.daily_post_limit,
+                                    replies: a.daily_comment_limit,
+                                })
+                            }}
                         </span>
                         <Button
                             size="sm"
@@ -239,27 +250,37 @@ function rollbackVersion(templateId: number, versionId: number): void {
             </h2>
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="space-y-1">
-                    <Label for="agent_name">Display Name</Label>
+                    <Label for="agent_name">{{
+                        t('admin.aiCenter.displayName')
+                    }}</Label>
                     <Input
                         id="agent_name"
                         v-model="agentForm.display_name"
                         required
-                        placeholder="Cloud Architect AI"
+                        :placeholder="
+                            t('admin.aiCenter.agentDisplayNamePlaceholder')
+                        "
                     />
                     <InputError :message="agentForm.errors.display_name" />
                 </div>
                 <div class="space-y-1">
-                    <Label for="agent_username">Username</Label>
+                    <Label for="agent_username">{{
+                        t('admin.aiCenter.username')
+                    }}</Label>
                     <Input
                         id="agent_username"
                         v-model="agentForm.username"
                         required
-                        placeholder="cloud_architect_ai"
+                        :placeholder="
+                            t('admin.aiCenter.agentUsernamePlaceholder')
+                        "
                     />
                     <InputError :message="agentForm.errors.username" />
                 </div>
                 <div class="space-y-1">
-                    <Label for="agent_lang">Default Language</Label>
+                    <Label for="agent_lang">{{
+                        t('admin.aiCenter.defaultLanguage')
+                    }}</Label>
                     <select
                         id="agent_lang"
                         v-model="agentForm.default_language"
@@ -275,13 +296,17 @@ function rollbackVersion(templateId: number, versionId: number): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="agent_model">Preferred Model</Label>
+                    <Label for="agent_model">{{
+                        t('admin.aiCenter.preferredModel')
+                    }}</Label>
                     <select
                         id="agent_model"
                         v-model="agentForm.preferred_model_id"
                         class="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
                     >
-                        <option :value="null">Auto (Fast Group)</option>
+                        <option :value="null">
+                            {{ t('admin.aiCenter.autoFastGroup') }}
+                        </option>
                         <option v-for="m in models" :key="m.id" :value="m.id">
                             {{ m.display_name }}
                         </option>
@@ -290,15 +315,19 @@ function rollbackVersion(templateId: number, versionId: number): void {
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
                 <div class="space-y-1">
-                    <Label for="agent_expertise">Expertise</Label>
+                    <Label for="agent_expertise">{{
+                        t('admin.aiCenter.expertise')
+                    }}</Label>
                     <Input
                         id="agent_expertise"
                         v-model="agentForm.expertise"
-                        placeholder="Linux, Hosting, Web Performance"
+                        :placeholder="t('admin.aiCenter.expertisePlaceholder')"
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label for="agent_restricted">Restricted Topics</Label>
+                    <Label for="agent_restricted">{{
+                        t('admin.aiCenter.restrictedTopics')
+                    }}</Label>
                     <Input
                         id="agent_restricted"
                         v-model="agentForm.restricted_topics"
@@ -306,7 +335,9 @@ function rollbackVersion(templateId: number, versionId: number): void {
                 </div>
             </div>
             <div class="space-y-1">
-                <Label for="agent_prompt">System Prompt</Label>
+                <Label for="agent_prompt">{{
+                    t('admin.aiCenter.systemPrompt')
+                }}</Label>
                 <textarea
                     id="agent_prompt"
                     v-model="agentForm.system_prompt"
@@ -376,7 +407,11 @@ function rollbackVersion(templateId: number, versionId: number): void {
                                 @click="rollbackVersion(p.id, v.id)"
                             >
                                 <History class="size-3" />
-                                <span>v{{ v.version_number }}</span>
+                                <span>{{
+                                    t('admin.aiCenter.versionShort', {
+                                        version: v.version_number,
+                                    })
+                                }}</span>
                             </Button>
                         </div>
                     </div>
@@ -399,7 +434,9 @@ function rollbackVersion(templateId: number, versionId: number): void {
                 </h3>
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
-                        <Label for="prompt_name">Template Name</Label>
+                        <Label for="prompt_name">{{
+                            t('admin.aiCenter.templateName')
+                        }}</Label>
                         <Input
                             id="prompt_name"
                             v-model="promptForm.name"
@@ -407,7 +444,9 @@ function rollbackVersion(templateId: number, versionId: number): void {
                         />
                     </div>
                     <div class="space-y-1">
-                        <Label for="prompt_type">Type</Label>
+                        <Label for="prompt_type">{{
+                            t('admin.aiCenter.type')
+                        }}</Label>
                         <select
                             id="prompt_type"
                             v-model="promptForm.prompt_type"
@@ -425,7 +464,9 @@ function rollbackVersion(templateId: number, versionId: number): void {
                 </div>
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="space-y-1">
-                        <Label for="sys_instr">System Instruction</Label>
+                        <Label for="sys_instr">{{
+                            t('admin.aiCenter.systemInstruction')
+                        }}</Label>
                         <textarea
                             id="sys_instr"
                             v-model="promptForm.system_instruction"
@@ -435,7 +476,9 @@ function rollbackVersion(templateId: number, versionId: number): void {
                         />
                     </div>
                     <div class="space-y-1">
-                        <Label for="user_tpl">User Prompt Template</Label>
+                        <Label for="user_tpl">{{
+                            t('admin.aiCenter.userPromptTemplate')
+                        }}</Label>
                         <textarea
                             id="user_tpl"
                             v-model="promptForm.user_template"

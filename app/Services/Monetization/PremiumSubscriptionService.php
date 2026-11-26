@@ -193,6 +193,12 @@ class PremiumSubscriptionService
                 url: route('account.premium'),
                 actorName: (string) config('app.name', 'SyncViet'),
                 actorUsername: 'system',
+                titleKey: $hasActiveTime
+                    ? 'Your SyncViet Premium was extended by :days days (expires :date).'
+                    : 'SyncViet Premium (:plan) is now active until :date.',
+                titleParams: $hasActiveTime
+                    ? ['days' => $plan->duration_days, 'date' => $newExpiresAt->format('Y-m-d')]
+                    : ['plan' => $plan->name, 'date' => $newExpiresAt->format('Y-m-d')],
             ));
 
             return $subscription;
@@ -297,6 +303,8 @@ class PremiumSubscriptionService
                 url: route('account.premium'),
                 actorName: (string) config('app.name', 'SyncViet'),
                 actorUsername: 'system',
+                titleKey: 'You received +:days complimentary days of SyncViet Premium (:reason).',
+                titleParams: ['days' => $days, 'reason' => $reason],
             ));
 
             return $subscription;
@@ -630,11 +638,12 @@ class PremiumSubscriptionService
                         $sub->user->forceFill(['premium_until' => null])->save();
                         $sub->user->notify(new SocialActivityNotification(
                             eventKey: 'premium_expired',
-                            titleVi: 'Gói SyncViet Premium của bạn đã hết hạn. Gia hạn ngay để giữ huy hiệu tích xanh.',
+                            titleVi: 'Gói SyncViet Premium của bạn đã hết hạn. Gia hạn ngay để giữ huy hiệu thành viên Premium.',
                             titleEn: 'Your SyncViet Premium membership has expired. Renew anytime to restore your blue badge.',
                             url: route('monetization.premium'),
                             actorName: (string) config('app.name', 'SyncViet'),
                             actorUsername: 'system',
+                            titleKey: 'Your SyncViet Premium membership has expired. Renew anytime to restore your blue badge.',
                         ));
                     }
 
@@ -671,6 +680,8 @@ class PremiumSubscriptionService
                                 url: route('account.premium'),
                                 actorName: (string) config('app.name', 'SyncViet'),
                                 actorUsername: 'system',
+                                titleKey: 'Your SyncViet Premium membership expires in :days day(s).',
+                                titleParams: ['days' => $days],
                             ));
                         }
 

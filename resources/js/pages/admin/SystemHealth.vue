@@ -65,6 +65,18 @@ defineProps<{
 }>();
 
 const { t, locale } = useI18n();
+
+function backupStatusLabel(status?: string): string {
+    const map: Record<string, string> = {
+        completed: 'admin.healthExtra.backupStatusCompleted',
+        failed: 'admin.healthExtra.backupStatusFailed',
+        running: 'admin.healthExtra.backupStatusRunning',
+        none: 'admin.healthExtra.backupStatusNone',
+    };
+    const key = status ? map[status] : map.none;
+
+    return key ? t(key) : status || t('admin.healthExtra.backupStatusNone');
+}
 </script>
 
 <template>
@@ -86,7 +98,13 @@ const { t, locale } = useI18n();
         <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <AdminStatCard
                 :label="t('admin.health.database')"
-                :value="health.db_ok ? `${health.db_latency_ms} ms` : 'ERR'"
+                :value="
+                    health.db_ok
+                        ? t('admin.healthExtra.latencyMs', {
+                              ms: health.db_latency_ms,
+                          })
+                        : t('admin.healthExtra.errorCode')
+                "
                 :hint="health.db_connection"
                 :icon="Database"
                 tone="success"
@@ -101,7 +119,12 @@ const { t, locale } = useI18n();
             <AdminStatCard
                 :label="t('admin.health.storage')"
                 :value="formatBytes(health.media_storage_bytes, locale)"
-                :hint="`${formatNumber(health.media_files_count, locale)} files · disk: ${health.media_disk}`"
+                :hint="
+                    t('admin.healthExtra.storageHint', {
+                        count: formatNumber(health.media_files_count, locale),
+                        disk: health.media_disk,
+                    })
+                "
                 :icon="HardDrive"
                 tone="neutral"
             />
@@ -127,10 +150,16 @@ const { t, locale } = useI18n();
             </h2>
             <dl class="mt-4 grid gap-3 text-xs sm:grid-cols-2 lg:grid-cols-3">
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">PHP / Laravel</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.runtimeStack') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
-                        PHP {{ health.php_version }} · Laravel
-                        {{ health.laravel_version }}
+                        {{
+                            t('admin.healthExtra.runtimeVersions', {
+                                php: health.php_version,
+                                laravel: health.laravel_version,
+                            })
+                        }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
@@ -138,65 +167,94 @@ const { t, locale } = useI18n();
                         {{ t('admin.health.environment') }}
                     </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
-                        {{ health.app_env }} (debug:
-                        {{ health.app_debug ? 'on' : 'off' }})
+                        {{
+                            t('admin.healthExtra.envWithDebug', {
+                                env: health.app_env,
+                                status: health.app_debug
+                                    ? t('admin.healthExtra.debugOn')
+                                    : t('admin.healthExtra.debugOff'),
+                            })
+                        }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Hashing</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.hashing') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{ health.hashing_driver }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Session / Cache</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.sessionCache') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{ health.session_driver }} / {{ health.cache_store }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Queue / Media Disk</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.queueMediaDisk') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{ health.queue_connection }} / {{ health.media_disk }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Active Sessions (30m)</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.activeSessions30m') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{ formatNumber(health.active_sessions_30m, locale) }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
                     <dt class="text-muted-foreground">
-                        Cache Probe / Trusted Proxies
+                        {{ t('admin.healthExtra.cacheProbeProxies') }}
                     </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
-                        {{ health.cache_ok ? 'OK' : 'DEGRADED' }} · Proxies:
                         {{
-                            health.trusted_proxies_configured
-                                ? 'Configured'
-                                : 'Direct / Default'
+                            t('admin.healthExtra.cacheProxiesValue', {
+                                cache: health.cache_ok
+                                    ? t('admin.healthExtra.statusOk')
+                                    : t('admin.healthExtra.statusDegraded'),
+                                proxies: health.trusted_proxies_configured
+                                    ? t('admin.healthExtra.configured')
+                                    : t('admin.healthExtra.directDefault'),
+                            })
                         }}
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Last Backup</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.lastBackup') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{
-                            health.last_backup_at
-                                ? formatDateTime(health.last_backup_at, locale)
-                                : 'None yet'
+                            t('admin.healthExtra.lastBackupValue', {
+                                time: health.last_backup_at
+                                    ? formatDateTime(
+                                          health.last_backup_at,
+                                          locale,
+                                      )
+                                    : t('admin.healthExtra.noneYet'),
+                                status: backupStatusLabel(
+                                    health.last_backup_status,
+                                ),
+                            })
                         }}
-                        ({{ health.last_backup_status || 'none' }})
                     </dd>
                 </div>
                 <div class="rounded-lg border border-border/80 bg-muted/40 p-3">
-                    <dt class="text-muted-foreground">Disk Free Space</dt>
+                    <dt class="text-muted-foreground">
+                        {{ t('admin.healthExtra.diskFreeSpace') }}
+                    </dt>
                     <dd class="mt-1 font-mono font-semibold text-foreground">
                         {{
                             health.disk_free_bytes != null
                                 ? formatBytes(health.disk_free_bytes, locale)
-                                : 'Unavailable'
+                                : t('admin.healthExtra.unavailable')
                         }}
                     </dd>
                 </div>
@@ -209,29 +267,31 @@ const { t, locale } = useI18n();
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Activity class="size-4 text-primary" aria-hidden="true" />
-                    <span>Integrations &amp; Security Alerts</span>
+                    <span>{{
+                        t('admin.healthExtra.integrationsAndAlerts')
+                    }}</span>
                 </h2>
                 <div class="mt-4 space-y-2.5 text-xs">
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 p-3"
                     >
-                        <span class="text-muted-foreground"
-                            >Payment Methods Active</span
-                        >
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.paymentMethodsActive')
+                        }}</span>
                         <span class="font-mono font-semibold">
                             {{
                                 health.integrations?.payment_methods_enabled?.join(
                                     ', ',
-                                ) || 'None'
+                                ) || t('admin.healthExtra.none')
                             }}
                         </span>
                     </div>
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 p-3"
                     >
-                        <span class="text-muted-foreground"
-                            >Payment Webhook HMAC Secret</span
-                        >
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.webhookHmacSecret')
+                        }}</span>
                         <Badge
                             :variant="
                                 health.integrations?.webhook_secret_configured
@@ -241,17 +301,17 @@ const { t, locale } = useI18n();
                         >
                             {{
                                 health.integrations?.webhook_secret_configured
-                                    ? 'Configured'
-                                    : 'Missing'
+                                    ? t('admin.healthExtra.configured')
+                                    : t('admin.healthExtra.missing')
                             }}
                         </Badge>
                     </div>
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 p-3"
                     >
-                        <span class="text-muted-foreground"
-                            >Google Search Console API</span
-                        >
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.gscApi')
+                        }}</span>
                         <Badge
                             :variant="
                                 health.integrations?.gsc_connected
@@ -261,24 +321,28 @@ const { t, locale } = useI18n();
                         >
                             {{
                                 health.integrations?.gsc_connected
-                                    ? 'Connected'
-                                    : 'Not Configured'
+                                    ? t('admin.healthExtra.connected')
+                                    : t('admin.healthExtra.notConfigured')
                             }}
                         </Badge>
                     </div>
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 p-3"
                     >
-                        <span class="text-muted-foreground"
-                            >AI Providers / Emergency Stop</span
-                        >
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.aiProvidersEmergencyStop')
+                        }}</span>
                         <span class="font-mono font-semibold">
-                            {{ health.integrations?.ai_healthy_keys ?? 0 }}
-                            healthy key(s) ·
                             {{
-                                health.integrations?.ai_emergency_stopped
-                                    ? 'STOPPED'
-                                    : 'Ready'
+                                t('admin.healthExtra.aiProvidersValue', {
+                                    count:
+                                        health.integrations?.ai_healthy_keys ??
+                                        0,
+                                    status: health.integrations
+                                        ?.ai_emergency_stopped
+                                        ? t('admin.healthExtra.statusStopped')
+                                        : t('admin.healthExtra.statusReady'),
+                                })
                             }}
                         </span>
                     </div>
@@ -289,7 +353,7 @@ const { t, locale } = useI18n();
                             class="flex items-center gap-1.5 text-muted-foreground"
                         >
                             <ShieldAlert class="size-3.5 text-amber-500" />
-                            Security Alerts (24h Failed Logins / Pending Fraud)
+                            {{ t('admin.healthExtra.securityAlertsLabel') }}
                         </span>
                         <span class="font-mono font-semibold">
                             {{ health.security_alerts?.failed_logins_24h ?? 0 }}
@@ -308,28 +372,38 @@ const { t, locale } = useI18n();
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Server class="size-4 text-primary" aria-hidden="true" />
-                    <span>Host Infrastructure Telemetry (Honest Status)</span>
+                    <span>{{ t('admin.healthExtra.hostTelemetryTitle') }}</span>
                 </h2>
                 <div class="mt-4 space-y-2.5 text-xs">
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 bg-muted/30 p-3"
                     >
-                        <span class="text-muted-foreground">CPU Usage</span>
-                        <Badge variant="outline">Unavailable</Badge>
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.cpuUsage')
+                        }}</span>
+                        <Badge variant="outline">{{
+                            t('admin.healthExtra.unavailable')
+                        }}</Badge>
                     </div>
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 bg-muted/30 p-3"
                     >
-                        <span class="text-muted-foreground">RAM Usage</span>
-                        <Badge variant="outline">Unavailable</Badge>
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.ramUsage')
+                        }}</span>
+                        <Badge variant="outline">{{
+                            t('admin.healthExtra.unavailable')
+                        }}</Badge>
                     </div>
                     <div
                         class="flex items-center justify-between rounded-lg border border-border/80 bg-muted/30 p-3"
                     >
-                        <span class="text-muted-foreground"
-                            >PHP Workers / Entry Processes</span
-                        >
-                        <Badge variant="outline">Unavailable</Badge>
+                        <span class="text-muted-foreground">{{
+                            t('admin.healthExtra.phpWorkers')
+                        }}</span>
+                        <Badge variant="outline">{{
+                            t('admin.healthExtra.unavailable')
+                        }}</Badge>
                     </div>
                     <p
                         class="rounded-lg border border-border/60 bg-muted/20 p-3 text-muted-foreground"

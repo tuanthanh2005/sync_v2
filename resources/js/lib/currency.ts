@@ -5,11 +5,20 @@ export function formatVnd(amount: number, locale = 'en'): string {
         0,
         Math.trunc(Number.isFinite(amount) ? amount : 0),
     );
-    const formatted = new Intl.NumberFormat(resolveIntlLocale(locale)).format(
-        safeAmount,
-    );
 
-    return `${formatted}đ`;
+    try {
+        return new Intl.NumberFormat(resolveIntlLocale(locale), {
+            style: 'currency',
+            currency: 'VND',
+            maximumFractionDigits: 0,
+        }).format(safeAmount);
+    } catch {
+        const formatted = new Intl.NumberFormat(
+            resolveIntlLocale(locale),
+        ).format(safeAmount);
+
+        return `${formatted} ₫`;
+    }
 }
 
 export function formatUsdCents(cents: number, locale = 'en'): string {
@@ -25,6 +34,10 @@ export function formatUsdCents(cents: number, locale = 'en'): string {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     }).format(dollars);
+}
+
+export function defaultCurrencyForLocale(locale: string): 'VND' | 'USD' {
+    return locale.toLowerCase().startsWith('vi') ? 'VND' : 'USD';
 }
 
 export function formatMoney(

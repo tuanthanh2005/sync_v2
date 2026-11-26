@@ -130,7 +130,11 @@ function toggleAchievement(id: number): void {
         <!-- Growth Campaigns -->
         <section class="space-y-4 rounded-xl border border-border bg-card p-5">
             <h2 class="text-sm font-semibold">
-                Growth Campaigns ({{ campaigns.length }})
+                {{
+                    t('admin.growthCenter.campaigns.title', {
+                        count: campaigns.length,
+                    })
+                }}
             </h2>
             <div class="space-y-2.5">
                 <div
@@ -156,12 +160,15 @@ function toggleAchievement(id: number): void {
                             </Badge>
                         </p>
                         <p class="text-muted-foreground">
-                            Participants: {{ c.current_participants }}/{{
-                                c.max_participants ?? '∞'
+                            {{
+                                t('admin.growthCenter.campaigns.campaignMeta', {
+                                    currentParticipants: c.current_participants,
+                                    maxParticipants: c.max_participants ?? '∞',
+                                    usedBudget: c.used_reward_days_budget,
+                                    maxBudget: c.max_reward_days_budget ?? '∞',
+                                    version: c.versions_count,
+                                })
                             }}
-                            · Reward budget: {{ c.used_reward_days_budget }}/{{
-                                c.max_reward_days_budget ?? '∞'
-                            }}d · v{{ c.versions_count }}
                         </p>
                     </div>
                     <div class="flex gap-1.5">
@@ -171,7 +178,7 @@ function toggleAchievement(id: number): void {
                             variant="outline"
                             @click="setCampaignStatus(c.id, 'active')"
                         >
-                            Activate
+                            {{ t('admin.growthCenter.campaigns.activate') }}
                         </Button>
                         <Button
                             v-if="c.status === 'active'"
@@ -179,7 +186,7 @@ function toggleAchievement(id: number): void {
                             variant="ghost"
                             @click="setCampaignStatus(c.id, 'paused')"
                         >
-                            Pause
+                            {{ t('admin.growthCenter.campaigns.pause') }}
                         </Button>
                     </div>
                 </div>
@@ -192,28 +199,56 @@ function toggleAchievement(id: number): void {
                 <Input
                     v-model="campForm.name"
                     required
-                    placeholder="New Campaign Name"
+                    :placeholder="
+                        t(
+                            'admin.growthCenter.campaigns.newCampaignNamePlaceholder',
+                        )
+                    "
                 />
                 <select
                     v-model="campForm.type"
                     class="h-9 rounded-lg border border-input bg-background px-2 text-xs"
                 >
-                    <option value="referral">Referral</option>
-                    <option value="launch">Launch</option>
-                    <option value="early_member">Early Member</option>
-                    <option value="founding_member">Founding Member</option>
-                    <option value="community_growth">Community Growth</option>
-                    <option value="seasonal">Seasonal</option>
+                    <option value="referral">
+                        {{ t('admin.growthCenter.campaigns.typeReferral') }}
+                    </option>
+                    <option value="launch">
+                        {{ t('admin.growthCenter.campaigns.typeLaunch') }}
+                    </option>
+                    <option value="early_member">
+                        {{ t('admin.growthCenter.campaigns.typeEarlyMember') }}
+                    </option>
+                    <option value="founding_member">
+                        {{
+                            t('admin.growthCenter.campaigns.typeFoundingMember')
+                        }}
+                    </option>
+                    <option value="community_growth">
+                        {{
+                            t(
+                                'admin.growthCenter.campaigns.typeCommunityGrowth',
+                            )
+                        }}
+                    </option>
+                    <option value="seasonal">
+                        {{ t('admin.growthCenter.campaigns.typeSeasonal') }}
+                    </option>
                 </select>
                 <Input
                     v-model.number="campForm.max_participants"
                     type="number"
                     min="1"
-                    placeholder="Max Participants"
+                    :placeholder="
+                        t(
+                            'admin.growthCenter.campaigns.maxParticipantsPlaceholder',
+                        )
+                    "
                 />
                 <Button type="submit" size="sm" :disabled="campForm.processing">
                     <Plus class="size-3.5" />
-                    <span>Create Draft</span>
+                    <span>{{
+                        t('admin.growthCenter.campaigns.createDraft')
+                    }}</span>
                 </Button>
             </form>
         </section>
@@ -226,29 +261,45 @@ function toggleAchievement(id: number): void {
                 <div class="flex items-center justify-between">
                     <h2 class="flex items-center gap-2 text-sm font-semibold">
                         <Award class="size-4 text-amber-500" />
-                        Early Members ({{ earlySummary.active_count }} /
-                        {{ earlySummary.max_slots }})
+                        {{
+                            t(
+                                'admin.growthCenter.campaigns.earlyMembersTitle',
+                                {
+                                    active: earlySummary.active_count,
+                                    max: earlySummary.max_slots,
+                                },
+                            )
+                        }}
                     </h2>
                     <Badge
                         :variant="
                             earlySummary.enabled ? 'default' : 'secondary'
                         "
                     >
-                        {{ earlySummary.enabled ? 'Active' : 'Paused' }}
+                        {{
+                            earlySummary.enabled
+                                ? t('admin.growthCenter.common.active')
+                                : t('admin.growthCenter.common.paused')
+                        }}
                     </Badge>
                 </div>
                 <form @submit.prevent="submitEarlyEnroll" class="flex gap-2">
                     <Input
                         v-model="earlyForm.username"
                         required
-                        placeholder="Verified human username"
+                        :placeholder="
+                            t(
+                                'admin.growthCenter.campaigns.verifiedHumanUsernamePlaceholder',
+                            )
+                        "
                     />
                     <Button
                         type="submit"
                         size="sm"
                         :disabled="earlyForm.processing"
-                        >Enroll</Button
                     >
+                        {{ t('admin.growthCenter.campaigns.enroll') }}
+                    </Button>
                 </form>
                 <InputError :message="earlyForm.errors.username" />
                 <ul class="divide-y divide-border/60 text-xs">
@@ -258,9 +309,12 @@ function toggleAchievement(id: number): void {
                         class="flex items-center justify-between py-1.5"
                     >
                         <span
-                            >#{{ e.member_number }} @{{ e.username }} (+{{
-                                e.premium_days_granted
-                            }}d)</span
+                            >#{{ e.member_number }} @{{ e.username }} ({{
+                                t(
+                                    'admin.growthCenter.campaigns.daysGrantedBadge',
+                                    { days: e.premium_days_granted },
+                                )
+                            }})</span
                         >
                         <Badge variant="outline">{{ e.status }}</Badge>
                     </li>
@@ -271,19 +325,23 @@ function toggleAchievement(id: number): void {
                 class="space-y-3 rounded-xl border border-border bg-card p-5"
             >
                 <h2 class="text-sm font-semibold">
-                    Member Badges & Founding Members
+                    {{ t('admin.growthCenter.campaigns.memberBadgesTitle') }}
                 </h2>
                 <form
                     @submit.prevent="submitGrantBadge"
                     class="grid gap-2 sm:grid-cols-3"
                 >
                     <div>
-                        <Label for="bdg_user" class="sr-only">Username</Label>
+                        <Label for="bdg_user" class="sr-only">{{
+                            t('admin.growthCenter.common.username')
+                        }}</Label>
                         <Input
                             id="bdg_user"
                             v-model="badgeForm.username"
                             required
-                            placeholder="Username"
+                            :placeholder="
+                                t('admin.growthCenter.common.username')
+                            "
                         />
                     </div>
                     <select
@@ -303,7 +361,7 @@ function toggleAchievement(id: number): void {
                         size="sm"
                         :disabled="badgeForm.processing"
                     >
-                        Grant Badge
+                        {{ t('admin.growthCenter.campaigns.grantBadge') }}
                     </Button>
                 </form>
                 <InputError :message="badgeForm.errors.username" />
@@ -321,7 +379,11 @@ function toggleAchievement(id: number): void {
                         <Badge
                             :variant="b.is_active ? 'default' : 'destructive'"
                         >
-                            {{ b.is_active ? 'Active' : 'Revoked' }}
+                            {{
+                                b.is_active
+                                    ? t('admin.growthCenter.common.active')
+                                    : t('admin.growthCenter.common.revoked')
+                            }}
                         </Badge>
                     </li>
                 </ul>
@@ -332,7 +394,11 @@ function toggleAchievement(id: number): void {
         <section class="space-y-3 rounded-xl border border-border bg-card p-5">
             <h2 class="flex items-center gap-2 text-sm font-semibold">
                 <Trophy class="size-4 text-primary" />
-                Achievements ({{ achievements.length }})
+                {{
+                    t('admin.growthCenter.campaigns.achievementsTitle', {
+                        count: achievements.length,
+                    })
+                }}
             </h2>
             <div class="grid gap-2.5 text-xs sm:grid-cols-2 lg:grid-cols-4">
                 <div
@@ -349,15 +415,21 @@ function toggleAchievement(id: number): void {
                         </p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-muted-foreground"
-                            >{{ a.unlocked_count }} unlocked</span
-                        >
+                        <span class="text-muted-foreground">{{
+                            t('admin.growthCenter.campaigns.unlockedCount', {
+                                count: a.unlocked_count,
+                            })
+                        }}</span>
                         <Button
                             size="sm"
                             variant="outline"
                             @click="toggleAchievement(a.id)"
                         >
-                            {{ a.is_active ? 'Enabled' : 'Disabled' }}
+                            {{
+                                a.is_active
+                                    ? t('admin.growthCenter.common.enabled')
+                                    : t('admin.growthCenter.common.disabled')
+                            }}
                         </Button>
                     </div>
                 </div>

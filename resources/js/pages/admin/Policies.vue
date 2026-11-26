@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, setLayoutProps, useForm } from '@inertiajs/vue3';
 import {
     ExternalLink,
     FileText,
@@ -8,7 +8,8 @@ import {
     Shield,
     Trash2,
 } from '@lucide/vue';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import PolicyManagementController from '@/actions/App/Http/Controllers/Admin/PolicyManagementController';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,21 +20,41 @@ import { index as adminPolicies } from '@/routes/admin/policies';
 import { show as showPolicy } from '@/routes/policies';
 import type { AdminFooterLinkRecord, AdminPolicyRecord } from '@/types';
 
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            { title: 'Quản trị hệ thống', href: adminOverview() },
-            { title: 'Chính sách & Footer', href: adminPolicies() },
-        ],
-    },
-});
-
 const props = defineProps<{
     policies: AdminPolicyRecord[];
     footerLinks: AdminFooterLinkRecord[];
     footerGroups: Array<{ value: string; label: string }>;
     policyStatuses: Array<{ value: string; label: string }>;
 }>();
+
+const { t, locale } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
+        breadcrumbs: [
+            {
+                title: t('admin.policiesCenter.breadcrumbAdmin'),
+                href: adminOverview(),
+            },
+            {
+                title: t('admin.policiesCenter.breadcrumbPolicies'),
+                href: adminPolicies(),
+            },
+        ],
+    });
+});
+
+function policyStatusLabel(status: string): string {
+    if (status === 'published') {
+        return t('admin.policiesCenter.statusPublished');
+    }
+
+    if (status === 'draft') {
+        return t('admin.policiesCenter.statusDraft');
+    }
+
+    return status;
+}
 
 const selectedPolicySlug = ref<string>(props.policies[0]?.slug ?? '');
 
@@ -131,7 +152,7 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
 
 <template>
     <div class="space-y-6">
-        <Head title="Quản lý Chính sách & Footer" />
+        <Head :title="t('admin.policiesCenter.headTitle')" />
 
         <section class="rounded-xl border border-border bg-card p-6 shadow-xs">
             <div class="flex flex-wrap items-start justify-between gap-4">
@@ -140,15 +161,15 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                         class="flex items-center gap-2 text-xs font-semibold text-primary"
                     >
                         <Shield class="size-4" aria-hidden="true" />
-                        <span>Admin Only · Yêu cầu xác thực 2FA</span>
+                        <span>{{
+                            t('admin.policiesCenter.adminOnlyBadge')
+                        }}</span>
                     </div>
                     <h1 class="mt-1.5 text-xl font-bold text-foreground">
-                        Quản lý Trang Chính sách & Liên kết Footer
+                        {{ t('admin.policiesCenter.heading') }}
                     </h1>
                     <p class="mt-1 text-sm text-muted-foreground">
-                        Các chính sách chưa được phê duyệt phải giữ ở trạng thái
-                        Bản nháp (Draft). Chỉ các trang đã Xuất bản và bật hiển
-                        thị mới xuất hiện trên Footer công khai.
+                        {{ t('admin.policiesCenter.subtitle') }}
                     </p>
                 </div>
             </div>
@@ -160,7 +181,11 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                 class="space-y-2 rounded-xl border border-border bg-card p-4 shadow-xs lg:col-span-4"
             >
                 <h2 class="px-1 text-sm font-semibold text-foreground">
-                    Danh sách trang chính sách ({{ policies.length }})
+                    {{
+                        t('admin.policiesCenter.policyListHeading', {
+                            count: policies.length,
+                        })
+                    }}
                 </h2>
                 <div class="space-y-1.5 pt-1">
                     <button
@@ -177,7 +202,11 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                     >
                         <div class="min-w-0">
                             <p class="truncate font-semibold">
-                                {{ policy.title_vi }}
+                                {{
+                                    locale.startsWith('vi')
+                                        ? policy.title_vi
+                                        : policy.title_en || policy.title_vi
+                                }}
                             </p>
                             <p
                                 class="truncate text-[11px] text-muted-foreground"
@@ -211,7 +240,11 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             aria-hidden="true"
                         />
                         <h2 class="text-sm font-semibold text-foreground">
-                            Chỉnh sửa: /policies/{{ selectedPolicySlug }}
+                            {{
+                                t('admin.policiesCenter.editingPath', {
+                                    slug: selectedPolicySlug,
+                                })
+                            }}
                         </h2>
                     </div>
                     <Button
@@ -223,7 +256,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                     >
                         <Link :href="showPolicy(selectedPolicySlug)">
                             <ExternalLink class="size-3.5" />
-                            <span>Xem trang</span>
+                            <span>{{
+                                t('admin.policiesCenter.viewPage')
+                            }}</span>
                         </Link>
                     </Button>
                 </div>
@@ -231,7 +266,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                 <form class="space-y-4" @submit.prevent="submitPolicy">
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="grid gap-1.5">
-                            <Label for="title_vi">Tiêu đề (Tiếng Việt)</Label>
+                            <Label for="title_vi">{{
+                                t('admin.policiesCenter.titleViLabel')
+                            }}</Label>
                             <Input
                                 id="title_vi"
                                 v-model="policyForm.title_vi"
@@ -239,7 +276,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             />
                         </div>
                         <div class="grid gap-1.5">
-                            <Label for="title_en">Title (English)</Label>
+                            <Label for="title_en">{{
+                                t('admin.policiesCenter.titleEnLabel')
+                            }}</Label>
                             <Input
                                 id="title_en"
                                 v-model="policyForm.title_en"
@@ -250,14 +289,18 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
 
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="grid gap-1.5">
-                            <Label for="summary_vi">Tóm tắt (VI)</Label>
+                            <Label for="summary_vi">{{
+                                t('admin.policiesCenter.summaryViLabel')
+                            }}</Label>
                             <Input
                                 id="summary_vi"
                                 v-model="policyForm.summary_vi"
                             />
                         </div>
                         <div class="grid gap-1.5">
-                            <Label for="summary_en">Summary (EN)</Label>
+                            <Label for="summary_en">{{
+                                t('admin.policiesCenter.summaryEnLabel')
+                            }}</Label>
                             <Input
                                 id="summary_en"
                                 v-model="policyForm.summary_en"
@@ -266,10 +309,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                     </div>
 
                     <div class="grid gap-1.5">
-                        <Label for="content_vi"
-                            >Nội dung (Tiếng Việt — tự động lọc XSS ở
-                            backend)</Label
-                        >
+                        <Label for="content_vi">{{
+                            t('admin.policiesCenter.contentViLabel')
+                        }}</Label>
                         <textarea
                             id="content_vi"
                             v-model="policyForm.content_vi"
@@ -279,9 +321,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                     </div>
 
                     <div class="grid gap-1.5">
-                        <Label for="content_en"
-                            >Content (English — sanitized server-side)</Label
-                        >
+                        <Label for="content_en">{{
+                            t('admin.policiesCenter.contentEnLabel')
+                        }}</Label>
                         <textarea
                             id="content_en"
                             v-model="policyForm.content_en"
@@ -292,7 +334,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
 
                     <div class="grid gap-4 sm:grid-cols-4">
                         <div class="grid gap-1.5">
-                            <Label for="policy_status">Trạng thái</Label>
+                            <Label for="policy_status">{{
+                                t('admin.policiesCenter.statusLabel')
+                            }}</Label>
                             <select
                                 id="policy_status"
                                 v-model="policyForm.status"
@@ -308,7 +352,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             </select>
                         </div>
                         <div class="grid gap-1.5">
-                            <Label for="policy_group">Nhóm Footer</Label>
+                            <Label for="policy_group">{{
+                                t('admin.policiesCenter.footerGroupLabel')
+                            }}</Label>
                             <select
                                 id="policy_group"
                                 v-model="policyForm.footer_group"
@@ -324,7 +370,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             </select>
                         </div>
                         <div class="grid gap-1.5">
-                            <Label for="policy_order">Thứ tự</Label>
+                            <Label for="policy_order">{{
+                                t('admin.policiesCenter.sortOrderLabel')
+                            }}</Label>
                             <Input
                                 id="policy_order"
                                 v-model.number="policyForm.sort_order"
@@ -340,7 +388,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                                     type="checkbox"
                                     class="size-4 rounded border-input"
                                 />
-                                <span>Hiển thị</span>
+                                <span>{{
+                                    t('admin.policiesCenter.visibleLabel')
+                                }}</span>
                             </label>
                         </div>
                     </div>
@@ -352,7 +402,7 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                         data-test="save-policy-button"
                     >
                         <Save class="size-4" />
-                        <span>Lưu chính sách</span>
+                        <span>{{ t('admin.policiesCenter.savePolicy') }}</span>
                     </Button>
                 </form>
             </div>
@@ -361,11 +411,10 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
         <!-- Footer Links Management Section -->
         <section class="rounded-xl border border-border bg-card p-5 shadow-xs">
             <h2 class="text-base font-semibold text-foreground">
-                Quản lý thứ tự & hiển thị liên kết Footer
+                {{ t('admin.policiesCenter.footerLinksHeading') }}
             </h2>
             <p class="mt-1 text-xs text-muted-foreground">
-                Liên kết gắn với trang chính sách ở trạng thái Bản nháp sẽ tự
-                động bị ẩn khỏi Footer công khai để tránh liên kết chết.
+                {{ t('admin.policiesCenter.footerLinksHint') }}
             </p>
 
             <div class="mt-4 space-y-2.5">
@@ -375,15 +424,21 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                     class="grid items-center gap-2 rounded-lg border border-border p-3 md:grid-cols-12"
                 >
                     <div class="md:col-span-3">
-                        <Input v-model="link.label_vi" aria-label="Nhãn VI" />
+                        <Input
+                            v-model="link.label_vi"
+                            :aria-label="t('admin.policiesCenter.labelViAria')"
+                        />
                     </div>
                     <div class="md:col-span-3">
-                        <Input v-model="link.label_en" aria-label="Nhãn EN" />
+                        <Input
+                            v-model="link.label_en"
+                            :aria-label="t('admin.policiesCenter.labelEnAria')"
+                        />
                     </div>
                     <div class="md:col-span-2">
                         <select
                             v-model="link.footer_group"
-                            aria-label="Nhóm"
+                            :aria-label="t('admin.policiesCenter.groupAria')"
                             class="h-9 w-full rounded-md border border-input bg-transparent px-2.5 text-xs dark:bg-card"
                         >
                             <option
@@ -400,7 +455,9 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             v-model.number="link.sort_order"
                             type="number"
                             min="0"
-                            aria-label="Thứ tự"
+                            :aria-label="
+                                t('admin.policiesCenter.sortOrderAria')
+                            "
                         />
                     </div>
                     <div class="flex items-center gap-2 md:col-span-2">
@@ -410,14 +467,16 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                                 type="checkbox"
                                 class="size-4 rounded"
                             />
-                            <span>Bật</span>
+                            <span>{{
+                                t('admin.policiesCenter.enabledToggle')
+                            }}</span>
                         </label>
                         <Badge
                             v-if="link.policy_status"
                             variant="outline"
                             class="text-[10px]"
                         >
-                            {{ link.policy_status }}
+                            {{ policyStatusLabel(link.policy_status) }}
                         </Badge>
                     </div>
                     <div class="flex justify-end gap-1 md:col-span-1">
@@ -426,7 +485,10 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             variant="outline"
                             size="icon"
                             class="size-8 rounded-lg"
-                            title="Lưu liên kết"
+                            :title="t('admin.policiesCenter.saveLinkTitle')"
+                            :aria-label="
+                                t('admin.policiesCenter.saveLinkTitle')
+                            "
                             @click="updateLinkItem(link)"
                         >
                             <Save class="size-3.5" />
@@ -437,7 +499,10 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                             variant="ghost"
                             size="icon"
                             class="size-8 rounded-lg text-destructive"
-                            title="Xóa liên kết"
+                            :title="t('admin.policiesCenter.deleteLinkTitle')"
+                            :aria-label="
+                                t('admin.policiesCenter.deleteLinkTitle')
+                            "
                             @click="deleteLinkItem(link)"
                         >
                             <Trash2 class="size-3.5" />
@@ -452,33 +517,43 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                 @submit.prevent="createFooterLink"
             >
                 <div class="grid gap-1 md:col-span-3">
-                    <Label class="text-xs">Nhãn mới (VI)</Label>
+                    <Label class="text-xs">{{
+                        t('admin.policiesCenter.newLabelVi')
+                    }}</Label>
                     <Input
                         v-model="newLinkForm.label_vi"
                         required
-                        placeholder="Trợ giúp"
+                        :placeholder="
+                            t('admin.policiesCenter.newLabelViPlaceholder')
+                        "
                     />
                 </div>
                 <div class="grid gap-1 md:col-span-3">
-                    <Label class="text-xs">New Label (EN)</Label>
+                    <Label class="text-xs">{{
+                        t('admin.policiesCenter.newLabelEn')
+                    }}</Label>
                     <Input
                         v-model="newLinkForm.label_en"
                         required
-                        placeholder="Support"
+                        :placeholder="
+                            t('admin.policiesCenter.newLabelEnPlaceholder')
+                        "
                     />
                 </div>
                 <div class="grid gap-1 md:col-span-3">
-                    <Label class="text-xs"
-                        >Đường dẫn (/... hoặc https://...)</Label
-                    >
+                    <Label class="text-xs">{{
+                        t('admin.policiesCenter.urlLabel')
+                    }}</Label>
                     <Input
                         v-model="newLinkForm.url"
                         required
-                        placeholder="/policies/help-center"
+                        :placeholder="t('admin.policiesCenter.urlPlaceholder')"
                     />
                 </div>
                 <div class="grid gap-1 md:col-span-1">
-                    <Label class="text-xs">Thứ tự</Label>
+                    <Label class="text-xs">{{
+                        t('admin.policiesCenter.sortOrderLabel')
+                    }}</Label>
                     <Input
                         v-model.number="newLinkForm.sort_order"
                         type="number"
@@ -492,7 +567,7 @@ function deleteLinkItem(link: AdminFooterLinkRecord): void {
                         :disabled="newLinkForm.processing"
                     >
                         <Plus class="size-4" />
-                        <span>Thêm</span>
+                        <span>{{ t('admin.policiesCenter.addLink') }}</span>
                     </Button>
                 </div>
             </form>

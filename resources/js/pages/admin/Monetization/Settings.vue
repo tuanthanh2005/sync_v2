@@ -68,6 +68,28 @@ const props = defineProps<{
 
 const { t, locale } = useI18n();
 const activeTab = ref(props.tab || 'methods');
+const settingsTabs = [
+    {
+        key: 'methods',
+        labelKey: 'admin.monetizationCenter.settings.tabs.methods',
+    },
+    {
+        key: 'pending',
+        labelKey: 'admin.monetizationCenter.settings.tabs.pending',
+    },
+    {
+        key: 'adsense',
+        labelKey: 'admin.monetizationCenter.settings.tabs.adsense',
+    },
+    {
+        key: 'compliance',
+        labelKey: 'admin.monetizationCenter.settings.tabs.compliance',
+    },
+    {
+        key: 'webhooks',
+        labelKey: 'admin.monetizationCenter.settings.tabs.webhooks',
+    },
+] as const;
 
 const guardrailsForm = useForm({
     monetization_usd_to_vnd_rate: props.monetizationConfig.usd_to_vnd_rate,
@@ -143,21 +165,15 @@ function submitManualConfirm(): void {
 
         <div class="flex flex-wrap gap-2">
             <Button
-                v-for="tabKey in [
-                    'methods',
-                    'pending',
-                    'adsense',
-                    'compliance',
-                    'webhooks',
-                ]"
-                :key="tabKey"
+                v-for="tabItem in settingsTabs"
+                :key="tabItem.key"
                 type="button"
                 size="sm"
-                :variant="activeTab === tabKey ? 'default' : 'outline'"
-                class="rounded-lg text-xs capitalize"
-                @click="activeTab = tabKey"
+                :variant="activeTab === tabItem.key ? 'default' : 'outline'"
+                class="rounded-lg text-xs"
+                @click="activeTab = tabItem.key"
             >
-                {{ tabKey }}
+                {{ t(tabItem.labelKey) }}
             </Button>
         </div>
 
@@ -167,14 +183,16 @@ function submitManualConfirm(): void {
                 class="space-y-3 rounded-2xl border border-border bg-card p-5"
             >
                 <h2 class="text-sm font-bold text-foreground">
-                    Global Financial Guardrails
+                    {{ t('admin.monetizationCenter.settings.guardrailsTitle') }}
                 </h2>
                 <form
                     @submit.prevent="saveGuardrails"
                     class="flex flex-wrap items-end gap-3 text-xs"
                 >
                     <div class="grid gap-1">
-                        <Label>USD → VND Snapshot Rate (Integer)</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.settings.usdToVndRate')
+                        }}</Label>
                         <Input
                             v-model.number="
                                 guardrailsForm.monetization_usd_to_vnd_rate
@@ -184,7 +202,11 @@ function submitManualConfirm(): void {
                         />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Max Pending Orders / User</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.maxPendingOrdersPerUser',
+                            )
+                        }}</Label>
                         <Input
                             v-model.number="
                                 guardrailsForm.monetization_max_pending_payments
@@ -201,7 +223,9 @@ function submitManualConfirm(): void {
                         :disabled="guardrailsForm.processing"
                     >
                         <Save class="size-3.5" />
-                        <span>Save</span>
+                        <span>{{
+                            t('admin.monetizationCenter.common.save')
+                        }}</span>
                     </Button>
                 </form>
             </section>
@@ -221,7 +245,11 @@ function submitManualConfirm(): void {
             class="space-y-4 rounded-2xl border border-border bg-card p-5"
         >
             <h2 class="text-sm font-bold text-foreground">
-                Open Pending Orders ({{ pendingOrders.length }})
+                {{
+                    t('admin.monetizationCenter.settings.openPendingOrders', {
+                        count: pendingOrders.length,
+                    })
+                }}
             </h2>
             <div v-if="pendingOrders.length > 0" class="divide-y divide-border">
                 <div
@@ -250,7 +278,11 @@ function submitManualConfirm(): void {
                                 @click="reconcileTargetId = p.id"
                             >
                                 <CheckCircle2 class="size-3" />
-                                <span>Confirm Paid</span>
+                                <span>{{
+                                    t(
+                                        'admin.monetizationCenter.settings.confirmPaid',
+                                    )
+                                }}</span>
                             </Button>
                         </div>
                     </div>
@@ -262,18 +294,30 @@ function submitManualConfirm(): void {
                     >
                         <Input
                             v-model="reconcileForm.provider_reference"
-                            placeholder="Bank / PayPal Tx Ref"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.settings.txRefPlaceholder',
+                                )
+                            "
                             required
                         />
                         <Input
                             v-model="reconcileForm.reason"
-                            placeholder="Verification note"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.settings.verificationNotePlaceholder',
+                                )
+                            "
                             required
                         />
                         <Input
                             v-model="reconcileForm.password"
                             type="password"
-                            placeholder="Admin password"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.settings.adminPasswordPlaceholder',
+                                )
+                            "
                             required
                         />
                         <Button
@@ -281,7 +325,11 @@ function submitManualConfirm(): void {
                             size="sm"
                             :disabled="reconcileForm.processing"
                         >
-                            Verify & Settle
+                            {{
+                                t(
+                                    'admin.monetizationCenter.settings.verifyAndSettle',
+                                )
+                            }}
                         </Button>
                         <InputError
                             class="sm:col-span-4"
@@ -294,7 +342,7 @@ function submitManualConfirm(): void {
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No pending payment orders waiting reconciliation.
+                {{ t('admin.monetizationCenter.settings.emptyPendingOrders') }}
             </p>
         </section>
 
@@ -306,14 +354,11 @@ function submitManualConfirm(): void {
             <div class="flex items-center gap-2">
                 <Globe class="size-4 text-primary" />
                 <h2 class="text-sm font-bold text-foreground">
-                    Google AdSense Safe Controlled Configuration
+                    {{ t('admin.monetizationCenter.settings.adsenseTitle') }}
                 </h2>
             </div>
             <p class="text-xs text-muted-foreground">
-                Arbitrary HTML/JavaScript injection is strictly forbidden. Only
-                validated Publisher IDs (ca-pub-XXXXXXXXXXXXXXXX) and numeric
-                slot IDs are accepted. Direct rented banners always take
-                priority over AdSense.
+                {{ t('admin.monetizationCenter.settings.adsenseDescription') }}
             </p>
             <form @submit.prevent="saveAdSense" class="space-y-4 text-xs">
                 <label class="flex items-center gap-2 font-semibold">
@@ -321,25 +366,43 @@ function submitManualConfirm(): void {
                         v-model="adSenseForm.adsense_enabled"
                         type="checkbox"
                     />
-                    <span>Enable Google AdSense on permitted public pages</span>
+                    <span>{{
+                        t('admin.monetizationCenter.settings.adsenseEnable')
+                    }}</span>
                 </label>
 
                 <div class="grid gap-3 sm:grid-cols-2">
                     <div class="grid gap-1">
-                        <Label>Publisher ID (ca-pub-XXXXXXXXXXXXXXXX)</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsensePublisherId',
+                            )
+                        }}</Label>
                         <Input
                             v-model="adSenseForm.adsense_publisher_id"
-                            placeholder="ca-pub-1234567890123456"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.settings.adsensePublisherIdPlaceholder',
+                                )
+                            "
                         />
                         <InputError
                             :message="adSenseForm.errors.adsense_publisher_id"
                         />
                     </div>
                     <div class="grid gap-1">
-                        <Label>ads.txt Entry Line</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsenseAdsTxtLine',
+                            )
+                        }}</Label>
                         <Input
                             v-model="adSenseForm.adsense_ads_txt_line"
-                            placeholder="google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.settings.adsenseAdsTxtLinePlaceholder',
+                                )
+                            "
                         />
                         <InputError
                             :message="adSenseForm.errors.adsense_ads_txt_line"
@@ -349,19 +412,35 @@ function submitManualConfirm(): void {
 
                 <div class="grid gap-3 sm:grid-cols-4">
                     <div class="grid gap-1">
-                        <Label>Sidebar Slot ID</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsenseSidebarSlotId',
+                            )
+                        }}</Label>
                         <Input v-model="adSenseForm.adsense_slots.sidebar" />
                     </div>
                     <div class="grid gap-1">
-                        <Label>In-Feed Slot ID</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsenseInFeedSlotId',
+                            )
+                        }}</Label>
                         <Input v-model="adSenseForm.adsense_slots.in_feed" />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Explore Slot ID</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsenseExploreSlotId',
+                            )
+                        }}</Label>
                         <Input v-model="adSenseForm.adsense_slots.explore" />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Community Slot ID</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.settings.adsenseCommunitySlotId',
+                            )
+                        }}</Label>
                         <Input v-model="adSenseForm.adsense_slots.community" />
                     </div>
                 </div>
@@ -372,7 +451,9 @@ function submitManualConfirm(): void {
                     :disabled="adSenseForm.processing"
                 >
                     <Save class="size-3.5" />
-                    <span>Save AdSense Config</span>
+                    <span>{{
+                        t('admin.monetizationCenter.settings.saveAdsenseConfig')
+                    }}</span>
                 </Button>
             </form>
         </section>
@@ -403,8 +484,12 @@ function submitManualConfirm(): void {
                     >
                         {{
                             rule.require_native_iap_for_digital
-                                ? 'Native IAP Required'
-                                : 'Web Checkout Allowed'
+                                ? t(
+                                      'admin.monetizationCenter.settings.nativeIapRequired',
+                                  )
+                                : t(
+                                      'admin.monetizationCenter.settings.webCheckoutAllowed',
+                                  )
                         }}
                     </Badge>
                 </div>
@@ -414,28 +499,42 @@ function submitManualConfirm(): void {
                             v-model="rule.allow_external_web_checkout"
                             type="checkbox"
                         />
-                        <span>External Web Checkout</span>
+                        <span>{{
+                            t(
+                                'admin.monetizationCenter.settings.externalWebCheckout',
+                            )
+                        }}</span>
                     </label>
                     <label class="flex items-center gap-1.5">
                         <input
                             v-model="rule.allow_premium_purchase"
                             type="checkbox"
                         />
-                        <span>Premium Purchase</span>
+                        <span>{{
+                            t(
+                                'admin.monetizationCenter.settings.premiumPurchase',
+                            )
+                        }}</span>
                     </label>
                     <label class="flex items-center gap-1.5">
                         <input
                             v-model="rule.allow_boost_purchase"
                             type="checkbox"
                         />
-                        <span>Boost Purchase</span>
+                        <span>{{
+                            t('admin.monetizationCenter.settings.boostPurchase')
+                        }}</span>
                     </label>
                     <label class="flex items-center gap-1.5">
                         <input
                             v-model="rule.allow_banner_display"
                             type="checkbox"
                         />
-                        <span>Display Banners</span>
+                        <span>{{
+                            t(
+                                'admin.monetizationCenter.settings.displayBanners',
+                            )
+                        }}</span>
                     </label>
                 </div>
                 <p v-if="rule.policy_note" class="text-muted-foreground">
@@ -448,7 +547,7 @@ function submitManualConfirm(): void {
                     class="h-7 text-[11px]"
                     @click="saveCompliance(rule)"
                 >
-                    Save Rule
+                    {{ t('admin.monetizationCenter.settings.saveRule') }}
                 </Button>
             </div>
         </section>
@@ -459,7 +558,7 @@ function submitManualConfirm(): void {
             class="space-y-3 rounded-2xl border border-border bg-card p-5"
         >
             <h2 class="text-sm font-bold text-foreground">
-                Payment Webhook Audit Trail
+                {{ t('admin.monetizationCenter.settings.webhookAuditTrail') }}
             </h2>
             <div v-if="webhookLogs.length > 0" class="divide-y divide-border">
                 <div
@@ -474,7 +573,15 @@ function submitManualConfirm(): void {
                             "
                             class="mr-2 text-[10px]"
                         >
-                            {{ l.signature_valid ? 'SIG OK' : 'INVALID SIG' }}
+                            {{
+                                l.signature_valid
+                                    ? t(
+                                          'admin.monetizationCenter.settings.sigOk',
+                                      )
+                                    : t(
+                                          'admin.monetizationCenter.settings.invalidSig',
+                                      )
+                            }}
                         </Badge>
                         <span class="font-semibold uppercase">{{
                             l.provider
@@ -493,7 +600,7 @@ function submitManualConfirm(): void {
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No webhook attempts logged yet.
+                {{ t('admin.monetizationCenter.settings.emptyWebhookLogs') }}
             </p>
         </section>
     </div>

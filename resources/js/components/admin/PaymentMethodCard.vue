@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +25,8 @@ export type AdminPaymentMethod = {
 const props = defineProps<{
     method: AdminPaymentMethod;
 }>();
+
+const { t } = useI18n();
 
 const form = useForm({
     name: props.method.name,
@@ -75,17 +78,21 @@ function save(): void {
             >
                 {{
                     method.requires_legal_clearance
-                        ? 'Crypto (Legal Hold)'
+                        ? t(
+                              'admin.monetizationCenter.paymentMethod.cryptoLegalHold',
+                          )
                         : form.is_enabled
-                          ? 'Enabled'
-                          : 'Disabled'
+                          ? t('admin.monetizationCenter.common.enabled')
+                          : t('admin.monetizationCenter.common.disabled')
                 }}
             </Badge>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
             <div>
-                <Label class="text-[10px]">Fee (bps)</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.feeBps')
+                }}</Label>
                 <Input
                     v-model.number="form.fee_percent_bps"
                     type="number"
@@ -93,7 +100,9 @@ function save(): void {
                 />
             </div>
             <div>
-                <Label class="text-[10px]">Fixed VND</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.fixedVnd')
+                }}</Label>
                 <Input
                     v-model.number="form.fee_fixed_vnd"
                     type="number"
@@ -101,7 +110,9 @@ function save(): void {
                 />
             </div>
             <div>
-                <Label class="text-[10px]">Fixed USD¢</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.fixedUsdCents')
+                }}</Label>
                 <Input
                     v-model.number="form.fee_fixed_usd_cents"
                     type="number"
@@ -115,38 +126,62 @@ function save(): void {
             class="grid gap-2 rounded-lg border border-border/80 bg-muted/30 p-3 sm:grid-cols-2"
         >
             <div>
-                <Label class="text-[10px]">Tên ngân hàng</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.bankName')
+                }}</Label>
                 <input
                     v-model="form.instructions.bank_name"
                     type="text"
-                    placeholder="VD: MB Bank, Vietcombank, ACB"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.bankNamePlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
             <div>
-                <Label class="text-[10px]">Mã VietQR (để tự tạo QR)</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.vietqrCode')
+                }}</Label>
                 <input
                     v-model="form.instructions.bank_code"
                     type="text"
-                    placeholder="VD: MB, VCB, TCB, ACB, BIDV, VPB"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.vietqrCodePlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 font-mono text-xs uppercase shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
             <div>
-                <Label class="text-[10px]">Số tài khoản nhận</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.accountNumber')
+                }}</Label>
                 <input
                     v-model="form.instructions.account_number"
                     type="text"
-                    placeholder="Nhập số tài khoản ngân hàng"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.accountNumberPlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 font-mono text-xs shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
             <div>
-                <Label class="text-[10px]">Tên chủ tài khoản</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.accountHolder')
+                }}</Label>
                 <input
                     v-model="form.instructions.account_holder"
                     type="text"
-                    placeholder="VD: NGUYEN VAN A"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.accountHolderPlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs uppercase shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
@@ -157,20 +192,32 @@ function save(): void {
             class="grid gap-2 rounded-lg border border-border/80 bg-muted/30 p-3 sm:grid-cols-2"
         >
             <div>
-                <Label class="text-[10px]">Email PayPal nhận tiền</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.paypalEmail')
+                }}</Label>
                 <input
                     v-model="form.instructions.merchant_email"
                     type="email"
-                    placeholder="payments@syncviet.com"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.paypalEmailPlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
             <div>
-                <Label class="text-[10px]">PayPal.Me URL (tùy chọn)</Label>
+                <Label class="text-[10px]">{{
+                    t('admin.monetizationCenter.paymentMethod.paypalMeUrl')
+                }}</Label>
                 <input
                     v-model="form.instructions.paypal_me_url"
                     type="url"
-                    placeholder="paypal.me/yourname"
+                    :placeholder="
+                        t(
+                            'admin.monetizationCenter.paymentMethod.paypalMeUrlPlaceholder',
+                        )
+                    "
                     class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs shadow-xs outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
                 />
             </div>
@@ -180,11 +227,15 @@ function save(): void {
             <div class="flex items-center gap-3">
                 <label class="flex items-center gap-1.5">
                     <input v-model="form.is_enabled" type="checkbox" />
-                    <span>Enabled</span>
+                    <span>{{
+                        t('admin.monetizationCenter.common.enabled')
+                    }}</span>
                 </label>
                 <label class="flex items-center gap-1.5">
                     <input v-model="form.is_live_ready" type="checkbox" />
-                    <span>Live Ready</span>
+                    <span>{{
+                        t('admin.monetizationCenter.paymentMethod.liveReady')
+                    }}</span>
                 </label>
             </div>
             <Button
@@ -195,7 +246,7 @@ function save(): void {
                 :disabled="form.processing"
                 @click="save"
             >
-                Save
+                {{ t('admin.monetizationCenter.common.save') }}
             </Button>
         </div>
     </div>

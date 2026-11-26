@@ -729,7 +729,7 @@ function isItemActive(item: NavItem): boolean {
         >
             <!-- Left Sidebar (~240px) -->
             <aside
-                aria-label="Thanh điều hướng chính"
+                :aria-label="t('accessibility.mainNavigation')"
                 class="sticky top-22 hidden w-[240px] shrink-0 space-y-4 lg:block"
             >
                 <div class="rounded-xl border border-border bg-card p-3">
@@ -897,7 +897,7 @@ function isItemActive(item: NavItem): boolean {
             <!-- Right Sidebar (~320px) + MiniFooter (hidden on Service Layout pages) -->
             <aside
                 v-if="!isWideServiceLayout"
-                aria-label="Thông tin bổ trợ"
+                :aria-label="t('accessibility.supplementaryInfo')"
                 class="sticky top-22 hidden w-[320px] shrink-0 space-y-4 xl:block"
             >
                 <!-- Community Context Right Sidebar (Mockup 2) -->

@@ -383,6 +383,12 @@ class BannerAdvertisingService
                 url: route('monetization.banner'),
                 actorName: $reviewer->name,
                 actorUsername: $reviewer->username,
+                titleKey: $approved
+                    ? 'Your banner ":name" was approved and scheduled for display.'
+                    : 'Your banner ":name" was rejected: :reason',
+                titleParams: $approved
+                    ? ['name' => $updated->name]
+                    : ['name' => $updated->name, 'reason' => (string) $updated->rejection_reason],
             ));
         }
 

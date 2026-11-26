@@ -111,7 +111,7 @@ const isGuest = computed(() => !page.props.auth.user);
 
         <nav
             v-if="pagination.last_page > 1"
-            aria-label="Pagination"
+            :aria-label="t('accessibility.pagination')"
             class="flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3"
         >
             <Button

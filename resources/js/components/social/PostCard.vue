@@ -457,7 +457,7 @@ function submitReport(): void {
                         variant="ghost"
                         size="icon"
                         class="size-10 shrink-0 rounded-full text-muted-foreground sm:size-8 sm:rounded-lg"
-                        aria-label="Post options"
+                        :aria-label="t('accessibility.postOptions')"
                     >
                         <MoreHorizontal class="size-4" />
                     </Button>
@@ -770,8 +770,12 @@ function submitReport(): void {
                     <span>{{ post.boost_summary.status_label }}</span>
                 </span>
                 <span class="text-[11px] text-muted-foreground">
-                    {{ post.boost_summary.impressions_count }} imp ·
-                    {{ post.boost_summary.clicks_count }} clicks
+                    {{
+                        t('post.extra.boostMetrics', {
+                            impressions: post.boost_summary.impressions_count,
+                            clicks: post.boost_summary.clicks_count,
+                        })
+                    }}
                 </span>
             </div>
 
@@ -836,7 +840,7 @@ function submitReport(): void {
                     <button
                         type="button"
                         class="flex size-9 items-center justify-center rounded-lg text-xs text-muted-foreground hover:bg-muted sm:size-8"
-                        aria-label="Choose reaction"
+                        :aria-label="t('accessibility.chooseReaction')"
                         @click="showReactionMenu = !showReactionMenu"
                     >
                         ▾

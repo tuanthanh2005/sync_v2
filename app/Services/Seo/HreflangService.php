@@ -200,7 +200,7 @@ class HreflangService
                             'code' => 'hreflang_relative_url',
                             'locale' => $lang,
                             'url' => $href,
-                            'message' => 'Hreflang alternate URL must be an absolute URL.',
+                            'message' => __('Hreflang alternate URL must be an absolute URL.'),
                         ];
                     }
 

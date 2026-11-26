@@ -177,7 +177,9 @@ function submitReasonAction(reason: string): void {
                 class="flex items-center gap-2 text-sm font-bold text-foreground"
             >
                 <Plus class="size-4 text-primary" />
-                <span>Create Managed Banner Campaign</span>
+                <span>{{
+                    t('admin.monetizationCenter.banners.createCampaignTitle')
+                }}</span>
             </h2>
             <form
                 @submit.prevent="submitAdminCampaign"
@@ -185,7 +187,9 @@ function submitReasonAction(reason: string): void {
             >
                 <div class="grid gap-3 sm:grid-cols-3">
                     <div class="grid gap-1">
-                        <Label>Placement</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.placement')
+                        }}</Label>
                         <select
                             v-model.number="createForm.banner_placement_id"
                             class="h-9 rounded-lg border border-input bg-background px-2.5 text-xs"
@@ -200,17 +204,23 @@ function submitReasonAction(reason: string): void {
                         </select>
                     </div>
                     <div class="grid gap-1">
-                        <Label>Campaign Name</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.campaignName')
+                        }}</Label>
                         <Input v-model="createForm.name" required />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Business Name</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.businessName')
+                        }}</Label>
                         <Input v-model="createForm.business_name" />
                     </div>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-3">
                     <div class="grid gap-1">
-                        <Label>Target URL (HTTPS)</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.targetUrl')
+                        }}</Label>
                         <Input
                             v-model="createForm.target_url"
                             type="url"
@@ -219,11 +229,17 @@ function submitReasonAction(reason: string): void {
                         <InputError :message="createForm.errors.target_url" />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Alt Text</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.altText')
+                        }}</Label>
                         <Input v-model="createForm.alt_text" required />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Duration (days) & Start</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.banners.durationAndStart',
+                            )
+                        }}</Label>
                         <div class="flex gap-2">
                             <Input
                                 v-model.number="createForm.duration_days"
@@ -239,7 +255,9 @@ function submitReasonAction(reason: string): void {
                 </div>
                 <div class="grid gap-3 sm:grid-cols-3">
                     <div class="grid gap-1">
-                        <Label>Desktop Image</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.desktopImage')
+                        }}</Label>
                         <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -250,7 +268,9 @@ function submitReasonAction(reason: string): void {
                         />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Mobile Image</Label>
+                        <Label>{{
+                            t('admin.monetizationCenter.banners.mobileImage')
+                        }}</Label>
                         <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -258,10 +278,18 @@ function submitReasonAction(reason: string): void {
                         />
                     </div>
                     <div class="grid gap-1">
-                        <Label>Owner Username (optional)</Label>
+                        <Label>{{
+                            t(
+                                'admin.monetizationCenter.banners.ownerUsernameOptional',
+                            )
+                        }}</Label>
                         <Input
                             v-model="createForm.owner_username"
-                            placeholder="defaults to current admin"
+                            :placeholder="
+                                t(
+                                    'admin.monetizationCenter.banners.ownerUsernamePlaceholder',
+                                )
+                            "
                         />
                     </div>
                 </div>
@@ -271,7 +299,9 @@ function submitReasonAction(reason: string): void {
                     :disabled="createForm.processing"
                 >
                     <Plus class="size-3.5" />
-                    <span>Publish Banner Campaign</span>
+                    <span>{{
+                        t('admin.monetizationCenter.banners.publishCampaign')
+                    }}</span>
                 </Button>
             </form>
         </section>
@@ -279,7 +309,11 @@ function submitReasonAction(reason: string): void {
         <!-- Campaigns Moderation & Emergency Pause -->
         <section class="space-y-3 rounded-2xl border border-border bg-card p-5">
             <h2 class="text-sm font-bold text-foreground">
-                Banner Campaigns ({{ campaigns.total }})
+                {{
+                    t('admin.monetizationCenter.banners.campaignsTitle', {
+                        count: campaigns.total,
+                    })
+                }}
             </h2>
             <div
                 v-if="campaigns.data.length > 0"
@@ -309,8 +343,16 @@ function submitReasonAction(reason: string): void {
                             {{
                                 formatMoney(c.price_amount, c.currency, locale)
                             }}
-                            · {{ c.impressions_count }} imp /
-                            {{ c.clicks_count }} clicks
+                            ·
+                            {{
+                                t(
+                                    'admin.monetizationCenter.common.impressionsClicks',
+                                    {
+                                        impressions: c.impressions_count,
+                                        clicks: c.clicks_count,
+                                    },
+                                )
+                            }}
                         </p>
                     </div>
                     <div class="flex flex-wrap items-center gap-1.5">
@@ -322,7 +364,9 @@ function submitReasonAction(reason: string): void {
                             @click="approveCampaign(c.id)"
                         >
                             <CheckCircle2 class="size-3" />
-                            <span>Approve</span>
+                            <span>{{
+                                t('admin.monetizationCenter.banners.approve')
+                            }}</span>
                         </Button>
                         <Button
                             v-if="c.status === 'pending_review'"
@@ -334,12 +378,16 @@ function submitReasonAction(reason: string): void {
                                 openReasonAction(
                                     c.id,
                                     'reject',
-                                    'Reject Banner',
+                                    t(
+                                        'admin.monetizationCenter.banners.rejectBannerTitle',
+                                    ),
                                 )
                             "
                         >
                             <XCircle class="size-3" />
-                            <span>Reject</span>
+                            <span>{{
+                                t('admin.monetizationCenter.banners.reject')
+                            }}</span>
                         </Button>
                         <Button
                             v-if="
@@ -354,25 +402,35 @@ function submitReasonAction(reason: string): void {
                                 openReasonAction(
                                     c.id,
                                     'emergency_pause',
-                                    'Emergency Pause Banner',
+                                    t(
+                                        'admin.monetizationCenter.banners.emergencyPauseTitle',
+                                    ),
                                 )
                             "
                         >
                             <PauseOctagon class="size-3" />
-                            <span>Emergency Pause</span>
+                            <span>{{
+                                t(
+                                    'admin.monetizationCenter.banners.emergencyPause',
+                                )
+                            }}</span>
                         </Button>
                     </div>
                 </div>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No banner campaigns found.
+                {{ t('admin.monetizationCenter.banners.emptyCampaigns') }}
             </p>
         </section>
 
         <!-- Placements Pricing & Exclusive/Rotation Config -->
         <section class="space-y-3 rounded-2xl border border-border bg-card p-5">
             <h2 class="text-sm font-bold text-foreground">
-                Banner Placements ({{ placements.length }})
+                {{
+                    t('admin.monetizationCenter.banners.placementsTitle', {
+                        count: placements.length,
+                    })
+                }}
             </h2>
             <div class="grid gap-3 md:grid-cols-2">
                 <div
@@ -393,17 +451,33 @@ function submitReasonAction(reason: string): void {
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <Label class="text-[10px]">Mode</Label>
+                            <Label class="text-[10px]">{{
+                                t('admin.monetizationCenter.banners.mode')
+                            }}</Label>
                             <select
                                 v-model="pl.delivery_mode"
                                 class="h-8 w-full rounded-md border border-input bg-background px-2 text-xs"
                             >
-                                <option value="exclusive">Exclusive</option>
-                                <option value="rotation">Rotation</option>
+                                <option value="exclusive">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.banners.modeExclusive',
+                                        )
+                                    }}
+                                </option>
+                                <option value="rotation">
+                                    {{
+                                        t(
+                                            'admin.monetizationCenter.banners.modeRotation',
+                                        )
+                                    }}
+                                </option>
                             </select>
                         </div>
                         <div>
-                            <Label class="text-[10px]">7d VND</Label>
+                            <Label class="text-[10px]">{{
+                                t('admin.monetizationCenter.banners.price7dVnd')
+                            }}</Label>
                             <Input
                                 v-model.number="pl.price_7d_vnd"
                                 type="number"
@@ -411,7 +485,11 @@ function submitReasonAction(reason: string): void {
                             />
                         </div>
                         <div>
-                            <Label class="text-[10px]">30d VND</Label>
+                            <Label class="text-[10px]">{{
+                                t(
+                                    'admin.monetizationCenter.banners.price30dVnd',
+                                )
+                            }}</Label>
                             <Input
                                 v-model.number="pl.price_30d_vnd"
                                 type="number"
@@ -422,7 +500,9 @@ function submitReasonAction(reason: string): void {
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-1.5">
                             <input v-model="pl.is_active" type="checkbox" />
-                            <span>Active</span>
+                            <span>{{
+                                t('admin.monetizationCenter.common.active')
+                            }}</span>
                         </label>
                         <Button
                             type="button"
@@ -432,7 +512,9 @@ function submitReasonAction(reason: string): void {
                             @click="savePlacement(pl)"
                         >
                             <Save class="size-3" />
-                            <span>Save</span>
+                            <span>{{
+                                t('admin.monetizationCenter.common.save')
+                            }}</span>
                         </Button>
                     </div>
                 </div>
@@ -441,7 +523,10 @@ function submitReasonAction(reason: string): void {
 
         <ReasonDialog
             v-model:open="reasonOpen"
-            :title="actionCtx?.title || 'Banner Action'"
+            :title="
+                actionCtx?.title ||
+                t('admin.monetizationCenter.banners.bannerActionFallback')
+            "
             :description="t('dialog.reasonPlaceholder')"
             :confirm-label="t('common.confirm')"
             @submit="submitReasonAction"

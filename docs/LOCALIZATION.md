@@ -2,7 +2,19 @@
 
 ## 1. Supported Languages
 
-English (`en`) is the default and fallback language. All 15 languages are bundled with 100% key parity across both frontend (`resources/js/i18n/locales/{code}.json`, 643 keys each) and backend (`lang/{code}.json`, 168 keys each):
+English (`en`) is the default and fallback language, configured centrally in `config/localization.php` (Single Source of Truth). All 15 languages are bundled with **100% key parity** across all three layers:
+
+- Frontend UI (`resources/js/i18n/locales/{code}.json`): **2,099 keys** each (14 non-English packs lazy-loaded dynamically on demand).
+- Backend JSON (`lang/{code}.json`): **603 keys** each (enums, API/controller/service responses, emails, notifications, Blade errors, SEO SSR labels).
+- Laravel PHP Lang (`lang/{code}/{auth,pagination,passwords,validation}.php`): **147 keys** each.
+
+For complete architectural, glossary, audit, and developer SOP documentation, see:
+
+- [LOCALIZATION_ARCHITECTURE.md](LOCALIZATION_ARCHITECTURE.md)
+- [INTERNATIONALIZATION_GUIDELINES.md](INTERNATIONALIZATION_GUIDELINES.md)
+- [TRANSLATION_GLOSSARY.md](TRANSLATION_GLOSSARY.md)
+- [TRANSLATION_COVERAGE_REPORT.md](TRANSLATION_COVERAGE_REPORT.md)
+- [LOCALIZATION_TEST_RESULTS.md](LOCALIZATION_TEST_RESULTS.md)
 
 | Code    | Native Name        |    Flag Asset    |   Direction   |
 | :------ | :----------------- | :--------------: | :-----------: |

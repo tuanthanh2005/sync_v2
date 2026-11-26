@@ -112,6 +112,7 @@ function joinCommunity(slug: string): void {
                 </h2>
                 <select
                     v-model="form.selected_locale"
+                    :aria-label="t('growth.onboarding.languageStep')"
                     class="h-10 w-full max-w-xs rounded-lg border border-input bg-background px-3 text-sm"
                 >
                     <option
@@ -186,8 +187,12 @@ function joinCommunity(slug: string): void {
                                 {{ c.name }}
                             </p>
                             <p class="text-muted-foreground">
-                                {{ c.category_label }} · {{ c.members_count }}
-                                members
+                                {{ c.category_label }} ·
+                                {{
+                                    t('communities.membersCount', {
+                                        count: c.members_count,
+                                    })
+                                }}
                             </p>
                         </div>
                         <Button

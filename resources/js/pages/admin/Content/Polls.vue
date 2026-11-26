@@ -42,6 +42,34 @@ const dialogOpen = ref(false);
 const activePoll = ref<PollRow | null>(null);
 const activeAction = ref('close');
 
+function moderationStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        approved: 'admin.contentExtra.modStatus.approved',
+        visible: 'admin.contentExtra.modStatus.visible',
+        published: 'admin.contentExtra.modStatus.published',
+        pending: 'admin.contentExtra.modStatus.pending',
+        hidden: 'admin.contentExtra.modStatus.hidden',
+        removed: 'admin.contentExtra.modStatus.removed',
+        rejected: 'admin.contentExtra.modStatus.rejected',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
+function pollActionLabel(action: string): string {
+    const map: Record<string, string> = {
+        close: 'admin.contentExtra.actions.close',
+        reopen: 'admin.contentExtra.actions.reopen',
+        hide: 'admin.contentExtra.actions.hide',
+        restore: 'admin.contentExtra.actions.restore',
+        delete: 'admin.contentExtra.actions.delete',
+    };
+    const key = map[action];
+
+    return key ? t(key) : action;
+}
+
 function openAction(poll: PollRow, action: string): void {
     activePoll.value = poll;
     activeAction.value = action;
@@ -101,28 +129,47 @@ function submitAction(reason: string): void {
                                 <span class="font-semibold text-foreground">{{
                                     poll.question
                                 }}</span>
-                                <Badge variant="secondary" class="text-[10px]"
+                                <Badge
+                                    variant="secondary"
+                                    class="text-[10px]"
                                     >{{
-                                        formatNumber(poll.total_votes, locale)
-                                    }}
-                                    votes</Badge
+                                        t('admin.contentExtra.pollVotesBadge', {
+                                            count: formatNumber(
+                                                poll.total_votes,
+                                                locale,
+                                            ),
+                                        })
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="poll.is_closed"
                                     variant="destructive"
                                     class="text-[10px]"
-                                    >Closed</Badge
+                                    >{{
+                                        t('admin.contentExtra.pollClosedBadge')
+                                    }}</Badge
                                 >
                                 <Badge variant="outline" class="text-[10px]">{{
-                                    poll.moderation_status
+                                    moderationStatusLabel(
+                                        poll.moderation_status,
+                                    )
                                 }}</Badge>
                             </div>
                             <p class="text-[11px] text-muted-foreground">
-                                Post #{{ poll.post_id }} · @{{
-                                    poll.author_username || 'unknown'
+                                {{
+                                    t('admin.contentExtra.pollMeta', {
+                                        postId: poll.post_id,
+                                        author: poll.author_username
+                                            ? `@${poll.author_username}`
+                                            : t(
+                                                  'admin.contentExtra.unknownAuthor',
+                                              ),
+                                        endsAt: formatDateTime(
+                                            poll.ends_at,
+                                            locale,
+                                        ),
+                                    })
                                 }}
-                                · Ends:
-                                {{ formatDateTime(poll.ends_at, locale) }}
                             </p>
                             <div class="flex flex-wrap gap-2 pt-1">
                                 <span
@@ -149,7 +196,7 @@ function submitAction(reason: string): void {
                                 <Lock class="size-3.5" />
                                 <span>{{
                                     poll.is_closed
-                                        ? 'Reopen'
+                                        ? t('admin.contentExtra.actions.reopen')
                                         : t('admin.content.closePoll')
                                 }}</span>
                             </Button>
@@ -157,6 +204,20 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="outline"
                                 class="h-7 px-2 text-[11px]"
+                                :title="
+                                    poll.moderation_status === 'hidden'
+                                        ? t(
+                                              'admin.contentExtra.actions.restore',
+                                          )
+                                        : t('admin.contentExtra.actions.hide')
+                                "
+                                :aria-label="
+                                    poll.moderation_status === 'hidden'
+                                        ? t(
+                                              'admin.contentExtra.actions.restore',
+                                          )
+                                        : t('admin.contentExtra.actions.hide')
+                                "
                                 @click="
                                     openAction(
                                         poll,
@@ -172,6 +233,10 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="destructive"
                                 class="h-7 px-2 text-[11px]"
+                                :title="t('admin.contentExtra.actions.delete')"
+                                :aria-label="
+                                    t('admin.contentExtra.actions.delete')
+                                "
                                 @click="openAction(poll, 'delete')"
                             >
                                 <Trash2 class="size-3.5" />
@@ -192,7 +257,12 @@ function submitAction(reason: string): void {
 
         <ReasonDialog
             v-model:open="dialogOpen"
-            :title="`${t('admin.content.pollsTitle')} · ${activeAction}`"
+            :title="
+                t('admin.contentExtra.actionDialogTitle', {
+                    section: t('admin.content.pollsTitle'),
+                    action: pollActionLabel(activeAction),
+                })
+            "
             :description="activePoll?.question || ''"
             @submit="submitAction"
         />

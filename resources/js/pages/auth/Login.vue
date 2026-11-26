@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -12,22 +14,24 @@ import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
-defineOptions({
-    layout: {
-        title: 'Đăng nhập tài khoản',
-        description: 'Nhập email và mật khẩu để truy cập tài khoản của bạn',
-    },
-});
-
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
+
+const { t } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
+        title: t('auth.login.layoutTitle'),
+        description: t('auth.login.layoutDescription'),
+    });
+});
 </script>
 
 <template>
     <div>
-        <Head title="Đăng nhập" />
+        <Head :title="t('auth.login.pageTitle')" />
 
         <div
             v-if="status"
@@ -59,12 +63,14 @@ defineProps<{
                     fill="#EA4335"
                 />
             </svg>
-            Tiếp tục với Google
+            {{ t('auth.login.continueWithGoogle') }}
         </a>
 
         <div class="relative mb-5 flex items-center gap-3">
             <div class="h-px flex-1 bg-border" />
-            <span class="text-xs text-muted-foreground">hoặc</span>
+            <span class="text-xs text-muted-foreground">{{
+                t('auth.login.orDivider')
+            }}</span>
             <div class="h-px flex-1 bg-border" />
         </div>
 
@@ -76,7 +82,7 @@ defineProps<{
         >
             <div class="grid gap-5">
                 <div class="grid gap-2">
-                    <Label for="email">Địa chỉ email</Label>
+                    <Label for="email">{{ t('auth.fields.email') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -85,21 +91,23 @@ defineProps<{
                         v-focus
                         :tabindex="1"
                         autocomplete="email"
-                        placeholder="ban@example.com"
+                        :placeholder="t('auth.fields.emailPlaceholder')"
                     />
                     <InputError :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Mật khẩu</Label>
+                        <Label for="password">{{
+                            t('auth.fields.password')
+                        }}</Label>
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
                             class="text-sm text-primary"
                             :tabindex="5"
                         >
-                            Quên mật khẩu?
+                            {{ t('auth.login.forgotPassword') }}
                         </TextLink>
                     </div>
                     <PasswordInput
@@ -108,7 +116,7 @@ defineProps<{
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        placeholder="Nhập mật khẩu"
+                        :placeholder="t('auth.fields.passwordPlaceholder')"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -117,7 +125,7 @@ defineProps<{
                     <Label for="remember" class="flex items-center space-x-2.5">
                         <Checkbox id="remember" name="remember" :tabindex="3" />
                         <span class="text-sm font-normal text-muted-foreground">
-                            Ghi nhớ đăng nhập
+                            {{ t('auth.login.rememberMe') }}
                         </span>
                     </Label>
                 </div>
@@ -130,18 +138,18 @@ defineProps<{
                     data-test="login-button"
                 >
                     <Spinner v-if="processing" />
-                    Đăng nhập
+                    {{ t('auth.login.submit') }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Chưa có tài khoản?
+                {{ t('auth.login.noAccount') }}
                 <TextLink
                     :href="register()"
                     class="font-medium text-primary"
                     :tabindex="5"
                 >
-                    Đăng ký ngay
+                    {{ t('auth.login.registerLink') }}
                 </TextLink>
             </div>
         </Form>

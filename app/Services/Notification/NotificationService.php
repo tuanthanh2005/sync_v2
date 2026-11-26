@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserBlock;
 use App\Notifications\SocialActivityNotification;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Lang;
 
 class NotificationService
 {
@@ -47,12 +48,27 @@ class NotificationService
                     /** @var array<string, mixed> $data */
                     $data = $notification->data;
 
+                    $titleKey = is_string($data['title_key'] ?? null) && $data['title_key'] !== ''
+                        ? $data['title_key']
+                        : null;
+                    /** @var array<string, scalar> $titleParams */
+                    $titleParams = is_array($data['title_params'] ?? null) ? $data['title_params'] : [];
+
+                    if ($titleKey !== null) {
+                        $title = (string) Lang::get($titleKey, $titleParams, $locale);
+                    } elseif ($locale === 'vi') {
+                        $title = (string) ($data['title_vi'] ?? $data['title_en'] ?? '');
+                    } else {
+                        $enFallback = (string) ($data['title_en'] ?? $data['title_vi'] ?? '');
+                        $title = $enFallback !== ''
+                            ? (string) Lang::get($enFallback, $titleParams, $locale)
+                            : '';
+                    }
+
                     return [
                         'id' => $notification->id,
                         'event' => (string) ($data['event'] ?? 'activity'),
-                        'title' => $locale === 'en'
-                            ? (string) ($data['title_en'] ?? $data['title_vi'] ?? '')
-                            : (string) ($data['title_vi'] ?? $data['title_en'] ?? ''),
+                        'title' => $title,
                         'url' => (string) ($data['url'] ?? '/'),
                         'actor_name' => $data['actor_name'] ?? null,
                         'actor_username' => $data['actor_username'] ?? null,

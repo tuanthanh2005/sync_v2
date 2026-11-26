@@ -129,6 +129,7 @@ class RetentionAndDigestService
                 url: route('home', [], false),
                 actorName: (string) config('app.name', 'SyncViet'),
                 actorUsername: 'system',
+                titleKey: 'New discussions matching your topics and communities are waiting on SyncViet.',
             ));
 
             $user->forceFill([
@@ -190,6 +191,10 @@ class RetentionAndDigestService
 
             $joinedCount = CommunityMember::query()->where('user_id', $user->id)->count();
 
+            $digestKey = $joinedCount > 0
+                ? 'Weekly digest: :count new discussions across SyncViet communities.'
+                : 'Explore :count trending discussions this week on SyncViet.';
+
             $user->notify(new SocialActivityNotification(
                 eventKey: 'growth.weekly_digest',
                 titleVi: $joinedCount > 0
@@ -201,6 +206,8 @@ class RetentionAndDigestService
                 url: route('home', [], false),
                 actorName: (string) config('app.name', 'SyncViet'),
                 actorUsername: 'system',
+                titleKey: $digestKey,
+                titleParams: ['count' => $recentPostsCount],
             ));
 
             $user->forceFill(['last_reengagement_sent_at' => now()])->saveQuietly();

@@ -58,7 +58,7 @@ function createBackup(): void {
         >
             <Input
                 v-model="form.notes"
-                placeholder="Optional backup label (e.g. Pre-upgrade snapshot)"
+                :placeholder="t('admin.backupsExtra.notesPlaceholder')"
                 class="h-9 min-w-[240px] flex-1 text-xs"
             />
             <Button
@@ -96,7 +96,12 @@ function createBackup(): void {
                             >
                         </p>
                         <p class="text-[11px] text-muted-foreground">
-                            @{{ b.creator_username || 'system' }} ·
+                            {{
+                                b.creator_username
+                                    ? `@${b.creator_username}`
+                                    : t('admin.backupsExtra.systemActor')
+                            }}
+                            ·
                             {{ formatDateTime(b.created_at, locale) }}
                             <span v-if="b.notes"> · {{ b.notes }}</span>
                         </p>

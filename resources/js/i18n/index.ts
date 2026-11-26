@@ -48,10 +48,25 @@ const localeLoaders: Record<
 
 type MessageSchema = typeof en;
 
+const missingKeysReported = new Set<string>();
+
 export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
     legacy: false,
     locale: 'en',
     fallbackLocale: 'en',
+    missingWarn: false,
+    fallbackWarn: false,
+    missing: (locale, key) => {
+        const signature = `${locale}:${key}`;
+        if (!missingKeysReported.has(signature)) {
+            missingKeysReported.add(signature);
+            if (import.meta.env.DEV) {
+                console.warn(
+                    `[SyncViet i18n] Missing translation key "${key}" for locale "${locale}" (fell back to English).`,
+                );
+            }
+        }
+    },
     messages: {
         en,
     } as Record<SupportedLocale, MessageSchema>,

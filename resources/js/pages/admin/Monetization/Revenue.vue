@@ -71,6 +71,12 @@ const { t, locale } = useI18n();
 const range = ref(props.filters.range);
 const fromDate = ref(props.filters.from);
 const toDate = ref(props.filters.to);
+const revenueRanges = [
+    { key: 'day', labelKey: 'admin.monetizationCenter.revenue.ranges.day' },
+    { key: 'week', labelKey: 'admin.monetizationCenter.revenue.ranges.week' },
+    { key: 'month', labelKey: 'admin.monetizationCenter.revenue.ranges.month' },
+    { key: 'year', labelKey: 'admin.monetizationCenter.revenue.ranges.year' },
+] as const;
 
 function switchRange(nextRange: string): void {
     range.value = nextRange;
@@ -110,15 +116,15 @@ function switchRange(nextRange: string): void {
 
             <div class="flex flex-wrap items-center gap-2">
                 <Button
-                    v-for="r in ['day', 'week', 'month', 'year']"
-                    :key="r"
+                    v-for="r in revenueRanges"
+                    :key="r.key"
                     type="button"
                     size="sm"
-                    :variant="range === r ? 'default' : 'outline'"
-                    class="rounded-lg text-xs capitalize"
-                    @click="switchRange(r)"
+                    :variant="range === r.key ? 'default' : 'outline'"
+                    class="rounded-lg text-xs"
+                    @click="switchRange(r.key)"
                 >
-                    {{ r }}
+                    {{ t(r.labelKey) }}
                 </Button>
                 <a
                     :href="
@@ -133,7 +139,7 @@ function switchRange(nextRange: string): void {
                     class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground hover:bg-surface-hover"
                 >
                     <Download class="size-3.5" />
-                    <span>CSV</span>
+                    <span>{{ t('admin.monetizationCenter.common.csv') }}</span>
                 </a>
             </div>
         </div>
@@ -156,9 +162,13 @@ function switchRange(nextRange: string): void {
             <div class="space-y-3 rounded-2xl border border-border bg-card p-5">
                 <div class="flex items-center justify-between">
                     <h2 class="text-sm font-bold text-foreground">
-                        VND Accounting (Vietnam)
+                        {{
+                            t('admin.monetizationCenter.revenue.vndAccounting')
+                        }}
                     </h2>
-                    <Badge variant="soft">VND</Badge>
+                    <Badge variant="soft">{{
+                        t('admin.monetizationCenter.common.vnd')
+                    }}</Badge>
                 </div>
                 <div class="grid grid-cols-2 gap-3 text-xs">
                     <div class="rounded-xl bg-muted/35 p-3">
@@ -192,7 +202,13 @@ function switchRange(nextRange: string): void {
                     class="grid grid-cols-3 gap-2 border-t border-border pt-3 text-xs"
                 >
                     <div>
-                        <dt class="text-muted-foreground">Premium</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.servicePremium',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatVnd(
@@ -203,7 +219,13 @@ function switchRange(nextRange: string): void {
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Banner</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.serviceBanner',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatVnd(
@@ -214,7 +236,13 @@ function switchRange(nextRange: string): void {
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Boost</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.serviceBoost',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatVnd(
@@ -226,18 +254,28 @@ function switchRange(nextRange: string): void {
                     </div>
                 </dl>
                 <p class="text-[11px] text-muted-foreground">
-                    Refunded:
-                    {{ formatVnd(currencies.VND.total_refunded, locale) }} ·
-                    Fees: {{ formatVnd(currencies.VND.total_fees, locale) }}
+                    {{
+                        t('admin.monetizationCenter.revenue.refundedAndFees', {
+                            refunded: formatVnd(
+                                currencies.VND.total_refunded,
+                                locale,
+                            ),
+                            fees: formatVnd(currencies.VND.total_fees, locale),
+                        })
+                    }}
                 </p>
             </div>
 
             <div class="space-y-3 rounded-2xl border border-border bg-card p-5">
                 <div class="flex items-center justify-between">
                     <h2 class="text-sm font-bold text-foreground">
-                        USD Accounting (International)
+                        {{
+                            t('admin.monetizationCenter.revenue.usdAccounting')
+                        }}
                     </h2>
-                    <Badge variant="soft">USD</Badge>
+                    <Badge variant="soft">{{
+                        t('admin.monetizationCenter.common.usd')
+                    }}</Badge>
                 </div>
                 <div class="grid grid-cols-2 gap-3 text-xs">
                     <div class="rounded-xl bg-muted/35 p-3">
@@ -271,7 +309,13 @@ function switchRange(nextRange: string): void {
                     class="grid grid-cols-3 gap-2 border-t border-border pt-3 text-xs"
                 >
                     <div>
-                        <dt class="text-muted-foreground">Premium</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.servicePremium',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatUsdCents(
@@ -282,7 +326,13 @@ function switchRange(nextRange: string): void {
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Banner</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.serviceBanner',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatUsdCents(
@@ -293,7 +343,13 @@ function switchRange(nextRange: string): void {
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-muted-foreground">Boost</dt>
+                        <dt class="text-muted-foreground">
+                            {{
+                                t(
+                                    'admin.monetizationCenter.revenue.serviceBoost',
+                                )
+                            }}
+                        </dt>
                         <dd class="font-semibold text-foreground">
                             {{
                                 formatUsdCents(
@@ -305,10 +361,18 @@ function switchRange(nextRange: string): void {
                     </div>
                 </dl>
                 <p class="text-[11px] text-muted-foreground">
-                    Refunded:
-                    {{ formatUsdCents(currencies.USD.total_refunded, locale) }}
-                    · Fees:
-                    {{ formatUsdCents(currencies.USD.total_fees, locale) }}
+                    {{
+                        t('admin.monetizationCenter.revenue.refundedAndFees', {
+                            refunded: formatUsdCents(
+                                currencies.USD.total_refunded,
+                                locale,
+                            ),
+                            fees: formatUsdCents(
+                                currencies.USD.total_fees,
+                                locale,
+                            ),
+                        })
+                    }}
                 </p>
             </div>
         </section>
@@ -320,13 +384,19 @@ function switchRange(nextRange: string): void {
                     class="flex items-center gap-1.5 text-xs text-muted-foreground"
                 >
                     <Crown class="size-3.5 text-primary" />
-                    <span>Active Premium</span>
+                    <span>{{
+                        t('admin.monetizationCenter.revenue.activePremium')
+                    }}</span>
                 </p>
                 <p class="mt-1.5 text-xl font-bold text-foreground">
                     {{ operations.active_premium_members }}
                 </p>
                 <p class="text-[11px] text-muted-foreground">
-                    Expiring ≤7d: {{ operations.expiring_7d_premium }}
+                    {{
+                        t('admin.monetizationCenter.revenue.expiring7d', {
+                            count: operations.expiring_7d_premium,
+                        })
+                    }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-4">
@@ -334,14 +404,20 @@ function switchRange(nextRange: string): void {
                     class="flex items-center gap-1.5 text-xs text-muted-foreground"
                 >
                     <ImageIcon class="size-3.5 text-primary" />
-                    <span>Banner Slots</span>
+                    <span>{{
+                        t('admin.monetizationCenter.revenue.bannerSlots')
+                    }}</span>
                 </p>
                 <p class="mt-1.5 text-xl font-bold text-foreground">
                     {{ operations.occupied_banner_placements }} /
                     {{ operations.total_banner_placements }}
                 </p>
                 <p class="text-[11px] text-muted-foreground">
-                    Pending review: {{ operations.pending_banner_reviews }}
+                    {{
+                        t('admin.monetizationCenter.revenue.pendingReview', {
+                            count: operations.pending_banner_reviews,
+                        })
+                    }}
                 </p>
             </div>
             <div class="rounded-xl border border-border bg-card p-4">
@@ -349,7 +425,9 @@ function switchRange(nextRange: string): void {
                     class="flex items-center gap-1.5 text-xs text-muted-foreground"
                 >
                     <Zap class="size-3.5 text-primary" />
-                    <span>Active Boosts</span>
+                    <span>{{
+                        t('admin.monetizationCenter.revenue.activeBoosts')
+                    }}</span>
                 </p>
                 <p class="mt-1.5 text-xl font-bold text-foreground">
                     {{ operations.active_boost_campaigns }}
@@ -360,7 +438,9 @@ function switchRange(nextRange: string): void {
                     class="flex items-center gap-1.5 text-xs text-muted-foreground"
                 >
                     <ReceiptText class="size-3.5 text-warning" />
-                    <span>Pending Orders</span>
+                    <span>{{
+                        t('admin.monetizationCenter.revenue.pendingOrders')
+                    }}</span>
                 </p>
                 <p class="mt-1.5 text-xl font-bold text-foreground">
                     {{ operations.pending_orders_count }}
@@ -371,18 +451,21 @@ function switchRange(nextRange: string): void {
                     class="flex items-center gap-1.5 text-xs text-muted-foreground"
                 >
                     <WalletIcon class="size-3.5 text-primary" />
-                    <span>Ad Balance Liability</span>
+                    <span>{{
+                        t('admin.monetizationCenter.revenue.adBalanceLiability')
+                    }}</span>
                 </p>
                 <p class="mt-1.5 text-base font-bold text-foreground">
                     {{ formatVnd(operations.ad_balance_liability_vnd, locale) }}
                 </p>
                 <p class="text-[11px] text-muted-foreground">
-                    Spent:
                     {{
-                        formatVnd(
-                            operations.ad_balance_recognized_spend_vnd,
-                            locale,
-                        )
+                        t('admin.monetizationCenter.revenue.spent', {
+                            amount: formatVnd(
+                                operations.ad_balance_recognized_spend_vnd,
+                                locale,
+                            ),
+                        })
                     }}
                 </p>
             </div>
@@ -391,17 +474,47 @@ function switchRange(nextRange: string): void {
         <!-- Daily Ledger Breakdown Table -->
         <section class="rounded-2xl border border-border bg-card p-5">
             <h2 class="mb-3 text-sm font-bold text-foreground">
-                Daily Settled Cashflow
+                {{ t('admin.monetizationCenter.revenue.dailySettledCashflow') }}
             </h2>
             <div v-if="dailySeries.length > 0" class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-4">Date</th>
-                            <th class="py-2 pr-4">Service (VND)</th>
-                            <th class="py-2 pr-4">Ad Top-Up (VND)</th>
-                            <th class="py-2 pr-4">Service (USD)</th>
-                            <th class="py-2">Ad Top-Up (USD)</th>
+                            <th class="py-2 pr-4">
+                                {{
+                                    t(
+                                        'admin.monetizationCenter.revenue.colDate',
+                                    )
+                                }}
+                            </th>
+                            <th class="py-2 pr-4">
+                                {{
+                                    t(
+                                        'admin.monetizationCenter.revenue.colServiceVnd',
+                                    )
+                                }}
+                            </th>
+                            <th class="py-2 pr-4">
+                                {{
+                                    t(
+                                        'admin.monetizationCenter.revenue.colAdTopUpVnd',
+                                    )
+                                }}
+                            </th>
+                            <th class="py-2 pr-4">
+                                {{
+                                    t(
+                                        'admin.monetizationCenter.revenue.colServiceUsd',
+                                    )
+                                }}
+                            </th>
+                            <th class="py-2">
+                                {{
+                                    t(
+                                        'admin.monetizationCenter.revenue.colAdTopUpUsd',
+                                    )
+                                }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-border">
@@ -438,7 +551,7 @@ function switchRange(nextRange: string): void {
                 </table>
             </div>
             <p v-else class="text-xs text-muted-foreground">
-                No settled transactions recorded in this date range.
+                {{ t('admin.monetizationCenter.revenue.emptyDailySeries') }}
             </p>
         </section>
     </div>

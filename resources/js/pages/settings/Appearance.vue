@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, setLayoutProps } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import Heading from '@/components/Heading.vue';
 import { edit } from '@/routes/appearance';
 
-defineOptions({
-    layout: {
+const { t } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
         breadcrumbs: [
             {
-                title: 'Giao diện',
+                title: t('settings.appearance.breadcrumb'),
                 href: edit(),
             },
         ],
-    },
+    });
 });
 </script>
 
 <template>
     <div class="space-y-6">
-        <Head title="Giao diện" />
+        <Head :title="t('settings.appearance.pageTitle')" />
 
-        <h1 class="sr-only">Cài đặt giao diện</h1>
+        <h1 class="sr-only">{{ t('settings.appearance.srHeading') }}</h1>
 
         <Heading
             variant="small"
-            title="Chế độ hiển thị"
-            description="Chọn giao diện Sáng (Light), Tối (Dark) hoặc đồng bộ theo thiết bị"
+            :title="t('settings.appearance.headingTitle')"
+            :description="t('settings.appearance.headingDescription')"
         />
         <AppearanceTabs />
     </div>

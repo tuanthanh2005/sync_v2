@@ -289,51 +289,66 @@ function purgeCloudflare(): void {
                 class="grid gap-4 md:grid-cols-2"
             >
                 <div class="space-y-1.5">
-                    <Label for="verify-method"
-                        >Google Verification Method</Label
-                    >
+                    <Label for="verify-method">{{
+                        t('admin.seoCenter.googleVerificationMethod')
+                    }}</Label>
                     <select
                         id="verify-method"
                         v-model="verifyForm.method"
                         class="flex h-10 w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground"
                     >
                         <option value="dns_txt">
-                            DNS TXT Record (Recommended — Domain Property)
+                            {{ t('admin.seoCenter.methodDnsTxt') }}
                         </option>
-                        <option value="dns_cname">DNS CNAME Record</option>
+                        <option value="dns_cname">
+                            {{ t('admin.seoCenter.methodDnsCname') }}
+                        </option>
                         <option value="html_file">
-                            HTML Verification File (/googleXXXX.html)
+                            {{ t('admin.seoCenter.methodHtmlFile') }}
                         </option>
                         <option value="html_meta">
-                            HTML Meta Tag (&lt;meta
-                            name="google-site-verification"&gt;)
+                            {{ t('admin.seoCenter.methodHtmlMeta') }}
                         </option>
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="verify-property">Search Console Property</Label>
+                    <Label for="verify-property">{{
+                        t('admin.seoCenter.searchConsoleProperty')
+                    }}</Label>
                     <Input
                         id="verify-property"
                         v-model="verifyForm.property_identifier"
-                        placeholder="sc-domain:syncviet.com"
+                        :placeholder="
+                            t('admin.seoCenter.propertyPlaceholder', {
+                                host: canonicalHost,
+                            })
+                        "
                     />
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="verify-token">Google Verification Token</Label>
+                    <Label for="verify-token">{{
+                        t('admin.seoCenter.googleVerificationToken')
+                    }}</Label>
                     <Input
                         id="verify-token"
                         v-model="verifyForm.verification_token"
-                        placeholder="google-site-verification=..."
+                        :placeholder="
+                            t(
+                                'admin.seoCenter.googleVerificationTokenPlaceholder',
+                            )
+                        "
                     />
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="bing-meta"
-                        >Bing Webmaster Meta Token (Optional)</Label
-                    >
+                    <Label for="bing-meta">{{
+                        t('admin.seoCenter.bingMetaToken')
+                    }}</Label>
                     <Input
                         id="bing-meta"
                         v-model="verifyForm.bing_meta_verification"
-                        placeholder="msvalidate.01 content token"
+                        :placeholder="
+                            t('admin.seoCenter.bingMetaTokenPlaceholder')
+                        "
                     />
                 </div>
                 <div class="flex flex-wrap items-center gap-2 md:col-span-2">
@@ -374,7 +389,7 @@ function purgeCloudflare(): void {
                         class="flex items-center gap-2 text-sm font-semibold text-foreground"
                     >
                         <Plug class="size-4 text-primary" />
-                        <span>Google Search Console API</span>
+                        <span>{{ t('admin.seoCenter.gscApiTitle') }}</span>
                     </h2>
                     <p class="mt-0.5 text-xs text-muted-foreground">
                         {{ gsc.indexing_api_note }}
@@ -393,8 +408,12 @@ function purgeCloudflare(): void {
                         {{ gsc.status }}
                     </Badge>
                     <Badge variant="outline">
-                        Quota: {{ gsc.inspection_quota_used_today }} /
-                        {{ gsc.inspection_quota_limit_daily }}
+                        {{
+                            t('admin.seoCenter.quotaUsage', {
+                                used: gsc.inspection_quota_used_today,
+                                limit: gsc.inspection_quota_limit_daily,
+                            })
+                        }}
                     </Badge>
                 </div>
             </div>
@@ -408,7 +427,7 @@ function purgeCloudflare(): void {
                     "
                     @click="gscAuthTab = 'service_account'"
                 >
-                    Service Account JSON
+                    {{ t('admin.seoCenter.serviceAccountJson') }}
                 </Button>
                 <Button
                     type="button"
@@ -416,7 +435,7 @@ function purgeCloudflare(): void {
                     :variant="gscAuthTab === 'oauth2' ? 'default' : 'outline'"
                     @click="gscAuthTab = 'oauth2'"
                 >
-                    OAuth 2.0 Client
+                    {{ t('admin.seoCenter.oauthClient') }}
                 </Button>
             </div>
 
@@ -426,28 +445,35 @@ function purgeCloudflare(): void {
                 class="space-y-3"
             >
                 <div class="space-y-1.5">
-                    <Label for="sa-prop">Property Identifier</Label>
+                    <Label for="sa-prop">{{
+                        t('admin.seoCenter.propertyIdentifier')
+                    }}</Label>
                     <Input
                         id="sa-prop"
                         v-model="saForm.property_identifier"
-                        placeholder="sc-domain:syncviet.com"
+                        :placeholder="
+                            t('admin.seoCenter.propertyPlaceholder', {
+                                host: canonicalHost,
+                            })
+                        "
                     />
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="sa-json"
-                        >Service Account JSON (Encrypted at rest — never
-                        returned to browser)</Label
-                    >
+                    <Label for="sa-json">{{
+                        t('admin.seoCenter.serviceAccountJsonLabel')
+                    }}</Label>
                     <textarea
                         id="sa-json"
                         v-model="saForm.service_account_json"
                         rows="4"
                         class="w-full rounded-lg border border-input bg-background p-3 font-mono text-xs text-foreground"
-                        placeholder='{"type":"service_account","client_email":"...","private_key":"-----BEGIN PRIVATE KEY-----..."}'
+                        :placeholder="
+                            t('admin.seoCenter.serviceAccountJsonPlaceholder')
+                        "
                     />
                 </div>
                 <Button type="submit" size="sm" :disabled="saForm.processing">
-                    Save Encrypted Service Account
+                    {{ t('admin.seoCenter.saveEncryptedServiceAccount') }}
                 </Button>
             </form>
 
@@ -458,7 +484,7 @@ function purgeCloudflare(): void {
             >
                 <div class="space-y-1.5 md:col-span-2">
                     <p class="text-xs text-muted-foreground">
-                        Authorized Redirect URI:
+                        {{ t('admin.seoCenter.authorizedRedirectUri') }}:
                         <code
                             class="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px]"
                             >{{ oauthCallbackUrl }}</code
@@ -466,18 +492,24 @@ function purgeCloudflare(): void {
                     </p>
                 </div>
                 <div class="space-y-1.5 md:col-span-2">
-                    <Label for="oauth-prop">Property Identifier</Label>
+                    <Label for="oauth-prop">{{
+                        t('admin.seoCenter.propertyIdentifier')
+                    }}</Label>
                     <Input
                         id="oauth-prop"
                         v-model="oauthForm.property_identifier"
                     />
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="oauth-id">OAuth Client ID</Label>
+                    <Label for="oauth-id">{{
+                        t('admin.seoCenter.oauthClientId')
+                    }}</Label>
                     <Input id="oauth-id" v-model="oauthForm.client_id" />
                 </div>
                 <div class="space-y-1.5">
-                    <Label for="oauth-secret">OAuth Client Secret</Label>
+                    <Label for="oauth-secret">{{
+                        t('admin.seoCenter.oauthClientSecret')
+                    }}</Label>
                     <Input
                         id="oauth-secret"
                         v-model="oauthForm.client_secret"
@@ -490,7 +522,7 @@ function purgeCloudflare(): void {
                         size="sm"
                         :disabled="oauthForm.processing"
                     >
-                        Save OAuth Client
+                        {{ t('admin.seoCenter.saveOAuthClient') }}
                     </Button>
                     <Button
                         v-if="gsc.has_credentials && gsc.auth_type === 'oauth2'"
@@ -503,7 +535,7 @@ function purgeCloudflare(): void {
                                 SeoIntegrationsController.redirectGscOAuth.url()
                             "
                         >
-                            Authorize with Google
+                            {{ t('admin.seoCenter.authorizeWithGoogle') }}
                         </a>
                     </Button>
                 </div>
@@ -519,7 +551,7 @@ function purgeCloudflare(): void {
                     @click="testGsc"
                 >
                     <RefreshCw class="size-3.5" />
-                    <span>Test Connection</span>
+                    <span>{{ t('admin.seoCenter.testConnection') }}</span>
                 </Button>
                 <Button
                     type="button"
@@ -527,7 +559,7 @@ function purgeCloudflare(): void {
                     size="sm"
                     @click="syncGscAnalytics"
                 >
-                    Sync Search Analytics (28d)
+                    {{ t('admin.seoCenter.syncSearchAnalytics28d') }}
                 </Button>
                 <Button
                     type="button"
@@ -535,7 +567,7 @@ function purgeCloudflare(): void {
                     size="sm"
                     @click="submitGscSitemap"
                 >
-                    Submit Sitemap Index via API
+                    {{ t('admin.seoCenter.submitSitemapViaApi') }}
                 </Button>
                 <Button
                     v-if="gsc.has_credentials || gsc.has_access_token"
@@ -545,7 +577,7 @@ function purgeCloudflare(): void {
                     @click="disconnectDialogOpen = true"
                 >
                     <Unplug class="size-3.5" />
-                    <span>Disconnect</span>
+                    <span>{{ t('admin.seoCenter.disconnect') }}</span>
                 </Button>
             </div>
 
@@ -567,10 +599,12 @@ function purgeCloudflare(): void {
                         class="flex items-center gap-2 text-sm font-semibold text-foreground"
                     >
                         <Send class="size-4 text-primary" />
-                        <span>Bing &amp; IndexNow Protocol</span>
+                        <span>{{
+                            t('admin.seoCenter.bingIndexNowTitle')
+                        }}</span>
                     </h2>
                     <p class="mt-0.5 text-xs text-muted-foreground">
-                        Verification key file:
+                        {{ t('admin.seoCenter.verificationKeyFile') }}:
                         <code
                             v-if="indexNow.key_url"
                             class="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px]"
@@ -582,11 +616,17 @@ function purgeCloudflare(): void {
                     <Badge
                         :variant="indexNow.enabled ? 'default' : 'secondary'"
                     >
-                        {{ indexNow.enabled ? 'Enabled' : 'Disabled' }}
+                        {{
+                            indexNow.enabled
+                                ? t('admin.seoCenter.enabled')
+                                : t('admin.seoCenter.disabled')
+                        }}
                     </Badge>
-                    <Badge variant="outline"
-                        >Queued: {{ indexNow.queued_count }}</Badge
-                    >
+                    <Badge variant="outline">{{
+                        t('admin.seoCenter.queuedCount', {
+                            count: indexNow.queued_count,
+                        })
+                    }}</Badge>
                 </div>
             </div>
 
@@ -599,8 +639,8 @@ function purgeCloudflare(): void {
                 >
                     {{
                         indexNow.enabled
-                            ? 'Disable IndexNow'
-                            : 'Enable IndexNow'
+                            ? t('admin.seoCenter.disableIndexNow')
+                            : t('admin.seoCenter.enableIndexNow')
                     }}
                 </Button>
                 <Button
@@ -610,10 +650,10 @@ function purgeCloudflare(): void {
                     @click="regenerateIndexNowKey"
                 >
                     <KeyRound class="size-3.5" />
-                    <span>Regenerate Key</span>
+                    <span>{{ t('admin.seoCenter.regenerateKey') }}</span>
                 </Button>
                 <Button type="button" size="sm" @click="submitIndexNowBatch">
-                    Submit Queued Batch Now
+                    {{ t('admin.seoCenter.submitQueuedBatchNow') }}
                 </Button>
             </div>
         </section>
@@ -628,13 +668,10 @@ function purgeCloudflare(): void {
                         class="flex items-center gap-2 text-sm font-semibold text-foreground"
                     >
                         <Gauge class="size-4 text-primary" />
-                        <span
-                            >Google Analytics 4 (Controlled — Zero Raw JS)</span
-                        >
+                        <span>{{ t('admin.seoCenter.ga4Title') }}</span>
                     </h2>
                     <p class="mt-0.5 text-xs text-muted-foreground">
-                        Only validated GA4 Measurement IDs (G-XXXXXXXX) are
-                        permitted. Admin routes are automatically excluded.
+                        {{ t('admin.seoCenter.ga4Desc') }}
                     </p>
                 </div>
                 <form @submit.prevent="saveGa4" class="space-y-3">
@@ -646,14 +683,20 @@ function purgeCloudflare(): void {
                             type="checkbox"
                             class="rounded border-input"
                         />
-                        <span>Enable Google Analytics 4 tracking</span>
+                        <span>{{
+                            t('admin.seoCenter.enableGa4Tracking')
+                        }}</span>
                     </label>
                     <div class="space-y-1.5">
-                        <Label for="ga4-id">Measurement ID</Label>
+                        <Label for="ga4-id">{{
+                            t('admin.seoCenter.measurementId')
+                        }}</Label>
                         <Input
                             id="ga4-id"
                             v-model="ga4Form.measurement_id"
-                            placeholder="G-XXXXXXXXXX"
+                            :placeholder="
+                                t('admin.seoCenter.measurementIdPlaceholder')
+                            "
                         />
                     </div>
                     <label
@@ -664,15 +707,15 @@ function purgeCloudflare(): void {
                             type="checkbox"
                             class="rounded border-input"
                         />
-                        <span
-                            >Respect analytics consent &amp; anonymize IP</span
-                        >
+                        <span>{{
+                            t('admin.seoCenter.respectAnalyticsConsent')
+                        }}</span>
                     </label>
                     <Button
                         type="submit"
                         size="sm"
                         :disabled="ga4Form.processing"
-                        >Save GA4 Settings</Button
+                        >{{ t('admin.seoCenter.saveGa4Settings') }}</Button
                     >
                 </form>
             </section>
@@ -686,10 +729,12 @@ function purgeCloudflare(): void {
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
                         >
                             <Cloud class="size-4 text-primary" />
-                            <span>Cloudflare Cache Purge (Purge-Only)</span>
+                            <span>{{
+                                t('admin.seoCenter.cloudflareTitle')
+                            }}</span>
                         </h2>
                         <p class="mt-0.5 text-xs text-muted-foreground">
-                            Never modifies DNS, SSL, or WAF rules.
+                            {{ t('admin.seoCenter.cloudflareDesc') }}
                         </p>
                     </div>
                     <Badge variant="secondary">{{ cloudflare.status }}</Badge>
@@ -704,25 +749,31 @@ function purgeCloudflare(): void {
                             type="checkbox"
                             class="rounded border-input"
                         />
-                        <span>Enable Cloudflare cache purge adapter</span>
+                        <span>{{
+                            t('admin.seoCenter.enableCloudflareAdapter')
+                        }}</span>
                     </label>
                     <div class="grid gap-3 sm:grid-cols-2">
                         <div class="space-y-1.5">
-                            <Label for="cf-zone">Zone ID</Label>
+                            <Label for="cf-zone">{{
+                                t('admin.seoCenter.zoneId')
+                            }}</Label>
                             <Input id="cf-zone" v-model="cfForm.zone_id" />
                         </div>
                         <div class="space-y-1.5">
-                            <Label for="cf-token"
-                                >API Token (Cache Purge Scope)</Label
-                            >
+                            <Label for="cf-token">{{
+                                t('admin.seoCenter.apiTokenCachePurge')
+                            }}</Label>
                             <Input
                                 id="cf-token"
                                 v-model="cfForm.api_token"
                                 type="password"
                                 :placeholder="
                                     cloudflare.has_token
-                                        ? 'Stored (encrypted)'
-                                        : 'Paste token'
+                                        ? t(
+                                              'admin.seoCenter.tokenStoredEncrypted',
+                                          )
+                                        : t('admin.seoCenter.pasteToken')
                                 "
                             />
                         </div>
@@ -732,7 +783,7 @@ function purgeCloudflare(): void {
                             type="submit"
                             size="sm"
                             :disabled="cfForm.processing"
-                            >Save Cloudflare</Button
+                            >{{ t('admin.seoCenter.saveCloudflare') }}</Button
                         >
                         <Button
                             type="button"
@@ -740,7 +791,7 @@ function purgeCloudflare(): void {
                             size="sm"
                             @click="purgeCloudflare"
                         >
-                            Purge Sitemap &amp; Robots Cache
+                            {{ t('admin.seoCenter.purgeSitemapRobotsCache') }}
                         </Button>
                     </div>
                 </form>
@@ -750,29 +801,35 @@ function purgeCloudflare(): void {
         <!-- 5. API Usage & Quota Log -->
         <section class="rounded-xl border border-border bg-card p-5 shadow-xs">
             <h2 class="text-sm font-semibold text-foreground">
-                API Usage &amp; Daily Quota Ledger
+                {{ t('admin.seoCenter.apiUsageTitle') }}
             </h2>
             <p
                 v-if="apiUsage.length === 0"
                 class="mt-2 text-xs text-muted-foreground"
             >
-                No external SEO API calls recorded yet.
+                {{ t('admin.seoCenter.noApiUsageYet') }}
             </p>
             <div v-else class="mt-3 overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-3 font-medium">Date</th>
-                            <th class="px-2 py-2 font-medium">Provider</th>
-                            <th class="px-2 py-2 font-medium">Endpoint</th>
-                            <th class="px-2 py-2 text-right font-medium">
-                                Requests
+                            <th class="py-2 pr-3 font-medium">
+                                {{ t('admin.seoCenter.date') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.provider') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.endpoint') }}
                             </th>
                             <th class="px-2 py-2 text-right font-medium">
-                                Errors
+                                {{ t('admin.seoCenter.requests') }}
+                            </th>
+                            <th class="px-2 py-2 text-right font-medium">
+                                {{ t('admin.seoCenter.errors') }}
                             </th>
                             <th class="py-2 pl-2 text-right font-medium">
-                                Quota
+                                {{ t('admin.seoCenter.quota') }}
                             </th>
                         </tr>
                     </thead>
@@ -802,9 +859,9 @@ function purgeCloudflare(): void {
 
         <ConfirmActionDialog
             :open="disconnectDialogOpen"
-            title="Disconnect Google Search Console"
-            description="Encrypted credentials and OAuth tokens will be permanently removed from the database."
-            confirm-label="Disconnect"
+            :title="t('admin.seoCenter.disconnectGscTitle')"
+            :description="t('admin.seoCenter.disconnectGscDesc')"
+            :confirm-label="t('admin.seoCenter.disconnect')"
             destructive
             @update:open="(v) => (disconnectDialogOpen = v)"
             @confirm="confirmDisconnectGsc"

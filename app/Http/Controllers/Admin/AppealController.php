@@ -107,8 +107,9 @@ class AppealController extends Controller
                     titleVi: $approved ? 'Khiếu nại của bạn đã được chấp thuận.' : 'Khiếu nại của bạn đã bị từ chối.',
                     titleEn: $approved ? 'Your appeal was approved.' : 'Your appeal was rejected.',
                     url: route('dashboard'),
-                    actorName: config('app.name', 'SyncViet'),
+                    actorName: (string) config('app.name', 'SyncViet'),
                     actorUsername: 'system',
+                    titleKey: $approved ? 'Your appeal was approved.' : 'Your appeal was rejected.',
                 ));
             }
 

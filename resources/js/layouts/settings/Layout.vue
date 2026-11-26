@@ -40,15 +40,15 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
 <template>
     <div class="rounded-xl border border-border bg-card p-5 shadow-xs sm:p-6">
         <Heading
-            title="Cài đặt tài khoản"
-            description="Quản lý thông tin hồ sơ, mật khẩu, phiên đăng nhập, bảo mật 2 lớp và ngôn ngữ hiển thị"
+            :title="t('settings.layout.headingTitle')"
+            :description="t('settings.layout.headingDescription')"
         />
 
         <div class="flex flex-col gap-6 md:flex-row md:gap-8">
             <aside class="w-full md:w-48 md:shrink-0">
                 <nav
                     class="flex flex-row gap-1 overflow-x-auto md:flex-col"
-                    aria-label="Điều hướng cài đặt"
+                    :aria-label="t('settings.layout.navAriaLabel')"
                 >
                     <Button
                         v-for="item in sidebarNavItems"

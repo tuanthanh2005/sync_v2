@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
 import { computed, ref, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,24 +13,23 @@ import {
 import { store } from '@/routes/two-factor/login';
 import type { TwoFactorConfigContent } from '@/types';
 
+const { t } = useI18n();
 const showRecoveryInput = ref<boolean>(false);
 const code = ref<string>('');
 
 const authConfigContent = computed<TwoFactorConfigContent>(() => {
     if (showRecoveryInput.value) {
         return {
-            title: 'Mã khôi phục 2FA',
-            description:
-                'Nhập một trong các mã khôi phục dự phòng để xác nhận quyền truy cập tài khoản.',
-            buttonText: 'đăng nhập bằng mã xác thực OTP',
+            title: t('auth.twoFactor.recoveryTitle'),
+            description: t('auth.twoFactor.recoveryDescription'),
+            buttonText: t('auth.twoFactor.useOtpCode'),
         };
     }
 
     return {
-        title: 'Mã xác thực 2 lớp',
-        description:
-            'Nhập mã 6 chữ số từ ứng dụng xác thực (Authenticator) trên thiết bị của bạn.',
-        buttonText: 'đăng nhập bằng mã khôi phục',
+        title: t('auth.twoFactor.otpTitle'),
+        description: t('auth.twoFactor.otpDescription'),
+        buttonText: t('auth.twoFactor.useRecoveryCode'),
     };
 });
 
@@ -49,7 +49,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
 
 <template>
     <div>
-        <Head title="Xác thực 2 lớp" />
+        <Head :title="t('auth.twoFactor.pageTitle')" />
 
         <div class="space-y-6">
             <template v-if="!showRecoveryInput">
@@ -88,10 +88,10 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                         class="w-full rounded-lg"
                         :disabled="processing"
                     >
-                        Tiếp tục
+                        {{ t('auth.twoFactor.continue') }}
                     </Button>
                     <div class="text-center text-sm text-muted-foreground">
-                        <span>Hoặc bạn có thể </span>
+                        <span>{{ t('auth.twoFactor.orYouCan') }} </span>
                         <button
                             type="button"
                             class="font-medium text-primary underline underline-offset-4"
@@ -113,7 +113,9 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                     <Input
                         name="recovery_code"
                         type="text"
-                        placeholder="Nhập mã khôi phục"
+                        :placeholder="
+                            t('auth.twoFactor.recoveryCodePlaceholder')
+                        "
                         v-focus
                         required
                     />
@@ -123,11 +125,11 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
                         class="w-full rounded-lg"
                         :disabled="processing"
                     >
-                        Tiếp tục
+                        {{ t('auth.twoFactor.continue') }}
                     </Button>
 
                     <div class="text-center text-sm text-muted-foreground">
-                        <span>Hoặc bạn có thể </span>
+                        <span>{{ t('auth.twoFactor.orYouCan') }} </span>
                         <button
                             type="button"
                             class="font-medium text-primary underline underline-offset-4"

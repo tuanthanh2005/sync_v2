@@ -93,7 +93,6 @@ const props = defineProps<{
 
 const { t, locale } = useI18n();
 const selectedDraftIds = ref<number[]>([]);
-const urlPlaceholder = 'https://docs.example.org/guide';
 
 const genForm = useForm({
     agent_id: props.agents[0]?.id ?? 0,
@@ -207,7 +206,7 @@ function togglePlan(id: number): void {
             <Button variant="outline" size="sm" as-child>
                 <a :href="AiContentWorkflowController.exportDraftsCsv.url()">
                     <Download class="size-4" />
-                    <span>CSV</span>
+                    <span>{{ t('admin.aiCenter.csv') }}</span>
                 </a>
             </Button>
         </div>
@@ -223,7 +222,9 @@ function togglePlan(id: number): void {
             </h2>
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="space-y-1">
-                    <Label for="gen_agent">AI Agent</Label>
+                    <Label for="gen_agent">{{
+                        t('admin.aiCenter.aiAgent')
+                    }}</Label>
                     <select
                         id="gen_agent"
                         v-model.number="genForm.agent_id"
@@ -235,7 +236,9 @@ function togglePlan(id: number): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="gen_lang">Language</Label>
+                    <Label for="gen_lang">{{
+                        t('admin.aiCenter.language')
+                    }}</Label>
                     <select
                         id="gen_lang"
                         v-model="genForm.language_code"
@@ -251,7 +254,9 @@ function togglePlan(id: number): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="gen_cat">Category</Label>
+                    <Label for="gen_cat">{{
+                        t('admin.aiCenter.category')
+                    }}</Label>
                     <select
                         id="gen_cat"
                         v-model="genForm.category"
@@ -267,14 +272,16 @@ function togglePlan(id: number): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="gen_src">Verified Source (Optional)</Label>
+                    <Label for="gen_src">{{
+                        t('admin.aiCenter.verifiedSourceOptional')
+                    }}</Label>
                     <select
                         id="gen_src"
                         v-model="genForm.source_id"
                         class="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
                     >
                         <option :value="null">
-                            None (Evergreen Knowledge)
+                            {{ t('admin.aiCenter.noneEvergreenKnowledge') }}
                         </option>
                         <option v-for="s in sources" :key="s.id" :value="s.id">
                             {{ s.title }}
@@ -291,7 +298,7 @@ function togglePlan(id: number): void {
                         id="gen_topic"
                         v-model="genForm.topic"
                         required
-                        placeholder="Practical guide to database indexing in MySQL 8.4"
+                        :placeholder="t('admin.aiCenter.topicPlaceholder')"
                     />
                     <InputError :message="genForm.errors.topic" />
                 </div>
@@ -328,7 +335,11 @@ function togglePlan(id: number): void {
                         @click="bulkReview('approved')"
                     >
                         <Check class="size-3.5" />
-                        <span>Approve ({{ selectedDraftIds.length }})</span>
+                        <span>{{
+                            t('admin.aiCenter.approveSelected', {
+                                count: selectedDraftIds.length,
+                            })
+                        }}</span>
                     </Button>
                     <Button
                         size="sm"
@@ -336,7 +347,7 @@ function togglePlan(id: number): void {
                         @click="bulkReview('rejected')"
                     >
                         <X class="size-3.5" />
-                        <span>Reject</span>
+                        <span>{{ t('admin.aiCenter.reject') }}</span>
                     </Button>
                 </div>
             </div>
@@ -395,7 +406,11 @@ function togglePlan(id: number): void {
                                                 : 'destructive'
                                         "
                                     >
-                                        Quality {{ d.quality_score }}/100
+                                        {{
+                                            t('admin.aiCenter.qualityScore', {
+                                                score: d.quality_score,
+                                            })
+                                        }}
                                     </Badge>
                                 </div>
                                 <p class="text-muted-foreground">
@@ -428,7 +443,7 @@ function togglePlan(id: number): void {
                                 @click="reviewDraft(d.id, 'approved')"
                             >
                                 <Check class="size-3.5" />
-                                <span>Approve</span>
+                                <span>{{ t('admin.aiCenter.approve') }}</span>
                             </Button>
                             <Button
                                 v-if="
@@ -440,7 +455,7 @@ function togglePlan(id: number): void {
                                 @click="reviewDraft(d.id, 'rejected')"
                             >
                                 <X class="size-3.5" />
-                                <span>Reject</span>
+                                <span>{{ t('admin.aiCenter.reject') }}</span>
                             </Button>
                             <Button
                                 v-if="
@@ -452,7 +467,9 @@ function togglePlan(id: number): void {
                                 @click="publishDraft(d.id)"
                             >
                                 <Send class="size-3.5" />
-                                <span>Publish Now</span>
+                                <span>{{
+                                    t('admin.aiCenter.publishNow')
+                                }}</span>
                             </Button>
                             <Button
                                 v-if="d.published_post_url"
@@ -461,7 +478,11 @@ function togglePlan(id: number): void {
                                 as-child
                             >
                                 <Link :href="d.published_post_url">
-                                    View Post #{{ d.published_post_id }}
+                                    {{
+                                        t('admin.aiCenter.viewPostNumber', {
+                                            id: d.published_post_id,
+                                        })
+                                    }}
                                 </Link>
                             </Button>
                         </div>
@@ -483,19 +504,23 @@ function togglePlan(id: number): void {
                     <Input
                         v-model="sourceForm.title"
                         required
-                        placeholder="Official Laravel 13 Release Notes"
+                        :placeholder="
+                            t('admin.aiCenter.sourceTitlePlaceholder')
+                        "
                     />
                     <Input
                         v-model="sourceForm.url"
                         type="url"
                         required
-                        :placeholder="urlPlaceholder"
+                        :placeholder="t('admin.aiCenter.sourceUrlPlaceholder')"
                     />
                     <InputError :message="sourceForm.errors.url" />
                     <textarea
                         v-model="sourceForm.excerpt"
                         rows="2"
-                        placeholder="Verified excerpt / key facts..."
+                        :placeholder="
+                            t('admin.aiCenter.sourceExcerptPlaceholder')
+                        "
                         class="w-full rounded-lg border border-input bg-background px-3 py-2 text-xs"
                     />
                     <Button
@@ -531,12 +556,12 @@ function togglePlan(id: number): void {
                     <Input
                         v-model="planForm.name"
                         required
-                        placeholder="Weekly Developer AI Guides"
+                        :placeholder="t('admin.aiCenter.planNamePlaceholder')"
                     />
                     <Input
                         v-model="planForm.topic"
                         required
-                        placeholder="PHP 8.4, Laravel 13 & Vue 3 Best Practices"
+                        :placeholder="t('admin.aiCenter.planTopicPlaceholder')"
                     />
                     <div class="grid grid-cols-2 gap-2">
                         <select
@@ -584,7 +609,11 @@ function togglePlan(id: number): void {
                             </p>
                             <p class="truncate text-muted-foreground">
                                 {{ p.agent_name }} · {{ p.target_language }} ·
-                                {{ p.posts_per_day }}/day
+                                {{
+                                    t('admin.aiCenter.postsPerDay', {
+                                        count: p.posts_per_day,
+                                    })
+                                }}
                             </p>
                         </div>
                         <Button
@@ -592,7 +621,11 @@ function togglePlan(id: number): void {
                             variant="outline"
                             @click="togglePlan(p.id)"
                         >
-                            {{ p.is_active ? 'Pause' : 'Resume' }}
+                            {{
+                                p.is_active
+                                    ? t('admin.aiCenter.pause')
+                                    : t('admin.aiCenter.resume')
+                            }}
                         </Button>
                     </li>
                 </ul>

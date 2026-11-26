@@ -1,33 +1,36 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
+import { watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
 
-defineOptions({
-    layout: {
-        title: 'Xác minh địa chỉ email',
-        description:
-            'Vui lòng kiểm tra hộp thư và nhấn vào liên kết xác minh chúng tôi vừa gửi.',
-    },
-});
-
 defineProps<{
     status?: string;
 }>();
+
+const { t } = useI18n();
+
+watchEffect(() => {
+    setLayoutProps({
+        title: t('auth.verifyEmail.layoutTitle'),
+        description: t('auth.verifyEmail.layoutDescription'),
+    });
+});
 </script>
 
 <template>
     <div>
-        <Head title="Xác minh email" />
+        <Head :title="t('auth.verifyEmail.pageTitle')" />
 
         <div
             v-if="status === 'verification-link-sent'"
             class="mb-4 rounded-lg border border-success/25 bg-success-soft px-3.5 py-2.5 text-center text-sm font-medium text-success-soft-foreground"
         >
-            Liên kết xác minh mới đã được gửi đến địa chỉ email của bạn.
+            {{ t('auth.verifyEmail.linkSent') }}
         </div>
 
         <Form
@@ -41,7 +44,7 @@ defineProps<{
                 class="w-full rounded-lg"
             >
                 <Spinner v-if="processing" />
-                Gửi lại email xác minh
+                {{ t('auth.verifyEmail.resendButton') }}
             </Button>
 
             <TextLink
@@ -49,7 +52,7 @@ defineProps<{
                 as="button"
                 class="mx-auto block text-sm"
             >
-                Đăng xuất
+                {{ t('auth.verifyEmail.logout') }}
             </TextLink>
         </Form>
     </div>

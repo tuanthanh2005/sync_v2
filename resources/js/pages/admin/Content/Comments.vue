@@ -53,6 +53,33 @@ const activeCommentId = ref<number | null>(null);
 const activeAction = ref('hide');
 const isBulk = ref(false);
 
+function moderationStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        approved: 'admin.contentExtra.modStatus.approved',
+        visible: 'admin.contentExtra.modStatus.visible',
+        published: 'admin.contentExtra.modStatus.published',
+        pending: 'admin.contentExtra.modStatus.pending',
+        hidden: 'admin.contentExtra.modStatus.hidden',
+        removed: 'admin.contentExtra.modStatus.removed',
+        rejected: 'admin.contentExtra.modStatus.rejected',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
+function commentActionLabel(action: string): string {
+    const map: Record<string, string> = {
+        hide: 'admin.contentExtra.actions.hide',
+        restore_visibility: 'admin.contentExtra.actions.restore_visibility',
+        restore_deleted: 'admin.contentExtra.actions.restore_deleted',
+        soft_delete: 'admin.contentExtra.actions.soft_delete',
+    };
+    const key = map[action];
+
+    return key ? t(key) : action;
+}
+
 function applyFilter(nextFilter = props.filters.filter): void {
     router.get(
         commentsRoute.url(),
@@ -139,10 +166,10 @@ function submitReason(reason: string): void {
                     :key="tab"
                     size="sm"
                     :variant="filters.filter === tab ? 'default' : 'ghost'"
-                    class="h-8 rounded-lg text-xs capitalize"
+                    class="h-8 rounded-lg text-xs"
                     @click="applyFilter(tab)"
                 >
-                    {{ tab }}
+                    {{ t(`admin.contentExtra.commentFilters.${tab}`) }}
                 </Button>
             </div>
             <form
@@ -173,9 +200,11 @@ function submitReason(reason: string): void {
             v-if="selectedIds.length > 0"
             class="flex items-center justify-between rounded-xl border border-primary/30 bg-primary-soft px-4 py-2.5 text-xs"
         >
-            <span class="font-semibold text-accent-foreground"
-                >{{ selectedIds.length }} selected</span
-            >
+            <span class="font-semibold text-accent-foreground">{{
+                t('admin.contentExtra.selectedCount', {
+                    count: selectedIds.length,
+                })
+            }}</span>
             <div class="flex gap-2">
                 <Button
                     size="sm"
@@ -215,22 +244,26 @@ function submitReason(reason: string): void {
                     />
                     <div class="min-w-0 flex-1 space-y-1">
                         <div class="flex flex-wrap items-center gap-2">
-                            <span class="font-semibold text-foreground"
-                                >@{{ c.author?.username || 'unknown' }}</span
-                            >
+                            <span class="font-semibold text-foreground">{{
+                                c.author?.username
+                                    ? `@${c.author.username}`
+                                    : t('admin.contentExtra.unknownAuthor')
+                            }}</span>
                             <Badge variant="secondary" class="text-[10px]">{{
-                                c.moderation_status
+                                moderationStatusLabel(c.moderation_status)
                             }}</Badge>
                             <Badge
                                 v-if="c.is_spam"
                                 variant="destructive"
                                 class="text-[10px]"
-                                >Spam</Badge
+                                >{{ t('admin.contentExtra.badgeSpam') }}</Badge
                             >
-                            <span class="text-[11px] text-muted-foreground"
-                                >Post #{{ c.post_id }}:
-                                {{ c.post_excerpt }}</span
-                            >
+                            <span class="text-[11px] text-muted-foreground">{{
+                                t('admin.contentExtra.commentPostExcerpt', {
+                                    id: c.post_id,
+                                    excerpt: c.post_excerpt,
+                                })
+                            }}</span>
                         </div>
                         <p class="text-foreground">{{ c.content }}</p>
                         <p class="text-[11px] text-muted-foreground">
@@ -242,6 +275,20 @@ function submitReason(reason: string): void {
                             size="sm"
                             variant="outline"
                             class="h-7 px-2 text-[11px]"
+                            :title="
+                                c.moderation_status === 'hidden'
+                                    ? t(
+                                          'admin.contentExtra.actions.restore_visibility',
+                                      )
+                                    : t('admin.contentExtra.actions.hide')
+                            "
+                            :aria-label="
+                                c.moderation_status === 'hidden'
+                                    ? t(
+                                          'admin.contentExtra.actions.restore_visibility',
+                                      )
+                                    : t('admin.contentExtra.actions.hide')
+                            "
                             @click="
                                 openSingle(
                                     c.id,
@@ -257,6 +304,12 @@ function submitReason(reason: string): void {
                             v-if="c.deleted_at"
                             size="sm"
                             class="h-7 px-2 text-[11px]"
+                            :title="
+                                t('admin.contentExtra.actions.restore_deleted')
+                            "
+                            :aria-label="
+                                t('admin.contentExtra.actions.restore_deleted')
+                            "
                             @click="openSingle(c.id, 'restore_deleted')"
                         >
                             <RotateCcw class="size-3.5" />
@@ -266,6 +319,10 @@ function submitReason(reason: string): void {
                             size="sm"
                             variant="destructive"
                             class="h-7 px-2 text-[11px]"
+                            :title="t('admin.contentExtra.actions.soft_delete')"
+                            :aria-label="
+                                t('admin.contentExtra.actions.soft_delete')
+                            "
                             @click="openSingle(c.id, 'soft_delete')"
                         >
                             <Trash2 class="size-3.5" />
@@ -287,11 +344,20 @@ function submitReason(reason: string): void {
 
         <ReasonDialog
             v-model:open="reasonOpen"
-            :title="`${t('admin.content.commentsTitle')} · ${activeAction}`"
+            :title="
+                t('admin.contentExtra.actionDialogTitle', {
+                    section: t('admin.content.commentsTitle'),
+                    action: commentActionLabel(activeAction),
+                })
+            "
             :description="
                 isBulk
-                    ? `${selectedIds.length} comments`
-                    : `Comment #${activeCommentId}`
+                    ? t('admin.contentExtra.bulkCommentsCount', {
+                          count: selectedIds.length,
+                      })
+                    : t('admin.contentExtra.commentNumber', {
+                          id: activeCommentId ?? '',
+                      })
             "
             @submit="submitReason"
         />

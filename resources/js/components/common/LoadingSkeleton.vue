@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const { variant = 'card', count = 2 } = defineProps<{
     variant?: 'feed' | 'card' | 'profile';
     count?: number;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <template>
-    <div class="space-y-4" aria-busy="true" aria-label="Đang tải nội dung">
+    <div
+        class="space-y-4"
+        aria-busy="true"
+        :aria-label="t('accessibility.loadingContent')"
+    >
         <div
             v-for="item in count"
             :key="item"

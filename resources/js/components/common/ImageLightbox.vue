@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from '@lucide/vue';
 import { onBeforeUnmount, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 export type LightboxImage = {
     id: number | string;
@@ -228,7 +231,7 @@ onBeforeUnmount(() => {
             v-if="open && images[currentIndex]"
             role="dialog"
             aria-modal="true"
-            aria-label="Image viewer"
+            :aria-label="t('accessibility.imageViewer')"
             class="fixed inset-0 z-[70] flex h-[100dvh] w-full flex-col bg-black/95 text-white select-none"
         >
             <!-- Top Safe-Area Controls -->
@@ -243,7 +246,11 @@ onBeforeUnmount(() => {
                     <button
                         type="button"
                         class="flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
-                        :aria-label="scale > 1.05 ? 'Zoom out' : 'Zoom in'"
+                        :aria-label="
+                            scale > 1.05
+                                ? t('accessibility.zoomOut')
+                                : t('accessibility.zoomIn')
+                        "
                         @click="toggleZoom"
                     >
                         <ZoomOut v-if="scale > 1.05" class="size-5" />
@@ -252,7 +259,7 @@ onBeforeUnmount(() => {
                     <button
                         type="button"
                         class="flex size-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
-                        aria-label="Close"
+                        :aria-label="t('common.close')"
                         @click="closeViewer()"
                     >
                         <X class="size-5" />
@@ -272,7 +279,7 @@ onBeforeUnmount(() => {
                 <button
                     v-if="images.length > 1"
                     type="button"
-                    aria-label="Previous image"
+                    :aria-label="t('accessibility.previousImage')"
                     class="absolute left-2 z-10 hidden size-11 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25 sm:flex"
                     @click.stop="goPrev"
                 >
@@ -281,7 +288,10 @@ onBeforeUnmount(() => {
 
                 <img
                     :src="images[currentIndex].url"
-                    :alt="images[currentIndex].alt || 'Post media'"
+                    :alt="
+                        images[currentIndex].alt ||
+                        t('accessibility.postMediaAlt')
+                    "
                     class="max-h-full max-w-full object-contain transition-transform duration-150 will-change-transform"
                     :style="{
                         transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`,
@@ -292,7 +302,7 @@ onBeforeUnmount(() => {
                 <button
                     v-if="images.length > 1"
                     type="button"
-                    aria-label="Next image"
+                    :aria-label="t('accessibility.nextImage')"
                     class="absolute right-2 z-10 hidden size-11 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25 sm:flex"
                     @click.stop="goNext"
                 >
@@ -309,7 +319,9 @@ onBeforeUnmount(() => {
                     v-for="(img, idx) in images"
                     :key="img.id"
                     type="button"
-                    :aria-label="`Image ${idx + 1}`"
+                    :aria-label="
+                        t('accessibility.imageNumber', { number: idx + 1 })
+                    "
                     :class="[
                         'h-2 rounded-full transition-all',
                         idx === currentIndex

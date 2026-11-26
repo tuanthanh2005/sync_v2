@@ -232,7 +232,7 @@ function submitEdit(): void {
                             variant="outline"
                             size="icon"
                             class="size-9 rounded-lg"
-                            aria-label="Share community"
+                            :aria-label="t('communities.extra.shareCommunity')"
                             @click="shareCommunity"
                         >
                             <Share2 class="size-4" />

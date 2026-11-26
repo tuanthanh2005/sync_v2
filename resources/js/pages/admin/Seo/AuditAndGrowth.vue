@@ -130,11 +130,13 @@ function saveSettings(): void {
                     @click="refreshRecommendations"
                 >
                     <Sparkles class="size-3.5" />
-                    <span>Refresh Keyword Intelligence</span>
+                    <span>{{
+                        t('admin.seoCenter.refreshKeywordIntelligence')
+                    }}</span>
                 </Button>
                 <Button size="sm" @click="runAudit">
                     <ShieldCheck class="size-3.5" />
-                    <span>Run SEO Audit Now</span>
+                    <span>{{ t('admin.seoCenter.runSeoAuditNow') }}</span>
                 </Button>
             </div>
         </div>
@@ -144,11 +146,14 @@ function saveSettings(): void {
             class="space-y-4 rounded-xl border border-border bg-card p-5 shadow-xs"
         >
             <h2 class="text-sm font-semibold text-foreground">
-                Open Technical Audit Issues ({{ issues.length }})
+                {{
+                    t('admin.seoCenter.openAuditIssuesCount', {
+                        count: issues.length,
+                    })
+                }}
             </h2>
             <p v-if="issues.length === 0" class="text-xs text-muted-foreground">
-                No open technical issues found. Run an audit to scan current URL
-                registry, hreflang, redirects, and sitemaps.
+                {{ t('admin.seoCenter.noOpenAuditIssues') }}
             </p>
             <div v-else class="space-y-2.5">
                 <div
@@ -176,7 +181,11 @@ function saveSettings(): void {
                             {{ issue.description }}
                         </p>
                         <p v-if="issue.recommendation" class="text-primary">
-                            Fix: {{ issue.recommendation }}
+                            {{
+                                t('admin.seoCenter.fixPrefix', {
+                                    recommendation: issue.recommendation,
+                                })
+                            }}
                         </p>
                     </div>
                     <Button
@@ -186,7 +195,7 @@ function saveSettings(): void {
                         @click="resolveIssue(issue.id)"
                     >
                         <CheckCircle2 class="size-3.5" />
-                        <span>Resolve</span>
+                        <span>{{ t('admin.seoCenter.resolve') }}</span>
                     </Button>
                 </div>
             </div>
@@ -201,14 +210,15 @@ function saveSettings(): void {
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Lightbulb class="size-4 text-primary" />
-                    <span>Keyword Intelligence &amp; CTR Recommendations</span>
+                    <span>{{
+                        t('admin.seoCenter.keywordIntelligenceTitle')
+                    }}</span>
                 </h2>
                 <p
                     v-if="recommendations.length === 0"
                     class="text-xs text-muted-foreground"
                 >
-                    No recommendations yet. Connect Google Search Console and
-                    sync Search Analytics to generate data-backed opportunities.
+                    {{ t('admin.seoCenter.noRecommendationsYet') }}
                 </p>
                 <div v-else class="space-y-2.5">
                     <div
@@ -230,7 +240,7 @@ function saveSettings(): void {
                             variant="ghost"
                             @click="dismissRecommendation(rec.id)"
                         >
-                            Dismiss
+                            {{ t('admin.seoCenter.dismiss') }}
                         </Button>
                     </div>
                 </div>
@@ -243,7 +253,7 @@ function saveSettings(): void {
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Hash class="size-4 text-primary" />
-                    <span>Active Topic Clusters</span>
+                    <span>{{ t('admin.seoCenter.activeTopicClusters') }}</span>
                 </h2>
                 <div class="flex flex-wrap gap-2">
                     <a
@@ -267,7 +277,7 @@ function saveSettings(): void {
                 class="flex items-center gap-2 text-sm font-semibold text-foreground"
             >
                 <Settings class="size-4 text-primary" />
-                <span>SEO Quality Gate &amp; Engine Guardrails</span>
+                <span>{{ t('admin.seoCenter.qualityGateSettingsTitle') }}</span>
             </h2>
             <form
                 @submit.prevent="saveSettings"
@@ -275,24 +285,28 @@ function saveSettings(): void {
             >
                 <label class="flex items-center gap-2 text-xs font-medium">
                     <input v-model="settingsForm.seo_enabled" type="checkbox" />
-                    <span>Enable SEO Engine globally</span>
+                    <span>{{
+                        t('admin.seoCenter.enableSeoEngineGlobally')
+                    }}</span>
                 </label>
                 <label class="flex items-center gap-2 text-xs font-medium">
                     <input
                         v-model="settingsForm.allow_indexing_in_non_production"
                         type="checkbox"
                     />
-                    <span>Allow indexing outside production</span>
+                    <span>{{ t('admin.seoCenter.allowIndexingNonProd') }}</span>
                 </label>
                 <label class="flex items-center gap-2 text-xs font-medium">
                     <input
                         v-model="settingsForm.index_user_profiles"
                         type="checkbox"
                     />
-                    <span>Allow indexing active public profiles</span>
+                    <span>{{
+                        t('admin.seoCenter.allowIndexingProfiles')
+                    }}</span>
                 </label>
                 <div class="space-y-1">
-                    <Label>Min Post Words for Index</Label>
+                    <Label>{{ t('admin.seoCenter.minPostWords') }}</Label>
                     <Input
                         v-model.number="settingsForm.min_post_words"
                         type="number"
@@ -301,7 +315,7 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label>Min Post Characters for Index</Label>
+                    <Label>{{ t('admin.seoCenter.minPostChars') }}</Label>
                     <Input
                         v-model.number="settingsForm.min_post_chars"
                         type="number"
@@ -310,7 +324,7 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label>Min Posts per Topic Cluster</Label>
+                    <Label>{{ t('admin.seoCenter.minTopicPosts') }}</Label>
                     <Input
                         v-model.number="settingsForm.min_topic_posts"
                         type="number"
@@ -319,7 +333,9 @@ function saveSettings(): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label>Daily GSC Inspection Quota Limit</Label>
+                    <Label>{{
+                        t('admin.seoCenter.dailyGscInspectionQuota')
+                    }}</Label>
                     <Input
                         v-model.number="settingsForm.gsc_daily_inspection_limit"
                         type="number"
@@ -333,7 +349,7 @@ function saveSettings(): void {
                         size="sm"
                         :disabled="settingsForm.processing"
                     >
-                        Save SEO Engine Settings
+                        {{ t('admin.seoCenter.saveSeoEngineSettings') }}
                     </Button>
                 </div>
             </form>

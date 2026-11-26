@@ -103,6 +103,17 @@ const { t, locale } = useI18n();
 const activeTab = ref(props.tab || 'balances');
 const searchInput = ref(props.search);
 
+function bucketLabel(bucket: string): string {
+    const map: Record<string, string> = {
+        paid: 'admin.financeExtra.bucket.paid',
+        promo: 'admin.financeExtra.bucket.promo',
+        held: 'admin.financeExtra.bucket.held',
+    };
+    const key = map[bucket.toLowerCase()];
+
+    return key ? t(key) : bucket;
+}
+
 const adjustTarget = ref<AccountRow | null>(null);
 const adjustForm = useForm({
     amount: 100000,
@@ -230,7 +241,14 @@ function submitRefund(): void {
             <AdminStatCard
                 :label="t('admin.dashboard.revenue')"
                 :value="formatCurrencyVnd(summary.total_deposited, locale)"
-                :hint="`Refunded: ${formatCurrencyVnd(summary.total_refunded, locale)}`"
+                :hint="
+                    t('admin.financeExtra.refundedHint', {
+                        amount: formatCurrencyVnd(
+                            summary.total_refunded,
+                            locale,
+                        ),
+                    })
+                "
                 :icon="CreditCard"
                 tone="success"
             />
@@ -469,7 +487,7 @@ function submitRefund(): void {
                                 e.type_label
                             }}</Badge>
                             <Badge variant="outline" class="text-[10px]">{{
-                                e.wallet_bucket
+                                bucketLabel(e.wallet_bucket)
                             }}</Badge>
                         </div>
                         <p class="break-words text-muted-foreground">
@@ -487,13 +505,21 @@ function submitRefund(): void {
                             class="border-b border-border text-muted-foreground"
                         >
                             <tr>
-                                <th class="py-2 pr-3">ID</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colId') }}
+                                </th>
                                 <th class="py-2 pr-3">
                                     {{ t('admin.users.member') }}
                                 </th>
-                                <th class="py-2 pr-3">Type / Bucket</th>
-                                <th class="py-2 pr-3">Amount</th>
-                                <th class="py-2 pr-3">Description</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colTypeBucket') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colAmount') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colDescription') }}
+                                </th>
                                 <th class="py-2">
                                     {{ t('admin.common.createdAt') }}
                                 </th>
@@ -518,7 +544,9 @@ function submitRefund(): void {
                                     <Badge
                                         variant="outline"
                                         class="ms-1 text-[10px]"
-                                        >{{ e.wallet_bucket }}</Badge
+                                        >{{
+                                            bucketLabel(e.wallet_bucket)
+                                        }}</Badge
                                     >
                                 </td>
                                 <td class="py-2.5 pr-3 font-mono font-semibold">
@@ -585,12 +613,13 @@ function submitRefund(): void {
                                     v-if="p.refunded_amount > 0"
                                     class="text-[11px] text-destructive"
                                 >
-                                    Refunded:
                                     {{
-                                        formatCurrencyVnd(
-                                            p.refunded_amount,
-                                            locale,
-                                        )
+                                        t('admin.financeExtra.refundedHint', {
+                                            amount: formatCurrencyVnd(
+                                                p.refunded_amount,
+                                                locale,
+                                            ),
+                                        })
                                     }}
                                 </p>
                             </div>
@@ -616,12 +645,18 @@ function submitRefund(): void {
                             class="border-b border-border text-muted-foreground"
                         >
                             <tr>
-                                <th class="py-2 pr-3">ID</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colId') }}
+                                </th>
                                 <th class="py-2 pr-3">
                                     {{ t('admin.users.member') }}
                                 </th>
-                                <th class="py-2 pr-3">Provider</th>
-                                <th class="py-2 pr-3">Amount</th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colProvider') }}
+                                </th>
+                                <th class="py-2 pr-3">
+                                    {{ t('admin.financeExtra.colAmount') }}
+                                </th>
                                 <th class="py-2 pr-3">
                                     {{ t('admin.common.status') }}
                                 </th>
@@ -719,7 +754,9 @@ function submitRefund(): void {
                 </DialogHeader>
                 <form @submit.prevent="submitAdjust" class="space-y-3 text-xs">
                     <div class="space-y-1">
-                        <Label>Wallet Bucket</Label>
+                        <Label>{{
+                            t('admin.financeExtra.walletBucketLabel')
+                        }}</Label>
                         <select
                             v-model="adjustForm.bucket"
                             class="h-9 w-full rounded-lg border border-input bg-background px-3 text-xs"
@@ -733,7 +770,9 @@ function submitRefund(): void {
                         </select>
                     </div>
                     <div class="space-y-1">
-                        <Label>Signed Amount (VND, +/-)</Label>
+                        <Label>{{
+                            t('admin.financeExtra.signedAmountLabel')
+                        }}</Label>
                         <Input
                             v-model.number="adjustForm.amount"
                             type="number"
@@ -782,21 +821,22 @@ function submitRefund(): void {
         >
             <DialogContent class="rounded-2xl sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle
-                        >{{ t('admin.finance.refundPayment') }} #{{
-                            refundTarget?.id
-                        }}</DialogTitle
-                    >
+                    <DialogTitle>{{
+                        t('admin.financeExtra.refundDialogTitle', {
+                            id: refundTarget?.id ?? '',
+                        })
+                    }}</DialogTitle>
                     <DialogDescription>{{
                         t('admin.finance.passwordConfirmHint')
                     }}</DialogDescription>
                 </DialogHeader>
                 <form @submit.prevent="submitRefund" class="space-y-3 text-xs">
                     <div class="space-y-1">
-                        <Label
-                            >Refund Amount (VND, max
-                            {{ refundTarget?.refundable_remaining }})</Label
-                        >
+                        <Label>{{
+                            t('admin.financeExtra.refundAmountLabel', {
+                                max: refundTarget?.refundable_remaining ?? 0,
+                            })
+                        }}</Label>
                         <Input
                             v-model.number="refundForm.amount"
                             type="number"

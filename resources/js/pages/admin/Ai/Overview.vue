@@ -350,11 +350,13 @@ function submitSettings(): void {
                     {{ control.usage_today.tokens.toLocaleString() }}
                 </p>
                 <p class="mt-1 text-xs text-muted-foreground">
-                    {{ control.usage_today.requests }} req · Est.
                     {{
-                        formatMicroUsd(
-                            control.usage_today.estimated_cost_micro_usd,
-                        )
+                        t('admin.aiCenter.requestsAndEstCost', {
+                            count: control.usage_today.requests,
+                            cost: formatMicroUsd(
+                                control.usage_today.estimated_cost_micro_usd,
+                            ),
+                        })
                     }}
                 </p>
             </div>
@@ -600,7 +602,9 @@ function submitSettings(): void {
                 <div class="mb-3 flex items-center justify-between">
                     <h2 class="flex items-center gap-2 text-sm font-semibold">
                         <Activity class="size-4 text-primary" />
-                        {{ t('admin.ai.usageByModel') }} ({{ days }}d)
+                        {{ t('admin.ai.usageByModel') }} ({{
+                            t('admin.aiCenter.daysShort', { count: days })
+                        }})
                     </h2>
                     <Link
                         :href="adminAiAssist.url()"
@@ -622,10 +626,18 @@ function submitSettings(): void {
                             <tr
                                 class="border-b border-border text-muted-foreground"
                             >
-                                <th class="py-2 pr-2">Model</th>
-                                <th class="px-2 py-2">Req</th>
-                                <th class="px-2 py-2">Tokens</th>
-                                <th class="py-2 pl-2 text-right">Est. Cost</th>
+                                <th class="py-2 pr-2">
+                                    {{ t('admin.aiCenter.model') }}
+                                </th>
+                                <th class="px-2 py-2">
+                                    {{ t('admin.aiCenter.reqShort') }}
+                                </th>
+                                <th class="px-2 py-2">
+                                    {{ t('admin.aiCenter.tokens') }}
+                                </th>
+                                <th class="py-2 pl-2 text-right">
+                                    {{ t('admin.aiCenter.estCost') }}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -691,7 +703,10 @@ function submitSettings(): void {
                                 {{ item.action }}
                             </p>
                             <p class="truncate text-muted-foreground">
-                                {{ item.actor_username || 'system' }}
+                                {{
+                                    item.actor_username ||
+                                    t('admin.aiCenter.systemActor')
+                                }}
                                 <span v-if="item.agent_name">
                                     · {{ item.agent_name }}
                                 </span>

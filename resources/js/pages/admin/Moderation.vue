@@ -20,6 +20,32 @@ defineProps<{
 const { t, locale } = useI18n();
 const notes = reactive<Record<number, string>>({});
 
+function targetTypeLabel(type: string): string {
+    const map: Record<string, string> = {
+        post: 'admin.moderationExtra.targetType.post',
+        comment: 'admin.moderationExtra.targetType.comment',
+        user: 'admin.moderationExtra.targetType.user',
+        community: 'admin.moderationExtra.targetType.community',
+        poll: 'admin.moderationExtra.targetType.poll',
+        message: 'admin.moderationExtra.targetType.message',
+    };
+    const key = map[type.toLowerCase()];
+
+    return key ? t(key) : type;
+}
+
+function priorityLabel(priority: string): string {
+    const map: Record<string, string> = {
+        low: 'admin.moderationExtra.priority.low',
+        normal: 'admin.moderationExtra.priority.normal',
+        high: 'admin.moderationExtra.priority.high',
+        critical: 'admin.moderationExtra.priority.critical',
+    };
+    const key = map[priority.toLowerCase()];
+
+    return key ? t(key) : priority;
+}
+
 function resolveReport(
     reportId: number,
     decision: 'dismiss' | 'hide_content' | 'suspend_user',
@@ -70,7 +96,14 @@ function triageReport(
                     <div class="space-y-1">
                         <div class="flex flex-wrap items-center gap-2">
                             <Badge variant="outline" class="text-[11px]">
-                                {{ report.target_type }} #{{ report.target_id }}
+                                {{
+                                    t('admin.moderationExtra.targetRef', {
+                                        type: targetTypeLabel(
+                                            report.target_type,
+                                        ),
+                                        id: report.target_id,
+                                    })
+                                }}
                             </Badge>
                             <Badge
                                 :variant="
@@ -87,7 +120,7 @@ function triageReport(
                                 variant="outline"
                                 class="text-[10px] uppercase"
                             >
-                                {{ report.priority || 'normal' }}
+                                {{ priorityLabel(report.priority || 'normal') }}
                             </Badge>
                             <span class="text-xs font-medium text-foreground">
                                 {{ report.reason_label }}
@@ -103,10 +136,19 @@ function triageReport(
                             {{ report.details }}
                         </p>
                         <p class="text-[11px] text-muted-foreground">
-                            Reporter: @{{ report.reporter_username || 'user' }}
+                            {{
+                                t('admin.moderationExtra.reporterBy', {
+                                    username:
+                                        report.reporter_username ||
+                                        t('admin.moderationExtra.unknownUser'),
+                                })
+                            }}
                             <span v-if="report.reviewer_username">
-                                · Reviewed by @{{
-                                    report.reviewer_username
+                                ·
+                                {{
+                                    t('admin.moderationExtra.reviewedBy', {
+                                        username: report.reviewer_username,
+                                    })
                                 }}</span
                             >
                             <span>
@@ -128,6 +170,9 @@ function triageReport(
                     >
                         <select
                             :value="report.priority || 'normal'"
+                            :aria-label="
+                                t('admin.moderationExtra.priorityAria')
+                            "
                             class="h-8 rounded-lg border border-input bg-background px-2 text-xs"
                             @change="
                                 (e) =>
@@ -138,14 +183,25 @@ function triageReport(
                                     })
                             "
                         >
-                            <option value="low">Low</option>
-                            <option value="normal">Normal</option>
-                            <option value="high">High</option>
-                            <option value="critical">Critical</option>
+                            <option value="low">
+                                {{ t('admin.moderationExtra.priority.low') }}
+                            </option>
+                            <option value="normal">
+                                {{ t('admin.moderationExtra.priority.normal') }}
+                            </option>
+                            <option value="high">
+                                {{ t('admin.moderationExtra.priority.high') }}
+                            </option>
+                            <option value="critical">
+                                {{
+                                    t('admin.moderationExtra.priority.critical')
+                                }}
+                            </option>
                         </select>
                         <select
                             v-if="moderators && moderators.length > 0"
                             :value="report.assigned_to ?? ''"
+                            :aria-label="t('admin.moderation.assignee')"
                             class="h-8 rounded-lg border border-input bg-background px-2 text-xs"
                             @change="
                                 (e) => {
@@ -161,7 +217,11 @@ function triageReport(
                             "
                         >
                             <option value="">
-                                {{ t('admin.moderation.assignee') }}: —
+                                {{
+                                    t(
+                                        'admin.moderationExtra.assigneeUnassigned',
+                                    )
+                                }}
                             </option>
                             <option
                                 v-for="mod in moderators"
@@ -244,14 +304,24 @@ function triageReport(
                             log.action
                         }}</span>
                         <span class="ms-2 text-muted-foreground">
-                            {{ log.target_type }} #{{ log.target_id }}
+                            {{
+                                t('admin.moderationExtra.targetRef', {
+                                    type: targetTypeLabel(log.target_type),
+                                    id: log.target_id,
+                                })
+                            }}
                             <template v-if="log.reason">
                                 · {{ log.reason }}</template
                             >
                         </span>
                     </div>
                     <span class="text-muted-foreground">
-                        @{{ log.actor_username || 'system' }} ·
+                        {{
+                            log.actor_username
+                                ? `@${log.actor_username}`
+                                : t('admin.moderationExtra.systemActor')
+                        }}
+                        ·
                         {{ formatDateTime(log.created_at, locale) }}
                     </span>
                 </div>

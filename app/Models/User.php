@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Enums\AccountType;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Services\System\LanguageService;
 use Carbon\CarbonInterface;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,10 +77,25 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  */
 #[Fillable(['name', 'username', 'email', 'password', 'has_password', 'timezone', 'preferred_locale', 'social_provider', 'social_provider_id', 'avatar_url', 'email_verified_at'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
+
+    /**
+     * Resolve the recipient's preferred locale for emails and queued notifications.
+     * Always validates against the platform allowlist and falls back to English.
+     */
+    public function preferredLocale(): string
+    {
+        $preferred = is_string($this->preferred_locale) ? trim($this->preferred_locale) : '';
+
+        if ($preferred !== '' && in_array($preferred, LanguageService::allCodes(), true)) {
+            return $preferred;
+        }
+
+        return (string) config('localization.fallback_locale', 'en');
+    }
 
     /**
      * Default attribute values.

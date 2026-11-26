@@ -2,7 +2,7 @@
 <noscript>
     <main style="max-width: 820px; margin: 2rem auto; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; line-height: 1.65;">
         @if (! empty($seoSsr['breadcrumbs']) && is_array($seoSsr['breadcrumbs']))
-            <nav aria-label="Breadcrumb" style="font-size: 0.875rem; margin-bottom: 1rem;">
+            <nav aria-label="{{ __('Breadcrumb') }}" style="font-size: 0.875rem; margin-bottom: 1rem;">
                 @foreach ($seoSsr['breadcrumbs'] as $idx => $crumb)
                     @if ($idx > 0) / @endif
                     <a href="{{ $crumb['href'] }}">{{ $crumb['label'] }}</a>
@@ -44,8 +44,8 @@
         </article>
 
         @if (! empty($seoSsr['comments']) && is_array($seoSsr['comments']))
-            <section aria-label="Public Comments" style="margin-top: 2rem;">
-                <h2>Comments</h2>
+            <section aria-label="{{ __('Public Comments') }}" style="margin-top: 2rem;">
+                <h2>{{ __('Comments') }}</h2>
                 @foreach ($seoSsr['comments'] as $comment)
                     <div style="border-top: 1px solid #e2e8f0; padding: 0.75rem 0;">
                         <strong>{{ $comment['author'] }}</strong>
@@ -56,7 +56,7 @@
         @endif
 
         @if (! empty($seoSsr['posts']) && is_array($seoSsr['posts']))
-            <section aria-label="Discussions" style="margin-top: 2rem;">
+            <section aria-label="{{ __('Discussions') }}" style="margin-top: 2rem;">
                 @foreach ($seoSsr['posts'] as $item)
                     <article style="border-top: 1px solid #e2e8f0; padding: 1rem 0;">
                         <h2><a href="{{ $item['href'] }}">{{ $item['title'] }}</a></h2>
@@ -72,8 +72,8 @@
         @endif
 
         @if (! empty($seoSsr['links']) && is_array($seoSsr['links']))
-            <nav aria-label="Related Links" style="margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
-                <h2>Related</h2>
+            <nav aria-label="{{ __('Related Links') }}" style="margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                <h2>{{ __('Related') }}</h2>
                 <ul>
                     @foreach ($seoSsr['links'] as $link)
                         <li><a href="{{ $link['href'] }}">{{ $link['label'] }}</a></li>
@@ -83,12 +83,12 @@
         @endif
 
         @if (! empty($seoSsr['prev_url']) || ! empty($seoSsr['next_url']))
-            <nav aria-label="Pagination" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <nav aria-label="{{ __('Pagination') }}" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
                 @if (! empty($seoSsr['prev_url']))
-                    <a rel="prev" href="{{ $seoSsr['prev_url'] }}">Previous Page</a>
+                    <a rel="prev" href="{{ $seoSsr['prev_url'] }}">{{ __('Previous Page') }}</a>
                 @endif
                 @if (! empty($seoSsr['next_url']))
-                    <a rel="next" href="{{ $seoSsr['next_url'] }}">Next Page</a>
+                    <a rel="next" href="{{ $seoSsr['next_url'] }}">{{ __('Next Page') }}</a>
                 @endif
             </nav>
         @endif

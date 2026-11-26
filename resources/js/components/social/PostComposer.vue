@@ -438,7 +438,7 @@ onBeforeUnmount(() => {
 
 <template>
     <section
-        aria-label="Post composer"
+        :aria-label="t('accessibility.postComposer')"
         :class="[
             isMobileFullscreen
                 ? 'fixed inset-0 z-50 flex h-[100dvh] flex-col bg-card md:static md:block md:h-auto md:rounded-xl md:border md:border-border md:p-4 md:shadow-xs'
@@ -779,9 +779,15 @@ onBeforeUnmount(() => {
                             v-model.number="form.poll_duration_hours"
                             class="h-8 rounded-lg border border-input bg-card px-2.5 text-xs text-foreground"
                         >
-                            <option :value="24">24h</option>
-                            <option :value="72">3d</option>
-                            <option :value="168">7d</option>
+                            <option :value="24">
+                                {{ t('post.extra.duration24h') }}
+                            </option>
+                            <option :value="72">
+                                {{ t('post.extra.duration3d') }}
+                            </option>
+                            <option :value="168">
+                                {{ t('post.extra.duration7d') }}
+                            </option>
                         </select>
                     </div>
                 </div>

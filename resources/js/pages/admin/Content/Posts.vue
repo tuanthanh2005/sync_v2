@@ -80,6 +80,38 @@ const communityId = ref(
     props.filters.community_id ? String(props.filters.community_id) : '',
 );
 
+function moderationStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        approved: 'admin.contentExtra.modStatus.approved',
+        visible: 'admin.contentExtra.modStatus.visible',
+        published: 'admin.contentExtra.modStatus.published',
+        pending: 'admin.contentExtra.modStatus.pending',
+        hidden: 'admin.contentExtra.modStatus.hidden',
+        removed: 'admin.contentExtra.modStatus.removed',
+        rejected: 'admin.contentExtra.modStatus.rejected',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
+function postActionLabel(action: string): string {
+    const map: Record<string, string> = {
+        hide: 'admin.contentExtra.actions.hide',
+        restore_visibility: 'admin.contentExtra.actions.restore_visibility',
+        lock_comments: 'admin.contentExtra.actions.lock_comments',
+        unlock_comments: 'admin.contentExtra.actions.unlock_comments',
+        pin: 'admin.contentExtra.actions.pin',
+        unpin: 'admin.contentExtra.actions.unpin',
+        content_warning: 'admin.contentExtra.actions.content_warning',
+        restore_deleted: 'admin.contentExtra.actions.restore_deleted',
+        soft_delete: 'admin.contentExtra.actions.soft_delete',
+    };
+    const key = map[action];
+
+    return key ? t(key) : action;
+}
+
 const reasonOpen = ref(false);
 const activePost = ref<PostRow | null>(null);
 const activeAction = ref('hide');
@@ -164,10 +196,10 @@ function submitAction(reason: string): void {
                     :key="tab"
                     size="sm"
                     :variant="filters.filter === tab ? 'default' : 'ghost'"
-                    class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap capitalize sm:min-h-8"
+                    class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap sm:min-h-8"
                     @click="applyFilter(tab)"
                 >
-                    {{ tab }}
+                    {{ t(`admin.contentExtra.postFilters.${tab}`) }}
                 </Button>
             </div>
             <form
@@ -228,47 +260,66 @@ function submitAction(reason: string): void {
                                 <span class="font-mono text-muted-foreground"
                                     >#{{ post.id }}</span
                                 >
-                                <span class="font-semibold text-foreground"
-                                    >@{{
-                                        post.author?.username || 'unknown'
-                                    }}</span
-                                >
+                                <span class="font-semibold text-foreground">{{
+                                    post.author?.username
+                                        ? `@${post.author.username}`
+                                        : t('admin.contentExtra.unknownAuthor')
+                                }}</span>
                                 <Badge
                                     variant="secondary"
                                     class="text-[10px]"
-                                    >{{ post.moderation_status }}</Badge
+                                    >{{
+                                        moderationStatusLabel(
+                                            post.moderation_status,
+                                        )
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="post.is_pinned"
                                     variant="outline"
                                     class="text-[10px]"
-                                    >Pinned</Badge
+                                    >{{
+                                        t('admin.contentExtra.badgePinned')
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="post.comments_locked"
                                     variant="outline"
                                     class="text-[10px]"
-                                    >Locked</Badge
+                                    >{{
+                                        t('admin.contentExtra.badgeLocked')
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="post.is_spam"
                                     variant="destructive"
                                     class="text-[10px]"
-                                    >Spam</Badge
+                                    >{{
+                                        t('admin.contentExtra.badgeSpam')
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="post.ad_campaigns_count > 0"
                                     variant="outline"
                                     class="text-[10px]"
-                                    >Sponsored ({{
-                                        post.ad_campaigns_count
-                                    }})</Badge
+                                    >{{
+                                        t('admin.contentExtra.badgeSponsored', {
+                                            count: post.ad_campaigns_count,
+                                        })
+                                    }}</Badge
                                 >
                                 <Badge
                                     v-if="post.content_warning"
                                     variant="destructive"
                                     class="text-[10px]"
-                                    >CW: {{ post.content_warning }}</Badge
+                                    >{{
+                                        t(
+                                            'admin.contentExtra.badgeContentWarning',
+                                            {
+                                                label: post.content_warning,
+                                            },
+                                        )
+                                    }}</Badge
                                 >
                             </div>
                             <p
@@ -308,6 +359,8 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="ghost"
                                 class="h-7 gap-1 px-2 text-[11px]"
+                                :title="t('admin.content.editHistory')"
+                                :aria-label="t('admin.content.editHistory')"
                                 @click="historyPost = post"
                             >
                                 <History class="size-3.5" />
@@ -337,6 +390,24 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="outline"
                                 class="h-7 gap-1 px-2 text-[11px]"
+                                :title="
+                                    post.comments_locked
+                                        ? t(
+                                              'admin.contentExtra.actions.unlock_comments',
+                                          )
+                                        : t(
+                                              'admin.contentExtra.actions.lock_comments',
+                                          )
+                                "
+                                :aria-label="
+                                    post.comments_locked
+                                        ? t(
+                                              'admin.contentExtra.actions.unlock_comments',
+                                          )
+                                        : t(
+                                              'admin.contentExtra.actions.lock_comments',
+                                          )
+                                "
                                 @click="
                                     openAction(
                                         post,
@@ -356,6 +427,16 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="outline"
                                 class="h-7 gap-1 px-2 text-[11px]"
+                                :title="
+                                    post.is_pinned
+                                        ? t('admin.contentExtra.actions.unpin')
+                                        : t('admin.contentExtra.actions.pin')
+                                "
+                                :aria-label="
+                                    post.is_pinned
+                                        ? t('admin.contentExtra.actions.unpin')
+                                        : t('admin.contentExtra.actions.pin')
+                                "
                                 @click="
                                     openAction(
                                         post,
@@ -369,6 +450,16 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="outline"
                                 class="h-7 gap-1 px-2 text-[11px]"
+                                :title="
+                                    t(
+                                        'admin.contentExtra.actions.content_warning',
+                                    )
+                                "
+                                :aria-label="
+                                    t(
+                                        'admin.contentExtra.actions.content_warning',
+                                    )
+                                "
                                 @click="openAction(post, 'content_warning')"
                             >
                                 <ShieldAlert class="size-3.5 text-warning" />
@@ -387,6 +478,12 @@ function submitAction(reason: string): void {
                                 size="sm"
                                 variant="destructive"
                                 class="h-7 gap-1 px-2 text-[11px]"
+                                :title="
+                                    t('admin.contentExtra.actions.soft_delete')
+                                "
+                                :aria-label="
+                                    t('admin.contentExtra.actions.soft_delete')
+                                "
                                 @click="openAction(post, 'soft_delete')"
                             >
                                 <Trash2 class="size-3.5" />
@@ -413,17 +510,22 @@ function submitAction(reason: string): void {
 
         <ReasonDialog
             v-model:open="reasonOpen"
-            :title="`${t('admin.content.postsTitle')} · ${activeAction}`"
+            :title="
+                t('admin.contentExtra.actionDialogTitle', {
+                    section: t('admin.content.postsTitle'),
+                    action: postActionLabel(activeAction),
+                })
+            "
             :description="
                 activePost
-                    ? `#${activePost.id} (@${activePost.author?.username})`
+                    ? `#${activePost.id} (${activePost.author?.username ? `@${activePost.author.username}` : t('admin.contentExtra.unknownAuthor')})`
                     : ''
             "
             :consequence="
                 activePost &&
                 activePost.ad_campaigns_count > 0 &&
                 (activeAction === 'hide' || activeAction === 'soft_delete')
-                    ? 'Active ad campaigns on this post will be stopped and unspent budget refunded.'
+                    ? t('admin.contentExtra.hideSponsoredPostConsequence')
                     : undefined
             "
             @submit="submitAction"
@@ -437,7 +539,9 @@ function submitAction(reason: string): void {
                 }}</Label>
                 <Input
                     v-model="warningLabel"
-                    placeholder="Sensitive topic / spoiler / graphic"
+                    :placeholder="
+                        t('admin.contentExtra.contentWarningPlaceholder')
+                    "
                     class="h-9 text-xs"
                 />
             </div>
@@ -449,11 +553,11 @@ function submitAction(reason: string): void {
         >
             <DialogContent class="max-w-lg rounded-2xl">
                 <DialogHeader>
-                    <DialogTitle class="text-base"
-                        >{{ t('admin.content.editHistory') }} #{{
-                            historyPost?.id
-                        }}</DialogTitle
-                    >
+                    <DialogTitle class="text-base">{{
+                        t('admin.contentExtra.editHistoryTitle', {
+                            id: historyPost?.id ?? '',
+                        })
+                    }}</DialogTitle>
                 </DialogHeader>
                 <div class="max-h-80 space-y-2 overflow-y-auto text-xs">
                     <div
@@ -468,7 +572,12 @@ function submitAction(reason: string): void {
                             {{ h.previous_content }}
                         </p>
                         <p class="mt-1 text-[10px] text-muted-foreground">
-                            @{{ h.editor_username || 'system' }} ·
+                            {{
+                                h.editor_username
+                                    ? `@${h.editor_username}`
+                                    : t('admin.contentExtra.systemActor')
+                            }}
+                            ·
                             {{ formatDateTime(h.created_at, locale) }}
                         </p>
                     </div>

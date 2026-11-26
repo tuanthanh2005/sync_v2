@@ -25,6 +25,29 @@ defineProps<{
 }>();
 
 const { t } = useI18n();
+
+function matchTypeLabel(matchType: string): string {
+    const map: Record<string, string> = {
+        contains: 'admin.contentExtra.matchTypes.contains',
+        exact: 'admin.contentExtra.matchTypes.exact',
+        domain: 'admin.contentExtra.matchTypes.domain',
+    };
+    const key = map[matchType.toLowerCase()];
+
+    return key ? t(key) : matchType;
+}
+
+function severityLabel(severity: string): string {
+    const map: Record<string, string> = {
+        block: 'admin.contentExtra.severities.block',
+        flag: 'admin.contentExtra.severities.flag',
+        mask: 'admin.contentExtra.severities.mask',
+    };
+    const key = map[severity.toLowerCase()];
+
+    return key ? t(key) : severity;
+}
+
 const form = useForm({
     keyword: '',
     match_type: 'contains',
@@ -63,12 +86,12 @@ function removeKeyword(id: number): void {
             class="flex flex-wrap items-end gap-3 rounded-xl border border-border bg-card p-4 text-xs"
         >
             <div class="min-w-[220px] flex-1 space-y-1">
-                <label class="font-medium text-foreground"
-                    >Keyword / Domain</label
-                >
+                <label class="font-medium text-foreground">{{
+                    t('admin.contentExtra.keywordDomainLabel')
+                }}</label>
                 <Input
                     v-model="form.keyword"
-                    placeholder="scam-domain.example"
+                    :placeholder="t('admin.contentExtra.keywordPlaceholder')"
                     class="h-9 text-xs"
                     required
                 />
@@ -81,9 +104,15 @@ function removeKeyword(id: number): void {
                     v-model="form.match_type"
                     class="h-9 rounded-lg border border-input bg-background px-3 text-xs"
                 >
-                    <option value="contains">Contains</option>
-                    <option value="exact">Exact Word</option>
-                    <option value="domain">Domain</option>
+                    <option value="contains">
+                        {{ t('admin.contentExtra.matchTypes.contains') }}
+                    </option>
+                    <option value="exact">
+                        {{ t('admin.contentExtra.matchTypes.exact') }}
+                    </option>
+                    <option value="domain">
+                        {{ t('admin.contentExtra.matchTypes.domain') }}
+                    </option>
                 </select>
             </div>
             <div class="space-y-1">
@@ -94,9 +123,15 @@ function removeKeyword(id: number): void {
                     v-model="form.severity"
                     class="h-9 rounded-lg border border-input bg-background px-3 text-xs"
                 >
-                    <option value="block">Block Submission</option>
-                    <option value="flag">Flag for Review</option>
-                    <option value="mask">Auto-Mask (***)</option>
+                    <option value="block">
+                        {{ t('admin.contentExtra.severities.block') }}
+                    </option>
+                    <option value="flag">
+                        {{ t('admin.contentExtra.severities.flag') }}
+                    </option>
+                    <option value="mask">
+                        {{ t('admin.contentExtra.severities.mask') }}
+                    </option>
                 </select>
             </div>
             <Button
@@ -127,7 +162,7 @@ function removeKeyword(id: number): void {
                             kw.keyword
                         }}</span>
                         <Badge variant="outline" class="text-[10px]">{{
-                            kw.match_type
+                            matchTypeLabel(kw.match_type)
                         }}</Badge>
                         <Badge
                             :variant="
@@ -136,13 +171,15 @@ function removeKeyword(id: number): void {
                                     : 'secondary'
                             "
                             class="text-[10px]"
-                            >{{ kw.severity }}</Badge
+                            >{{ severityLabel(kw.severity) }}</Badge
                         >
                     </div>
                     <Button
                         size="sm"
                         variant="ghost"
                         class="h-7 px-2 text-destructive"
+                        :title="t('admin.contentExtra.deleteKeywordTitle')"
+                        :aria-label="t('admin.contentExtra.deleteKeywordTitle')"
                         @click="removeKeyword(kw.id)"
                     >
                         <Trash2 class="size-3.5" />

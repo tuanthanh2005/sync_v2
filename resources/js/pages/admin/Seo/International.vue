@@ -130,7 +130,11 @@ function saveTemplates(): void {
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
                 >
                     <Globe2 class="size-4 text-primary" />
-                    <span>Platform Locales ({{ languages.length }})</span>
+                    <span>{{
+                        t('admin.seoCenter.platformLocalesCount', {
+                            count: languages.length,
+                        })
+                    }}</span>
                 </h2>
                 <div class="flex flex-wrap gap-2">
                     <Badge
@@ -139,7 +143,9 @@ function saveTemplates(): void {
                         :variant="lang.is_enabled ? 'default' : 'outline'"
                     >
                         {{ lang.code }} · {{ lang.native_name }}
-                        <span v-if="lang.direction === 'rtl'"> (RTL)</span>
+                        <span v-if="lang.direction === 'rtl'">
+                            {{ t('admin.seoCenter.rtlTag') }}
+                        </span>
                     </Badge>
                 </div>
             </section>
@@ -152,7 +158,9 @@ function saveTemplates(): void {
                         class="flex items-center gap-2 text-sm font-semibold text-foreground"
                     >
                         <CheckCircle2 class="size-4 text-primary" />
-                        <span>Hreflang Validator</span>
+                        <span>{{
+                            t('admin.seoCenter.hreflangValidator')
+                        }}</span>
                     </h2>
                     <Badge
                         :variant="
@@ -161,16 +169,19 @@ function saveTemplates(): void {
                                 : 'destructive'
                         "
                     >
-                        {{ hreflangValidation.valid_groups }} /
-                        {{ hreflangValidation.checked_groups }} Valid
+                        {{
+                            t('admin.seoCenter.validGroupsRatio', {
+                                valid: hreflangValidation.valid_groups,
+                                total: hreflangValidation.checked_groups,
+                            })
+                        }}
                     </Badge>
                 </div>
                 <p
                     v-if="hreflangValidation.issues.length === 0"
                     class="text-xs text-muted-foreground"
                 >
-                    All published multilingual content groups pass reciprocal
-                    BCP-47 hreflang validation.
+                    {{ t('admin.seoCenter.hreflangAllValid') }}
                 </p>
                 <ul v-else class="space-y-2 text-xs">
                     <li
@@ -198,7 +209,7 @@ function saveTemplates(): void {
                 class="flex items-center gap-2 text-sm font-semibold text-foreground"
             >
                 <Languages class="size-4 text-primary" />
-                <span>Multilingual Content Translation Workflow</span>
+                <span>{{ t('admin.seoCenter.translationWorkflowTitle') }}</span>
             </h2>
 
             <form
@@ -206,7 +217,9 @@ function saveTemplates(): void {
                 class="grid gap-3 md:grid-cols-2"
             >
                 <div class="space-y-1">
-                    <Label for="tr-post">Source Public Post</Label>
+                    <Label for="tr-post">{{
+                        t('admin.seoCenter.sourcePublicPost')
+                    }}</Label>
                     <select
                         id="tr-post"
                         v-model.number="trForm.post_id"
@@ -222,7 +235,9 @@ function saveTemplates(): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="tr-locale">Target Locale</Label>
+                    <Label for="tr-locale">{{
+                        t('admin.seoCenter.targetLocale')
+                    }}</Label>
                     <select
                         id="tr-locale"
                         v-model="trForm.target_locale"
@@ -240,21 +255,27 @@ function saveTemplates(): void {
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label for="tr-title">Translated Title</Label>
+                    <Label for="tr-title">{{
+                        t('admin.seoCenter.translatedTitle')
+                    }}</Label>
                     <Input id="tr-title" v-model="trForm.translated_title" />
                 </div>
                 <div class="space-y-1">
-                    <Label for="tr-slug">Localized Slug (Optional)</Label>
+                    <Label for="tr-slug">{{
+                        t('admin.seoCenter.localizedSlugOptional')
+                    }}</Label>
                     <Input
                         id="tr-slug"
                         v-model="trForm.localized_slug"
-                        placeholder="auto-generated-from-title"
+                        :placeholder="
+                            t('admin.seoCenter.localizedSlugPlaceholder')
+                        "
                     />
                 </div>
                 <div class="space-y-1 md:col-span-2">
-                    <Label for="tr-body"
-                        >Translated Content Body (Min 40 characters)</Label
-                    >
+                    <Label for="tr-body">{{
+                        t('admin.seoCenter.translatedBodyLabel')
+                    }}</Label>
                     <textarea
                         id="tr-body"
                         v-model="trForm.translated_body"
@@ -270,7 +291,7 @@ function saveTemplates(): void {
                             trForm.processing || candidatePosts.length === 0
                         "
                     >
-                        Save Translation Draft
+                        {{ t('admin.seoCenter.saveTranslationDraft') }}
                     </Button>
                 </div>
             </form>
@@ -279,12 +300,20 @@ function saveTemplates(): void {
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-border text-muted-foreground">
                         <tr>
-                            <th class="py-2 pr-2 font-medium">Source</th>
-                            <th class="px-2 py-2 font-medium">Target</th>
-                            <th class="px-2 py-2 font-medium">Slug</th>
-                            <th class="px-2 py-2 font-medium">Status</th>
+                            <th class="py-2 pr-2 font-medium">
+                                {{ t('admin.seoCenter.source') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.target') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.slug') }}
+                            </th>
+                            <th class="px-2 py-2 font-medium">
+                                {{ t('admin.seoCenter.status') }}
+                            </th>
                             <th class="py-2 pl-2 text-right font-medium">
-                                Actions
+                                {{ t('admin.seoCenter.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -315,7 +344,7 @@ function saveTemplates(): void {
                                     v-if="tr.is_stale"
                                     variant="destructive"
                                     class="ml-1"
-                                    >Stale</Badge
+                                    >{{ t('admin.seoCenter.stale') }}</Badge
                                 >
                             </td>
                             <td class="py-2 pl-2 text-right">
@@ -326,7 +355,7 @@ function saveTemplates(): void {
                                     variant="outline"
                                     @click="publishTranslation(tr.id)"
                                 >
-                                    Approve &amp; Publish
+                                    {{ t('admin.seoCenter.approveAndPublish') }}
                                 </Button>
                                 <Button
                                     v-else
@@ -335,7 +364,7 @@ function saveTemplates(): void {
                                     variant="ghost"
                                     @click="unpublishTranslation(tr.id)"
                                 >
-                                    Unpublish
+                                    {{ t('admin.seoCenter.unpublish') }}
                                 </Button>
                             </td>
                         </tr>
@@ -349,34 +378,40 @@ function saveTemplates(): void {
             class="space-y-4 rounded-xl border border-border bg-card p-5 shadow-xs"
         >
             <h2 class="text-sm font-semibold text-foreground">
-                Global Metadata Templates
+                {{ t('admin.seoCenter.globalMetadataTemplates') }}
             </h2>
             <form
                 @submit.prevent="saveTemplates"
                 class="grid gap-3 md:grid-cols-2"
             >
                 <div class="space-y-1">
-                    <Label>Home Title Template</Label>
+                    <Label>{{ t('admin.seoCenter.homeTitleTemplate') }}</Label>
                     <Input v-model="tplForm.title_template_home" />
                 </div>
                 <div class="space-y-1">
-                    <Label>Post Title Template</Label>
+                    <Label>{{ t('admin.seoCenter.postTitleTemplate') }}</Label>
                     <Input v-model="tplForm.title_template_post" />
                 </div>
                 <div class="space-y-1">
-                    <Label>Community Title Template</Label>
+                    <Label>{{
+                        t('admin.seoCenter.communityTitleTemplate')
+                    }}</Label>
                     <Input v-model="tplForm.title_template_community" />
                 </div>
                 <div class="space-y-1">
-                    <Label>Profile Title Template</Label>
+                    <Label>{{
+                        t('admin.seoCenter.profileTitleTemplate')
+                    }}</Label>
                     <Input v-model="tplForm.title_template_profile" />
                 </div>
                 <div class="space-y-1">
-                    <Label>Topic Title Template</Label>
+                    <Label>{{ t('admin.seoCenter.topicTitleTemplate') }}</Label>
                     <Input v-model="tplForm.title_template_topic" />
                 </div>
                 <div class="space-y-1 md:col-span-2">
-                    <Label>Home Meta Description Template</Label>
+                    <Label>{{
+                        t('admin.seoCenter.homeMetaDescriptionTemplate')
+                    }}</Label>
                     <Input v-model="tplForm.description_template_home" />
                 </div>
                 <div class="md:col-span-2">
@@ -384,7 +419,9 @@ function saveTemplates(): void {
                         type="submit"
                         size="sm"
                         :disabled="tplForm.processing"
-                        >Save Metadata Templates</Button
+                        >{{
+                            t('admin.seoCenter.saveMetadataTemplates')
+                        }}</Button
                     >
                 </div>
             </form>

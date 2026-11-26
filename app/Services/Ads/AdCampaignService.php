@@ -420,13 +420,17 @@ class AdCampaignService
                     eventKey: $approved ? 'ad_approved' : 'ad_rejected',
                     titleVi: $approved
                         ? "Chiến dịch \"{$updated->name}\" đã được phê duyệt và bắt đầu phân phối."
-                        : "Chiến dịch \"{$updated->name}\" bị từ chối và ngân sách đã hoàn lại ví.",
+                        : "Chiến dịch \"{$updated->name}\" bị từ chối và ngân sách đã hoàn lại số dư quảng cáo.",
                     titleEn: $approved
                         ? "Your ad campaign \"{$updated->name}\" was approved and is now active."
-                        : "Your ad campaign \"{$updated->name}\" was rejected and funds were refunded to your wallet.",
+                        : "Your ad campaign \"{$updated->name}\" was rejected and funds were refunded to your Advertising Balance.",
                     url: route('ads.index'),
                     actorName: $reviewer->name,
                     actorUsername: $reviewer->username,
+                    titleKey: $approved
+                        ? 'Your ad campaign ":name" was approved and is now active.'
+                        : 'Your ad campaign ":name" was rejected and funds were refunded to your Advertising Balance.',
+                    titleParams: ['name' => $updated->name],
                 ),
             );
         }

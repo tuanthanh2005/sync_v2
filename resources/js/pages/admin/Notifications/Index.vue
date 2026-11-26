@@ -40,6 +40,32 @@ defineProps<{
 }>();
 
 const { t, locale } = useI18n();
+
+function audienceLabel(audience: string): string {
+    const map: Record<string, string> = {
+        all: 'admin.notificationsExtra.audience.all',
+        verified: 'admin.notificationsExtra.audience.verified',
+        staff: 'admin.notificationsExtra.audience.staff',
+        user: 'admin.notificationsExtra.audience.user',
+    };
+    const key = map[audience.toLowerCase()];
+
+    return key ? t(key) : audience;
+}
+
+function broadcastStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+        sent: 'admin.notificationsExtra.status.sent',
+        scheduled: 'admin.notificationsExtra.status.scheduled',
+        cancelled: 'admin.notificationsExtra.status.cancelled',
+        failed: 'admin.notificationsExtra.status.failed',
+        pending: 'admin.notificationsExtra.status.pending',
+    };
+    const key = map[status.toLowerCase()];
+
+    return key ? t(key) : status;
+}
+
 const form = useForm({
     audience: 'all',
     target_username: '',
@@ -98,17 +124,31 @@ function cancelBroadcast(id: number): void {
                         v-model="form.audience"
                         class="h-9 w-full rounded-lg border border-input bg-background px-3 text-xs"
                     >
-                        <option value="all">All Active Users</option>
-                        <option value="verified">Verified Users</option>
-                        <option value="staff">Staff Only</option>
-                        <option value="user">Specific User (@username)</option>
+                        <option value="all">
+                            {{ t('admin.notificationsExtra.audience.all') }}
+                        </option>
+                        <option value="verified">
+                            {{
+                                t('admin.notificationsExtra.audience.verified')
+                            }}
+                        </option>
+                        <option value="staff">
+                            {{ t('admin.notificationsExtra.audience.staff') }}
+                        </option>
+                        <option value="user">
+                            {{ t('admin.notificationsExtra.audience.user') }}
+                        </option>
                     </select>
                 </div>
                 <div v-if="form.audience === 'user'" class="space-y-1">
-                    <Label>Username</Label>
+                    <Label>{{
+                        t('admin.notificationsExtra.usernameLabel')
+                    }}</Label>
                     <Input
                         v-model="form.target_username"
-                        placeholder="username"
+                        :placeholder="
+                            t('admin.notificationsExtra.usernamePlaceholder')
+                        "
                         class="h-9 text-xs"
                         required
                     />
@@ -119,18 +159,36 @@ function cancelBroadcast(id: number): void {
                         v-model="form.category"
                         class="h-9 w-full rounded-lg border border-input bg-background px-3 text-xs"
                     >
-                        <option value="system">System Announcement</option>
-                        <option value="maintenance">Maintenance Notice</option>
-                        <option value="policy">Policy Update</option>
-                        <option value="violation">Violation Warning</option>
+                        <option value="system">
+                            {{ t('admin.notificationsExtra.category.system') }}
+                        </option>
+                        <option value="maintenance">
+                            {{
+                                t(
+                                    'admin.notificationsExtra.category.maintenance',
+                                )
+                            }}
+                        </option>
+                        <option value="policy">
+                            {{ t('admin.notificationsExtra.category.policy') }}
+                        </option>
+                        <option value="violation">
+                            {{
+                                t('admin.notificationsExtra.category.violation')
+                            }}
+                        </option>
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <Label>Title</Label>
+                    <Label>{{
+                        t('admin.notificationsExtra.titleLabel')
+                    }}</Label>
                     <Input v-model="form.title" required class="h-9 text-xs" />
                 </div>
                 <div class="space-y-1">
-                    <Label>Message</Label>
+                    <Label>{{
+                        t('admin.notificationsExtra.messageLabel')
+                    }}</Label>
                     <textarea
                         v-model="form.body"
                         rows="3"
@@ -182,10 +240,10 @@ function cancelBroadcast(id: number): void {
                                 <Badge
                                     variant="secondary"
                                     class="text-[10px]"
-                                    >{{ item.audience }}</Badge
+                                    >{{ audienceLabel(item.audience) }}</Badge
                                 >
                                 <Badge variant="outline" class="text-[10px]">{{
-                                    item.status
+                                    broadcastStatusLabel(item.status)
                                 }}</Badge>
                                 <span class="text-[11px] text-muted-foreground"
                                     >({{ item.recipients_count }})</span
@@ -193,7 +251,14 @@ function cancelBroadcast(id: number): void {
                             </div>
                             <p class="text-muted-foreground">{{ item.body }}</p>
                             <p class="text-[11px] text-muted-foreground">
-                                @{{ item.sender_username || 'system' }} ·
+                                {{
+                                    item.sender_username
+                                        ? `@${item.sender_username}`
+                                        : t(
+                                              'admin.notificationsExtra.systemActor',
+                                          )
+                                }}
+                                ·
                                 {{
                                     formatDateTime(
                                         item.sent_at ||

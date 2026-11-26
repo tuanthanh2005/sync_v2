@@ -231,7 +231,9 @@ function toggleModelEnabled(m: ModelItem): void {
                         id="cred_name"
                         v-model="credForm.name"
                         required
-                        placeholder="Gemini Free Key #1"
+                        :placeholder="
+                            t('admin.aiCenter.credentialNamePlaceholder')
+                        "
                     />
                     <InputError :message="credForm.errors.name" />
                 </div>
@@ -243,7 +245,7 @@ function toggleModelEnabled(m: ModelItem): void {
                         id="project_id"
                         v-model="credForm.project_id"
                         required
-                        placeholder="gcp-project-alpha"
+                        :placeholder="t('admin.aiCenter.projectIdPlaceholder')"
                     />
                     <InputError :message="credForm.errors.project_id" />
                 </div>
@@ -256,9 +258,11 @@ function toggleModelEnabled(m: ModelItem): void {
                         v-model="credForm.billing_tier"
                         class="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
                     >
-                        <option value="free">Free Tier</option>
+                        <option value="free">
+                            {{ t('admin.aiCenter.freeTier') }}
+                        </option>
                         <option value="paid">
-                            Paid Tier (Billing Enabled)
+                            {{ t('admin.aiCenter.paidTierBillingEnabled') }}
                         </option>
                     </select>
                 </div>
@@ -273,12 +277,12 @@ function toggleModelEnabled(m: ModelItem): void {
                         type="password"
                         autocomplete="off"
                         required
-                        placeholder="AIza..."
+                        :placeholder="t('admin.aiCenter.apiKeyPlaceholder')"
                     />
                     <InputError :message="credForm.errors.api_key" />
                 </div>
                 <div class="space-y-1">
-                    <Label for="rpm_limit">RPM</Label>
+                    <Label for="rpm_limit">{{ t('admin.aiCenter.rpm') }}</Label>
                     <Input
                         id="rpm_limit"
                         v-model.number="credForm.rpm_limit"
@@ -287,7 +291,7 @@ function toggleModelEnabled(m: ModelItem): void {
                     />
                 </div>
                 <div class="space-y-1">
-                    <Label for="rpd_limit">RPD</Label>
+                    <Label for="rpd_limit">{{ t('admin.aiCenter.rpd') }}</Label>
                     <Input
                         id="rpd_limit"
                         v-model.number="credForm.rpd_limit"
@@ -336,12 +340,24 @@ function toggleModelEnabled(m: ModelItem): void {
                         <tr
                             class="border-b border-border text-muted-foreground"
                         >
-                            <th class="py-2 pr-3">Name / Project</th>
-                            <th class="px-2 py-2">Masked Key</th>
-                            <th class="px-2 py-2">Tier</th>
-                            <th class="px-2 py-2">Limits (RPM/RPD)</th>
-                            <th class="px-2 py-2">Health</th>
-                            <th class="py-2 pl-2 text-right">Actions</th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.aiCenter.nameAndProject') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.maskedKey') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.tier') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.limitsRpmRpd') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.health') }}
+                            </th>
+                            <th class="py-2 pl-2 text-right">
+                                {{ t('admin.aiCenter.actions') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -357,7 +373,12 @@ function toggleModelEnabled(m: ModelItem): void {
                                 <p
                                     class="font-mono text-[11px] text-muted-foreground"
                                 >
-                                    {{ c.project_id }} · P{{ c.priority }}
+                                    {{ c.project_id }} ·
+                                    {{
+                                        t('admin.aiCenter.priorityShort', {
+                                            priority: c.priority,
+                                        })
+                                    }}
                                 </p>
                             </td>
                             <td class="px-2 py-2.5 font-mono">
@@ -371,7 +392,11 @@ function toggleModelEnabled(m: ModelItem): void {
                                             : 'secondary'
                                     "
                                 >
-                                    {{ c.billing_tier.toUpperCase() }}
+                                    {{
+                                        c.billing_tier === 'paid'
+                                            ? t('admin.aiCenter.tierPaid')
+                                            : t('admin.aiCenter.tierFree')
+                                    }}
                                 </Badge>
                             </td>
                             <td class="px-2 py-2.5">
@@ -405,11 +430,17 @@ function toggleModelEnabled(m: ModelItem): void {
                                         @click="testCredential(c)"
                                     >
                                         <Wifi class="size-3.5" />
-                                        <span>Test</span>
+                                        <span>{{
+                                            t('admin.aiCenter.test')
+                                        }}</span>
                                     </Button>
                                     <Button
                                         size="sm"
                                         variant="outline"
+                                        :aria-label="
+                                            t('admin.aiCenter.syncModels')
+                                        "
+                                        :title="t('admin.aiCenter.syncModels')"
                                         @click="syncModels(c)"
                                     >
                                         <RefreshCw class="size-3.5" />
@@ -429,6 +460,12 @@ function toggleModelEnabled(m: ModelItem): void {
                                         size="sm"
                                         variant="ghost"
                                         class="text-destructive"
+                                        :aria-label="
+                                            t('admin.aiCenter.deleteCredential')
+                                        "
+                                        :title="
+                                            t('admin.aiCenter.deleteCredential')
+                                        "
                                         @click="deleteTarget = c"
                                     >
                                         <Trash2 class="size-3.5" />
@@ -453,12 +490,24 @@ function toggleModelEnabled(m: ModelItem): void {
                         <tr
                             class="border-b border-border text-muted-foreground"
                         >
-                            <th class="py-2 pr-3">Model</th>
-                            <th class="px-2 py-2">Role Group</th>
-                            <th class="px-2 py-2">Capabilities</th>
-                            <th class="px-2 py-2">Billing</th>
-                            <th class="px-2 py-2">Status</th>
-                            <th class="py-2 pl-2 text-right">Action</th>
+                            <th class="py-2 pr-3">
+                                {{ t('admin.aiCenter.model') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.roleGroup') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.capabilities') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.billing') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.status') }}
+                            </th>
+                            <th class="py-2 pl-2 text-right">
+                                {{ t('admin.aiCenter.action') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -483,7 +532,10 @@ function toggleModelEnabled(m: ModelItem): void {
                                     >JSON</span
                                 >
                                 <span v-if="m.supports_thinking">
-                                    · Thinking</span
+                                    ·
+                                    {{
+                                        t('admin.aiCenter.capabilityThinking')
+                                    }}</span
                                 >
                             </td>
                             <td class="px-2 py-2.5">
@@ -494,8 +546,8 @@ function toggleModelEnabled(m: ModelItem): void {
                                 >
                                     {{
                                         m.is_paid_only
-                                            ? 'Paid Only'
-                                            : 'Free / Paid'
+                                            ? t('admin.aiCenter.paidOnly')
+                                            : t('admin.aiCenter.freeOrPaid')
                                     }}
                                 </Badge>
                             </td>
@@ -505,7 +557,11 @@ function toggleModelEnabled(m: ModelItem): void {
                                         m.is_enabled ? 'default' : 'outline'
                                     "
                                 >
-                                    {{ m.is_enabled ? 'Enabled' : 'Disabled' }}
+                                    {{
+                                        m.is_enabled
+                                            ? t('admin.aiCenter.enabled')
+                                            : t('admin.aiCenter.disabled')
+                                    }}
                                 </Badge>
                             </td>
                             <td class="py-2.5 pl-2 text-right">
@@ -548,11 +604,21 @@ function toggleModelEnabled(m: ModelItem): void {
                         <tr
                             class="border-b border-border text-muted-foreground"
                         >
-                            <th class="py-2 pr-2">Project ID</th>
-                            <th class="px-2 py-2">Model</th>
-                            <th class="px-2 py-2">Window</th>
-                            <th class="px-2 py-2">Req / Tokens</th>
-                            <th class="py-2 pl-2 text-right">Wait Until</th>
+                            <th class="py-2 pr-2">
+                                {{ t('admin.aiCenter.projectId') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.model') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.window') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.aiCenter.reqAndTokens') }}
+                            </th>
+                            <th class="py-2 pl-2 text-right">
+                                {{ t('admin.aiCenter.waitUntil') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -571,8 +637,12 @@ function toggleModelEnabled(m: ModelItem): void {
                                 {{ q.window_type }} ({{ q.window_key }})
                             </td>
                             <td class="px-2 py-2">
-                                {{ q.requests_count }} req ·
-                                {{ q.tokens_count.toLocaleString() }} tok
+                                {{
+                                    t('admin.aiCenter.quotaReqAndTok', {
+                                        requests: q.requests_count,
+                                        tokens: q.tokens_count.toLocaleString(),
+                                    })
+                                }}
                             </td>
                             <td class="py-2 pl-2 text-right">
                                 {{

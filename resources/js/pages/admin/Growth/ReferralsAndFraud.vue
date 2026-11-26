@@ -185,7 +185,9 @@ function toggleCode(id: number): void {
             <div class="flex gap-2">
                 <Button size="sm" @click="runQualification">
                     <Play class="size-4" />
-                    <span>Run Qualification</span>
+                    <span>{{
+                        t('admin.growthCenter.referrals.runQualification')
+                    }}</span>
                 </Button>
                 <Button size="sm" variant="outline" as-child>
                     <a
@@ -194,7 +196,7 @@ function toggleCode(id: number): void {
                         "
                     >
                         <Download class="size-4" />
-                        <span>CSV</span>
+                        <span>{{ t('admin.growthCenter.common.csv') }}</span>
                     </a>
                 </Button>
             </div>
@@ -204,13 +206,17 @@ function toggleCode(id: number): void {
         <section class="rounded-xl border border-border bg-card p-5">
             <h2 class="mb-3 flex items-center gap-2 text-sm font-semibold">
                 <ShieldAlert class="size-4 text-primary" />
-                Referrals & Manual Review Queue ({{ referrals.length }})
+                {{
+                    t('admin.growthCenter.referrals.queueTitle', {
+                        count: referrals.length,
+                    })
+                }}
             </h2>
             <div
                 v-if="referrals.length === 0"
                 class="py-6 text-center text-xs text-muted-foreground"
             >
-                No referrals attributed yet.
+                {{ t('admin.growthCenter.referrals.emptyReferrals') }}
             </div>
             <div v-else class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
@@ -218,11 +224,31 @@ function toggleCode(id: number): void {
                         <tr
                             class="border-b border-border text-muted-foreground"
                         >
-                            <th class="py-2 pr-2">Code / Referrer</th>
-                            <th class="px-2 py-2">Referee</th>
-                            <th class="px-2 py-2">Risk</th>
-                            <th class="px-2 py-2">Status</th>
-                            <th class="py-2 pl-2 text-right">Actions</th>
+                            <th class="py-2 pr-2">
+                                {{
+                                    t(
+                                        'admin.growthCenter.referrals.colCodeReferrer',
+                                    )
+                                }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{
+                                    t('admin.growthCenter.referrals.colReferee')
+                                }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{ t('admin.growthCenter.referrals.colRisk') }}
+                            </th>
+                            <th class="px-2 py-2">
+                                {{
+                                    t('admin.growthCenter.referrals.colStatus')
+                                }}
+                            </th>
+                            <th class="py-2 pl-2 text-right">
+                                {{
+                                    t('admin.growthCenter.referrals.colActions')
+                                }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -245,7 +271,11 @@ function toggleCode(id: number): void {
                                     v-if="r.referee_verified"
                                     variant="secondary"
                                     class="ml-1"
-                                    >Verified</Badge
+                                    >{{
+                                        t(
+                                            'admin.growthCenter.referrals.verified',
+                                        )
+                                    }}</Badge
                                 >
                             </td>
                             <td class="px-2 py-2">
@@ -265,12 +295,24 @@ function toggleCode(id: number): void {
                                     <Button
                                         size="sm"
                                         variant="outline"
+                                        :aria-label="
+                                            t(
+                                                'admin.growthCenter.referrals.approveReferralTitle',
+                                            )
+                                        "
+                                        :title="
+                                            t(
+                                                'admin.growthCenter.referrals.approveReferralTitle',
+                                            )
+                                        "
                                         @click="
                                             reasonAction = {
                                                 type: 'referral',
                                                 id: r.id,
                                                 decision: 'approve',
-                                                title: 'Approve Referral',
+                                                title: t(
+                                                    'admin.growthCenter.referrals.approveReferralTitle',
+                                                ),
                                             }
                                         "
                                     >
@@ -279,12 +321,24 @@ function toggleCode(id: number): void {
                                     <Button
                                         size="sm"
                                         variant="ghost"
+                                        :aria-label="
+                                            t(
+                                                'admin.growthCenter.referrals.rejectReferralTitle',
+                                            )
+                                        "
+                                        :title="
+                                            t(
+                                                'admin.growthCenter.referrals.rejectReferralTitle',
+                                            )
+                                        "
                                         @click="
                                             reasonAction = {
                                                 type: 'referral',
                                                 id: r.id,
                                                 decision: 'reject',
-                                                title: 'Reject Referral',
+                                                title: t(
+                                                    'admin.growthCenter.referrals.rejectReferralTitle',
+                                                ),
                                             }
                                         "
                                     >
@@ -294,12 +348,24 @@ function toggleCode(id: number): void {
                                         size="sm"
                                         variant="ghost"
                                         class="text-destructive"
+                                        :aria-label="
+                                            t(
+                                                'admin.growthCenter.referrals.revokeReferralTitle',
+                                            )
+                                        "
+                                        :title="
+                                            t(
+                                                'admin.growthCenter.referrals.revokeReferralTitle',
+                                            )
+                                        "
                                         @click="
                                             reasonAction = {
                                                 type: 'referral',
                                                 id: r.id,
                                                 decision: 'revoke',
-                                                title: 'Revoke Referral',
+                                                title: t(
+                                                    'admin.growthCenter.referrals.revokeReferralTitle',
+                                                ),
                                             }
                                         "
                                     >
@@ -319,7 +385,7 @@ function toggleCode(id: number): void {
                 class="space-y-3 rounded-xl border border-border bg-card p-5"
             >
                 <h2 class="text-sm font-semibold">
-                    Cumulative Reward Milestone Rules
+                    {{ t('admin.growthCenter.referrals.milestoneRulesTitle') }}
                 </h2>
                 <ul class="divide-y divide-border/60 text-xs">
                     <li
@@ -329,15 +395,26 @@ function toggleCode(id: number): void {
                     >
                         <span>
                             <strong>{{ rule.name }}</strong> —
-                            {{ rule.required_qualified_referrals }} refs →
-                            {{ rule.cumulative_premium_days }}d total
+                            {{
+                                t(
+                                    'admin.growthCenter.referrals.milestoneRuleSummary',
+                                    {
+                                        refs: rule.required_qualified_referrals,
+                                        days: rule.cumulative_premium_days,
+                                    },
+                                )
+                            }}
                         </span>
                         <Button
                             size="sm"
                             variant="outline"
                             @click="toggleRule(rule.id, rule.is_active)"
                         >
-                            {{ rule.is_active ? 'Active' : 'Paused' }}
+                            {{
+                                rule.is_active
+                                    ? t('admin.growthCenter.common.active')
+                                    : t('admin.growthCenter.common.paused')
+                            }}
                         </Button>
                     </li>
                 </ul>
@@ -348,7 +425,11 @@ function toggleCode(id: number): void {
                     <Input
                         v-model="ruleForm.name"
                         required
-                        placeholder="Milestone Name"
+                        :placeholder="
+                            t(
+                                'admin.growthCenter.referrals.milestoneNamePlaceholder',
+                            )
+                        "
                     />
                     <Input
                         v-model.number="ruleForm.required_qualified_referrals"
@@ -365,8 +446,9 @@ function toggleCode(id: number): void {
                             type="submit"
                             size="sm"
                             :disabled="ruleForm.processing"
-                            >Add</Button
                         >
+                            {{ t('admin.growthCenter.referrals.addRule') }}
+                        </Button>
                     </div>
                 </form>
             </section>
@@ -375,22 +457,30 @@ function toggleCode(id: number): void {
                 class="space-y-3 rounded-xl border border-border bg-card p-5"
             >
                 <h2 class="text-sm font-semibold">
-                    Manual Promotional Grant & Reward Clawback
+                    {{ t('admin.growthCenter.referrals.manualGrantTitle') }}
                 </h2>
                 <form @submit.prevent="submitManualGrant" class="space-y-2.5">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <Label for="mg_user">Username</Label>
+                            <Label for="mg_user">{{
+                                t('admin.growthCenter.common.username')
+                            }}</Label>
                             <Input
                                 id="mg_user"
                                 v-model="grantForm.username"
                                 required
-                                placeholder="member_username"
+                                :placeholder="
+                                    t(
+                                        'admin.growthCenter.referrals.memberUsernamePlaceholder',
+                                    )
+                                "
                             />
                             <InputError :message="grantForm.errors.username" />
                         </div>
                         <div>
-                            <Label for="mg_days">Days</Label>
+                            <Label for="mg_days">{{
+                                t('admin.growthCenter.common.days')
+                            }}</Label>
                             <Input
                                 id="mg_days"
                                 v-model.number="grantForm.days"
@@ -403,14 +493,22 @@ function toggleCode(id: number): void {
                     <Input
                         v-model="grantForm.reason"
                         required
-                        placeholder="Mandatory audit reason..."
+                        :placeholder="
+                            t(
+                                'admin.growthCenter.referrals.auditReasonPlaceholder',
+                            )
+                        "
                     />
                     <Button
                         type="submit"
                         size="sm"
                         :disabled="grantForm.processing"
                     >
-                        Grant Promotional Premium
+                        {{
+                            t(
+                                'admin.growthCenter.referrals.grantPromotionalPremium',
+                            )
+                        }}
                     </Button>
                 </form>
 
@@ -423,9 +521,16 @@ function toggleCode(id: number): void {
                         class="flex items-center justify-between gap-2 py-2"
                     >
                         <span>
-                            @{{ rw.username }} · +{{ rw.days_granted }}d ({{
-                                rw.status
-                            }})
+                            @{{ rw.username }} ·
+                            {{
+                                t(
+                                    'admin.growthCenter.referrals.rewardDaysStatus',
+                                    {
+                                        days: rw.days_granted,
+                                        status: rw.status,
+                                    },
+                                )
+                            }}
                         </span>
                         <Button
                             v-if="rw.status === 'granted'"
@@ -436,11 +541,13 @@ function toggleCode(id: number): void {
                                 reasonAction = {
                                     type: 'revoke_reward',
                                     id: rw.id,
-                                    title: 'Revoke Promotional Reward',
+                                    title: t(
+                                        'admin.growthCenter.referrals.revokeRewardTitle',
+                                    ),
                                 }
                             "
                         >
-                            Revoke
+                            {{ t('admin.growthCenter.referrals.revoke') }}
                         </Button>
                     </li>
                 </ul>
@@ -452,7 +559,9 @@ function toggleCode(id: number): void {
             v-if="codes.length > 0"
             class="rounded-xl border border-border bg-card p-5"
         >
-            <h2 class="mb-3 text-sm font-semibold">Referral Codes Control</h2>
+            <h2 class="mb-3 text-sm font-semibold">
+                {{ t('admin.growthCenter.referrals.codesControlTitle') }}
+            </h2>
             <div class="grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-3">
                 <div
                     v-for="c in codes.slice(0, 12)"
@@ -472,7 +581,11 @@ function toggleCode(id: number): void {
                         variant="outline"
                         @click="toggleCode(c.id)"
                     >
-                        {{ c.is_active ? 'Disable' : 'Enable' }}
+                        {{
+                            c.is_active
+                                ? t('admin.growthCenter.common.disable')
+                                : t('admin.growthCenter.common.enable')
+                        }}
                     </Button>
                 </div>
             </div>
@@ -480,8 +593,13 @@ function toggleCode(id: number): void {
 
         <ReasonDialog
             :open="reasonAction !== null"
-            :title="reasonAction?.title || 'Confirm Action'"
-            description="Provide a clear audit reason. This action will be permanently recorded in the Growth activity log."
+            :title="
+                reasonAction?.title ||
+                t('admin.growthCenter.referrals.confirmActionFallback')
+            "
+            :description="
+                t('admin.growthCenter.referrals.reasonDialogDescription')
+            "
             :confirm-label="t('dialog.confirm')"
             :processing="actionProcessing"
             @update:open="

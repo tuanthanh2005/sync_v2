@@ -306,7 +306,7 @@ function savePreferences(): void {
                             @click="showQr = !showQr"
                         >
                             <QrCode class="size-3.5" />
-                            <span>QR</span>
+                            <span>{{ t('growth.extra.qrButton') }}</span>
                         </Button>
                         <a
                             :href="shareLinks.facebook"
@@ -344,7 +344,8 @@ function savePreferences(): void {
                             :href="shareLinks.email"
                             class="inline-flex h-8 items-center gap-1 rounded-lg border border-border bg-card px-2.5 text-xs font-medium hover:bg-muted"
                         >
-                            <Mail class="size-3" /> Email
+                            <Mail class="size-3" />
+                            {{ t('growth.extra.shareEmail') }}
                         </a>
                     </div>
                 </div>
@@ -358,7 +359,7 @@ function savePreferences(): void {
                         viewBox="0 0 21 21"
                         class="size-28"
                         shape-rendering="crispEdges"
-                        aria-label="Referral QR Code"
+                        :aria-label="t('growth.extra.qrAriaLabel')"
                     >
                         <rect width="21" height="21" fill="#ffffff" />
                         <template v-for="(row, r) in qrCells" :key="r">
@@ -424,7 +425,11 @@ function savePreferences(): void {
                     {{ t('growth.referral.statDaysEarned') }}
                 </p>
                 <p class="mt-1 text-2xl font-bold text-primary">
-                    {{ referral.stats.premium_days_earned }}d
+                    {{
+                        t('growth.extra.daysShort', {
+                            count: referral.stats.premium_days_earned,
+                        })
+                    }}
                 </p>
             </div>
         </div>
@@ -497,7 +502,11 @@ function savePreferences(): void {
                                       : 'outline'
                             "
                         >
-                            {{ m.cumulative_premium_days }}d
+                            {{
+                                t('growth.extra.daysShort', {
+                                    count: m.cumulative_premium_days,
+                                })
+                            }}
                         </Badge>
                     </div>
                     <p class="mt-1 text-muted-foreground">
@@ -634,8 +643,12 @@ function savePreferences(): void {
                             class="flex items-center justify-between gap-2"
                         >
                             <span class="truncate text-foreground"
-                                >+{{ rw.days_granted }}d ·
-                                {{ rw.note || rw.source }}</span
+                                >+{{
+                                    t('growth.extra.daysShort', {
+                                        count: rw.days_granted,
+                                    })
+                                }}
+                                · {{ rw.note || rw.source }}</span
                             >
                             <span class="shrink-0 text-muted-foreground">{{
                                 formatDateTime(rw.granted_at, locale)

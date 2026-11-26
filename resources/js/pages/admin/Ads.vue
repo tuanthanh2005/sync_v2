@@ -97,11 +97,12 @@ function manageStatus(
             class="flex items-center gap-2 rounded-xl border border-warning/40 bg-warning-soft/50 px-4 py-3 text-xs text-warning-soft-foreground"
         >
             <AlertTriangle class="size-4 shrink-0" />
-            <span
-                >{{ t('admin.ads.anomalyFlag') }}:
-                {{ anomalies.length }} campaign(s) detected with high single-IP
-                click bursts in 24h.</span
-            >
+            <span>{{
+                t('admin.adsExtra.anomalySummary', {
+                    flag: t('admin.ads.anomalyFlag'),
+                    count: anomalies.length,
+                })
+            }}</span>
         </div>
 
         <div
@@ -123,7 +124,7 @@ function manageStatus(
                 class="min-h-9 shrink-0 rounded-lg text-xs whitespace-nowrap sm:min-h-8"
                 @click="filterStatus(st)"
             >
-                {{ st }}
+                {{ t(`admin.adsExtra.statusFilter.${st}`) }}
             </Button>
         </div>
 
@@ -153,20 +154,38 @@ function manageStatus(
                             }}</Badge>
                         </div>
                         <p class="text-muted-foreground">
-                            {{ t('adminAds.advertiser') }}: @{{
-                                c.owner_username
+                            {{
+                                t('admin.adsExtra.campaignFinancialSummary', {
+                                    username: c.owner_username,
+                                    budget: formatCurrencyVnd(
+                                        c.total_budget,
+                                        locale,
+                                    ),
+                                    spent: formatCurrencyVnd(
+                                        c.spent_amount,
+                                        locale,
+                                    ),
+                                    held: formatCurrencyVnd(
+                                        c.held_amount,
+                                        locale,
+                                    ),
+                                })
                             }}
-                            · Budget:
-                            {{ formatCurrencyVnd(c.total_budget, locale) }} ·
-                            Spent:
-                            {{ formatCurrencyVnd(c.spent_amount, locale) }} ·
-                            Held: {{ formatCurrencyVnd(c.held_amount, locale) }}
                         </p>
                         <p class="text-[11px] text-muted-foreground">
-                            Impressions:
-                            {{ formatNumber(c.impressions_count, locale) }} ·
-                            Clicks: {{ formatNumber(c.clicks_count, locale) }} ·
-                            CTR: {{ c.ctr_percent }}%
+                            {{
+                                t('admin.adsExtra.campaignPerformanceSummary', {
+                                    impressions: formatNumber(
+                                        c.impressions_count,
+                                        locale,
+                                    ),
+                                    clicks: formatNumber(
+                                        c.clicks_count,
+                                        locale,
+                                    ),
+                                    ctr: c.ctr_percent,
+                                })
+                            }}
                         </p>
                         <p v-if="c.post" class="text-muted-foreground">
                             {{ c.post.excerpt }}
@@ -240,7 +259,7 @@ function manageStatus(
             v-model:open="rejectOpen"
             :title="t('adminAds.reject')"
             :description="activeCampaign?.name || ''"
-            consequence="Rejecting this campaign immediately refunds 100% of the reserved ad wallet hold."
+            :consequence="t('admin.adsExtra.rejectConsequence')"
             @submit="submitReject"
         />
     </div>

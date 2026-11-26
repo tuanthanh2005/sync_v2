@@ -184,10 +184,14 @@ function submitBooking(): void {
                     {{ placement.name }}
                 </h2>
                 <p class="text-xs text-muted-foreground">
-                    {{ t('monetization.banner.recommendedSize') }}:
-                    {{ placement.recommended_width }}×{{
-                        placement.recommended_height
-                    }}px ({{ placement.delivery_mode_label }})
+                    {{
+                        t('monetization.bookingExtra.recommendedSizeSpec', {
+                            label: t('monetization.banner.recommendedSize'),
+                            width: placement.recommended_width,
+                            height: placement.recommended_height,
+                            mode: placement.delivery_mode_label,
+                        })
+                    }}
                 </p>
             </div>
             <p class="text-lg font-bold text-primary">
@@ -429,7 +433,7 @@ function submitBooking(): void {
                             ]"
                             @click="previewMode = 'desktop'"
                         >
-                            Desktop
+                            {{ t('monetization.bookingExtra.desktop') }}
                         </button>
                         <button
                             type="button"
@@ -441,7 +445,7 @@ function submitBooking(): void {
                             ]"
                             @click="previewMode = 'mobile'"
                         >
-                            Mobile
+                            {{ t('monetization.bookingExtra.mobile') }}
                         </button>
                     </div>
                 </div>

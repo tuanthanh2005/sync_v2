@@ -14,7 +14,7 @@ const footer = computed(() => page.props.footer);
 
 <template>
     <footer
-        aria-label="Authentication Footer"
+        :aria-label="t('accessibility.authFooter')"
         class="border-t border-border bg-card px-4 py-4"
     >
         <div

@@ -6,13 +6,14 @@ import NotificationController from '@/actions/App/Http/Controllers/Notification/
 import EmptyState from '@/components/common/EmptyState.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { formatDateTime } from '@/lib/formatters';
 import type { NotificationItem } from '@/types';
 
 defineProps<{
     notifications: NotificationItem[];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 function openNotification(item: NotificationItem): void {
     if (!item.read_at) {
@@ -78,7 +79,7 @@ function markAllRead(): void {
                 :key="item.id"
                 type="button"
                 :class="[
-                    'flex w-full items-start justify-between gap-3 px-5 py-4 text-left transition-colors hover:bg-muted/60',
+                    'flex w-full items-start justify-between gap-3 px-5 py-4 text-start transition-colors hover:bg-muted/60',
                     !item.read_at ? 'bg-accent/35' : '',
                 ]"
                 @click="openNotification(item)"
@@ -88,11 +89,11 @@ function markAllRead(): void {
                         {{ item.title }}
                     </p>
                     <p class="text-xs text-muted-foreground">
-                        <span v-if="item.actor_username" class="mr-2">
+                        <span v-if="item.actor_username" class="me-2">
                             @{{ item.actor_username }}
                         </span>
                         <span v-if="item.created_at">
-                            {{ new Date(item.created_at).toLocaleString() }}
+                            {{ formatDateTime(item.created_at, locale) }}
                         </span>
                     </p>
                 </div>
@@ -100,7 +101,7 @@ function markAllRead(): void {
                     v-if="!item.read_at"
                     class="shrink-0 bg-primary text-[10px] text-primary-foreground"
                 >
-                    NEW
+                    {{ t('notifications.newBadge') }}
                 </Badge>
             </button>
         </div>

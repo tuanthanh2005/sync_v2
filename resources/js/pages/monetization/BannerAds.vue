@@ -5,8 +5,8 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BannerBookingForm from '@/components/monetization/BannerBookingForm.vue';
 import { Badge } from '@/components/ui/badge';
-import { formatMoney } from '@/lib/currency';
-import { formatDate } from '@/lib/formatters';
+import { defaultCurrencyForLocale, formatMoney } from '@/lib/currency';
+import { formatDate, formatNumber } from '@/lib/formatters';
 import type {
     BannerCampaignItem,
     BannerPlacementItem,
@@ -27,7 +27,7 @@ const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-const currency = ref<'VND' | 'USD'>(locale.value === 'vi' ? 'VND' : 'USD');
+const currency = ref<'VND' | 'USD'>(defaultCurrencyForLocale(locale.value));
 const selectedPlacementId = ref<number>(props.placements[0]?.id ?? 0);
 
 const selectedPlacement = computed(
@@ -53,7 +53,7 @@ function price7d(p: BannerPlacementItem): number {
             <div class="max-w-2xl space-y-2">
                 <Badge variant="soft" class="gap-1.5 text-xs">
                     <ImageIcon class="size-3.5" />
-                    <span>SyncViet Banner Ads</span>
+                    <span>{{ t('monetization.bookingExtra.badgeTitle') }}</span>
                 </Badge>
                 <h1 class="text-2xl font-bold text-foreground">
                     {{ t('monetization.banner.heading') }}
@@ -76,7 +76,7 @@ function price7d(p: BannerPlacementItem): number {
                     ]"
                     @click="currency = 'VND'"
                 >
-                    VND (₫)
+                    {{ t('monetization.checkout.currencyVnd') }}
                 </button>
                 <button
                     type="button"
@@ -88,7 +88,7 @@ function price7d(p: BannerPlacementItem): number {
                     ]"
                     @click="currency = 'USD'"
                 >
-                    USD ($)
+                    {{ t('monetization.checkout.currencyUsd') }}
                 </button>
             </div>
         </section>
@@ -100,7 +100,7 @@ function price7d(p: BannerPlacementItem): number {
                 :key="pl.id"
                 type="button"
                 :class="[
-                    'flex flex-col justify-between rounded-xl border p-4 text-left transition-colors',
+                    'flex flex-col justify-between rounded-xl border p-4 text-start transition-colors',
                     selectedPlacement?.id === pl.id
                         ? 'border-primary bg-primary-soft/50'
                         : 'border-border bg-card hover:border-primary/40',
@@ -143,7 +143,15 @@ function price7d(p: BannerPlacementItem): number {
                     class="mt-3 flex items-center justify-between border-t border-border/70 pt-2.5 text-xs"
                 >
                     <span class="font-bold text-primary">
-                        {{ formatMoney(price7d(pl), currency, locale) }} / 7d
+                        {{
+                            t('monetization.bookingExtra.pricePer7Days', {
+                                price: formatMoney(
+                                    price7d(pl),
+                                    currency,
+                                    locale,
+                                ),
+                            })
+                        }}
                     </span>
                     <span
                         :class="[
@@ -203,10 +211,21 @@ function price7d(p: BannerPlacementItem): number {
                             {{ formatDate(c.ends_at, locale) }}
                         </p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-end">
                         <p class="font-semibold text-foreground">
-                            {{ c.impressions_count }} imp ·
-                            {{ c.clicks_count }} clicks ({{ c.ctr_percent }}%)
+                            {{
+                                t('monetization.bookingExtra.campaignStats', {
+                                    impressions: formatNumber(
+                                        c.impressions_count,
+                                        locale,
+                                    ),
+                                    clicks: formatNumber(
+                                        c.clicks_count,
+                                        locale,
+                                    ),
+                                    ctr: c.ctr_percent,
+                                })
+                            }}
                         </p>
                         <p class="text-muted-foreground">
                             {{

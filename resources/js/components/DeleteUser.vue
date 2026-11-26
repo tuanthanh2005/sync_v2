@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import { useTemplateRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -18,6 +19,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 
+const { t } = useI18n();
 const passwordInput = useTemplateRef('passwordInput');
 </script>
 
@@ -25,16 +27,18 @@ const passwordInput = useTemplateRef('passwordInput');
     <div class="space-y-6">
         <Heading
             variant="small"
-            title="Xóa tài khoản"
-            description="Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu liên quan"
+            :title="t('settings.deleteAccount.headingTitle')"
+            :description="t('settings.deleteAccount.headingDescription')"
         />
         <div
             class="space-y-4 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30"
         >
             <div class="relative space-y-0.5 text-red-700 dark:text-red-200">
-                <p class="font-medium">Cảnh báo</p>
+                <p class="font-medium">
+                    {{ t('settings.deleteAccount.warningTitle') }}
+                </p>
                 <p class="text-sm">
-                    Hành động này không thể hoàn tác sau khi xác nhận.
+                    {{ t('settings.deleteAccount.warningDescription') }}
                 </p>
             </div>
             <Dialog>
@@ -44,7 +48,7 @@ const passwordInput = useTemplateRef('passwordInput');
                         class="rounded-lg"
                         data-test="delete-user-button"
                     >
-                        Xóa tài khoản
+                        {{ t('settings.deleteAccount.deleteButton') }}
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -60,24 +64,30 @@ const passwordInput = useTemplateRef('passwordInput');
                     >
                         <DialogHeader class="space-y-3">
                             <DialogTitle>
-                                Bạn chắc chắn muốn xóa tài khoản?
+                                {{ t('settings.deleteAccount.confirmTitle') }}
                             </DialogTitle>
                             <DialogDescription>
-                                Khi tài khoản bị xóa, mọi dữ liệu và phiên đăng
-                                nhập của bạn sẽ bị hủy vĩnh viễn. Vui lòng nhập
-                                mật khẩu để xác nhận.
+                                {{
+                                    t(
+                                        'settings.deleteAccount.confirmDescription',
+                                    )
+                                }}
                             </DialogDescription>
                         </DialogHeader>
 
                         <div class="grid gap-2">
                             <Label for="password" class="sr-only">
-                                Mật khẩu
+                                {{ t('settings.deleteAccount.passwordLabel') }}
                             </Label>
                             <PasswordInput
                                 id="password"
                                 name="password"
                                 ref="passwordInput"
-                                placeholder="Nhập mật khẩu xác nhận"
+                                :placeholder="
+                                    t(
+                                        'settings.deleteAccount.passwordPlaceholder',
+                                    )
+                                "
                             />
                             <InputError :message="errors.password" />
                         </div>
@@ -94,7 +104,7 @@ const passwordInput = useTemplateRef('passwordInput');
                                         }
                                     "
                                 >
-                                    Hủy
+                                    {{ t('common.cancel') }}
                                 </Button>
                             </DialogClose>
 
@@ -105,7 +115,7 @@ const passwordInput = useTemplateRef('passwordInput');
                                 :disabled="processing"
                                 data-test="confirm-delete-user-button"
                             >
-                                Xác nhận xóa tài khoản
+                                {{ t('settings.deleteAccount.confirmButton') }}
                             </Button>
                         </DialogFooter>
                     </Form>

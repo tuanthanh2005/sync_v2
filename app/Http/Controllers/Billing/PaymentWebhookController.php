@@ -19,7 +19,10 @@ class PaymentWebhookController extends Controller
         $decoded = json_decode($rawPayload, true);
 
         if (! is_array($decoded)) {
-            return response()->json(['message' => 'Malformed JSON payload.'], 400);
+            return response()->json([
+                'error_code' => 'MALFORMED_JSON_PAYLOAD',
+                'message' => __('Malformed JSON payload.'),
+            ], 400);
         }
 
         $signature = $request->header('X-SyncViet-Signature');
