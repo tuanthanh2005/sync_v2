@@ -213,7 +213,7 @@ class AdminAnalyticsService
             && app(SeoConfigService::class)->bool('gsc_enabled', false)
             && app(SeoConfigService::class)->string('gsc_property_url', '') !== '';
         $aiHealthyKeys = Schema::hasTable('ai_credentials')
-            ? AiCredential::query()->where('is_active', true)->where('health_status', 'healthy')->count()
+            ? AiCredential::query()->where('is_enabled', true)->where('health_status', 'healthy')->count()
             : 0;
         $aiEmergencyStopped = Schema::hasTable('ai_automation_settings')
             && app(AiAutomationControlService::class)->isEmergencyStopped();
