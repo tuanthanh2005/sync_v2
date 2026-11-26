@@ -13,8 +13,15 @@ use App\Services\Monetization\PremiumSubscriptionService;
 use App\Services\Policy\PolicyManagementService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\RbacService;
+use App\Services\Seo\GoogleSearchConsoleService;
+use App\Services\Seo\IndexNowService;
+use App\Services\Seo\KeywordIntelligenceService;
+use App\Services\Seo\SeoAuditService;
+use App\Services\Seo\SeoRegistryService;
+use App\Services\Seo\SitemapEngineService;
 use App\Services\System\LanguageService;
 use Database\Seeders\MonetizationSeeder;
+use Database\Seeders\SeoSeeder;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -34,7 +41,8 @@ Artisan::command('app:rbac:sync', function (
     $languageService->ensureSeeded();
     $policyService->ensureDefaultPoliciesExist();
     MonetizationSeeder::seedDefaultsIfEmpty();
-    $this->info('RBAC catalog, 15 platform languages, draft policies, and monetization catalog synced.');
+    SeoSeeder::seedDefaultsIfEmpty();
+    $this->info('RBAC catalog, 15 platform languages, draft policies, monetization, and SEO engine defaults synced.');
 })->purpose('Synchronize RBAC roles, permissions, languages, draft policies, and monetization defaults');
 
 Artisan::command('app:monetization:sync', function (
@@ -175,6 +183,71 @@ Artisan::command('app:notifications:dispatch', function (): void {
     Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
 })->purpose('Dispatch due scheduled administrative notifications');
 
+Artisan::command('app:seo:backfill', function (
+    SeoRegistryService $registry,
+    SitemapEngineService $sitemaps,
+): void {
+    $reg = $registry->backfillAll();
+    $map = $sitemaps->rebuildAll();
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'SEO backfill complete: processed=%d eligible=%d sitemaps=%d shards=%d sitemap_urls=%d',
+        $reg['processed'],
+        $reg['eligible'],
+        $map['sitemaps'],
+        $map['shards'],
+        $map['urls'],
+    ));
+})->purpose('Backfill all public entities into seo_url_registry and rebuild all XML sitemap shards');
+
+Artisan::command('app:seo:sync', function (
+    SitemapEngineService $sitemaps,
+    IndexNowService $indexNow,
+): void {
+    $map = $sitemaps->rebuildDirty();
+    $idx = $indexNow->submitQueuedBatch(100);
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'SEO sync: dirty_sitemaps=%d shards=%d urls=%d indexnow_submitted=%d indexnow_failed=%d',
+        $map['sitemaps'],
+        $map['shards'],
+        $map['urls'],
+        $idx['submitted'],
+        $idx['failed'],
+    ));
+})->purpose('Rebuild dirty sitemap shards and submit queued IndexNow batches');
+
+Artisan::command('app:seo:inspect', function (GoogleSearchConsoleService $gsc): void {
+    $res = $gsc->inspectPriorityBatch();
+    $this->info(sprintf('SEO inspect: ok=%s inspected=%d remaining_quota=%d (%s)', $res['ok'] ? 'yes' : 'no', $res['inspected'], $res['quota_remaining'], $res['message']));
+})->purpose('Run a bounded priority batch against Google Search Console URL Inspection API');
+
+Artisan::command('app:seo:analytics', function (
+    GoogleSearchConsoleService $gsc,
+    KeywordIntelligenceService $keywords,
+): void {
+    $res = $gsc->syncSearchAnalytics(28);
+    $rec = $res['ok'] ? $keywords->refreshRecommendations(28) : ['generated' => 0];
+    $this->info(sprintf('SEO analytics: ok=%s rows=%d recommendations=%d (%s)', $res['ok'] ? 'yes' : 'no', $res['rows_synced'], $rec['generated'], $res['message']));
+})->purpose('Sync Google Search Console Search Analytics and refresh keyword intelligence recommendations');
+
+Artisan::command('app:seo:audit', function (SeoAuditService $audit): void {
+    $run = $audit->runAudit('scheduled');
+    $this->info(sprintf(
+        'SEO audit #%d finished: technical_health_score=%d/100 critical=%d high=%d medium=%d low=%d',
+        $run->id,
+        $run->technical_health_score,
+        $run->critical_count,
+        $run->high_count,
+        $run->medium_count,
+        $run->low_count,
+    ));
+})->purpose('Execute automated technical SEO audit checks and persist findings');
+
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
+Schedule::command('app:seo:sync')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('app:seo:inspect')->hourly()->withoutOverlapping();
+Schedule::command('app:seo:analytics')->dailyAt('03:15')->withoutOverlapping();
+Schedule::command('app:seo:audit')->weeklyOn(1, '04:00')->withoutOverlapping();

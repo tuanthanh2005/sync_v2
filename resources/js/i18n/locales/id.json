@@ -461,7 +461,8 @@
             "advertising": "Periklanan",
             "finance": "Keuangan",
             "system": "Sistem",
-            "monetization": "Monetisasi"
+            "monetization": "Monetisasi",
+            "seo": "Pusat SEO"
         },
         "nav": {
             "dashboard": "Dasbor",
@@ -499,7 +500,12 @@
             "premiumManagement": "Paket & Anggota Premium",
             "bannerAdvertising": "Iklan Banner",
             "boostPackages": "Paket Boost",
-            "monetizationSettings": "Pembayaran, AdSense & Kepatuhan"
+            "monetizationSettings": "Pembayaran, AdSense & Kepatuhan",
+            "seoOverview": "Ringkasan SEO",
+            "seoIntegrations": "Integrasi & GSC",
+            "seoUrlsSitemaps": "URL & Sitemap",
+            "seoInternational": "SEO Internasional",
+            "seoAuditGrowth": "Audit & Pertumbuhan"
         },
         "common": {
             "search": "Cari...",
@@ -766,6 +772,48 @@
             "download": "Unduh",
             "checksum": "Checksum SHA-256",
             "size": "Ukuran"
+        },
+        "seo": {
+            "overviewTitle": "Ringkasan Pusat SEO",
+            "indexingActive": "Pengindeksan Aktif",
+            "indexingGuarded": "Pengindeksan Terlindung",
+            "canonicalOrigin": "Domain Kanonis",
+            "syncRegistry": "Sinkronkan Registri URL",
+            "runAudit": "Jalankan Audit SEO",
+            "kpiRegisteredUrls": "URL Terdaftar",
+            "eligible": "memenuhi syarat",
+            "excluded": "dikecualikan",
+            "kpiSitemapCoverage": "Cakupan Sitemap",
+            "sitemapGroups": "grup",
+            "pendingSync": "menunggu sinkron",
+            "kpiGoogleIndexed": "Terindeks Google",
+            "notIndexed": "Belum terindeks",
+            "kpiTechnicalScore": "Skor Kesehatan Teknis",
+            "scoreDisclaimer": "Skor teknis internal SyncViet (BUKAN Skor Peringkat Google).",
+            "gscPerformance": "Performa Google Search Console",
+            "gscHonestSubtitle": "Klik, tayangan, CTR, dan posisi asli dari API Search Console.",
+            "gscNotConnected": "Google Search Console — Perlu Pengaturan",
+            "gscNoDataYet": "Belum ada data Search Console yang disinkronkan",
+            "gscConnectHint": "Hubungkan OAuth 2.0 atau Service Account di Integrasi & GSC.",
+            "organicFunnelTitle": "Corong Konversi Organik",
+            "organicFunnelSubtitle": "Pelacakan aman privasi tanpa menyimpan alamat IP atau PII.",
+            "criticalAlertsTitle": "Peringatan SEO Kritis & Tinggi",
+            "viewAllAudits": "Lihat semua audit",
+            "noCriticalAlerts": "Tidak ada peringatan SEO kritis.",
+            "localeDistribution": "Distribusi URL per Bahasa",
+            "registryEmptyHint": "Klik Sinkronkan Registri URL untuk memindai konten publik.",
+            "recentJobsTitle": "Tugas Latar SEO Terbaru",
+            "noJobsYet": "Belum ada tugas SEO tercatat.",
+            "integrationsTitle": "Integrasi SEO & Search Console",
+            "integrationsSubtitle": "Hanya API resmi — kredensial dienkripsi.",
+            "webmasterVerificationTitle": "Verifikasi Kepemilikan Google & Bing",
+            "webmasterVerificationDesc": "Prioritaskan properti sc-domain via DNS TXT.",
+            "saveVerification": "Simpan Verifikasi",
+            "verifyNow": "Verifikasi Sekarang",
+            "urlsTitle": "Registri URL, Sitemap & Pengalihan",
+            "internationalTitle": "SEO Internasional & Terjemahan",
+            "internationalSubtitle": "15 bahasa, alur ulasan terjemahan, validator hreflang, dan templat.",
+            "auditTitle": "Audit SEO Otomatis & Kata Kunci"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Dukungan Prioritas",
                 "desc": "Permintaan bantuan akun Anda diprioritaskan oleh tim dukungan SyncViet."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Topik & Diskusi",
+            "badge": "Klaster Topik",
+            "subtitle": "Jelajahi diskusi publik dan komunitas multibahasa berdasarkan topik.",
+            "postsCount": "{count} postingan",
+            "featured": "Unggulan",
+            "emptyTitle": "Belum ada topik aktif",
+            "emptyDesc": "Diskusi publik dengan tagar akan muncul di sini.",
+            "previous": "Sebelumnya",
+            "next": "Berikutnya",
+            "allTopics": "Semua Topik",
+            "joinDiscussion": "Ikut berdiskusi",
+            "noPostsInTopic": "Belum ada postingan publik di topik ini.",
+            "relatedTopics": "Topik Terkait",
+            "relatedCommunities": "Komunitas Terkait"
+        },
+        "post": {
+            "guestCtaTitle": "Bergabung dengan komunitas SyncViet",
+            "guestCtaDesc": "Buat akun gratis untuk membalas, menyimpan, dan berdiskusi secara global.",
+            "availableLanguages": "Bahasa tersedia",
+            "relatedTopics": "Topik & Komunitas",
+            "relatedPosts": "Diskusi Terkait",
+            "moreFromAuthor": "Lainnya dari penulis ini"
         }
     }
 }

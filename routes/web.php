@@ -17,6 +17,10 @@ use App\Http\Controllers\Admin\OverviewController;
 use App\Http\Controllers\Admin\PolicyManagementController;
 use App\Http\Controllers\Admin\RoleManagementController;
 use App\Http\Controllers\Admin\SecurityAuditController;
+use App\Http\Controllers\Admin\Seo\SeoIntegrationsController;
+use App\Http\Controllers\Admin\Seo\SeoInternationalAndAuditController;
+use App\Http\Controllers\Admin\Seo\SeoOverviewController;
+use App\Http\Controllers\Admin\Seo\SeoUrlsAndSitemapsController;
 use App\Http\Controllers\Admin\SystemSettingsController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Ads\AdCampaignController;
@@ -36,6 +40,8 @@ use App\Http\Controllers\Monetization\PremiumController;
 use App\Http\Controllers\Monetization\ServicesCenterController;
 use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\PolicyPageController;
+use App\Http\Controllers\Seo\SeoPublicController;
+use App\Http\Controllers\Seo\TopicController;
 use App\Http\Controllers\Social\CommentController;
 use App\Http\Controllers\Social\PostController;
 use App\Http\Controllers\Social\PostInteractionController;
@@ -89,7 +95,39 @@ Route::post('/banners/{bannerCampaign}/event', [ServicesCenterController::class,
     ->middleware('throttle:30,1')
     ->name('banners.event');
 Route::get('/ads.txt', [ServicesCenterController::class, 'adsTxt'])->name('seo.ads-txt');
-Route::get('/sitemap.xml', [ServicesCenterController::class, 'sitemap'])->name('seo.sitemap');
+Route::get('/robots.txt', [SeoPublicController::class, 'robots'])->name('seo.robots');
+Route::get('/sitemap.xml', [SeoPublicController::class, 'sitemapIndex'])->name('seo.sitemap');
+Route::get('/sitemap-{shard}.xml', [SeoPublicController::class, 'sitemapShard'])
+    ->where('shard', '[a-zA-Z0-9_-]+')
+    ->name('seo.sitemap.shard');
+Route::get('/og-default.svg', [SeoPublicController::class, 'defaultOgImage'])->name('seo.og-default');
+Route::get('/google{token}.html', [SeoPublicController::class, 'googleVerificationFile'])
+    ->where('token', '[a-zA-Z0-9_-]{8,80}')
+    ->name('seo.google-verification');
+Route::get('/{key}.txt', [SeoPublicController::class, 'indexNowKeyFile'])
+    ->where('key', '[a-zA-Z0-9]{16,128}')
+    ->name('seo.indexnow-key');
+
+// ─── Public Topic Clusters & Localized International SEO Routes ──────────────
+$seoLocaleRegex = 'en|vi|es|pt-BR|id|hi|th|fil|fr|de|ja|ko|zh-CN|ar|tr';
+
+Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
+Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.show');
+
+Route::prefix('{locale}')
+    ->where(['locale' => $seoLocaleRegex])
+    ->group(function (): void {
+        Route::get('/posts/{postId}-{slug}', [PostController::class, 'showLocalized'])
+            ->whereNumber('postId')
+            ->where('slug', '[a-zA-Z0-9_-]+')
+            ->name('posts.localized.slug');
+        Route::get('/posts/{postId}', [PostController::class, 'showLocalized'])
+            ->whereNumber('postId')
+            ->name('posts.localized');
+        Route::get('/topics', [TopicController::class, 'index'])->name('topics.localized.index');
+        Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.localized.show');
+        Route::get('/communities/{community:slug}', [CommunityController::class, 'showLocalized'])->name('communities.localized.show');
+    });
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
@@ -426,6 +464,134 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
                 Route::post('/guardrails', [MonetizationSettingsAdminController::class, 'updateGeneralMonetization'])
                     ->middleware('permission:monetization.manage')
                     ->name('guardrails.update');
+            });
+
+            // ── International SEO & Organic Growth Center V2.0 ───────────────────
+            Route::prefix('seo')->name('seo.')->group(function () {
+                Route::get('/', [SeoOverviewController::class, 'index'])
+                    ->middleware('permission:seo.view')
+                    ->name('overview');
+
+                Route::get('/integrations', [SeoIntegrationsController::class, 'index'])
+                    ->middleware('permission:seo.view')
+                    ->name('integrations');
+                Route::post('/integrations/verification', [SeoIntegrationsController::class, 'saveVerification'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.verification.save');
+                Route::post('/integrations/verification/check', [SeoIntegrationsController::class, 'checkVerification'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.verification.check');
+                Route::post('/integrations/gsc/service-account', [SeoIntegrationsController::class, 'saveGscServiceAccount'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.service-account');
+                Route::post('/integrations/gsc/oauth-client', [SeoIntegrationsController::class, 'saveGscOAuthClient'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.oauth-client');
+                Route::get('/integrations/gsc/oauth-redirect', [SeoIntegrationsController::class, 'redirectGscOAuth'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.oauth-redirect');
+                Route::get('/integrations/gsc/oauth-callback', [SeoIntegrationsController::class, 'callbackGscOAuth'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.oauth-callback');
+                Route::post('/integrations/gsc/test', [SeoIntegrationsController::class, 'testGscConnection'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.test');
+                Route::post('/integrations/gsc/disconnect', [SeoIntegrationsController::class, 'disconnectGsc'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.disconnect');
+                Route::post('/integrations/gsc/sync-analytics', [SeoIntegrationsController::class, 'syncGscAnalytics'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.sync-analytics');
+                Route::post('/integrations/gsc/submit-sitemap', [SeoIntegrationsController::class, 'submitGscSitemap'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.gsc.submit-sitemap');
+                Route::post('/integrations/indexnow/toggle', [SeoIntegrationsController::class, 'toggleIndexNow'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.indexnow.toggle');
+                Route::post('/integrations/indexnow/regenerate-key', [SeoIntegrationsController::class, 'regenerateIndexNowKey'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.indexnow.regenerate-key');
+                Route::post('/integrations/indexnow/submit-batch', [SeoIntegrationsController::class, 'submitIndexNowBatch'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.indexnow.submit-batch');
+                Route::post('/integrations/ga4', [SeoIntegrationsController::class, 'saveGa4'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.ga4.save');
+                Route::post('/integrations/cloudflare', [SeoIntegrationsController::class, 'saveCloudflare'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.cloudflare.save');
+                Route::post('/integrations/cloudflare/purge', [SeoIntegrationsController::class, 'purgeCloudflare'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('integrations.cloudflare.purge');
+                Route::post('/integrations/pagespeed', [SeoIntegrationsController::class, 'runPageSpeed'])
+                    ->middleware('permission:seo.view')
+                    ->name('integrations.pagespeed');
+
+                Route::get('/urls', [SeoUrlsAndSitemapsController::class, 'index'])
+                    ->middleware('permission:seo.view')
+                    ->name('urls');
+                Route::post('/urls/backfill', [SeoUrlsAndSitemapsController::class, 'backfillRegistry'])
+                    ->middleware('permission:seo.manage')
+                    ->name('urls.backfill');
+                Route::post('/urls/bulk', [SeoUrlsAndSitemapsController::class, 'bulkAction'])
+                    ->middleware('permission:seo.manage')
+                    ->name('urls.bulk');
+                Route::get('/urls/export-csv', [SeoUrlsAndSitemapsController::class, 'exportRegistryCsv'])
+                    ->middleware('permission:seo.view')
+                    ->name('urls.export-csv');
+                Route::post('/sitemaps/rebuild', [SeoUrlsAndSitemapsController::class, 'rebuildSitemaps'])
+                    ->middleware('permission:seo.manage')
+                    ->name('sitemaps.rebuild');
+                Route::post('/inspections/run-batch', [SeoUrlsAndSitemapsController::class, 'runInspectionBatch'])
+                    ->middleware('permission:seo.integrations,seo.manage')
+                    ->name('inspections.run-batch');
+                Route::post('/redirects', [SeoUrlsAndSitemapsController::class, 'storeRedirect'])
+                    ->middleware('permission:seo.redirects,seo.manage')
+                    ->name('redirects.store');
+                Route::patch('/redirects/{seoRedirect}/toggle', [SeoUrlsAndSitemapsController::class, 'toggleRedirect'])
+                    ->middleware('permission:seo.redirects,seo.manage')
+                    ->name('redirects.toggle');
+                Route::delete('/redirects/{seoRedirect}', [SeoUrlsAndSitemapsController::class, 'destroyRedirect'])
+                    ->middleware('permission:seo.redirects,seo.manage')
+                    ->name('redirects.destroy');
+                Route::post('/robots', [SeoUrlsAndSitemapsController::class, 'updateRobots'])
+                    ->middleware('permission:seo.manage')
+                    ->name('robots.update');
+
+                Route::get('/international', [SeoInternationalAndAuditController::class, 'international'])
+                    ->middleware('permission:seo.view')
+                    ->name('international');
+                Route::post('/translations', [SeoInternationalAndAuditController::class, 'storeTranslation'])
+                    ->middleware('permission:seo.translations,seo.manage')
+                    ->name('translations.store');
+                Route::post('/translations/{translation}/publish', [SeoInternationalAndAuditController::class, 'publishTranslation'])
+                    ->middleware('permission:seo.translations,seo.manage')
+                    ->name('translations.publish');
+                Route::post('/translations/{translation}/unpublish', [SeoInternationalAndAuditController::class, 'unpublishTranslation'])
+                    ->middleware('permission:seo.translations,seo.manage')
+                    ->name('translations.unpublish');
+                Route::post('/templates', [SeoInternationalAndAuditController::class, 'updateTemplates'])
+                    ->middleware('permission:seo.manage')
+                    ->name('templates.update');
+
+                Route::get('/audit', [SeoInternationalAndAuditController::class, 'audit'])
+                    ->middleware('permission:seo.view')
+                    ->name('audit');
+                Route::post('/audit/run', [SeoInternationalAndAuditController::class, 'runAuditNow'])
+                    ->middleware('permission:seo.audit,seo.manage')
+                    ->name('audit.run');
+                Route::post('/audit/issues/{issue}/resolve', [SeoInternationalAndAuditController::class, 'resolveIssue'])
+                    ->middleware('permission:seo.audit,seo.manage')
+                    ->name('audit.issues.resolve');
+                Route::post('/recommendations/refresh', [SeoInternationalAndAuditController::class, 'refreshRecommendations'])
+                    ->middleware('permission:seo.audit,seo.manage')
+                    ->name('recommendations.refresh');
+                Route::post('/recommendations/{recommendation}/dismiss', [SeoInternationalAndAuditController::class, 'dismissRecommendation'])
+                    ->middleware('permission:seo.audit,seo.manage')
+                    ->name('recommendations.dismiss');
+                Route::post('/settings', [SeoInternationalAndAuditController::class, 'updateSettings'])
+                    ->middleware('permission:seo.manage')
+                    ->name('settings.update');
             });
 
             // ── System: Languages, Settings, Notifications, Policies, Security, Backups ─

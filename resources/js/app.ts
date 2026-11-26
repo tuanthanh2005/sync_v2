@@ -9,6 +9,7 @@ import AppProviders from '@/layouts/AppProviders.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { trackGa4PageView } from '@/lib/analytics';
 import { initializeFlashToast } from '@/lib/flashToast';
 
 const appName = import.meta.env.VITE_APP_NAME || 'SyncViet';
@@ -64,6 +65,7 @@ void createInertiaApp({
 router.on('navigate', (event) => {
     const page = (event as CustomEvent).detail?.page;
     syncPageLocale(page?.props as Record<string, unknown> | undefined);
+    trackGa4PageView(typeof page?.url === 'string' ? page.url : undefined);
 });
 
 router.on('success', (event) => {

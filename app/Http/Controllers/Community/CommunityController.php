@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Services\Community\CommunityService;
 use App\Services\Monetization\AdSenseConfigService;
 use App\Services\Monetization\BannerAdvertisingService;
+use App\Services\Seo\OrganicGrowthService;
+use App\Services\Seo\SeoMetadataService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -23,17 +25,43 @@ class CommunityController extends Controller
         private readonly CommunityService $communityService,
         private readonly BannerAdvertisingService $bannerService,
         private readonly AdSenseConfigService $adSenseService,
+        private readonly SeoMetadataService $seoMetadata,
+        private readonly OrganicGrowthService $organicGrowth,
     ) {}
 
     public function index(Request $request): Response
     {
         $filter = $request->string('filter', 'all')->toString();
         $search = $request->string('q')->toString();
+        $payload = $this->communityService->directoryPayload($request->user(), $filter, $search);
 
-        return Inertia::render(
-            'communities/Index',
-            $this->communityService->directoryPayload($request->user(), $filter, $search),
+        $seo = $this->seoMetadata->forStaticPage(
+            '/communities',
+            'Communities | '.config('app.name', 'SyncViet'),
+            'Discover active global communities and topic hubs on '.config('app.name', 'SyncViet').'.',
+            $search === '',
+            app()->getLocale(),
         );
+
+        $ssrLinks = array_map(
+            static fn (array $c): array => ['label' => (string) ($c['name'] ?? ''), 'href' => '/communities/'.($c['slug'] ?? '')],
+            array_slice($payload['communities'], 0, 20),
+        );
+
+        return Inertia::render('communities/Index', $payload)->withViewData([
+            'seo' => $seo,
+            'seoSsr' => [
+                'type' => 'communities_index',
+                'heading' => 'Communities',
+                'description' => (string) ($seo['description'] ?? ''),
+                'links' => $ssrLinks,
+            ],
+        ]);
+    }
+
+    public function showLocalized(Request $request, string $locale, Community $community): Response
+    {
+        return $this->show($request, $community);
     }
 
     public function show(Request $request, Community $community): Response
@@ -43,11 +71,19 @@ class CommunityController extends Controller
         $tab = $request->string('tab', 'posts')->toString();
         $category = $request->string('category', 'all')->toString();
         $sort = $request->string('sort', 'latest')->toString();
+        $showPayload = $this->communityService->showPayload($community, $request->user(), $tab, $category, $sort);
+        $seo = $this->seoMetadata->forCommunity($community, app()->getLocale());
+
+        $ssrPosts = array_map(static fn (array $p): array => [
+            'title' => (string) ($p['title'] ?: Str::limit(strip_tags((string) ($p['content'] ?? '')), 80)),
+            'excerpt' => Str::limit(strip_tags((string) ($p['content'] ?? '')), 180),
+            'href' => '/posts/'.($p['id'] ?? ''),
+        ], array_slice(is_array($showPayload['posts'] ?? null) ? $showPayload['posts'] : [], 0, 12));
 
         return Inertia::render(
             'communities/Show',
             [
-                ...$this->communityService->showPayload($community, $request->user(), $tab, $category, $sort),
+                ...$showPayload,
                 'banners' => $this->bannerService->activeBannersForSlots(
                     ['desktop_community_top', 'mobile_community'],
                     $request->user(),
@@ -56,10 +92,16 @@ class CommunityController extends Controller
                 'adSense' => $this->adSenseService->configForPage('community', $request->user()),
             ],
         )->withViewData([
-            'seo' => [
-                'title' => $community->name.' - '.config('app.name'),
-                'description' => Str::limit((string) $community->description, 160),
-                'url' => route('communities.show', $community),
+            'seo' => $seo,
+            'seoSsr' => [
+                'type' => 'community',
+                'heading' => $community->name,
+                'description' => (string) ($community->description ?? ''),
+                'posts' => $ssrPosts,
+                'breadcrumbs' => [
+                    ['label' => (string) config('app.name', 'SyncViet'), 'href' => '/'],
+                    ['label' => 'Communities', 'href' => '/communities'],
+                ],
             ],
         ]);
     }
@@ -123,6 +165,10 @@ class CommunityController extends Controller
         abort_if($user === null, 403);
 
         $result = $this->communityService->toggleMembership($user, $community);
+
+        if ($result['joined']) {
+            $this->organicGrowth->recordEvent('join_community', $request, $user, 'community', $community->id);
+        }
 
         Inertia::flash('toast', [
             'type' => 'success',

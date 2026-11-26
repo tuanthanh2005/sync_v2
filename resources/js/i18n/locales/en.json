@@ -461,7 +461,8 @@
             "advertising": "Advertising",
             "finance": "Finance",
             "system": "System",
-            "monetization": "Monetization"
+            "monetization": "Monetization",
+            "seo": "SEO Center"
         },
         "nav": {
             "dashboard": "Dashboard",
@@ -499,7 +500,12 @@
             "premiumManagement": "Premium Plans & Members",
             "bannerAdvertising": "Banner Advertising",
             "boostPackages": "Boost Packages",
-            "monetizationSettings": "Payments, AdSense & Compliance"
+            "monetizationSettings": "Payments, AdSense & Compliance",
+            "seoOverview": "SEO Overview",
+            "seoIntegrations": "Integrations & GSC",
+            "seoUrlsSitemaps": "URLs & Sitemaps",
+            "seoInternational": "International SEO",
+            "seoAuditGrowth": "Audit & Growth"
         },
         "common": {
             "search": "Search...",
@@ -766,6 +772,48 @@
             "download": "Download",
             "checksum": "SHA-256 Checksum",
             "size": "Size"
+        },
+        "seo": {
+            "overviewTitle": "SEO Center Overview",
+            "indexingActive": "Indexing Active",
+            "indexingGuarded": "Indexing Guarded",
+            "canonicalOrigin": "Canonical Origin",
+            "syncRegistry": "Sync URL Registry",
+            "runAudit": "Run SEO Audit",
+            "kpiRegisteredUrls": "Registered URLs",
+            "eligible": "eligible",
+            "excluded": "excluded",
+            "kpiSitemapCoverage": "Sitemap Coverage",
+            "sitemapGroups": "groups",
+            "pendingSync": "pending sync",
+            "kpiGoogleIndexed": "Google Indexed (Verified)",
+            "notIndexed": "Not indexed",
+            "kpiTechnicalScore": "Technical Health Score",
+            "scoreDisclaimer": "Internal SyncViet technical hygiene score (NOT a Google Ranking Score).",
+            "gscPerformance": "Google Search Console Performance",
+            "gscHonestSubtitle": "Real clicks, impressions, CTR, and average position from Search Console API.",
+            "gscNotConnected": "Google Search Console — Setup Required",
+            "gscNoDataYet": "No Search Console analytics data synced yet",
+            "gscConnectHint": "Connect OAuth 2.0 or a Service Account in Integrations & GSC to view live search performance.",
+            "organicFunnelTitle": "Organic Search Conversion Funnel",
+            "organicFunnelSubtitle": "Privacy-safe acquisition tracking without storing IP addresses or personal PII.",
+            "criticalAlertsTitle": "Critical & High SEO Alerts",
+            "viewAllAudits": "View all audits",
+            "noCriticalAlerts": "No critical or high technical SEO alerts open.",
+            "localeDistribution": "URL Distribution by Language",
+            "registryEmptyHint": "Click Sync URL Registry to index existing public entities.",
+            "recentJobsTitle": "Recent SEO Background Jobs",
+            "noJobsYet": "No SEO background jobs recorded yet.",
+            "integrationsTitle": "SEO Integrations & Search Console",
+            "integrationsSubtitle": "Official API connections only — credentials are encrypted at rest and never exposed.",
+            "webmasterVerificationTitle": "Google & Bing Ownership Verification",
+            "webmasterVerificationDesc": "Prioritize sc-domain property verification via DNS TXT. Status only becomes Verified after live validation.",
+            "saveVerification": "Save Verification Config",
+            "verifyNow": "Verify Live Now",
+            "urlsTitle": "URL Registry, Sitemaps & Redirects",
+            "internationalTitle": "International SEO & Multilingual Content",
+            "internationalSubtitle": "15-language coverage, translation review workflow, reciprocal hreflang validation, and metadata templates.",
+            "auditTitle": "Automated SEO Audit & Keyword Intelligence"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Priority Support",
                 "desc": "Receive prioritized review and faster assistance from the SyncViet support team."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Topics & Discussions",
+            "badge": "Topic Clusters",
+            "subtitle": "Explore active public discussions and multilingual communities organized by topic.",
+            "postsCount": "{count} posts",
+            "featured": "Featured",
+            "emptyTitle": "No active topics yet",
+            "emptyDesc": "Public discussions with hashtags will appear here automatically.",
+            "previous": "Previous",
+            "next": "Next",
+            "allTopics": "All Topics",
+            "joinDiscussion": "Join the discussion",
+            "noPostsInTopic": "No public discussions are listed under this topic yet.",
+            "relatedTopics": "Related Topics",
+            "relatedCommunities": "Related Communities"
+        },
+        "post": {
+            "guestCtaTitle": "Join the SyncViet community",
+            "guestCtaDesc": "Create a free account to reply, bookmark, follow authors, and join global discussions.",
+            "availableLanguages": "Available languages",
+            "relatedTopics": "Topics & Community",
+            "relatedPosts": "Related Discussions",
+            "moreFromAuthor": "More from this author"
         }
     }
 }

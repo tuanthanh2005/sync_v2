@@ -461,7 +461,8 @@
             "advertising": "广告业务",
             "finance": "财务管理",
             "system": "系统配置",
-            "monetization": "商业化变现"
+            "monetization": "商业化变现",
+            "seo": "SEO 中心"
         },
         "nav": {
             "dashboard": "仪表盘",
@@ -499,7 +500,12 @@
             "premiumManagement": "Premium 套餐与会员",
             "bannerAdvertising": "横幅广告",
             "boostPackages": "推文助推套餐",
-            "monetizationSettings": "支付、AdSense 与合规"
+            "monetizationSettings": "支付、AdSense 与合规",
+            "seoOverview": "SEO 概览",
+            "seoIntegrations": "集成与 GSC",
+            "seoUrlsSitemaps": "URL 与站点地图",
+            "seoInternational": "国际 SEO",
+            "seoAuditGrowth": "审计与增长"
         },
         "common": {
             "search": "搜索...",
@@ -766,6 +772,48 @@
             "download": "下载",
             "checksum": "SHA-256 校验和",
             "size": "大小"
+        },
+        "seo": {
+            "overviewTitle": "SEO 中心概览",
+            "indexingActive": "允许索引",
+            "indexingGuarded": "索引已保护",
+            "canonicalOrigin": "规范域名",
+            "syncRegistry": "同步 URL 注册表",
+            "runAudit": "运行 SEO 审计",
+            "kpiRegisteredUrls": "已注册 URL",
+            "eligible": "符合条件",
+            "excluded": "已排除",
+            "kpiSitemapCoverage": "站点地图覆盖",
+            "sitemapGroups": "分组",
+            "pendingSync": "待更新",
+            "kpiGoogleIndexed": "Google 已索引",
+            "notIndexed": "未索引",
+            "kpiTechnicalScore": "技术健康评分",
+            "scoreDisclaimer": "SyncViet 内部技术健康分（并非 Google 排名评分）。",
+            "gscPerformance": "Google Search Console 表现",
+            "gscHonestSubtitle": "来自 Search Console API 的真实点击、展示、CTR 和排名。",
+            "gscNotConnected": "Google Search Console — 需要配置",
+            "gscNoDataYet": "尚未同步 Search Console 数据",
+            "gscConnectHint": "请在 集成与 GSC 中连接 OAuth 2.0 或服务账号。",
+            "organicFunnelTitle": "自然搜索转化漏斗",
+            "organicFunnelSubtitle": "注重隐私的归因追踪，不存储 IP 地址或个人身份信息。",
+            "criticalAlertsTitle": "严重与高危 SEO 警报",
+            "viewAllAudits": "查看全部审计",
+            "noCriticalAlerts": "当前没有未处理的严重 SEO 警报。",
+            "localeDistribution": "各语言 URL 分布",
+            "registryEmptyHint": "点击 同步 URL 注册表 扫描现有公开内容。",
+            "recentJobsTitle": "近期 SEO 后台任务",
+            "noJobsYet": "暂无 SEO 后台任务记录。",
+            "integrationsTitle": "SEO 集成与 Search Console",
+            "integrationsSubtitle": "仅使用官方 API — 凭据加密存储且永不暴露。",
+            "webmasterVerificationTitle": "Google 与 Bing 站点验证",
+            "webmasterVerificationDesc": "优先通过 DNS TXT 验证 sc-domain 资源。",
+            "saveVerification": "保存验证配置",
+            "verifyNow": "立即实时验证",
+            "urlsTitle": "URL 注册表、站点地图与重定向",
+            "internationalTitle": "国际 SEO 与多语言翻译",
+            "internationalSubtitle": "15 种语言支持、翻译审核流、hreflang 校验与元数据模板。",
+            "auditTitle": "自动化 SEO 审计与关键词洞察"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "优先客服支持",
                 "desc": "您的账号支持请求将获得 SyncViet 团队优先受理与更快响应。"
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "话题与讨论",
+            "badge": "话题集群",
+            "subtitle": "按主题浏览公开讨论与多语言社区。",
+            "postsCount": "{count} 篇帖子",
+            "featured": "精选",
+            "emptyTitle": "暂无活跃话题",
+            "emptyDesc": "带有标签的公开讨论将自动显示在这里。",
+            "previous": "上一页",
+            "next": "下一页",
+            "allTopics": "全部话题",
+            "joinDiscussion": "参与讨论",
+            "noPostsInTopic": "该话题下暂无公开帖子。",
+            "relatedTopics": "相关话题",
+            "relatedCommunities": "相关社区"
+        },
+        "post": {
+            "guestCtaTitle": "加入 SyncViet 社区",
+            "guestCtaDesc": "免费创建账号即可回复、收藏、关注作者并参与全球讨论。",
+            "availableLanguages": "可用语言",
+            "relatedTopics": "话题与社区",
+            "relatedPosts": "相关讨论",
+            "moreFromAuthor": "该作者的更多内容"
         }
     }
 }

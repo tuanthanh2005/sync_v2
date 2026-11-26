@@ -8,6 +8,8 @@ use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
 use App\Enums\ReactionType;
+use App\Enums\SeoEntityType;
+use App\Jobs\Seo\ProcessSeoEntityJob;
 use App\Models\AdCampaign;
 use App\Models\Bookmark;
 use App\Models\Community;
@@ -238,6 +240,10 @@ class PostService
             actor: $author,
         );
 
+        DB::afterCommit(static function () use ($post): void {
+            ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
+        });
+
         return $post->load(['author.profile', 'community', 'hashtags', 'media', 'poll.options']);
     }
 
@@ -273,6 +279,10 @@ class PostService
             subject: $post,
             actor: $actor,
         );
+
+        DB::afterCommit(static function () use ($post): void {
+            ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
+        });
 
         return $post->fresh(['author.profile', 'community', 'hashtags', 'media', 'poll.options']) ?? $post;
     }
@@ -341,6 +351,10 @@ class PostService
             subject: $post,
             actor: $actor,
         );
+
+        DB::afterCommit(static function () use ($post): void {
+            ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id, true, 410);
+        });
     }
 
     /**

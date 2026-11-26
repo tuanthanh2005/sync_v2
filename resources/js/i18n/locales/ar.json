@@ -461,7 +461,8 @@
             "advertising": "الإعلانات",
             "finance": "المالية",
             "system": "النظام",
-            "monetization": "تحقيق الدخل"
+            "monetization": "تحقيق الدخل",
+            "seo": "مركز SEO"
         },
         "nav": {
             "dashboard": "لوحة التحكم",
@@ -499,7 +500,12 @@
             "premiumManagement": "خطط وأعضاء Premium",
             "bannerAdvertising": "إعلانات البانر",
             "boostPackages": "باقات ترويج المنشورات",
-            "monetizationSettings": "المدفوعات وAdSense والامتثال"
+            "monetizationSettings": "المدفوعات وAdSense والامتثال",
+            "seoOverview": "نظرة عامة SEO",
+            "seoIntegrations": "التكاملات و GSC",
+            "seoUrlsSitemaps": "الروابط وخرائط الموقع",
+            "seoInternational": "SEO الدولي",
+            "seoAuditGrowth": "التدقيق والنمو"
         },
         "common": {
             "search": "بحث...",
@@ -766,6 +772,48 @@
             "download": "تنزيل",
             "checksum": "بصمة التحقق SHA-256",
             "size": "الحجم"
+        },
+        "seo": {
+            "overviewTitle": "نظرة عامة على مركز SEO",
+            "indexingActive": "الفهرسة نشطة",
+            "indexingGuarded": "الفهرسة محمية",
+            "canonicalOrigin": "النطاق الأساسي",
+            "syncRegistry": "مزامنة سجل الروابط",
+            "runAudit": "تشغيل تدقيق SEO",
+            "kpiRegisteredUrls": "الروابط المسجلة",
+            "eligible": "مؤهل",
+            "excluded": "مستبعد",
+            "kpiSitemapCoverage": "تغطية خريطة الموقع",
+            "sitemapGroups": "مجموعات",
+            "pendingSync": "بانتظار التحديث",
+            "kpiGoogleIndexed": "مفهرس في Google",
+            "notIndexed": "غير مفهرس",
+            "kpiTechnicalScore": "درجة الصحة التقنية",
+            "scoreDisclaimer": "درجة فحص تقني داخلية في SyncViet (ليست درجة ترتيب Google).",
+            "gscPerformance": "أداء Google Search Console",
+            "gscHonestSubtitle": "النقرات ومرات الظهور ونسبة النقر والترتيب الفعلي من API.",
+            "gscNotConnected": "Google Search Console — يتطلب الإعداد",
+            "gscNoDataYet": "لا توجد بيانات Search Console متزامنة بعد",
+            "gscConnectHint": "اربط OAuth 2.0 أو حساب الخدمة من صفحة التكاملات و GSC.",
+            "organicFunnelTitle": "قمع التحويل من البحث العضوي",
+            "organicFunnelSubtitle": "تتبع يحافظ على الخصوصية دون تخزين عناوين IP أو بيانات شخصية.",
+            "criticalAlertsTitle": "تنبيهات SEO الحرجة والعالية",
+            "viewAllAudits": "عرض كل التدقيقات",
+            "noCriticalAlerts": "لا توجد تنبيهات SEO حرجة مفتوحة.",
+            "localeDistribution": "توزيع الروابط حسب اللغة",
+            "registryEmptyHint": "انقر مزامنة سجل الروابط لفحص المحتوى العام.",
+            "recentJobsTitle": "مهام SEO الخلفية الأخيرة",
+            "noJobsYet": "لم يتم تسجيل مهام SEO بعد.",
+            "integrationsTitle": "تكاملات SEO و Search Console",
+            "integrationsSubtitle": "واجهات برمجية رسمية فقط — بيانات الاعتماد مشفرة بالكامل.",
+            "webmasterVerificationTitle": "التحقق من ملكية Google و Bing",
+            "webmasterVerificationDesc": "يفضل التحقق من نطاق sc-domain عبر سجل DNS TXT.",
+            "saveVerification": "حفظ إعدادات التحقق",
+            "verifyNow": "التحقق المباشر الآن",
+            "urlsTitle": "سجل الروابط وخرائط الموقع وإعادة التوجيه",
+            "internationalTitle": "SEO الدولي والترجمات متعددة اللغات",
+            "internationalSubtitle": "تغطية 15 لغة، مراجعة الترجمات، مدقق hreflang، وقوالب البيانات.",
+            "auditTitle": "تدقيق SEO التلقائي وذكاء الكلمات المفتاحية"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "دعم فني ذو أولوية",
                 "desc": "تحظى طلبات الدعم الخاصة بحسابك بأولوية المراجعة واستجابة أسرع من فريق SyncViet."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "المواضيع والنقاشات",
+            "badge": "مجموعات المواضيع",
+            "subtitle": "استكشف النقاشات العامة والمجتمعات متعددة اللغات حسب الموضوع.",
+            "postsCount": "{count} منشورات",
+            "featured": "مميز",
+            "emptyTitle": "لا توجد مواضيع نشطة بعد",
+            "emptyDesc": "ستظهر المنشورات العامة التي تحتوي على وسوم هنا تلقائياً.",
+            "previous": "السابق",
+            "next": "التالي",
+            "allTopics": "كل المواضيع",
+            "joinDiscussion": "انضم للنقاش",
+            "noPostsInTopic": "لا توجد منشورات عامة في هذا الموضوع بعد.",
+            "relatedTopics": "مواضيع ذات صلة",
+            "relatedCommunities": "مجتمعات ذات صلة"
+        },
+        "post": {
+            "guestCtaTitle": "انضم إلى مجتمع SyncViet",
+            "guestCtaDesc": "أنشئ حساباً مجانياً للتعليق والحفظ ومتابعة الكتّاب والمشاركة عالمياً.",
+            "availableLanguages": "اللغات المتاحة",
+            "relatedTopics": "المواضيع والمجتمع",
+            "relatedPosts": "نقاشات ذات صلة",
+            "moreFromAuthor": "المزيد من هذا الكاتب"
         }
     }
 }

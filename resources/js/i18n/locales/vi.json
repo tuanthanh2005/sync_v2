@@ -461,7 +461,8 @@
             "advertising": "Quảng cáo",
             "finance": "Tài chính",
             "system": "Hệ thống",
-            "monetization": "Kiếm tiền & Doanh thu"
+            "monetization": "Kiếm tiền & Doanh thu",
+            "seo": "Trung tâm SEO"
         },
         "nav": {
             "dashboard": "Bảng điều khiển",
@@ -499,7 +500,12 @@
             "premiumManagement": "Gói & Thành viên Premium",
             "bannerAdvertising": "Quảng cáo Banner",
             "boostPackages": "Gói Đẩy bài viết",
-            "monetizationSettings": "Thanh toán, AdSense & Tuân thủ"
+            "monetizationSettings": "Thanh toán, AdSense & Tuân thủ",
+            "seoOverview": "Tổng quan SEO",
+            "seoIntegrations": "Tích hợp & GSC",
+            "seoUrlsSitemaps": "URL & Sitemap",
+            "seoInternational": "SEO Quốc tế",
+            "seoAuditGrowth": "Kiểm toán & Tăng trưởng"
         },
         "common": {
             "search": "Tìm kiếm...",
@@ -766,6 +772,48 @@
             "download": "Tải xuống",
             "checksum": "Mã SHA-256",
             "size": "Dung lượng"
+        },
+        "seo": {
+            "overviewTitle": "Tổng quan Trung tâm SEO",
+            "indexingActive": "Đang cho phép lập chỉ mục",
+            "indexingGuarded": "Đang khóa lập chỉ mục",
+            "canonicalOrigin": "Tên miền chuẩn (Canonical)",
+            "syncRegistry": "Đồng bộ URL Registry",
+            "runAudit": "Chạy kiểm toán SEO",
+            "kpiRegisteredUrls": "URL đã đăng ký",
+            "eligible": "đủ điều kiện",
+            "excluded": "loại trừ",
+            "kpiSitemapCoverage": "Phủ sóng Sitemap",
+            "sitemapGroups": "nhóm",
+            "pendingSync": "chờ cập nhật",
+            "kpiGoogleIndexed": "Google đã lập chỉ mục",
+            "notIndexed": "Chưa lập chỉ mục",
+            "kpiTechnicalScore": "Điểm sức khỏe kỹ thuật",
+            "scoreDisclaimer": "Điểm kiểm tra kỹ thuật nội bộ SyncViet (KHÔNG phải điểm xếp hạng Google).",
+            "gscPerformance": "Hiệu suất Google Search Console",
+            "gscHonestSubtitle": "Dữ liệu nhấp chuột, hiển thị, CTR và vị trí thực tế từ Search Console API.",
+            "gscNotConnected": "Google Search Console — Cần thiết lập",
+            "gscNoDataYet": "Chưa có dữ liệu Search Console nào được đồng bộ",
+            "gscConnectHint": "Kết nối OAuth 2.0 hoặc Service Account trong mục Tích hợp & GSC để xem dữ liệu tìm kiếm thực.",
+            "organicFunnelTitle": "Phễu chuyển đổi Organic Search",
+            "organicFunnelSubtitle": "Theo dõi tăng trưởng bảo vệ quyền riêng tư, không lưu địa chỉ IP hoặc PII.",
+            "criticalAlertsTitle": "Cảnh báo SEO nghiêm trọng",
+            "viewAllAudits": "Xem toàn bộ kiểm toán",
+            "noCriticalAlerts": "Không có cảnh báo SEO nghiêm trọng hoặc mức cao nào đang mở.",
+            "localeDistribution": "Phân bổ URL theo ngôn ngữ",
+            "registryEmptyHint": "Nhấn Đồng bộ URL Registry để quét các nội dung công khai hiện có.",
+            "recentJobsTitle": "Tác vụ nền SEO gần đây",
+            "noJobsYet": "Chưa có tác vụ nền SEO nào được ghi nhận.",
+            "integrationsTitle": "Tích hợp SEO & Search Console",
+            "integrationsSubtitle": "Chỉ sử dụng API chính thức — khóa bí mật được mã hóa trong DB và không bao giờ lộ ra trình duyệt.",
+            "webmasterVerificationTitle": "Xác minh sở hữu Google & Bing",
+            "webmasterVerificationDesc": "Ưu tiên xác minh Domain Property (sc-domain) qua DNS TXT. Chỉ chuyển sang Verified sau khi kiểm tra thực tế.",
+            "saveVerification": "Lưu cấu hình xác minh",
+            "verifyNow": "Kiểm tra trực tiếp ngay",
+            "urlsTitle": "URL Registry, Sitemap & Chuyển hướng",
+            "internationalTitle": "SEO Quốc tế & Nội dung Đa ngôn ngữ",
+            "internationalSubtitle": "Hỗ trợ 15 ngôn ngữ, quy trình duyệt bản dịch, kiểm tra hreflang đối xứng và mẫu Metadata.",
+            "auditTitle": "Kiểm toán SEO tự động & Phân tích Từ khóa"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Hỗ trợ ưu tiên",
                 "desc": "Các yêu cầu hỗ trợ tài khoản được đội ngũ SyncViet ưu tiên tiếp nhận và phản hồi nhanh hơn."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Chủ đề & Thảo luận",
+            "badge": "Cụm chủ đề",
+            "subtitle": "Khám phá các cuộc thảo luận công khai và cộng đồng đa ngôn ngữ theo từng chủ đề.",
+            "postsCount": "{count} bài viết",
+            "featured": "Nổi bật",
+            "emptyTitle": "Chưa có chủ đề hoạt động",
+            "emptyDesc": "Các bài thảo luận công khai gắn hashtag sẽ tự động hiển thị tại đây.",
+            "previous": "Trang trước",
+            "next": "Trang sau",
+            "allTopics": "Tất cả chủ đề",
+            "joinDiscussion": "Tham gia thảo luận",
+            "noPostsInTopic": "Chưa có bài viết công khai nào thuộc chủ đề này.",
+            "relatedTopics": "Chủ đề liên quan",
+            "relatedCommunities": "Cộng đồng liên quan"
+        },
+        "post": {
+            "guestCtaTitle": "Tham gia cộng đồng SyncViet",
+            "guestCtaDesc": "Tạo tài khoản miễn phí để bình luận, lưu bài viết, theo dõi tác giả và tham gia thảo luận toàn cầu.",
+            "availableLanguages": "Ngôn ngữ khả dụng",
+            "relatedTopics": "Chủ đề & Cộng đồng",
+            "relatedPosts": "Bài viết liên quan",
+            "moreFromAuthor": "Thêm từ tác giả này"
         }
     }
 }

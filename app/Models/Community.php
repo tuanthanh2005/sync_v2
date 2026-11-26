@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int $owner_id
  * @property string $name
  * @property string $slug
+ * @property string $language_code
  * @property PostCategory $category
  * @property string|null $description
  * @property string|null $avatar_disk
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $status
  * @property bool $is_verified_badge
  * @property bool $is_featured
+ * @property bool $seo_noindex
  * @property bool $allow_new_members
  * @property bool $allow_posting
  * @property string|null $moderation_reason
@@ -38,7 +40,7 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-#[Fillable(['name', 'slug', 'category', 'description', 'rules', 'visibility'])]
+#[Fillable(['name', 'slug', 'language_code', 'category', 'description', 'rules', 'visibility'])]
 class Community extends Model
 {
     /** @use HasFactory<CommunityFactory> */
@@ -54,6 +56,7 @@ class Community extends Model
             'rules' => 'array',
             'is_verified_badge' => 'boolean',
             'is_featured' => 'boolean',
+            'seo_noindex' => 'boolean',
             'allow_new_members' => 'boolean',
             'allow_posting' => 'boolean',
             'members_count' => 'integer',

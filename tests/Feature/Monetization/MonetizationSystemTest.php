@@ -20,6 +20,9 @@ use App\Models\User;
 use App\Services\Billing\HmacPaymentWebhookService;
 use App\Services\Monetization\AdSenseConfigService;
 use App\Services\Security\AuditLogger;
+use App\Services\Seo\SeoConfigService;
+use App\Services\Seo\SeoRegistryService;
+use App\Services\Seo\SitemapEngineService;
 use App\Services\Social\ProfileService;
 use Database\Seeders\MonetizationSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,9 +81,16 @@ test('guests can browse services center, pricing pages, and sitemap without logi
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page->component('monetization/BoostPost')->has('packages', 5));
 
+    app(SeoConfigService::class)->set('allow_indexing_in_non_production', true, 'general', 'boolean');
+    app(SeoRegistryService::class)->syncStaticPages();
+    app(SitemapEngineService::class)->rebuildAll();
+
     $sitemap = $this->get(route('seo.sitemap'))->assertOk();
     $sitemap->assertHeader('Content-Type', 'application/xml; charset=utf-8');
-    expect($sitemap->getContent())
+    expect($sitemap->getContent())->toContain('sitemap-pages.xml');
+
+    $pagesShard = $this->get('/sitemap-pages.xml')->assertOk();
+    expect($pagesShard->getContent())
         ->toContain('/services')
         ->toContain('/premium')
         ->not->toContain('/wallet')

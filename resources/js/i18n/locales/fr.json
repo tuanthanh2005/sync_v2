@@ -461,7 +461,8 @@
             "advertising": "Publicité",
             "finance": "Finances",
             "system": "Système",
-            "monetization": "Monétisation"
+            "monetization": "Monétisation",
+            "seo": "Centre SEO"
         },
         "nav": {
             "dashboard": "Tableau de bord",
@@ -499,7 +500,12 @@
             "premiumManagement": "Offres et membres Premium",
             "bannerAdvertising": "Bannières publicitaires",
             "boostPackages": "Forfaits de mise en avant",
-            "monetizationSettings": "Paiements, AdSense et conformité"
+            "monetizationSettings": "Paiements, AdSense et conformité",
+            "seoOverview": "Vue SEO",
+            "seoIntegrations": "Intégrations et GSC",
+            "seoUrlsSitemaps": "URLs et Sitemaps",
+            "seoInternational": "SEO International",
+            "seoAuditGrowth": "Audit et Croissance"
         },
         "common": {
             "search": "Rechercher...",
@@ -766,6 +772,48 @@
             "download": "Télécharger",
             "checksum": "Empreinte SHA-256",
             "size": "Taille"
+        },
+        "seo": {
+            "overviewTitle": "Vue d’ensemble du Centre SEO",
+            "indexingActive": "Indexation active",
+            "indexingGuarded": "Indexation protégée",
+            "canonicalOrigin": "Origine canonique",
+            "syncRegistry": "Synchroniser les URLs",
+            "runAudit": "Lancer l’audit SEO",
+            "kpiRegisteredUrls": "URLs enregistrées",
+            "eligible": "éligibles",
+            "excluded": "exclues",
+            "kpiSitemapCoverage": "Couverture Sitemap",
+            "sitemapGroups": "groupes",
+            "pendingSync": "en attente",
+            "kpiGoogleIndexed": "Indexées Google",
+            "notIndexed": "Non indexées",
+            "kpiTechnicalScore": "Score santé technique",
+            "scoreDisclaimer": "Score technique interne SyncViet (NON un score de classement Google).",
+            "gscPerformance": "Performance Google Search Console",
+            "gscHonestSubtitle": "Clics, impressions, CTR et position réels via l’API Search Console.",
+            "gscNotConnected": "Google Search Console — Configuration requise",
+            "gscNoDataYet": "Aucune donnée Search Console synchronisée",
+            "gscConnectHint": "Connectez OAuth 2.0 ou un compte de service dans Intégrations et GSC.",
+            "organicFunnelTitle": "Entonnoir organique",
+            "organicFunnelSubtitle": "Suivi respectueux de la vie privée sans IP ni données personnelles.",
+            "criticalAlertsTitle": "Alertes SEO critiques",
+            "viewAllAudits": "Voir les audits",
+            "noCriticalAlerts": "Aucune alerte SEO critique ouverte.",
+            "localeDistribution": "Répartition des URLs par langue",
+            "registryEmptyHint": "Cliquez sur Synchroniser les URLs pour indexer les contenus publics.",
+            "recentJobsTitle": "Tâches SEO récentes",
+            "noJobsYet": "Aucune tâche SEO enregistrée.",
+            "integrationsTitle": "Intégrations SEO et Search Console",
+            "integrationsSubtitle": "APIs officielles uniquement — identifiants chiffrés.",
+            "webmasterVerificationTitle": "Vérification Google et Bing",
+            "webmasterVerificationDesc": "Privilégiez la vérification sc-domain via DNS TXT.",
+            "saveVerification": "Enregistrer",
+            "verifyNow": "Vérifier maintenant",
+            "urlsTitle": "Registre URL, Sitemaps et Redirections",
+            "internationalTitle": "SEO International et Traductions",
+            "internationalSubtitle": "15 langues, workflow de validation, validateur hreflang et modèles.",
+            "auditTitle": "Audit SEO automatisé et Mots-clés"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Support prioritaire",
                 "desc": "Bénéficiez d’un traitement prioritaire et de réponses plus rapides de l’équipe SyncViet."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Sujets et Discussions",
+            "badge": "Clusters de sujets",
+            "subtitle": "Explorez les discussions publiques et communautés multilingues par sujet.",
+            "postsCount": "{count} publications",
+            "featured": "En vedette",
+            "emptyTitle": "Aucun sujet actif",
+            "emptyDesc": "Les discussions publiques avec hashtags apparaîtront ici.",
+            "previous": "Précédent",
+            "next": "Suivant",
+            "allTopics": "Tous les sujets",
+            "joinDiscussion": "Rejoindre la discussion",
+            "noPostsInTopic": "Aucune publication publique dans ce sujet.",
+            "relatedTopics": "Sujets associés",
+            "relatedCommunities": "Communautés associées"
+        },
+        "post": {
+            "guestCtaTitle": "Rejoignez la communauté SyncViet",
+            "guestCtaDesc": "Créez un compte gratuit pour commenter, enregistrer et échanger dans le monde entier.",
+            "availableLanguages": "Langues disponibles",
+            "relatedTopics": "Sujets et Communauté",
+            "relatedPosts": "Discussions similaires",
+            "moreFromAuthor": "Plus de cet auteur"
         }
     }
 }

@@ -15,12 +15,48 @@ import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
 import { formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
-import { home, login } from '@/routes';
+import { home, login, register } from '@/routes';
 import type { CommentItem, PublicFeedPost } from '@/types';
+
+type RelatedPostItem = {
+    id: number;
+    title: string;
+    excerpt: string;
+    path: string;
+    url: string;
+    author_name?: string;
+    created_at: string | null;
+};
+
+type SeoInternalLinks = {
+    related_posts: RelatedPostItem[];
+    more_from_author: RelatedPostItem[];
+    related_community: {
+        name: string;
+        slug: string;
+        path: string;
+        members_count: number;
+    } | null;
+    related_topics: Array<{
+        name: string;
+        slug: string;
+        path: string;
+        posts_count: number;
+    }>;
+};
+
+type SeoLanguageInfo = {
+    current: string;
+    original: string;
+    is_translation: boolean;
+    alternates: Array<{ hreflang: string; href: string }>;
+};
 
 const props = defineProps<{
     post: PublicFeedPost;
     comments: CommentItem[];
+    seoInternalLinks?: SeoInternalLinks;
+    seoLanguage?: SeoLanguageInfo;
 }>();
 
 const { t, locale } = useI18n();
@@ -118,6 +154,54 @@ function executeDeleteComment(): void {
         </div>
 
         <PostCard :post="post" :truncate="false" />
+
+        <!-- Subtle Guest Organic Conversion CTA -->
+        <section
+            v-if="!user"
+            class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/25 bg-primary-soft/50 p-4"
+        >
+            <div class="min-w-0">
+                <p class="text-sm font-semibold text-foreground">
+                    {{ t('seo.post.guestCtaTitle') }}
+                </p>
+                <p class="text-xs text-muted-foreground">
+                    {{ t('seo.post.guestCtaDesc') }}
+                </p>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+                <Button variant="outline" size="sm" as-child>
+                    <Link :href="login()">{{ t('nav.login') }}</Link>
+                </Button>
+                <Button size="sm" as-child>
+                    <Link :href="register()">{{ t('nav.register') }}</Link>
+                </Button>
+            </div>
+        </section>
+
+        <!-- Available Published Language Versions -->
+        <section
+            v-if="seoLanguage && seoLanguage.alternates.length > 2"
+            class="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-xs"
+        >
+            <span class="font-medium text-muted-foreground">
+                {{ t('seo.post.availableLanguages') }}:
+            </span>
+            <a
+                v-for="alt in seoLanguage.alternates.filter(
+                    (item) => item.hreflang !== 'x-default',
+                )"
+                :key="alt.hreflang"
+                :href="alt.href"
+                :class="[
+                    'rounded-full border px-2.5 py-0.5 font-medium uppercase transition-colors',
+                    alt.hreflang === seoLanguage.current
+                        ? 'border-primary bg-primary-soft text-primary'
+                        : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground',
+                ]"
+            >
+                {{ alt.hreflang }}
+            </a>
+        </section>
 
         <!-- Comments Section -->
         <section
@@ -326,6 +410,93 @@ function executeDeleteComment(): void {
             <p v-else class="py-4 text-center text-xs text-muted-foreground">
                 {{ t('post.noComments') }}
             </p>
+        </section>
+
+        <!-- Crawlable SEO Internal Linking Sections -->
+        <section
+            v-if="
+                seoInternalLinks &&
+                (seoInternalLinks.related_posts.length > 0 ||
+                    seoInternalLinks.more_from_author.length > 0 ||
+                    seoInternalLinks.related_topics.length > 0)
+            "
+            class="space-y-4"
+        >
+            <div
+                v-if="seoInternalLinks.related_topics.length > 0"
+                class="rounded-xl border border-border bg-card p-4"
+            >
+                <h2 class="text-sm font-semibold text-foreground">
+                    {{ t('seo.post.relatedTopics') }}
+                </h2>
+                <div class="mt-2.5 flex flex-wrap gap-2">
+                    <Link
+                        v-for="topic in seoInternalLinks.related_topics"
+                        :key="topic.slug"
+                        :href="topic.path"
+                        class="rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                    >
+                        #{{ topic.name }}
+                    </Link>
+                    <Link
+                        v-if="seoInternalLinks.related_community"
+                        :href="seoInternalLinks.related_community.path"
+                        class="rounded-full border border-primary/30 bg-primary-soft px-3 py-1 text-xs font-medium text-primary"
+                    >
+                        {{ seoInternalLinks.related_community.name }}
+                    </Link>
+                </div>
+            </div>
+
+            <div
+                v-if="seoInternalLinks.related_posts.length > 0"
+                class="rounded-xl border border-border bg-card p-5"
+            >
+                <h2 class="text-sm font-semibold text-foreground">
+                    {{ t('seo.post.relatedPosts') }}
+                </h2>
+                <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                    <Link
+                        v-for="rp in seoInternalLinks.related_posts"
+                        :key="rp.id"
+                        :href="rp.path"
+                        class="group block rounded-lg border border-border/80 bg-muted/20 p-3 transition-colors hover:border-primary/40 hover:bg-surface-hover"
+                    >
+                        <p
+                            class="line-clamp-2 text-xs font-semibold text-foreground group-hover:text-primary"
+                        >
+                            {{ rp.title }}
+                        </p>
+                        <p
+                            class="mt-1 line-clamp-2 text-[11px] text-muted-foreground"
+                        >
+                            {{ rp.excerpt }}
+                        </p>
+                    </Link>
+                </div>
+            </div>
+
+            <div
+                v-if="seoInternalLinks.more_from_author.length > 0"
+                class="rounded-xl border border-border bg-card p-5"
+            >
+                <h2 class="text-sm font-semibold text-foreground">
+                    {{ t('seo.post.moreFromAuthor') }}
+                </h2>
+                <ul class="mt-2.5 space-y-2">
+                    <li
+                        v-for="mp in seoInternalLinks.more_from_author"
+                        :key="mp.id"
+                    >
+                        <Link
+                            :href="mp.path"
+                            class="block text-xs font-medium text-foreground transition-colors hover:text-primary"
+                        >
+                            {{ mp.title }}
+                        </Link>
+                    </li>
+                </ul>
+            </div>
         </section>
 
         <ConfirmActionDialog

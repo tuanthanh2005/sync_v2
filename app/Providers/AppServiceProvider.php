@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Enums\SeoEntityType;
+use App\Jobs\Seo\ProcessSeoEntityJob;
 use App\Listeners\RecordAuthSecurityEvents;
 use App\Models\AdCampaign;
 use App\Models\Comment;
@@ -54,7 +56,32 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureAuthorization();
         $this->configureSecurityListeners();
+        $this->configureSeoModelHooks();
         $this->configureRouteRateLimits();
+    }
+
+    /**
+     * Automatically keep SEO URL Registry and dirty sitemap flags in sync on entity lifecycle events.
+     */
+    protected function configureSeoModelHooks(): void
+    {
+        Community::saved(static function (Community $community): void {
+            DB::afterCommit(static function () use ($community): void {
+                ProcessSeoEntityJob::dispatch(SeoEntityType::Community->value, $community->id);
+            });
+        });
+
+        Community::deleted(static function (Community $community): void {
+            DB::afterCommit(static function () use ($community): void {
+                ProcessSeoEntityJob::dispatch(SeoEntityType::Community->value, $community->id, true, 410);
+            });
+        });
+
+        PolicyPage::saved(static function (PolicyPage $policy): void {
+            DB::afterCommit(static function () use ($policy): void {
+                ProcessSeoEntityJob::dispatch(SeoEntityType::Policy->value, $policy->id);
+            });
+        });
     }
 
     /**

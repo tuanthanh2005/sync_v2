@@ -2,12 +2,17 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Seo\SeoConfigService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeaders
 {
+    public function __construct(
+        private readonly SeoConfigService $seoConfig,
+    ) {}
+
     /**
      * Apply defense-in-depth HTTP security headers to all web responses.
      */
@@ -20,13 +25,23 @@ class SecurityHeaders
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
-        $scriptSrc = app()->isLocal()
-            ? "'self' 'unsafe-inline' http://127.0.0.1:5173 http://localhost:5173"
-            : "'self' 'unsafe-inline'";
+        $ga4Active = $this->seoConfig->ga4PublicConfig()['enabled'] && ! $request->is('admin*');
 
-        $connectSrc = app()->isLocal()
-            ? "'self' http://127.0.0.1:5173 http://localhost:5173 ws://127.0.0.1:5173 ws://localhost:5173"
-            : "'self'";
+        $scriptParts = ["'self'", "'unsafe-inline'"];
+        $connectParts = ["'self'"];
+
+        if (app()->isLocal()) {
+            $scriptParts[] = 'http://127.0.0.1:5173 http://localhost:5173';
+            $connectParts[] = 'http://127.0.0.1:5173 http://localhost:5173 ws://127.0.0.1:5173 ws://localhost:5173';
+        }
+
+        if ($ga4Active) {
+            $scriptParts[] = 'https://www.googletagmanager.com';
+            $connectParts[] = 'https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com';
+        }
+
+        $scriptSrc = implode(' ', $scriptParts);
+        $connectSrc = implode(' ', $connectParts);
 
         $csp = implode('; ', [
             "default-src 'self'",

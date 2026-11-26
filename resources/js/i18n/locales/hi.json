@@ -461,7 +461,8 @@
             "advertising": "विज्ञापन",
             "finance": "वित्त",
             "system": "सिस्टम",
-            "monetization": "मुद्रीकरण"
+            "monetization": "मुद्रीकरण",
+            "seo": "SEO केंद्र"
         },
         "nav": {
             "dashboard": "डैशबोर्ड",
@@ -499,7 +500,12 @@
             "premiumManagement": "प्रीमियम प्लान और सदस्य",
             "bannerAdvertising": "बैनर विज्ञापन",
             "boostPackages": "बूस्ट पैकेज",
-            "monetizationSettings": "भुगतान, AdSense और अनुपालन"
+            "monetizationSettings": "भुगतान, AdSense और अनुपालन",
+            "seoOverview": "SEO अवलोकन",
+            "seoIntegrations": "एकीकरण और GSC",
+            "seoUrlsSitemaps": "URL और साइटमैप",
+            "seoInternational": "अंतर्राष्ट्रीय SEO",
+            "seoAuditGrowth": "ऑडिट और विकास"
         },
         "common": {
             "search": "खोजें...",
@@ -766,6 +772,48 @@
             "download": "डाउनलोड करें",
             "checksum": "SHA-256 चेकसम",
             "size": "आकार"
+        },
+        "seo": {
+            "overviewTitle": "SEO केंद्र अवलोकन",
+            "indexingActive": "इंडेक्सिंग सक्रिय",
+            "indexingGuarded": "इंडेक्सिंग सुरक्षित",
+            "canonicalOrigin": "कैनोनिकल डोमेन",
+            "syncRegistry": "URL रजिस्ट्री सिंक करें",
+            "runAudit": "SEO ऑडिट चलाएं",
+            "kpiRegisteredUrls": "पंजीकृत URL",
+            "eligible": "योग्य",
+            "excluded": "बाहर",
+            "kpiSitemapCoverage": "साइटमैप कवरेज",
+            "sitemapGroups": "समूह",
+            "pendingSync": "लंबित",
+            "kpiGoogleIndexed": "Google में इंडेक्स",
+            "notIndexed": "इंडेक्स नहीं",
+            "kpiTechnicalScore": "तकनीकी स्वास्थ्य स्कोर",
+            "scoreDisclaimer": "आंतरिक SyncViet तकनीकी स्कोर (Google रैंकिंग स्कोर नहीं)।",
+            "gscPerformance": "Google Search Console प्रदर्शन",
+            "gscHonestSubtitle": "Search Console API से वास्तविक क्लिक, इंप्रेशन और स्थिति।",
+            "gscNotConnected": "Google Search Console — सेटअप आवश्यक",
+            "gscNoDataYet": "अभी तक कोई Search Console डेटा सिंक नहीं हुआ",
+            "gscConnectHint": "एकीकरण और GSC में OAuth 2.0 या सर्विस अकाउंट कनेक्ट करें।",
+            "organicFunnelTitle": "ऑर्गेनिक कन्वर्ज़न फ़नल",
+            "organicFunnelSubtitle": "बिना IP या PII के गोपनीयता-सुरक्षित ट्रैकिंग।",
+            "criticalAlertsTitle": "गंभीर SEO अलर्ट",
+            "viewAllAudits": "सभी ऑडिट देखें",
+            "noCriticalAlerts": "कोई गंभीर SEO अलर्ट नहीं है।",
+            "localeDistribution": "भाषा के अनुसार URL वितरण",
+            "registryEmptyHint": "सार्वजनिक पृष्ठों को स्कैन करने के लिए URL रजिस्ट्री सिंक करें।",
+            "recentJobsTitle": "हाल के SEO बैकग्राउंड जॉब",
+            "noJobsYet": "अभी कोई SEO जॉब दर्ज नहीं।",
+            "integrationsTitle": "SEO एकीकरण और Search Console",
+            "integrationsSubtitle": "केवल आधिकारिक API — क्रेडेंशियल एन्क्रिप्टेड हैं।",
+            "webmasterVerificationTitle": "Google और Bing स्वामित्व सत्यापन",
+            "webmasterVerificationDesc": "DNS TXT के माध्यम से sc-domain को प्राथमिकता दें।",
+            "saveVerification": "सत्यापन सहेजें",
+            "verifyNow": "अभी सत्यापित करें",
+            "urlsTitle": "URL रजिस्ट्री, साइटमैप और रीडायरेक्ट",
+            "internationalTitle": "अंतर्राष्ट्रीय SEO और अनुवाद",
+            "internationalSubtitle": "15 भाषाएँ, अनुवाद समीक्षा, hreflang वैलिडेटर और टेम्प्लेट।",
+            "auditTitle": "स्वचालित SEO ऑडिट और कीवर्ड इंटेलिजेंस"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "प्राथमिकता सहायता",
                 "desc": "SyncViet सहायता टीम से तेज़ समीक्षा और प्राथमिकता समर्थन प्राप्त करें।"
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "विषय और चर्चाएँ",
+            "badge": "विषय समूह",
+            "subtitle": "विषय के अनुसार सार्वजनिक चर्चाओं और बहुभाषी समुदायों का अन्वेषण करें।",
+            "postsCount": "{count} पोस्ट",
+            "featured": "प्रमुख",
+            "emptyTitle": "अभी कोई सक्रिय विषय नहीं",
+            "emptyDesc": "हैशटैग वाली सार्वजनिक चर्चाएँ यहाँ दिखाई देंगी।",
+            "previous": "पिछला",
+            "next": "अगला",
+            "allTopics": "सभी विषय",
+            "joinDiscussion": "चर्चा में शामिल हों",
+            "noPostsInTopic": "इस विषय में अभी कोई सार्वजनिक पोस्ट नहीं है।",
+            "relatedTopics": "संबंधित विषय",
+            "relatedCommunities": "संबंधित समुदाय"
+        },
+        "post": {
+            "guestCtaTitle": "SyncViet समुदाय से जुड़ें",
+            "guestCtaDesc": "टिप्पणी करने, सहेजने और वैश्विक चर्चाओं में भाग लेने के लिए निःशुल्क खाता बनाएँ।",
+            "availableLanguages": "उपलब्ध भाषाएँ",
+            "relatedTopics": "विषय और समुदाय",
+            "relatedPosts": "संबंधित चर्चाएँ",
+            "moreFromAuthor": "इस लेखक से और"
         }
     }
 }

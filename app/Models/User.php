@@ -30,6 +30,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $ban_reason
  * @property int $warnings_count
  * @property int $violations_count
+ * @property int $trust_level
  * @property bool $can_post
  * @property bool $can_comment
  * @property bool $can_create_community
@@ -45,6 +46,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property CarbonInterface|null $deactivated_at
  * @property string $timezone
  * @property string|null $preferred_locale
+ * @property string|null $acquisition_source
+ * @property string|null $acquisition_landing_url
+ * @property string|null $acquisition_locale
  * @property CarbonInterface|null $last_login_at
  * @property CarbonInterface|null $last_activity_at
  * @property string|null $social_provider
@@ -109,6 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'deactivated_at' => 'datetime',
             'warnings_count' => 'integer',
             'violations_count' => 'integer',
+            'trust_level' => 'integer',
             'can_post' => 'boolean',
             'can_comment' => 'boolean',
             'can_create_community' => 'boolean',

@@ -461,7 +461,8 @@
             "advertising": "การโฆษณา",
             "finance": "การเงิน",
             "system": "ระบบ",
-            "monetization": "การสร้างรายได้"
+            "monetization": "การสร้างรายได้",
+            "seo": "ศูนย์ SEO"
         },
         "nav": {
             "dashboard": "แดชบอร์ด",
@@ -499,7 +500,12 @@
             "premiumManagement": "แพ็กเกจและสมาชิก Premium",
             "bannerAdvertising": "โฆษณาแบนเนอร์",
             "boostPackages": "แพ็กเกจโปรโมตโพสต์ (Boost)",
-            "monetizationSettings": "การชำระเงิน AdSense และการปฏิบัติตามข้อกำหนด"
+            "monetizationSettings": "การชำระเงิน AdSense และการปฏิบัติตามข้อกำหนด",
+            "seoOverview": "ภาพรวม SEO",
+            "seoIntegrations": "การเชื่อมต่อ & GSC",
+            "seoUrlsSitemaps": "URL และ Sitemap",
+            "seoInternational": "SEO นานาชาติ",
+            "seoAuditGrowth": "ตรวจสอบ & การเติบโต"
         },
         "common": {
             "search": "ค้นหา...",
@@ -766,6 +772,48 @@
             "download": "ดาวน์โหลด",
             "checksum": "ค่าตรวจสอบ SHA-256",
             "size": "ขนาด"
+        },
+        "seo": {
+            "overviewTitle": "ภาพรวมศูนย์ SEO",
+            "indexingActive": "เปิดการทำดัชนี",
+            "indexingGuarded": "ป้องกันการทำดัชนี",
+            "canonicalOrigin": "โดเมนหลัก (Canonical)",
+            "syncRegistry": "ซิงค์ทะเบียน URL",
+            "runAudit": "ตรวจสอบ SEO ทันที",
+            "kpiRegisteredUrls": "URL ที่ลงทะเบียน",
+            "eligible": "มีสิทธิ์",
+            "excluded": "ยกเว้น",
+            "kpiSitemapCoverage": "ความครอบคลุม Sitemap",
+            "sitemapGroups": "กลุ่ม",
+            "pendingSync": "รออัปเดต",
+            "kpiGoogleIndexed": "Google ทำดัชนีแล้ว",
+            "notIndexed": "ยังไม่ทำดัชนี",
+            "kpiTechnicalScore": "คะแนนสุขภาพทางเทคนิค",
+            "scoreDisclaimer": "คะแนนตรวจสุขภาพทางเทคนิคภายใน SyncViet (ไม่ใช่คะแนนอันดับ Google)",
+            "gscPerformance": "ประสิทธิภาพ Google Search Console",
+            "gscHonestSubtitle": "คลิก การแสดงผล CTR และอันดับจริงจาก Search Console API",
+            "gscNotConnected": "Google Search Console — ต้องตั้งค่า",
+            "gscNoDataYet": "ยังไม่มีข้อมูล Search Console ที่ซิงค์",
+            "gscConnectHint": "เชื่อมต่อ OAuth 2.0 หรือ Service Account ในเมนู การเชื่อมต่อ & GSC",
+            "organicFunnelTitle": "กรวยการแปลงผล Organic Search",
+            "organicFunnelSubtitle": "ติดตามแบบรักษาความเป็นส่วนตัว ไม่เก็บ IP หรือ PII",
+            "criticalAlertsTitle": "การแจ้งเตือน SEO ระดับวิกฤต",
+            "viewAllAudits": "ดูทั้งหมด",
+            "noCriticalAlerts": "ไม่มีการแจ้งเตือน SEO ระดับวิกฤต",
+            "localeDistribution": "การกระจาย URL ตามภาษา",
+            "registryEmptyHint": "คลิก ซิงค์ทะเบียน URL เพื่อสแกนเนื้อหาสาธารณะ",
+            "recentJobsTitle": "งานเบื้องหลัง SEO ล่าสุด",
+            "noJobsYet": "ยังไม่มีประวัติงาน SEO",
+            "integrationsTitle": "การเชื่อมต่อ SEO และ Search Console",
+            "integrationsSubtitle": "ใช้ API ทางการเท่านั้น — เข้ารหัสข้อมูลรับรองอย่างปลอดภัย",
+            "webmasterVerificationTitle": "ยืนยันความเป็นเจ้าของ Google & Bing",
+            "webmasterVerificationDesc": "แนะนำยืนยันแบบ sc-domain ผ่าน DNS TXT",
+            "saveVerification": "บันทึกการยืนยัน",
+            "verifyNow": "ตรวจสอบทันที",
+            "urlsTitle": "ทะเบียน URL, Sitemap และ Redirect",
+            "internationalTitle": "SEO นานาชาติและการแปลเนื้อหา",
+            "internationalSubtitle": "รองรับ 15 ภาษา ระบบตรวจคำแปล ตรวจสอบ hreflang และเทมเพลต",
+            "auditTitle": "ตรวจสอบ SEO อัตโนมัติและคีย์เวิร์ด"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "การช่วยเหลือแบบเร่งด่วน",
                 "desc": "คำขอความช่วยเหลือของคุณจะได้รับการจัดลำดับความสำคัญและตอบกลับรวดเร็วขึ้น"
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "หัวข้อและการสนทนา",
+            "badge": "กลุ่มหัวข้อ",
+            "subtitle": "สำรวจการสนทนาสาธารณะและชุมชนหลายภาษาตามหัวข้อ",
+            "postsCount": "{count} โพสต์",
+            "featured": "แนะนำ",
+            "emptyTitle": "ยังไม่มีหัวข้อที่ใช้งาน",
+            "emptyDesc": "โพสต์สาธารณะที่มีแฮชแท็กจะปรากฏที่นี่โดยอัตโนมัติ",
+            "previous": "ก่อนหน้า",
+            "next": "ถัดไป",
+            "allTopics": "หัวข้อทั้งหมด",
+            "joinDiscussion": "เข้าร่วมการสนทนา",
+            "noPostsInTopic": "ยังไม่มีโพสต์สาธารณะในหัวข้อนี้",
+            "relatedTopics": "หัวข้อที่เกี่ยวข้อง",
+            "relatedCommunities": "ชุมชนที่เกี่ยวข้อง"
+        },
+        "post": {
+            "guestCtaTitle": "เข้าร่วมชุมชน SyncViet",
+            "guestCtaDesc": "สร้างบัญชีฟรีเพื่อแสดงความคิดเห็น บันทึกโพสต์ และร่วมสนทนาระดับโลก",
+            "availableLanguages": "ภาษาที่มีให้บริการ",
+            "relatedTopics": "หัวข้อและชุมชน",
+            "relatedPosts": "การสนทนาที่เกี่ยวข้อง",
+            "moreFromAuthor": "เพิ่มเติมจากผู้เขียนนี้"
         }
     }
 }

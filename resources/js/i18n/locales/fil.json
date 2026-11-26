@@ -461,7 +461,8 @@
             "advertising": "Pag-aanunsyo",
             "finance": "Pananalapi",
             "system": "Sistema",
-            "monetization": "Monetisasyon"
+            "monetization": "Monetisasyon",
+            "seo": "SEO Center"
         },
         "nav": {
             "dashboard": "Panel ng Kontrol",
@@ -499,7 +500,12 @@
             "premiumManagement": "Mga Plan at Kasapi ng Premium",
             "bannerAdvertising": "Pag-aanunsyo sa Banner",
             "boostPackages": "Mga Pakete ng Boost",
-            "monetizationSettings": "Pagbabayad, AdSense at Pagsunod"
+            "monetizationSettings": "Pagbabayad, AdSense at Pagsunod",
+            "seoOverview": "Buod ng SEO",
+            "seoIntegrations": "Mga Integrasyon at GSC",
+            "seoUrlsSitemaps": "Mga URL at Sitemap",
+            "seoInternational": "Internasyonal na SEO",
+            "seoAuditGrowth": "Audit at Paglago"
         },
         "common": {
             "search": "Maghanap...",
@@ -766,6 +772,48 @@
             "download": "I-download",
             "checksum": "Checksum ng SHA-256",
             "size": "Laki"
+        },
+        "seo": {
+            "overviewTitle": "Buod ng SEO Center",
+            "indexingActive": "Aktibo ang Indexing",
+            "indexingGuarded": "Protektado ang Indexing",
+            "canonicalOrigin": "Canonical Domain",
+            "syncRegistry": "I-sync ang URL Registry",
+            "runAudit": "Patakbuhin ang SEO Audit",
+            "kpiRegisteredUrls": "Mga Rehistradong URL",
+            "eligible": "kwalipikado",
+            "excluded": "hindi kasama",
+            "kpiSitemapCoverage": "Saklaw ng Sitemap",
+            "sitemapGroups": "grupo",
+            "pendingSync": "nakabinbin",
+            "kpiGoogleIndexed": "Na-index ng Google",
+            "notIndexed": "Hindi pa na-index",
+            "kpiTechnicalScore": "Teknikal na Kalusugan",
+            "scoreDisclaimer": "Panloob na teknikal na marka ng SyncViet (HINDI Google Ranking Score).",
+            "gscPerformance": "Performance ng Google Search Console",
+            "gscHonestSubtitle": "Totoong clicks, impressions, CTR, at posisyon mula sa Search Console API.",
+            "gscNotConnected": "Google Search Console — Kailangan ng Setup",
+            "gscNoDataYet": "Wala pang naka-sync na data mula sa Search Console",
+            "gscConnectHint": "Ikonekta ang OAuth 2.0 o Service Account sa Mga Integrasyon at GSC.",
+            "organicFunnelTitle": "Organic Search Funnel",
+            "organicFunnelSubtitle": "Ligtas sa privacy na pagsubaybay nang walang IP o PII.",
+            "criticalAlertsTitle": "Mga Kritikal na Alerto sa SEO",
+            "viewAllAudits": "Tingnan lahat",
+            "noCriticalAlerts": "Walang bukas na kritikal na alerto sa SEO.",
+            "localeDistribution": "Pamamahagi ng URL ayon sa Wika",
+            "registryEmptyHint": "I-click ang I-sync ang URL Registry upang i-scan ang pampublikong nilalaman.",
+            "recentJobsTitle": "Mga Kamakailang SEO Job",
+            "noJobsYet": "Wala pang naitalang SEO job.",
+            "integrationsTitle": "Mga Integrasyon ng SEO at Search Console",
+            "integrationsSubtitle": "Opisyal na API lamang — naka-encrypt ang mga kredensyal.",
+            "webmasterVerificationTitle": "Beripikasyon sa Google at Bing",
+            "webmasterVerificationDesc": "Unahin ang sc-domain via DNS TXT.",
+            "saveVerification": "I-save ang Beripikasyon",
+            "verifyNow": "I-verify Ngayon",
+            "urlsTitle": "URL Registry, Sitemaps at Redirects",
+            "internationalTitle": "Internasyonal na SEO at Mga Salin",
+            "internationalSubtitle": "15 wika, daloy ng pagsusuri, hreflang validator, at templates.",
+            "auditTitle": "Awtomatikong SEO Audit at Keyword Intelligence"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Priyoridad na Suporta",
                 "desc": "Makatanggap ng mas mabilis na pagsusuri at tulong mula sa koponan ng SyncViet."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Mga Paksa at Talakayan",
+            "badge": "Mga Cluster ng Paksa",
+            "subtitle": "Tuklasin ang mga pampublikong talakayan at komunidad ayon sa paksa.",
+            "postsCount": "{count} post",
+            "featured": "Tampok",
+            "emptyTitle": "Wala pang aktibong paksa",
+            "emptyDesc": "Awtomatikong lalabas dito ang mga pampublikong post na may hashtag.",
+            "previous": "Nakaraan",
+            "next": "Susunod",
+            "allTopics": "Lahat ng Paksa",
+            "joinDiscussion": "Sumali sa talakayan",
+            "noPostsInTopic": "Wala pang pampublikong post sa paksang ito.",
+            "relatedTopics": "Mga Kaugnay na Paksa",
+            "relatedCommunities": "Mga Kaugnay na Komunidad"
+        },
+        "post": {
+            "guestCtaTitle": "Sumali sa komunidad ng SyncViet",
+            "guestCtaDesc": "Gumawa ng libreng account para magkomento, mag-save, at makipagtalakayan sa buong mundo.",
+            "availableLanguages": "Mga magagamit na wika",
+            "relatedTopics": "Mga Paksa at Komunidad",
+            "relatedPosts": "Mga Kaugnay na Talakayan",
+            "moreFromAuthor": "Higit pa mula sa may-akda"
         }
     }
 }

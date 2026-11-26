@@ -32,9 +32,17 @@ class SetLocale
             $enabledCodes = self::SUPPORTED_LOCALES;
         }
 
-        $candidate = $request->hasSession()
-            ? $request->session()->get('locale')
+        // Respect explicit URL locale prefix (e.g., /vi/posts/..., /ja/topics/...) without IP-redirecting bots.
+        $firstSegment = $request->segment(1);
+        $candidate = is_string($firstSegment) && in_array($firstSegment, $enabledCodes, true)
+            ? $firstSegment
             : null;
+
+        if ($candidate === null) {
+            $candidate = $request->hasSession()
+                ? $request->session()->get('locale')
+                : null;
+        }
 
         if (! is_string($candidate) || ! in_array($candidate, $enabledCodes, true)) {
             $cookieLocale = $request->cookie('syncviet_locale');

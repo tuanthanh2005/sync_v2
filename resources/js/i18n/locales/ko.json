@@ -461,7 +461,8 @@
             "advertising": "광고",
             "finance": "재무",
             "system": "시스템",
-            "monetization": "수익화"
+            "monetization": "수익화",
+            "seo": "SEO 센터"
         },
         "nav": {
             "dashboard": "대시보드",
@@ -499,7 +500,12 @@
             "premiumManagement": "Premium 요금제 및 회원",
             "bannerAdvertising": "배너 광고",
             "boostPackages": "부스트 패키지",
-            "monetizationSettings": "결제, AdSense 및 규정 준수"
+            "monetizationSettings": "결제, AdSense 및 규정 준수",
+            "seoOverview": "SEO 개요",
+            "seoIntegrations": "연동 & GSC",
+            "seoUrlsSitemaps": "URL & 사이트맵",
+            "seoInternational": "글로벌 SEO",
+            "seoAuditGrowth": "감사 & 성장"
         },
         "common": {
             "search": "검색...",
@@ -766,6 +772,48 @@
             "download": "다운로드",
             "checksum": "SHA-256 체크섬",
             "size": "크기"
+        },
+        "seo": {
+            "overviewTitle": "SEO 센터 개요",
+            "indexingActive": "색인 허용됨",
+            "indexingGuarded": "색인 보호됨",
+            "canonicalOrigin": "표준 도메인",
+            "syncRegistry": "URL 레지스트리 동기화",
+            "runAudit": "SEO 감사 실행",
+            "kpiRegisteredUrls": "등록된 URL",
+            "eligible": "대상",
+            "excluded": "제외",
+            "kpiSitemapCoverage": "사이트맵 포함",
+            "sitemapGroups": "그룹",
+            "pendingSync": "동기화 대기",
+            "kpiGoogleIndexed": "Google 색인 완료",
+            "notIndexed": "미색인",
+            "kpiTechnicalScore": "기술 건강 점수",
+            "scoreDisclaimer": "SyncViet 내부 기술 점검 점수입니다 (Google 순위 점수가 아님).",
+            "gscPerformance": "Google Search Console 성과",
+            "gscHonestSubtitle": "Search Console API 기반 실제 클릭, 노출, CTR 및 평균 순위.",
+            "gscNotConnected": "Google Search Console — 설정 필요",
+            "gscNoDataYet": "동기화된 Search Console 데이터가 없습니다",
+            "gscConnectHint": "연동 & GSC에서 OAuth 2.0 또는 서비스 계정을 연결하세요.",
+            "organicFunnelTitle": "자연 검색 전환 퍼널",
+            "organicFunnelSubtitle": "IP나 개인정보(PII)를 저장하지 않는 개인정보 보호 추적.",
+            "criticalAlertsTitle": "심각 및 높음 SEO 알림",
+            "viewAllAudits": "모든 감사 보기",
+            "noCriticalAlerts": "열려 있는 심각한 SEO 알림이 없습니다.",
+            "localeDistribution": "언어별 URL 분포",
+            "registryEmptyHint": "URL 레지스트리 동기화를 클릭해 공개 콘텐츠를 스캔하세요.",
+            "recentJobsTitle": "최근 SEO 백그라운드 작업",
+            "noJobsYet": "기록된 SEO 작업이 없습니다.",
+            "integrationsTitle": "SEO 연동 & Search Console",
+            "integrationsSubtitle": "공식 API만 사용 — 인증 정보는 암호화되어 저장됩니다.",
+            "webmasterVerificationTitle": "Google & Bing 소유권 확인",
+            "webmasterVerificationDesc": "DNS TXT를 통한 sc-domain 속성 확인을 권장합니다.",
+            "saveVerification": "확인 설정 저장",
+            "verifyNow": "지금 실시간 확인",
+            "urlsTitle": "URL 레지스트리, 사이트맵 & 리디렉션",
+            "internationalTitle": "글로벌 SEO & 다국어 번역",
+            "internationalSubtitle": "15개 언어, 번역 검토 워크플로, hreflang 검증 및 메타 템플릿.",
+            "auditTitle": "자동 SEO 감사 & 키워드 인텔리전스"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "우선 고객 지원",
                 "desc": "계정 관련 문의를 SyncViet 지원팀이 우선적으로 검토하고 빠르게 응답합니다."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "토픽 & 토론",
+            "badge": "토픽 클러스터",
+            "subtitle": "주제별 공개 토론과 다국어 커뮤니티를 탐색하세요.",
+            "postsCount": "{count}개 게시물",
+            "featured": "추천",
+            "emptyTitle": "활성 토픽이 아직 없습니다",
+            "emptyDesc": "해시태그가 포함된 공개 토론이 자동으로 표시됩니다.",
+            "previous": "이전",
+            "next": "다음",
+            "allTopics": "모든 토픽",
+            "joinDiscussion": "토론 참여하기",
+            "noPostsInTopic": "이 토픽에 아직 공개 게시물이 없습니다.",
+            "relatedTopics": "관련 토픽",
+            "relatedCommunities": "관련 커뮤니티"
+        },
+        "post": {
+            "guestCtaTitle": "SyncViet 커뮤니티에 참여하세요",
+            "guestCtaDesc": "무료 계정을 만들어 댓글 작성, 북마크, 글로벌 토론에 참여하세요.",
+            "availableLanguages": "지원 언어",
+            "relatedTopics": "토픽 & 커뮤니티",
+            "relatedPosts": "관련 토론",
+            "moreFromAuthor": "작성자의 다른 글"
         }
     }
 }

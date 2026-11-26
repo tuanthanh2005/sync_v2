@@ -461,7 +461,8 @@
             "advertising": "広告",
             "finance": "財務",
             "system": "システム",
-            "monetization": "収益化"
+            "monetization": "収益化",
+            "seo": "SEOセンター"
         },
         "nav": {
             "dashboard": "ダッシュボード",
@@ -499,7 +500,12 @@
             "premiumManagement": "Premiumプラン・会員管理",
             "bannerAdvertising": "バナー広告",
             "boostPackages": "ブーストパッケージ",
-            "monetizationSettings": "決済・AdSense・コンプライアンス"
+            "monetizationSettings": "決済・AdSense・コンプライアンス",
+            "seoOverview": "SEO概要",
+            "seoIntegrations": "連携 & GSC",
+            "seoUrlsSitemaps": "URL & サイトマップ",
+            "seoInternational": "国際SEO",
+            "seoAuditGrowth": "監査 & 成長"
         },
         "common": {
             "search": "検索...",
@@ -766,6 +772,48 @@
             "download": "ダウンロード",
             "checksum": "SHA-256 チェックサム",
             "size": "サイズ"
+        },
+        "seo": {
+            "overviewTitle": "SEOセンター概要",
+            "indexingActive": "インデックス許可",
+            "indexingGuarded": "インデックス保護中",
+            "canonicalOrigin": "正規ドメイン",
+            "syncRegistry": "URLレジストリ同期",
+            "runAudit": "SEO監査を実行",
+            "kpiRegisteredUrls": "登録URL数",
+            "eligible": "対象",
+            "excluded": "除外",
+            "kpiSitemapCoverage": "サイトマップ網羅数",
+            "sitemapGroups": "グループ",
+            "pendingSync": "更新待ち",
+            "kpiGoogleIndexed": "Googleインデックス済",
+            "notIndexed": "未インデックス",
+            "kpiTechnicalScore": "技術ヘルススコア",
+            "scoreDisclaimer": "SyncViet内部の技術健全性スコア（Googleランキングスコアではありません）。",
+            "gscPerformance": "Google Search Console パフォーマンス",
+            "gscHonestSubtitle": "Search Console APIからの実クリック・表示回数・CTR・順位。",
+            "gscNotConnected": "Google Search Console — 設定が必要です",
+            "gscNoDataYet": "Search Consoleデータがまだ同期されていません",
+            "gscConnectHint": "連携 & GSC で OAuth 2.0 またはサービスアカウントを設定してください。",
+            "organicFunnelTitle": "自然検索コンバージョンファネル",
+            "organicFunnelSubtitle": "IPや個人情報を保存しないプライバシー配慮型トラッキング。",
+            "criticalAlertsTitle": "重大なSEOアラート",
+            "viewAllAudits": "すべての監査を表示",
+            "noCriticalAlerts": "未解決の重大SEOアラートはありません。",
+            "localeDistribution": "言語別URL分布",
+            "registryEmptyHint": "URLレジストリ同期を実行して公開ページを登録してください。",
+            "recentJobsTitle": "最近のSEOバックグラウンドジョブ",
+            "noJobsYet": "SEOジョブ履歴はまだありません。",
+            "integrationsTitle": "SEO連携 & Search Console",
+            "integrationsSubtitle": "公式APIのみ使用 — 認証情報は暗号化保存されます。",
+            "webmasterVerificationTitle": "Google & Bing 所有権確認",
+            "webmasterVerificationDesc": "DNS TXTによる sc-domain 確認を推奨します。",
+            "saveVerification": "確認設定を保存",
+            "verifyNow": "今すぐ検証",
+            "urlsTitle": "URLレジストリ・サイトマップ・リダイレクト",
+            "internationalTitle": "国際SEO & 多言語コンテンツ",
+            "internationalSubtitle": "15言語対応、翻訳レビュー、hreflang検証、メタテンプレート。",
+            "auditTitle": "自動SEO監査 & キーワード分析"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "優先サポート",
                 "desc": "サポートへのお問い合わせを優先的に確認し、迅速に対応します。"
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "トピックとディスカッション",
+            "badge": "トピッククラスター",
+            "subtitle": "トピック別に公開ディスカッションと多言語コミュニティを探しましょう。",
+            "postsCount": "{count}件の投稿",
+            "featured": "注目",
+            "emptyTitle": "アクティブなトピックはまだありません",
+            "emptyDesc": "ハッシュタグ付きの公開投稿がここに自動表示されます。",
+            "previous": "前へ",
+            "next": "次へ",
+            "allTopics": "すべてのトピック",
+            "joinDiscussion": "ディスカッションに参加",
+            "noPostsInTopic": "このトピックの公開投稿はまだありません。",
+            "relatedTopics": "関連トピック",
+            "relatedCommunities": "関連コミュニティ"
+        },
+        "post": {
+            "guestCtaTitle": "SyncVietコミュニティに参加",
+            "guestCtaDesc": "無料アカウントを作成してコメント・保存・世界中のディスカッションに参加しましょう。",
+            "availableLanguages": "利用可能な言語",
+            "relatedTopics": "トピックとコミュニティ",
+            "relatedPosts": "関連ディスカッション",
+            "moreFromAuthor": "この投稿者の他の記事"
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Social;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Social\ProfileDetailsUpdateRequest;
 use App\Models\User;
+use App\Services\Seo\SeoMetadataService;
 use App\Services\Social\ProfileService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class ProfileViewController extends Controller
 {
     public function __construct(
         private readonly ProfileService $profileService,
+        private readonly SeoMetadataService $seoMetadata,
     ) {}
 
     public function me(Request $request): RedirectResponse
@@ -36,12 +38,21 @@ class ProfileViewController extends Controller
 
         $tab = $request->string('tab', 'posts')->toString();
         $payload = $this->profileService->profilePayload($user, $viewer, $tab);
+        $seo = $this->seoMetadata->forProfile($user, app()->getLocale());
+
+        $ssrPosts = array_map(static fn (array $p): array => [
+            'title' => (string) ($p['title'] ?: Str::limit(strip_tags((string) ($p['content'] ?? '')), 80)),
+            'excerpt' => Str::limit(strip_tags((string) ($p['content'] ?? '')), 180),
+            'href' => '/posts/'.($p['id'] ?? ''),
+        ], array_slice($payload['posts'], 0, 10));
 
         return Inertia::render('users/Show', $payload)->withViewData([
-            'seo' => [
-                'title' => sprintf('%s (@%s) - %s', $user->name, $user->username, config('app.name')),
-                'description' => Str::limit((string) ($payload['profile_user']['bio'] ?? $payload['profile_user']['headline'] ?? ''), 160),
-                'url' => route('users.show', ['user' => $user->username]),
+            'seo' => $seo,
+            'seoSsr' => [
+                'type' => 'profile',
+                'heading' => sprintf('%s (@%s)', $user->name, $user->username),
+                'description' => (string) ($payload['profile_user']['bio'] ?? $payload['profile_user']['headline'] ?? ''),
+                'posts' => $ssrPosts,
             ],
         ]);
     }

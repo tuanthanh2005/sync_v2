@@ -6,9 +6,11 @@ use App\Enums\PostCategory;
 use App\Services\Ads\AdDeliveryService;
 use App\Services\Monetization\AdSenseConfigService;
 use App\Services\Monetization\BannerAdvertisingService;
+use App\Services\Seo\SeoMetadataService;
 use App\Services\Social\FeedService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,6 +21,7 @@ class HomeController extends Controller
         private readonly AdDeliveryService $adDeliveryService,
         private readonly BannerAdvertisingService $bannerService,
         private readonly AdSenseConfigService $adSenseService,
+        private readonly SeoMetadataService $seoMetadata,
     ) {}
 
     /**
@@ -35,6 +38,16 @@ class HomeController extends Controller
             $request,
         );
 
+        $seo = $this->seoMetadata->forHome(app()->getLocale());
+        $ssrPosts = array_map(static function (array $item): array {
+            return [
+                'title' => (string) ($item['title'] ?: Str::limit(strip_tags((string) ($item['content'] ?? '')), 80)),
+                'excerpt' => Str::limit(strip_tags((string) ($item['content'] ?? '')), 200),
+                'href' => '/posts/'.($item['id'] ?? ''),
+                'author' => is_array($item['author'] ?? null) ? (string) ($item['author']['name'] ?? '') : '',
+            ];
+        }, array_slice($feed['data'], 0, 12));
+
         return Inertia::render('Welcome', [
             'posts' => $feed['data'],
             'sponsoredPost' => $sponsoredPost,
@@ -44,6 +57,19 @@ class HomeController extends Controller
             'hasMore' => $feed['has_more'],
             'activeTab' => $tab,
             'categories' => PostCategory::options(),
+        ])->withViewData([
+            'seo' => $seo,
+            'seoSsr' => [
+                'type' => 'home',
+                'heading' => (string) config('app.name', 'SyncViet'),
+                'description' => (string) ($seo['description'] ?? ''),
+                'posts' => $ssrPosts,
+                'links' => [
+                    ['label' => 'Communities', 'href' => '/communities'],
+                    ['label' => 'Topics', 'href' => '/topics'],
+                    ['label' => 'SyncViet Premium', 'href' => '/premium'],
+                ],
+            ],
         ]);
     }
 

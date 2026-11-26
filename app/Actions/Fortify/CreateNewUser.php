@@ -8,6 +8,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Services\Account\UsernameGenerator;
+use App\Services\Seo\OrganicGrowthService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -21,6 +22,7 @@ class CreateNewUser implements CreatesNewUsers
     public function __construct(
         private readonly UsernameGenerator $usernameGenerator,
         private readonly SystemSettingService $settings,
+        private readonly OrganicGrowthService $organicGrowth,
     ) {}
 
     /**
@@ -63,6 +65,8 @@ class CreateNewUser implements CreatesNewUsers
         $user->role = UserRole::User;
         $user->status = UserStatus::Active;
         $user->save();
+
+        $this->organicGrowth->attributeNewRegistration($user, request());
 
         return $user;
     }

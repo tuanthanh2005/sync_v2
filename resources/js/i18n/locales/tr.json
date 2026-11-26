@@ -461,7 +461,8 @@
             "advertising": "Reklam",
             "finance": "Finans",
             "system": "Sistem",
-            "monetization": "Gelir Yönetimi"
+            "monetization": "Gelir Yönetimi",
+            "seo": "SEO Merkezi"
         },
         "nav": {
             "dashboard": "Kontrol Paneli",
@@ -499,7 +500,12 @@
             "premiumManagement": "Premium Planlar ve Üyeler",
             "bannerAdvertising": "Banner Reklamları",
             "boostPackages": "Öne Çıkarma Paketleri",
-            "monetizationSettings": "Ödemeler, AdSense ve Uyumluluk"
+            "monetizationSettings": "Ödemeler, AdSense ve Uyumluluk",
+            "seoOverview": "SEO Genel Bakış",
+            "seoIntegrations": "Entegrasyonlar & GSC",
+            "seoUrlsSitemaps": "URL ve Site Haritaları",
+            "seoInternational": "Uluslararası SEO",
+            "seoAuditGrowth": "Denetim & Büyüme"
         },
         "common": {
             "search": "Ara...",
@@ -766,6 +772,48 @@
             "download": "İndir",
             "checksum": "SHA-256 Sağlama Toplamı",
             "size": "Boyut"
+        },
+        "seo": {
+            "overviewTitle": "SEO Merkezi Genel Bakış",
+            "indexingActive": "Dizinleme Aktif",
+            "indexingGuarded": "Dizinleme Korumalı",
+            "canonicalOrigin": "Kanonik Alan Adı",
+            "syncRegistry": "URL Kaydını Eşitle",
+            "runAudit": "SEO Denetimi Çalıştır",
+            "kpiRegisteredUrls": "Kayıtlı URL",
+            "eligible": "uygun",
+            "excluded": "hariç",
+            "kpiSitemapCoverage": "Site Haritası Kapsamı",
+            "sitemapGroups": "grup",
+            "pendingSync": "bekleyen",
+            "kpiGoogleIndexed": "Google Dizinli",
+            "notIndexed": "Dizinlenmedi",
+            "kpiTechnicalScore": "Teknik Sağlık Puanı",
+            "scoreDisclaimer": "Dahili SyncViet teknik puanı (Google Sıralama Puanı DEĞİLDİR).",
+            "gscPerformance": "Google Search Console Performansı",
+            "gscHonestSubtitle": "Search Console API kaynaklı gerçek tıklama, gösterim, TO ve sıralama.",
+            "gscNotConnected": "Google Search Console — Kurulum Gerekli",
+            "gscNoDataYet": "Henüz Search Console verisi eşitlenmedi",
+            "gscConnectHint": "Entegrasyonlar & GSC bölümünden OAuth 2.0 veya Hizmet Hesabı bağlayın.",
+            "organicFunnelTitle": "Organik Arama Dönüşüm Hunisi",
+            "organicFunnelSubtitle": "IP veya kişisel veri saklamayan gizlilik odaklı izleme.",
+            "criticalAlertsTitle": "Kritik ve Yüksek SEO Uyarıları",
+            "viewAllAudits": "Tüm denetimler",
+            "noCriticalAlerts": "Açık kritik SEO uyarısı yok.",
+            "localeDistribution": "Dile Göre URL Dağılımı",
+            "registryEmptyHint": "Herkese açık sayfaları taramak için URL Kaydını Eşitleye tıklayın.",
+            "recentJobsTitle": "Son SEO Arka Plan Görevleri",
+            "noJobsYet": "Henüz kayıtlı SEO görevi yok.",
+            "integrationsTitle": "SEO Entegrasyonları & Search Console",
+            "integrationsSubtitle": "Yalnızca resmi API bağlantıları — kimlik bilgileri şifreli saklanır.",
+            "webmasterVerificationTitle": "Google & Bing Sahiplik Doğrulama",
+            "webmasterVerificationDesc": "DNS TXT ile sc-domain doğrulamasını önceliklendirin.",
+            "saveVerification": "Doğrulamayı Kaydet",
+            "verifyNow": "Şimdi Canlı Doğrula",
+            "urlsTitle": "URL Kaydı, Site Haritaları ve Yönlendirmeler",
+            "internationalTitle": "Uluslararası SEO ve Çok Dilli İçerik",
+            "internationalSubtitle": "15 dil kapsamı, çeviri onay akışı, hreflang doğrulayıcı ve şablonlar.",
+            "auditTitle": "Otomatik SEO Denetimi & Anahtar Kelime Zekası"
         }
     },
     "common": {
@@ -1021,6 +1069,32 @@
                 "title": "Öncelikli Destek",
                 "desc": "Hesap destek talepleriniz SyncViet ekibi tarafından öncelikli olarak yanıtlanır."
             }
+        }
+    },
+    "seo": {
+        "topics": {
+            "title": "Konular ve Tartışmalar",
+            "badge": "Konu Kümeleri",
+            "subtitle": "Konulara göre herkese açık tartışmaları ve çok dilli toplulukları keşfedin.",
+            "postsCount": "{count} gönderi",
+            "featured": "Öne Çıkan",
+            "emptyTitle": "Henüz aktif konu yok",
+            "emptyDesc": "Etiketli herkese açık gönderiler burada otomatik listelenir.",
+            "previous": "Önceki",
+            "next": "Sonraki",
+            "allTopics": "Tüm Konular",
+            "joinDiscussion": "Tartışmaya katıl",
+            "noPostsInTopic": "Bu konuda henüz herkese açık gönderi yok.",
+            "relatedTopics": "İlgili Konular",
+            "relatedCommunities": "İlgili Topluluklar"
+        },
+        "post": {
+            "guestCtaTitle": "SyncViet topluluğuna katıl",
+            "guestCtaDesc": "Yanıtlamak, kaydetmek, yazarları takip etmek ve küresel tartışmalara katılmak için ücretsiz hesap oluşturun.",
+            "availableLanguages": "Mevcut diller",
+            "relatedTopics": "Konular ve Topluluk",
+            "relatedPosts": "İlgili Tartışmalar",
+            "moreFromAuthor": "Bu yazardan daha fazlası"
         }
     }
 }

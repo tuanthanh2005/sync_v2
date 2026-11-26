@@ -29,7 +29,6 @@ import ReportController from '@/actions/App/Http/Controllers/Moderation/ReportCo
 import PostController from '@/actions/App/Http/Controllers/Social/PostController';
 import PostInteractionController from '@/actions/App/Http/Controllers/Social/PostInteractionController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
-import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import ImageLightbox from '@/components/common/ImageLightbox.vue';
 import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
@@ -589,9 +588,7 @@ function submitReport(): void {
                 <Link
                     v-for="tag in post.hashtags"
                     :key="tag.id"
-                    :href="
-                        SearchController.url({ query: { hashtag: tag.slug } })
-                    "
+                    :href="`/topics/${tag.slug}`"
                     class="shrink-0 rounded-md bg-primary-soft px-2.5 py-1 text-xs font-medium text-accent-foreground transition-colors hover:bg-primary/15"
                 >
                     #{{ tag.name }}
@@ -651,7 +648,7 @@ function submitReport(): void {
                 v-if="post.link_url"
                 :href="post.link_url"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="ugc nofollow noopener noreferrer"
                 class="flex items-start gap-3 rounded-xl border border-border bg-muted/30 p-3.5 transition-colors hover:border-primary/40"
             >
                 <img

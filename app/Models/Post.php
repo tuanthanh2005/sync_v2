@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $community_id
  * @property PostCategory $category
  * @property string|null $title
+ * @property string|null $slug
+ * @property string $language_code
+ * @property string|null $content_fingerprint
  * @property string $content
  * @property string|null $link_url
  * @property array<string, string|null>|null $link_meta
@@ -32,6 +35,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $content_warning
  * @property ModerationStatus $moderation_status
  * @property bool $is_spam
+ * @property bool $is_ai_assisted
+ * @property bool $seo_noindex
+ * @property int|null $seo_quality_score
  * @property string|null $moderation_reason
  * @property int|null $moderated_by
  * @property CarbonInterface|null $moderated_at
@@ -46,6 +52,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable([
     'category',
     'title',
+    'slug',
+    'language_code',
     'content',
     'link_url',
     'link_meta',
@@ -70,6 +78,9 @@ class Post extends Model
             'is_pinned' => 'boolean',
             'comments_locked' => 'boolean',
             'is_spam' => 'boolean',
+            'is_ai_assisted' => 'boolean',
+            'seo_noindex' => 'boolean',
+            'seo_quality_score' => 'integer',
             'moderated_at' => 'datetime',
             'reactions_count' => 'integer',
             'comments_count' => 'integer',

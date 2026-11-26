@@ -57,4 +57,23 @@ return [
         'payment_order_expiry_hours' => (int) env('SYNCVIET_PAYMENT_EXPIRY_HOURS', 24),
         'default_usd_to_vnd_rate' => (int) env('SYNCVIET_USD_VND_RATE', 25_500),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Advanced International SEO & Organic Growth Engine V2.0
+    |--------------------------------------------------------------------------
+    */
+    'seo' => [
+        'canonical_base_url' => rtrim((string) env('SEO_CANONICAL_URL', env('APP_URL', 'https://syncviet.com')), '/'),
+        'sitemap_shard_size' => (int) env('SEO_SITEMAP_SHARD_SIZE', 5000),
+        'sitemap_storage_dir' => 'seo/sitemaps',
+        'min_post_words_for_index' => (int) env('SEO_MIN_POST_WORDS', 12),
+        'min_post_chars_for_index' => (int) env('SEO_MIN_POST_CHARS', 60),
+        'min_topic_posts_for_index' => (int) env('SEO_MIN_TOPIC_POSTS', 2),
+        'gsc_daily_inspection_quota' => (int) env('SEO_GSC_INSPECTION_DAILY_QUOTA', 1800),
+        'gsc_inspection_batch_size' => (int) env('SEO_GSC_INSPECTION_BATCH_SIZE', 25),
+        'indexnow_endpoint' => (string) env('SEO_INDEXNOW_ENDPOINT', 'https://api.indexnow.org/indexnow'),
+        'pagespeed_api_key' => env('PAGESPEED_INSIGHTS_API_KEY'),
+        'default_og_image' => '/og-default.svg',
+    ],
 ];

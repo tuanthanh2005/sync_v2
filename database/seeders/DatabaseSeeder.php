@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             RbacSeeder::class,
             LanguageSeeder::class,
             MonetizationSeeder::class,
+            SeoSeeder::class,
         ]);
 
         if (app()->isProduction()) {

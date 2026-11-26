@@ -8,6 +8,8 @@ use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SeoMiddleware;
+use App\Http\Middleware\SeoRedirectMiddleware;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -32,8 +34,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => EnsureUserHasRole::class,
         ]);
 
+        $middleware->prepend(SeoRedirectMiddleware::class);
+
         $middleware->web(append: [
             SetLocale::class,
+            SeoMiddleware::class,
             CheckMaintenanceMode::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,

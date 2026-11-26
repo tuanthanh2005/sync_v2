@@ -14,24 +14,29 @@ import {
     FileText,
     Flag,
     Globe,
+    Globe2,
     Hash,
     HeartPulse,
     Image as ImageIcon,
     KeyRound,
     LayoutDashboard,
+    Link2,
     Megaphone,
     Menu,
     MessageSquareText,
     Newspaper,
     PanelLeftClose,
     PanelLeftOpen,
+    Plug,
     Scale,
     Search,
     Settings,
     Shield,
     ShieldAlert,
     ShieldBan,
+    ShieldCheck,
     Sliders,
+    TrendingUp,
     Users,
     Vote,
     Zap,
@@ -94,6 +99,13 @@ import { index as adminNotifications } from '@/routes/admin/notifications';
 import { index as adminPolicies } from '@/routes/admin/policies';
 import { index as adminRoles } from '@/routes/admin/roles';
 import { index as adminSecurity } from '@/routes/admin/security';
+import {
+    audit as adminSeoAudit,
+    integrations as adminSeoIntegrations,
+    international as adminSeoInternational,
+    overview as adminSeoOverview,
+    urls as adminSeoUrls,
+} from '@/routes/admin/seo';
 import { index as adminSettings } from '@/routes/admin/settings';
 import { index as adminUsers } from '@/routes/admin/users';
 import { index as adminVerifications } from '@/routes/admin/verifications';
@@ -448,6 +460,40 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                           label: t('admin.nav.finance'),
                           href: adminFinance.url(),
                           icon: CreditCard,
+                      },
+                  ]
+                : [],
+        },
+        {
+            id: 'seo',
+            label: t('admin.groups.seo'),
+            items: perms.viewSeo
+                ? [
+                      {
+                          label: t('admin.nav.seoOverview'),
+                          href: adminSeoOverview.url(),
+                          icon: TrendingUp,
+                          exact: true,
+                      },
+                      {
+                          label: t('admin.nav.seoIntegrations'),
+                          href: adminSeoIntegrations.url(),
+                          icon: Plug,
+                      },
+                      {
+                          label: t('admin.nav.seoUrlsSitemaps'),
+                          href: adminSeoUrls.url(),
+                          icon: Link2,
+                      },
+                      {
+                          label: t('admin.nav.seoInternational'),
+                          href: adminSeoInternational.url(),
+                          icon: Globe2,
+                      },
+                      {
+                          label: t('admin.nav.seoAuditGrowth'),
+                          href: adminSeoAudit.url(),
+                          icon: ShieldCheck,
                       },
                   ]
                 : [],

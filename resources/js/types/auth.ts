@@ -31,6 +31,12 @@ export type UserPermissions = {
     manageNotifications?: boolean;
     viewSecurity?: boolean;
     manageBackups?: boolean;
+    viewSeo?: boolean;
+    manageSeo?: boolean;
+    auditSeo?: boolean;
+    manageSeoIntegrations?: boolean;
+    manageSeoTranslations?: boolean;
+    manageSeoRedirects?: boolean;
 };
 
 export type UserRestrictions = {
