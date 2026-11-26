@@ -34,7 +34,43 @@ const props = defineProps<{
     openPendingTopUpCount: number;
     maxPendingOrders: number;
     sandboxEnabled: boolean;
+    paymentMethodInstructions?: Record<
+        string,
+        Record<string, string | number | boolean | null>
+    >;
 }>();
+
+function instructionsFor(
+    p: PaymentTransactionItem,
+): Record<string, string | number | boolean | null> {
+    const live = props.paymentMethodInstructions?.[p.provider];
+    if (live && Object.keys(live).length > 0) {
+        return live;
+    }
+    const meta = (p.metadata ?? {}) as Record<string, unknown>;
+    if (meta.instructions && typeof meta.instructions === 'object') {
+        return meta.instructions as Record<
+            string,
+            string | number | boolean | null
+        >;
+    }
+    return {};
+}
+
+function vietQrImageUrl(p: PaymentTransactionItem): string | null {
+    const info = instructionsFor(p);
+    const bankCode = String(info.bank_code ?? '').trim();
+    const accountNumber = String(info.account_number ?? '').trim();
+    if (!bankCode || !accountNumber) {
+        return null;
+    }
+    const amount = p.total_amount ?? p.amount;
+    const addInfo = encodeURIComponent(p.order_code || `PAY-${p.id}`);
+    const accountName = encodeURIComponent(
+        String(info.account_holder ?? '').trim(),
+    );
+    return `https://img.vietqr.io/image/${encodeURIComponent(bankCode)}-${encodeURIComponent(accountNumber)}-compact2.png?amount=${amount}&addInfo=${addInfo}&accountName=${accountName}`;
+}
 
 const { t, locale } = useI18n();
 const searchInput = ref(props.filters.search);
@@ -268,22 +304,129 @@ function runSandboxConfirm(paymentId: number): void {
                 <!-- Pending Payment Instructions & Actions -->
                 <div
                     v-if="p.status === 'pending'"
-                    class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/80 bg-muted/30 p-3 text-xs"
+                    class="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-border/80 bg-muted/30 p-3.5 text-xs"
                 >
-                    <div class="space-y-0.5 text-muted-foreground">
-                        <p class="font-semibold text-foreground">
-                            {{
-                                t(
-                                    'monetization.payments.pendingInstructionsTitle',
-                                )
-                            }}
-                        </p>
-                        <p>
-                            {{ t('monetization.payments.transferNoteLabel') }}:
-                            <strong class="font-mono text-foreground">{{
-                                p.order_code || `PAY-${p.id}`
-                            }}</strong>
-                        </p>
+                    <div class="flex flex-wrap items-start gap-4">
+                        <img
+                            v-if="
+                                (p.provider === 'vietqr' ||
+                                    p.provider === 'bank_transfer') &&
+                                vietQrImageUrl(p)
+                            "
+                            :src="vietQrImageUrl(p) || ''"
+                            alt="VietQR"
+                            class="size-36 rounded-lg border border-border bg-white object-contain p-1"
+                        />
+                        <div class="space-y-1 text-muted-foreground">
+                            <p class="font-semibold text-foreground">
+                                {{
+                                    t(
+                                        'monetization.payments.pendingInstructionsTitle',
+                                    )
+                                }}
+                            </p>
+                            <template
+                                v-if="
+                                    p.provider === 'vietqr' ||
+                                    p.provider === 'bank_transfer'
+                                "
+                            >
+                                <p v-if="instructionsFor(p).bank_name">
+                                    Ngân hàng:
+                                    <strong class="text-foreground">{{
+                                        instructionsFor(p).bank_name
+                                    }}</strong>
+                                </p>
+                                <p
+                                    v-if="instructionsFor(p).account_number"
+                                    class="flex items-center gap-1.5"
+                                >
+                                    Số tài khoản:
+                                    <strong class="font-mono text-foreground">{{
+                                        instructionsFor(p).account_number
+                                    }}</strong>
+                                    <button
+                                        type="button"
+                                        class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
+                                        @click="
+                                            copyText(
+                                                String(
+                                                    instructionsFor(p)
+                                                        .account_number,
+                                                ),
+                                            )
+                                        "
+                                    >
+                                        <Copy class="size-3" />
+                                    </button>
+                                </p>
+                                <p v-if="instructionsFor(p).account_holder">
+                                    Chủ tài khoản:
+                                    <strong class="text-foreground">{{
+                                        instructionsFor(p).account_holder
+                                    }}</strong>
+                                </p>
+                            </template>
+                            <template v-else-if="p.provider === 'paypal'">
+                                <p
+                                    v-if="instructionsFor(p).merchant_email"
+                                    class="flex items-center gap-1.5"
+                                >
+                                    PayPal:
+                                    <strong class="font-mono text-foreground">{{
+                                        instructionsFor(p).merchant_email
+                                    }}</strong>
+                                    <button
+                                        type="button"
+                                        class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
+                                        @click="
+                                            copyText(
+                                                String(
+                                                    instructionsFor(p)
+                                                        .merchant_email,
+                                                ),
+                                            )
+                                        "
+                                    >
+                                        <Copy class="size-3" />
+                                    </button>
+                                </p>
+                                <p v-if="instructionsFor(p).paypal_me_url">
+                                    <a
+                                        :href="
+                                            String(
+                                                instructionsFor(p)
+                                                    .paypal_me_url,
+                                            )
+                                        "
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="font-semibold text-primary underline"
+                                    >
+                                        Mở link thanh toán PayPal.Me
+                                    </a>
+                                </p>
+                            </template>
+                            <p class="flex items-center gap-1.5">
+                                {{
+                                    t(
+                                        'monetization.payments.transferNoteLabel',
+                                    )
+                                }}:
+                                <strong class="font-mono text-foreground">{{
+                                    p.order_code || `PAY-${p.id}`
+                                }}</strong>
+                                <button
+                                    type="button"
+                                    class="inline-flex size-5 items-center justify-center rounded hover:bg-muted"
+                                    @click="
+                                        copyText(p.order_code || `PAY-${p.id}`)
+                                    "
+                                >
+                                    <Copy class="size-3" />
+                                </button>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2">

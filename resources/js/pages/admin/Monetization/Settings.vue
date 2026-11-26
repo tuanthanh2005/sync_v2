@@ -3,6 +3,9 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { CheckCircle2, Globe, Save, ShieldCheck, Sliders } from '@lucide/vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import PaymentMethodCard, {
+    type AdminPaymentMethod,
+} from '@/components/admin/PaymentMethodCard.vue';
 import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,24 +16,8 @@ import { formatDateTime } from '@/lib/formatters';
 import { update as updateAdSenseRoute } from '@/routes/admin/monetization/adsense';
 import { update as updateComplianceRoute } from '@/routes/admin/monetization/compliance';
 import { update as updateGuardrailsRoute } from '@/routes/admin/monetization/guardrails';
-import { update as updateMethodRoute } from '@/routes/admin/monetization/payment-methods';
 import { confirm as confirmPaymentRoute } from '@/routes/admin/monetization/payments';
 import type { PaymentTransactionItem } from '@/types';
-
-type AdminPaymentMethod = {
-    id: number;
-    code: string;
-    name: string;
-    category: string;
-    supported_currencies: string[];
-    fee_percent_bps: number;
-    fee_fixed_vnd: number;
-    fee_fixed_usd_cents: number;
-    is_enabled: boolean;
-    is_live_ready: boolean;
-    requires_legal_clearance: boolean;
-    instructions: Record<string, string | number | boolean | null>;
-};
 
 type ComplianceRuleRow = {
     id: number;
@@ -108,22 +95,6 @@ const reconcileForm = useForm({
     reason: '',
     password: '',
 });
-
-function saveMethod(m: AdminPaymentMethod): void {
-    router.patch(
-        updateMethodRoute.url(m.id),
-        {
-            name: m.name,
-            fee_percent_bps: m.fee_percent_bps,
-            fee_fixed_vnd: m.fee_fixed_vnd,
-            fee_fixed_usd_cents: m.fee_fixed_usd_cents,
-            is_enabled: m.is_enabled,
-            is_live_ready: m.is_live_ready,
-            instructions: m.instructions,
-        },
-        { preserveScroll: true },
-    );
-}
 
 function saveGuardrails(): void {
     guardrailsForm.post(updateGuardrailsRoute.url(), { preserveScroll: true });
@@ -236,92 +207,11 @@ function submitManualConfirm(): void {
             </section>
 
             <section class="grid gap-3 md:grid-cols-2">
-                <div
+                <PaymentMethodCard
                     v-for="m in paymentMethods"
                     :key="m.id"
-                    class="space-y-2.5 rounded-xl border border-border bg-card p-4 text-xs"
-                >
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <p class="font-bold text-foreground">
-                                {{ m.name }}
-                            </p>
-                            <p
-                                class="font-mono text-[10px] text-muted-foreground"
-                            >
-                                {{ m.code }} ·
-                                {{ m.supported_currencies.join(', ') }}
-                            </p>
-                        </div>
-                        <Badge
-                            :variant="
-                                m.requires_legal_clearance
-                                    ? 'outline'
-                                    : m.is_enabled
-                                      ? 'success'
-                                      : 'secondary'
-                            "
-                        >
-                            {{
-                                m.requires_legal_clearance
-                                    ? 'Crypto (Legal Hold)'
-                                    : m.is_enabled
-                                      ? 'Enabled'
-                                      : 'Disabled'
-                            }}
-                        </Badge>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <Label class="text-[10px]">Fee (bps)</Label>
-                            <Input
-                                v-model.number="m.fee_percent_bps"
-                                type="number"
-                                class="h-8 text-xs"
-                            />
-                        </div>
-                        <div>
-                            <Label class="text-[10px]">Fixed VND</Label>
-                            <Input
-                                v-model.number="m.fee_fixed_vnd"
-                                type="number"
-                                class="h-8 text-xs"
-                            />
-                        </div>
-                        <div>
-                            <Label class="text-[10px]">Fixed USD¢</Label>
-                            <Input
-                                v-model.number="m.fee_fixed_usd_cents"
-                                type="number"
-                                class="h-8 text-xs"
-                            />
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <label class="flex items-center gap-1.5">
-                                <input v-model="m.is_enabled" type="checkbox" />
-                                <span>Enabled</span>
-                            </label>
-                            <label class="flex items-center gap-1.5">
-                                <input
-                                    v-model="m.is_live_ready"
-                                    type="checkbox"
-                                />
-                                <span>Live Ready</span>
-                            </label>
-                        </div>
-                        <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            class="h-7 text-[11px]"
-                            @click="saveMethod(m)"
-                        >
-                            Save
-                        </Button>
-                    </div>
-                </div>
+                    :method="m"
+                />
             </section>
         </template>
 

@@ -6,6 +6,7 @@ use App\Enums\PaymentServiceType;
 use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use App\Services\Billing\HmacPaymentWebhookService;
 use App\Services\Monetization\MonetizationPaymentService;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,6 +55,11 @@ class PaymentHistoryController extends Controller
 
         $paginator = $query->latest('id')->paginate(20)->withQueryString();
 
+        $methodInstructions = PaymentMethod::query()
+            ->get(['code', 'instructions'])
+            ->mapWithKeys(static fn (PaymentMethod $m): array => [$m->code => $m->instructions ?? []])
+            ->all();
+
         return Inertia::render('monetization/Payments', [
             'payments' => [
                 'data' => array_values(collect($paginator->items())->map(static fn (Payment $p): array => self::serializePayment($p))->all()),
@@ -61,6 +67,7 @@ class PaymentHistoryController extends Controller
                 'last_page' => $paginator->lastPage(),
                 'total' => $paginator->total(),
             ],
+            'paymentMethodInstructions' => $methodInstructions,
             'filters' => [
                 'service_type' => $serviceType,
                 'status' => $status,
