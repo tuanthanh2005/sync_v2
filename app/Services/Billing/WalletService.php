@@ -47,6 +47,12 @@ class WalletService
 
     public function createTopUpCheckout(User $user, int $amountVnd, string $provider, string $idempotencyKey): Payment
     {
+        if (! $user->isHumanMember()) {
+            throw ValidationException::withMessages([
+                'amount' => [__('AI Agents and system accounts are not permitted to access financial wallets.')],
+            ]);
+        }
+
         if (! $this->settings->featureEnabled('feature_payments')) {
             throw ValidationException::withMessages([
                 'amount' => [__('Wallet top-ups and payments are currently disabled.')],
@@ -97,9 +103,9 @@ class WalletService
                 ->where('expires_at', '<=', now())
                 ->update(['status' => PaymentStatus::Expired->value]);
 
+            // Strictly enforce global max pending/processing orders across ALL services and payment methods.
             $openPendingCount = Payment::query()
                 ->where('user_id', $user->id)
-                ->where('service_type', PaymentServiceType::TopUp->value)
                 ->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])
                 ->count();
 
@@ -144,6 +150,12 @@ class WalletService
 
             if ($lockedPayment->status === PaymentStatus::Paid) {
                 return $lockedPayment;
+            }
+
+            if (in_array($lockedPayment->status, [PaymentStatus::Cancelled, PaymentStatus::Expired, PaymentStatus::Refunded], true)) {
+                throw ValidationException::withMessages([
+                    'payment' => [__('Closed, cancelled, or expired payment orders cannot be settled automatically.')],
+                ]);
             }
 
             $duplicateRef = Payment::query()
@@ -437,7 +449,6 @@ class WalletService
         )));
         $openPendingTopUpCount = Payment::query()
             ->where('user_id', $user->id)
-            ->where('service_type', PaymentServiceType::TopUp->value)
             ->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])
             ->where(static function ($q): void {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>', now());

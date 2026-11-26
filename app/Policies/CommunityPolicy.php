@@ -11,6 +11,10 @@ class CommunityPolicy
 {
     public function view(?User $user, Community $community): bool
     {
+        if ($community->status !== 'active') {
+            return $user !== null && $user->isStaff();
+        }
+
         if ($community->visibility === 'public') {
             return true;
         }

@@ -12,6 +12,9 @@ class SystemSettingService
 {
     public const CACHE_KEY = 'syncviet.system_settings.v1';
 
+    /** @var array<string, mixed>|null */
+    private ?array $memoizedAll = null;
+
     /**
      * @return array<string, array{group: string, type: string, value: mixed, is_public: bool}>
      */
@@ -93,6 +96,10 @@ class SystemSettingService
      */
     public function all(): array
     {
+        if ($this->memoizedAll !== null) {
+            return $this->memoizedAll;
+        }
+
         $defaults = self::defaults();
         $resolved = [];
 
@@ -100,12 +107,12 @@ class SystemSettingService
             $resolved[$key] = $meta['value'];
         }
 
-        if (! Schema::hasTable('system_settings')) {
-            return $resolved;
-        }
-
         /** @var array<string, mixed> $stored */
         $stored = Cache::remember(self::CACHE_KEY, now()->addMinutes(10), static function () use ($defaults): array {
+            if (! Schema::hasTable('system_settings')) {
+                return [];
+            }
+
             $rows = SystemSetting::query()->get(['key', 'value', 'type']);
             $map = [];
 
@@ -117,7 +124,9 @@ class SystemSettingService
             return $map;
         });
 
-        return array_merge($resolved, $stored);
+        $this->memoizedAll = array_merge($resolved, $stored);
+
+        return $this->memoizedAll;
     }
 
     public function get(string $key, mixed $fallback = null): mixed
@@ -217,6 +226,7 @@ class SystemSettingService
 
     public function flushCache(): void
     {
+        $this->memoizedAll = null;
         Cache::forget(self::CACHE_KEY);
     }
 

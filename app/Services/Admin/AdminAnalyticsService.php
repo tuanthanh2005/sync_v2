@@ -13,18 +13,24 @@ use App\Enums\UserStatus;
 use App\Models\AdCampaign;
 use App\Models\AdCreditEntry;
 use App\Models\AiAgent;
+use App\Models\AiCredential;
 use App\Models\Appeal;
 use App\Models\AuditLog;
 use App\Models\BackupRecord;
 use App\Models\Comment;
 use App\Models\Community;
+use App\Models\GrowthFraudReview;
+use App\Models\LoginHistory;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use App\Models\PolicyPage;
 use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\Report;
 use App\Models\User;
 use App\Models\VerificationRequest;
+use App\Services\Ai\AiAutomationControlService;
+use App\Services\Seo\SeoConfigService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -139,15 +145,15 @@ class AdminAnalyticsService
         $currentStart = now()->subDays($safeDays);
         $prevStart = now()->subDays($safeDays * 2);
 
-        $curUsers = User::query()->where('account_type', AccountType::Human->value)->where('created_at', '>=', $currentStart)->count();
-        $prevUsers = User::query()->where('account_type', AccountType::Human->value)->whereBetween('created_at', [$prevStart, $currentStart])->count();
+        $curUsers = User::query()->where('account_type', AccountType::Human->value)->where('is_test_account', false)->where('created_at', '>=', $currentStart)->count();
+        $prevUsers = User::query()->where('account_type', AccountType::Human->value)->where('is_test_account', false)->whereBetween('created_at', [$prevStart, $currentStart])->count();
         $curPosts = Post::query()->where('created_at', '>=', $currentStart)->count();
         $prevPosts = Post::query()->whereBetween('created_at', [$prevStart, $currentStart])->count();
 
         return [
             'period' => $safeDays,
             'totals' => [
-                'users' => User::query()->where('account_type', AccountType::Human->value)->count(),
+                'users' => User::query()->where('account_type', AccountType::Human->value)->where('is_test_account', false)->count(),
                 'posts' => Post::query()->count(),
                 'comments' => Comment::query()->count(),
                 'communities' => Community::query()->count(),
@@ -171,15 +177,48 @@ class AdminAnalyticsService
         DB::select('SELECT 1');
         $dbLatencyMs = round((microtime(true) - $dbStart) * 1000, 2);
 
+        $cacheOk = false;
+        try {
+            $probeKey = 'syncviet.health.cache_probe';
+            Cache::put($probeKey, 'ok', now()->addSeconds(30));
+            $cacheOk = Cache::get($probeKey) === 'ok';
+        } catch (\Throwable) {
+            $cacheOk = false;
+        }
+
         $pendingJobs = Schema::hasTable('jobs') ? DB::table('jobs')->count() : 0;
         $failedJobs = Schema::hasTable('failed_jobs') ? DB::table('failed_jobs')->count() : 0;
         $activeSessions = Schema::hasTable('sessions') ? DB::table('sessions')->where('last_activity', '>=', now()->subMinutes(30)->timestamp)->count() : 0;
         $backupsCount = Schema::hasTable('backup_records') ? BackupRecord::query()->count() : 0;
-        $lastBackup = Schema::hasTable('backup_records') ? BackupRecord::query()->latest('id')->first() : null;
+        $lastBackup = Schema::hasTable('backup_records') ? BackupRecord::query()->where('status', 'completed')->latest('id')->first() : null;
+
+        $diskFreeBytes = @disk_free_space(storage_path());
+        $diskTotalBytes = @disk_total_space(storage_path());
+
+        $enabledPaymentMethods = Schema::hasTable('payment_methods')
+            ? PaymentMethod::query()->where('is_enabled', true)->pluck('code')->all()
+            : [];
+        $gscConnected = Schema::hasTable('seo_settings')
+            && app(SeoConfigService::class)->bool('gsc_enabled', false)
+            && app(SeoConfigService::class)->string('gsc_property_url', '') !== '';
+        $aiHealthyKeys = Schema::hasTable('ai_credentials')
+            ? AiCredential::query()->where('is_active', true)->where('health_status', 'healthy')->count()
+            : 0;
+        $aiEmergencyStopped = Schema::hasTable('ai_automation_settings')
+            && app(AiAutomationControlService::class)->isEmergencyStopped();
+
+        $failedLogins24h = Schema::hasTable('login_histories')
+            ? LoginHistory::query()->where('event_type', 'failed')->where('created_at', '>=', now()->subHours(24))->count()
+            : 0;
+        $pendingFraudReviews = Schema::hasTable('growth_fraud_reviews')
+            ? GrowthFraudReview::query()->where('status', 'pending')->count()
+            : 0;
 
         return [
             'health' => [
+                'app_status' => 'healthy',
                 'db_ok' => true,
+                'cache_ok' => $cacheOk,
                 'db_connection' => (string) config('database.default'),
                 'db_latency_ms' => $dbLatencyMs,
                 'php_version' => PHP_VERSION,
@@ -191,14 +230,36 @@ class AdminAnalyticsService
                 'queue_connection' => (string) config('queue.default'),
                 'media_disk' => (string) config('syncviet.media_disk'),
                 'hashing_driver' => (string) config('hashing.driver'),
+                'trusted_proxies_configured' => config('syncviet.trusted_proxies') !== null && trim((string) (is_array(config('syncviet.trusted_proxies')) ? implode(',', config('syncviet.trusted_proxies')) : config('syncviet.trusted_proxies'))) !== '',
                 'pending_jobs' => $pendingJobs,
                 'failed_jobs' => $failedJobs,
                 'active_sessions_30m' => $activeSessions,
                 'media_files_count' => PostMedia::query()->count(),
                 'media_storage_bytes' => (int) PostMedia::query()->sum('size_bytes'),
+                'disk_free_bytes' => is_float($diskFreeBytes) ? (int) $diskFreeBytes : null,
+                'disk_total_bytes' => is_float($diskTotalBytes) ? (int) $diskTotalBytes : null,
                 'backups_count' => $backupsCount,
                 'last_backup_at' => $lastBackup?->created_at?->toIso8601String(),
+                'last_backup_type' => $lastBackup?->type,
+                'last_backup_status' => $lastBackup !== null ? $lastBackup->status : 'none',
                 'cron_last_heartbeat' => Cache::get('syncviet.cron.last_heartbeat'),
+                'integrations' => [
+                    'payment_methods_enabled' => $enabledPaymentMethods,
+                    'webhook_secret_configured' => trim((string) config('syncviet.payment_webhook_secret', '')) !== '',
+                    'gsc_connected' => $gscConnected,
+                    'ai_healthy_keys' => $aiHealthyKeys,
+                    'ai_emergency_stopped' => $aiEmergencyStopped,
+                ],
+                'security_alerts' => [
+                    'failed_logins_24h' => $failedLogins24h,
+                    'pending_fraud_reviews' => $pendingFraudReviews,
+                ],
+                'host_telemetry' => [
+                    'cpu_usage' => null,
+                    'ram_usage' => null,
+                    'php_workers' => null,
+                    'note' => 'Unavailable via Shared Hosting PHP runtime — inspect real-time CPU, RAM, Entry Processes, and PHP Workers directly in Hostinger hPanel.',
+                ],
             ],
         ];
     }
@@ -269,7 +330,8 @@ class AdminAnalyticsService
             ->where('created_at', '>=', $from);
 
         if ($table === 'users') {
-            $query->where('account_type', AccountType::Human->value);
+            $query->where('account_type', AccountType::Human->value)
+                ->where('is_test_account', false);
         }
 
         $rows = $query

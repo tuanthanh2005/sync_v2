@@ -13,6 +13,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Reverse Proxy / Cloudflare Trust & Automated Backup Retention
+    |--------------------------------------------------------------------------
+    | Set TRUSTED_PROXIES to comma-separated proxy IPs/CIDRs (or "*" ONLY when
+    | origin port 80/443 is strictly firewalled to Cloudflare / Hostinger proxy).
+    */
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+    'backup_retention_days' => (int) env('SYNCVIET_BACKUP_RETENTION_DAYS', 7),
+
+    /*
+    |--------------------------------------------------------------------------
     | Media Storage Disk Abstraction (local, public, or s3 / Cloudflare R2)
     |--------------------------------------------------------------------------
     */

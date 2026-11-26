@@ -67,6 +67,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        // Never execute Inertia layout/sidebar queries on non-Inertia utility, SEO, redirect, or webhook endpoints.
+        if (
+            ! $request->isMethod('GET')
+            || $request->is('robots.txt', 'sitemap*.xml', 'ads.txt', 'manifest.webmanifest', 'webhooks/*', 'r/*', 'growth/unsubscribe/*', 'up', 'google*.html', '*-indexnow.txt')
+        ) {
+            return parent::share($request);
+        }
+
         $user = $request->user();
         $user?->loadMissing(['profile', 'creditAccount', 'rbacRole.permissions']);
         $locale = app()->getLocale();

@@ -24,6 +24,8 @@ class SafeImageUploadService
 
     private const MAX_INPUT_PIXELS = 5000;
 
+    private const MAX_TOTAL_PIXELS = 16_000_000;
+
     private const TARGET_MAX_DIMENSION = 1600;
 
     /**
@@ -157,6 +159,7 @@ class SafeImageUploadService
             || $srcHeight < 1
             || $srcWidth > self::MAX_INPUT_PIXELS
             || $srcHeight > self::MAX_INPUT_PIXELS
+            || ($srcWidth * $srcHeight) > self::MAX_TOTAL_PIXELS
             || ! array_key_exists($imageMime, self::ALLOWED_MIME_MAP)
         ) {
             throw ValidationException::withMessages([

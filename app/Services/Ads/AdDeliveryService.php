@@ -108,7 +108,7 @@ class AdDeliveryService
 
     public function recordImpression(AdCampaign $campaign, ?User $viewer, Request $request): void
     {
-        if ($viewer?->id === $campaign->user_id) {
+        if ($viewer?->id === $campaign->user_id || ($viewer !== null && ! $viewer->isHumanMember()) || $this->isAutomatedCrawler($request)) {
             return;
         }
 
@@ -130,6 +130,8 @@ class AdDeliveryService
             $campaign->status !== AdCampaignStatus::Active
             || ($campaign->billing_mode !== 'fixed_package' && $campaign->held_amount <= 0)
             || $viewer?->id === $campaign->user_id
+            || ($viewer !== null && ! $viewer->isHumanMember())
+            || $this->isAutomatedCrawler($request)
         ) {
             return $destination;
         }
@@ -246,5 +248,12 @@ class AdDeliveryService
         }
 
         return $targetUrl;
+    }
+
+    private function isAutomatedCrawler(Request $request): bool
+    {
+        $ua = strtolower((string) $request->userAgent());
+
+        return $ua !== '' && (bool) preg_match('/bot|crawler|spider|slurp|googlebot|bingbot|facebookexternalhit|curl|wget|python-requests/i', $ua);
     }
 }

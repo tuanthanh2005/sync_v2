@@ -611,7 +611,10 @@ class BannerAdvertisingService
         string $eventType,
         string $bucketFormat,
     ): void {
-        if ($viewer?->id === $campaign->user_id) {
+        $ua = strtolower((string) $request->userAgent());
+        $isBot = $ua !== '' && (bool) preg_match('/bot|crawler|spider|slurp|googlebot|bingbot|facebookexternalhit|curl|wget|python-requests/i', $ua);
+
+        if ($viewer?->id === $campaign->user_id || ($viewer !== null && ! $viewer->isHumanMember()) || $isBot) {
             return;
         }
 

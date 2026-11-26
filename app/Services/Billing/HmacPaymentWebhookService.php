@@ -6,6 +6,7 @@ use App\Enums\PaymentStatus;
 use App\Models\Payment;
 use App\Models\PaymentWebhookLog;
 use App\Services\Monetization\MonetizationPaymentService;
+use App\Services\Security\AuditLogger;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -14,6 +15,7 @@ class HmacPaymentWebhookService implements PaymentGatewayInterface
 {
     public function __construct(
         private readonly MonetizationPaymentService $monetizationPaymentService,
+        private readonly AuditLogger $auditLogger,
     ) {}
 
     public function signPayload(string $payload, int $timestamp): string
@@ -92,6 +94,32 @@ class HmacPaymentWebhookService implements PaymentGatewayInterface
             $this->logWebhook($provider, $payment->id, $providerReference, true, 422, 'amount_mismatch', $payloadHash, 'Webhook amount does not match server order amount.');
 
             throw new HttpException(422, __('Payment amount mismatch.'));
+        }
+
+        if (isset($payload['currency']) && is_string($payload['currency']) && strtoupper(trim($payload['currency'])) !== strtoupper($payment->currency)) {
+            $this->logWebhook($provider, $payment->id, $providerReference, true, 422, 'currency_mismatch', $payloadHash, 'Webhook currency does not match server order currency.');
+
+            throw new HttpException(422, __('Payment currency mismatch.'));
+        }
+
+        // Late valid payment webhook on an already Cancelled/Expired/Refunded order: never blindly auto-credit
+        // AND never silently discard received funds — record an auditable manual reconciliation alert.
+        if (in_array($payment->status, [PaymentStatus::Cancelled, PaymentStatus::Expired, PaymentStatus::Refunded], true)) {
+            $this->logWebhook($provider, $payment->id, $providerReference, true, 202, 'late_reconciliation', $payloadHash, "Signed payment arrived after order status became {$payment->status->value}; manual finance reconciliation required.");
+            $this->auditLogger->log(
+                'payment.late_webhook_reconciliation_required',
+                $payment,
+                [
+                    'provider' => $provider,
+                    'provider_reference' => $providerReference,
+                    'order_status' => $payment->status->value,
+                    'amount' => $payment->amount,
+                    'currency' => $payment->currency,
+                ],
+                null,
+            );
+
+            return;
         }
 
         $wasAlreadyPaid = $payment->status === PaymentStatus::Paid;

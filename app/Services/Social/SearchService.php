@@ -109,6 +109,7 @@ class SearchService
         $communities = array_values(
             Community::query()
                 ->where('visibility', 'public')
+                ->where('status', 'active')
                 ->where(function (Builder $query) use ($likePattern): void {
                     $query->where('name', 'like', $likePattern)
                         ->orWhere('description', 'like', $likePattern);

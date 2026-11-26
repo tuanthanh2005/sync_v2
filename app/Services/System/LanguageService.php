@@ -17,6 +17,24 @@ class LanguageService
     public const CACHE_KEY = 'syncviet.languages.catalog.v1';
 
     /**
+     * Per-request in-memory memoization (eliminates repeated database-cache & information_schema queries).
+     *
+     * @var list<array{
+     *     code: string,
+     *     native_name: string,
+     *     english_name: string,
+     *     flag_code: string,
+     *     is_rtl: bool,
+     *     is_enabled: bool,
+     *     is_default: bool,
+     *     sort_order: int,
+     *     completion_percent: int,
+     *     missing_keys_count: int
+     * }>|null
+     */
+    private ?array $memoizedLanguages = null;
+
+    /**
      * Canonical list of all 15 supported platform languages.
      *
      * @return list<array{
@@ -104,18 +122,9 @@ class LanguageService
      */
     public function allLanguages(): array
     {
-        if (! Schema::hasTable('languages')) {
-            return array_map(
-                static fn (array $item): array => [
-                    ...$item,
-                    'completion_percent' => 100,
-                    'missing_keys_count' => 0,
-                ],
-                self::catalog(),
-            );
+        if ($this->memoizedLanguages !== null) {
+            return $this->memoizedLanguages;
         }
-
-        $this->ensureSeeded();
 
         /** @var list<array{
          *     code: string,
@@ -129,7 +138,20 @@ class LanguageService
          *     completion_percent: int,
          *     missing_keys_count: int
          * }> $cached */
-        $cached = Cache::remember(self::CACHE_KEY, now()->addMinutes(15), static function (): array {
+        $cached = Cache::remember(self::CACHE_KEY, now()->addMinutes(15), function (): array {
+            if (! Schema::hasTable('languages')) {
+                return array_map(
+                    static fn (array $item): array => [
+                        ...$item,
+                        'completion_percent' => 100,
+                        'missing_keys_count' => 0,
+                    ],
+                    self::catalog(),
+                );
+            }
+
+            $this->ensureSeeded();
+
             return array_values(
                 Language::query()
                     ->orderBy('sort_order')
@@ -150,6 +172,8 @@ class LanguageService
                     ->all(),
             );
         });
+
+        $this->memoizedLanguages = $cached;
 
         return $cached;
     }
@@ -481,6 +505,7 @@ class LanguageService
 
     public function flushCache(): void
     {
+        $this->memoizedLanguages = null;
         Cache::forget(self::CACHE_KEY);
     }
 

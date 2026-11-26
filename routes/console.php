@@ -8,6 +8,7 @@ use App\Models\AiContentPlan;
 use App\Models\User;
 use App\Models\UserSanction;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Admin\DatabaseBackupService;
 use App\Services\Ai\AiAutomationControlService;
 use App\Services\Ai\AiPublishingAndSchedulerService;
 use App\Services\Growth\GrowthAnalyticsService;
@@ -346,6 +347,19 @@ Artisan::command('app:growth:cleanup', function (ReferralService $referrals): vo
     $this->info("Growth cleanup: expired referral visits purged={$deleted}");
 })->purpose('Purge expired referral visit tracking rows per retention policy');
 
+Artisan::command('app:backup:database', function (DatabaseBackupService $backup): void {
+    $record = $backup->createDatabaseBackup(null, 'Automated scheduled database backup');
+    $pruned = $backup->pruneOldBackups();
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'Database backup completed: file=%s size=%d bytes sha256=%s pruned=%d',
+        basename($record->path),
+        $record->size_bytes,
+        substr((string) $record->checksum, 0, 12),
+        $pruned,
+    ));
+})->purpose('Create a private gzip-compressed logical SQL backup with SHA-256 checksum and prune expired archives');
+
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
@@ -359,3 +373,4 @@ Schedule::command('app:growth:qualify-referrals')->everyFifteenMinutes()->withou
 Schedule::command('app:growth:snapshot-analytics')->hourly()->withoutOverlapping();
 Schedule::command('app:growth:retention')->dailyAt('09:30')->withoutOverlapping();
 Schedule::command('app:growth:cleanup')->dailyAt('02:30')->withoutOverlapping();
+Schedule::command('app:backup:database')->dailyAt('02:00')->withoutOverlapping();

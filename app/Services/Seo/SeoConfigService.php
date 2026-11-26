@@ -13,6 +13,9 @@ class SeoConfigService
 {
     public const CACHE_KEY = 'syncviet.seo.settings.v1';
 
+    /** @var array<string, string|null>|null */
+    private ?array $memoizedSettings = null;
+
     public function __construct(
         private readonly LanguageService $languageService,
     ) {}
@@ -57,13 +60,17 @@ class SeoConfigService
      */
     public function all(): array
     {
-        try {
-            if (! Schema::hasTable('seo_settings')) {
-                return [];
-            }
+        if ($this->memoizedSettings !== null) {
+            return $this->memoizedSettings;
+        }
 
+        try {
             /** @var array<string, string|null> $cached */
             $cached = Cache::remember(self::CACHE_KEY, now()->addMinutes(15), static function (): array {
+                if (! Schema::hasTable('seo_settings')) {
+                    return [];
+                }
+
                 $rows = SeoSetting::query()->get(['key', 'value', 'is_encrypted']);
                 $result = [];
 
@@ -81,6 +88,8 @@ class SeoConfigService
 
                 return $result;
             });
+
+            $this->memoizedSettings = $cached;
 
             return $cached;
         } catch (\Throwable) {
@@ -169,6 +178,7 @@ class SeoConfigService
 
     public function flushCache(): void
     {
+        $this->memoizedSettings = null;
         Cache::forget(self::CACHE_KEY);
     }
 

@@ -5,10 +5,12 @@ namespace App\Services\Monetization;
 use App\Enums\BannerCampaignStatus;
 use App\Enums\PaymentServiceType;
 use App\Enums\PaymentStatus;
+use App\Enums\SubscriptionStatus;
 use App\Models\AdCampaign;
 use App\Models\BannerCampaign;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Services\Billing\WalletService;
 use App\Services\Security\AuditLogger;
@@ -127,6 +129,12 @@ class MonetizationPaymentService
         ?int $payableId = null,
         array $metadata = [],
     ): Payment {
+        if (! $user->isHumanMember()) {
+            throw ValidationException::withMessages([
+                'payment' => [__('AI Agents and system accounts are not permitted to create financial orders.')],
+            ]);
+        }
+
         if (! $this->settings->featureEnabled('feature_payments')) {
             throw ValidationException::withMessages([
                 'payment' => [__('Payments are currently disabled by the administrator.')],
@@ -198,9 +206,9 @@ class MonetizationPaymentService
                 ->where('expires_at', '<=', now())
                 ->update(['status' => PaymentStatus::Expired->value]);
 
+            // Strictly enforce global max pending/processing orders across ALL services and payment methods.
             $openPendingCount = Payment::query()
                 ->where('user_id', $user->id)
-                ->where('service_type', $serviceType->value)
                 ->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])
                 ->count();
 
@@ -436,6 +444,34 @@ class MonetizationPaymentService
             }
 
             $locked->save();
+
+            // Revoke linked Premium subscription on full refund and recalculate user's remaining valid expiry floor.
+            if ($locked->status === PaymentStatus::Refunded && $locked->service_type === PaymentServiceType::Premium) {
+                Subscription::query()
+                    ->where('payment_id', $locked->id)
+                    ->where('status', SubscriptionStatus::Active->value)
+                    ->update([
+                        'status' => SubscriptionStatus::Revoked->value,
+                        'revoked_at' => now(),
+                        'reason' => $cleanReason,
+                    ]);
+
+                /** @var User|null $lockedOwner */
+                $lockedOwner = User::query()->whereKey($locked->user_id)->lockForUpdate()->first();
+                if ($lockedOwner !== null) {
+                    $remainingExpiry = Subscription::query()
+                        ->where('user_id', $lockedOwner->id)
+                        ->where('status', SubscriptionStatus::Active->value)
+                        ->whereNull('revoked_at')
+                        ->whereNull('suspended_at')
+                        ->where('expires_at', '>', now())
+                        ->max('expires_at');
+
+                    $lockedOwner->forceFill([
+                        'premium_until' => $remainingExpiry,
+                    ])->save();
+                }
+            }
 
             $this->auditLogger->log(
                 'monetization.payment_refunded',

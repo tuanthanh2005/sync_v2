@@ -32,7 +32,9 @@ class ProcessSeoEntityJob implements ShouldBeUnique, ShouldQueue
         public readonly int $entityId,
         public readonly bool $removed = false,
         public readonly int $removedHttpStatus = 410,
-    ) {}
+    ) {
+        $this->onQueue('seo');
+    }
 
     public function uniqueId(): string
     {
