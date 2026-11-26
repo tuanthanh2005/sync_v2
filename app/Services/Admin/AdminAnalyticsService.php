@@ -192,8 +192,19 @@ class AdminAnalyticsService
         $backupsCount = Schema::hasTable('backup_records') ? BackupRecord::query()->count() : 0;
         $lastBackup = Schema::hasTable('backup_records') ? BackupRecord::query()->where('status', 'completed')->latest('id')->first() : null;
 
-        $diskFreeBytes = @disk_free_space(storage_path());
-        $diskTotalBytes = @disk_total_space(storage_path());
+        $diskFreeBytes = false;
+        $diskTotalBytes = false;
+        try {
+            if (function_exists('disk_free_space')) {
+                $diskFreeBytes = @disk_free_space(storage_path());
+            }
+            if (function_exists('disk_total_space')) {
+                $diskTotalBytes = @disk_total_space(storage_path());
+            }
+        } catch (\Throwable) {
+            $diskFreeBytes = false;
+            $diskTotalBytes = false;
+        }
 
         $enabledPaymentMethods = Schema::hasTable('payment_methods')
             ? PaymentMethod::query()->where('is_enabled', true)->pluck('code')->all()
