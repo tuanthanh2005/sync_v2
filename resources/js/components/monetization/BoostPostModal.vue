@@ -3,9 +3,10 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { Check, Sparkles, Wallet as WalletIcon, Zap } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import AutoHideScrollArea from '@/components/common/AutoHideScrollArea.vue';
+import InputError from '@/components/InputError.vue';
 import PaymentConfirmModal from '@/components/monetization/PaymentConfirmModal.vue';
 import PendingLimitModal from '@/components/monetization/PendingLimitModal.vue';
-import InputError from '@/components/InputError.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -131,35 +132,47 @@ function executeBoost(): void {
 <template>
     <div>
         <Dialog v-model:open="open">
-            <DialogContent
-                class="max-h-[90dvh] max-w-lg overflow-y-auto rounded-2xl"
-            >
-                <DialogHeader>
-                    <DialogTitle class="flex items-center gap-2 text-base">
-                        <Zap class="size-5 text-primary" />
-                        <span>{{ t('monetization.boost.modalTitle') }}</span>
-                    </DialogTitle>
-                    <DialogDescription class="line-clamp-2 text-xs">
-                        {{ postExcerpt }}
-                    </DialogDescription>
-                </DialogHeader>
+            <DialogContent structured class="max-w-lg rounded-2xl">
+                <!-- Fixed Modal Header -->
+                <div
+                    class="shrink-0 border-b border-border/70 px-5 pe-12 pt-4 pb-3.5 sm:px-6 sm:pt-5 sm:pb-4"
+                >
+                    <div
+                        class="mx-auto mb-3 h-1 w-10 rounded-full bg-border sm:hidden"
+                        aria-hidden="true"
+                    />
+                    <DialogHeader class="text-start">
+                        <DialogTitle class="flex items-center gap-2 text-base">
+                            <Zap class="size-5 shrink-0 text-primary" />
+                            <span>{{
+                                t('monetization.boost.modalTitle')
+                            }}</span>
+                        </DialogTitle>
+                        <DialogDescription class="line-clamp-2 text-xs">
+                            {{ postExcerpt }}
+                        </DialogDescription>
+                    </DialogHeader>
+                </div>
 
-                <div class="space-y-4">
+                <!-- Independently Scrollable Modal Body (4px auto-hide scrollbar) -->
+                <AutoHideScrollArea class="flex-1 space-y-4 px-5 py-4 sm:px-6">
                     <div class="grid gap-2.5">
                         <button
                             v-for="pkg in packages"
                             :key="pkg.id"
                             type="button"
                             :class="[
-                                'flex items-center justify-between gap-3 rounded-xl border p-3.5 text-left transition-colors',
+                                'flex w-full items-center justify-between gap-3 rounded-xl border p-3.5 text-start transition-colors',
                                 activePkg?.id === pkg.id
-                                    ? 'border-primary bg-primary-soft/60'
+                                    ? 'border-primary bg-primary-soft/60 ring-1 ring-primary/20'
                                     : 'border-border bg-card hover:border-primary/40',
                             ]"
                             @click="selectedPackage = pkg"
                         >
                             <div class="min-w-0">
-                                <div class="flex items-center gap-1.5">
+                                <div
+                                    class="flex flex-wrap items-center gap-1.5"
+                                >
                                     <span
                                         class="text-sm font-semibold text-foreground"
                                     >
@@ -181,7 +194,7 @@ function executeBoost(): void {
                                     {{ pkg.description }}
                                 </p>
                             </div>
-                            <div class="shrink-0 text-right">
+                            <div class="shrink-0 text-end tabular-nums">
                                 <p class="text-sm font-bold text-primary">
                                     {{ formatVnd(pkg.price_vnd, locale) }}
                                 </p>
@@ -208,7 +221,7 @@ function executeBoost(): void {
                             <button
                                 type="button"
                                 :class="[
-                                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium',
+                                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                                     paymentSource === 'ad_balance'
                                         ? 'border-primary bg-primary-soft text-accent-foreground'
                                         : 'border-border text-muted-foreground',
@@ -223,7 +236,7 @@ function executeBoost(): void {
                             <button
                                 type="button"
                                 :class="[
-                                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium',
+                                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors',
                                     paymentSource === 'direct'
                                         ? 'border-primary bg-primary-soft text-accent-foreground'
                                         : 'border-border text-muted-foreground',
@@ -242,7 +255,7 @@ function executeBoost(): void {
                             class="text-[11px] text-muted-foreground"
                         >
                             {{ t('monetization.wallet.availableShort') }}:
-                            <strong class="text-foreground">{{
+                            <strong class="text-foreground tabular-nums">{{
                                 formatVnd(walletBalance, locale)
                             }}</strong>
                         </p>
@@ -278,19 +291,42 @@ function executeBoost(): void {
                             formErrors.provider
                         "
                     />
+                </AutoHideScrollArea>
 
-                    <div class="flex justify-end gap-2">
+                <!-- Fixed Modal Footer (Total & CTA always visible) -->
+                <div
+                    class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border/70 bg-card/95 px-5 py-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:py-4"
+                >
+                    <div v-if="activePkg" class="min-w-0">
+                        <p class="text-[11px] text-muted-foreground">
+                            {{ t('monetization.confirmModal.total') }}
+                        </p>
+                        <p
+                            class="text-base font-bold text-primary tabular-nums"
+                        >
+                            {{
+                                formatMoney(
+                                    activeAmount,
+                                    paymentSource === 'ad_balance'
+                                        ? 'VND'
+                                        : currency,
+                                    locale,
+                                )
+                            }}
+                        </p>
+                    </div>
+                    <div class="ms-auto flex items-center gap-2">
                         <Button
                             type="button"
                             variant="outline"
-                            class="min-h-11 rounded-xl sm:min-h-9"
+                            class="min-h-10 rounded-xl sm:min-h-9"
                             @click="open = false"
                         >
                             {{ t('common.cancel') }}
                         </Button>
                         <Button
                             type="button"
-                            class="min-h-11 rounded-xl sm:min-h-9"
+                            class="min-h-10 rounded-xl sm:min-h-9"
                             :disabled="!activePkg || form.processing"
                             @click="openConfirm"
                         >

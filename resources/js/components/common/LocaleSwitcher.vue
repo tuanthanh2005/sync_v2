@@ -4,6 +4,7 @@ import { Check, ChevronDown, Search } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import LocaleController from '@/actions/App/Http/Controllers/LocaleController';
+import AutoHideScrollArea from '@/components/common/AutoHideScrollArea.vue';
 import FlagIcon from '@/components/common/FlagIcon.vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -130,9 +131,7 @@ function switchLocale(lang: PublicLanguageItem): void {
                 />
             </div>
 
-            <div
-                class="max-h-64 space-y-0.5 overflow-y-auto overscroll-contain pe-0.5"
-            >
+            <AutoHideScrollArea class="max-h-64 space-y-0.5 pe-0.5">
                 <button
                     v-for="lang in filteredLanguages"
                     :key="lang.code"
@@ -171,7 +170,7 @@ function switchLocale(lang: PublicLanguageItem): void {
                 >
                     {{ t('search.emptyTitle') }}
                 </p>
-            </div>
+            </AutoHideScrollArea>
         </DropdownMenuContent>
     </DropdownMenu>
 </template>

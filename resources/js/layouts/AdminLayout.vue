@@ -568,7 +568,7 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
             </div>
 
             <nav
-                class="flex-1 space-y-5 overflow-y-auto overscroll-contain px-2.5 py-4"
+                class="sv-scrollbar flex-1 space-y-5 overflow-y-auto overscroll-contain px-2.5 py-4"
             >
                 <div
                     v-for="group in navGroups"
@@ -677,7 +677,7 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                                     </SheetDescription>
                                 </SheetHeader>
                                 <nav
-                                    class="flex-1 space-y-4 overflow-y-auto p-3"
+                                    class="sv-scrollbar flex-1 space-y-4 overflow-y-auto overscroll-contain p-3"
                                 >
                                     <div
                                         v-for="group in navGroups"

@@ -1,5 +1,6 @@
 import { createInertiaApp, router } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
+import { initializeAutoHideScrollbars } from '@/composables/useAutoHideScrollbar';
 import { initializePwa } from '@/composables/usePwa';
 import { i18n, syncI18nLocale } from '@/i18n';
 import AdminLayout from '@/layouts/AdminLayout.vue';
@@ -78,3 +79,6 @@ initializeFlashToast();
 
 // Register safe PWA Service Worker & non-intrusive install/update handlers...
 initializePwa();
+
+// Enable lightweight global macOS-style auto-hide scrollbars (3000ms fade-out)...
+initializeAutoHideScrollbars(3000);

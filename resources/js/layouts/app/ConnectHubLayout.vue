@@ -411,7 +411,9 @@ function isItemActive(item: NavItem): boolean {
                             side="left"
                             class="flex w-[85vw] max-w-72 flex-col justify-between p-0"
                         >
-                            <div class="min-h-0 flex-1 overflow-y-auto">
+                            <div
+                                class="sv-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                            >
                                 <SheetHeader
                                     class="border-b border-border px-5 py-4 text-left"
                                 >

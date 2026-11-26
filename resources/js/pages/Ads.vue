@@ -34,6 +34,7 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AdCampaignController from '@/actions/App/Http/Controllers/Ads/AdCampaignController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
+import AutoHideScrollArea from '@/components/common/AutoHideScrollArea.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import InputError from '@/components/InputError.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -1362,19 +1363,29 @@ function updateCampaignStatus(
 
         <!-- Post Picker Modal -->
         <Dialog v-model:open="postPickerOpen">
-            <DialogContent class="max-w-lg">
-                <DialogHeader>
-                    <DialogTitle>{{ t('ads.selectPostModal') }}</DialogTitle>
-                </DialogHeader>
+            <DialogContent structured class="max-w-lg rounded-2xl">
                 <div
+                    class="shrink-0 border-b border-border/70 px-5 pe-12 pt-4 pb-3.5 sm:px-6 sm:pt-5 sm:pb-4"
+                >
+                    <div
+                        class="mx-auto mb-3 h-1 w-10 rounded-full bg-border sm:hidden"
+                        aria-hidden="true"
+                    />
+                    <DialogHeader class="text-start">
+                        <DialogTitle>{{
+                            t('ads.selectPostModal')
+                        }}</DialogTitle>
+                    </DialogHeader>
+                </div>
+                <AutoHideScrollArea
                     v-if="eligiblePosts.length > 0"
-                    class="max-h-80 space-y-2 overflow-y-auto"
+                    class="max-h-96 flex-1 space-y-2 px-5 py-4 sm:px-6"
                 >
                     <button
                         v-for="item in eligiblePosts"
                         :key="item.id"
                         type="button"
-                        class="flex w-full items-start gap-3 rounded-xl border border-border p-3 text-left transition-colors hover:border-primary/50 hover:bg-muted/40"
+                        class="flex w-full items-start gap-3 rounded-xl border border-border p-3 text-start transition-colors hover:border-primary/50 hover:bg-muted/40"
                         @click="selectPost(item)"
                     >
                         <img
@@ -1395,8 +1406,11 @@ function updateCampaignStatus(
                             </p>
                         </div>
                     </button>
-                </div>
-                <p v-else class="text-xs text-muted-foreground">
+                </AutoHideScrollArea>
+                <p
+                    v-else
+                    class="px-5 py-6 text-xs text-muted-foreground sm:px-6"
+                >
                     {{ t('ads.noEligiblePosts') }}
                 </p>
             </DialogContent>
@@ -1404,15 +1418,25 @@ function updateCampaignStatus(
 
         <!-- Usage Guide Modal -->
         <Dialog v-model:open="guideOpen">
-            <DialogContent class="max-w-md">
-                <DialogHeader>
-                    <DialogTitle>{{ t('ads.guideTitle') }}</DialogTitle>
-                </DialogHeader>
-                <div class="space-y-2.5 text-sm text-muted-foreground">
+            <DialogContent structured class="max-w-md rounded-2xl">
+                <div
+                    class="shrink-0 border-b border-border/70 px-5 pe-12 pt-4 pb-3.5 sm:px-6 sm:pt-5 sm:pb-4"
+                >
+                    <div
+                        class="mx-auto mb-3 h-1 w-10 rounded-full bg-border sm:hidden"
+                        aria-hidden="true"
+                    />
+                    <DialogHeader class="text-start">
+                        <DialogTitle>{{ t('ads.guideTitle') }}</DialogTitle>
+                    </DialogHeader>
+                </div>
+                <AutoHideScrollArea
+                    class="flex-1 space-y-2.5 px-5 py-4 text-sm text-muted-foreground sm:px-6"
+                >
                     <p>{{ t('ads.guidePoints.p1') }}</p>
                     <p>{{ t('ads.guidePoints.p2') }}</p>
                     <p>{{ t('ads.guidePoints.p3') }}</p>
-                </div>
+                </AutoHideScrollArea>
             </DialogContent>
         </Dialog>
     </div>

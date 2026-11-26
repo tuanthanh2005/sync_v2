@@ -133,6 +133,11 @@
     --sidebar-accent-foreground: #3730a3;
     --sidebar-border: #e2e8f0;
     --sidebar-ring: #4f46e5;
+    --scrollbar-size: 6px;
+    --scrollbar-radius: 9999px;
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: rgba(100, 116, 139, 0.35);
+    --scrollbar-thumb-hover: rgba(100, 116, 139, 0.65);
 }
 
 .dark {
@@ -185,11 +190,14 @@
     --sidebar-accent-foreground: #a5b4fc;
     --sidebar-border: #273244;
     --sidebar-ring: #818cf8;
+    --scrollbar-thumb: rgba(148, 163, 184, 0.3);
+    --scrollbar-thumb-hover: rgba(148, 163, 184, 0.6);
 }
 
 @layer base {
     * {
         @apply border-border outline-ring/50;
+        --sv-scrollbar-thumb-color: transparent;
     }
 
     /*
@@ -207,6 +215,7 @@
         text-size-adjust: 100%;
         scroll-behavior: smooth;
         scrollbar-gutter: stable;
+        --sv-scrollbar-thumb-color: transparent;
     }
 
     body {
@@ -243,6 +252,104 @@
 
 .no-scrollbar::-webkit-scrollbar {
     display: none;
+}
+
+/* ==========================================================================
+   Global Modern Auto-Hide Scrollbar System (macOS-inspired, Zero Layout Shift)
+   ========================================================================== */
+@property --sv-scrollbar-thumb-color {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    html,
+    [data-sv-scroll-area='true'],
+    [data-sv-scrollable='true'],
+    .sv-scrollbar {
+        transition: --sv-scrollbar-thumb-color 180ms ease-out;
+    }
+
+    html[data-scrolling='true'],
+    html[data-scrollbar-hover='true'],
+    html[data-scrollbar-dragging='true'],
+    html[data-scrollbar-mode='always'],
+    [data-scrolling='true'],
+    [data-scrollbar-hover='true'],
+    [data-scrollbar-dragging='true'],
+    [data-scrollbar-mode='always'] {
+        --sv-scrollbar-thumb-color: var(--scrollbar-thumb);
+    }
+
+    /* WebKit / Chromium / Edge / Safari / Opera: 4px visual thumb -> 6px on hover with 0px shift */
+    :not(.no-scrollbar):not([data-scrollbar-mode='native'])::-webkit-scrollbar {
+        width: var(--scrollbar-size, 6px);
+        height: var(--scrollbar-size, 6px);
+        background: transparent;
+    }
+
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-track {
+        background: var(--scrollbar-track, transparent);
+        border: none;
+    }
+
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb {
+        border-radius: var(--scrollbar-radius, 9999px);
+        border: 1px solid transparent;
+        background-clip: content-box;
+        background-color: var(--sv-scrollbar-thumb-color);
+        box-shadow: none;
+    }
+
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb:hover,
+    :not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb:active {
+        border-width: 0;
+        background-color: var(--scrollbar-thumb-hover);
+    }
+
+    /* Firefox standard fallback (isolated so Chromium keeps custom 4px WebKit thumb) */
+    @supports not selector(::-webkit-scrollbar) {
+        html,
+        [data-sv-scroll-area='true'],
+        [data-sv-scrollable='true'],
+        .sv-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: var(--sv-scrollbar-thumb-color) transparent;
+        }
+    }
+
+    /* Respect OS High Contrast / Forced Colors accessibility preferences */
+    @media (forced-colors: active), (prefers-contrast: more) {
+        html,
+        [data-sv-scroll-area='true'],
+        [data-sv-scrollable='true'],
+        .sv-scrollbar {
+            --sv-scrollbar-thumb-color: var(--scrollbar-thumb-hover);
+        }
+    }
 }
 
 @media (max-width: 1023px) {

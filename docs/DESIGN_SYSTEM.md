@@ -95,3 +95,24 @@ Mọi tương tác UI trên SyncViet bắt buộc tuân thủ nguyên tắc **Co
 5. **Scoped Transitions & Space Reservation (CLS ≈ 0)**:
     - Không dùng `transition-all`; chỉ animate thuộc tính cụ thể (`opacity`, `transform`, `colors`, `width` có chủ đích như thu gọn Admin Sidebar), tôn trọng `prefers-reduced-motion`.
     - Mọi flex/grid column dùng `min-w-0`, số tiền/thống kê dùng `tabular-nums`, card đang chọn dùng `border` cố định độ dày + `ring` (không đổi box dimensions), và banner đang hoạt động đặt trước `aspect-ratio` theo `placement.aspect_ratio`.
+
+## 7. Global Modern Auto-Hide Scrollbar System
+
+Toàn bộ scroll container của SyncViet tuân thủ một hệ thống scrollbar tập trung theo phong cách macOS tối giản (không hardcode màu scrollbar riêng lẻ từng trang):
+
+- **Design Tokens (`resources/css/app.css`)**:
+    - `--scrollbar-size: 6px` (độ rộng rãnh cố định; thumb dùng `border: 1px solid transparent; background-clip: content-box` tạo độ dày thị giác **`4px`** ở trạng thái bình thường và mở rộng lên **`6px`** khi hover mà **không đổi 0.0px kích thước layout**).
+    - `--scrollbar-radius: 9999px`, `--scrollbar-track: transparent`, tắt hoàn toàn `::-webkit-scrollbar-button` (không có nút mũi tên).
+    - **Light Mode**: `--scrollbar-thumb: rgba(100, 116, 139, 0.35)`, `--scrollbar-thumb-hover: rgba(100, 116, 139, 0.65)`.
+    - **Dark Mode**: `--scrollbar-thumb: rgba(148, 163, 184, 0.30)`, `--scrollbar-thumb-hover: rgba(148, 163, 184, 0.60)`.
+- **Cơ chế tự ẩn sau 3 giây & Cô lập từng vùng cuộn**:
+    - Dùng `@property --sv-scrollbar-thumb-color` chuyển màu mượt `180ms ease-out` giữa `transparent` và `var(--scrollbar-thumb)` mà không đổi `scrollbar-width` giữa `none` ↔ `thin`.
+    - `initializeAutoHideScrollbars(3000)` ([useAutoHideScrollbar.ts](file:///d:/du_an_multi_IT/resources/js/composables/useAutoHideScrollbar.ts)) gắn **1 passive capturing listener duy nhất** kết hợp `WeakMap` (không `MutationObserver`, không `setInterval`, tự giải phóng khi unmount), hỗ trợ chuột, touchpad, bàn phím, hover vùng mép scrollbar (hỗ trợ RTL) và giữ hiển thị khi đang kéo.
+    - Mỗi scroll container độc lập hoàn toàn: cuộn News Feed không làm scrollbar của Modal, Sidebar hay Dropdown xuất hiện theo.
+    - Component tái sử dụng `AutoHideScrollArea.vue` hỗ trợ cấu hình `hideDelay` (mặc định `3000ms`), `size`, `orientation`, `autoHide`, `alwaysVisible`, `nativeMode`, `overscrollContain`.
+- **Payment / Checkout / Confirmation Modals (`DialogContent structured`)**:
+    - Mọi modal thanh toán & xác nhận (`BoostPostModal`, `PaymentConfirmModal`, `ConfirmActionDialog`, `ReportDialog`, `Ads` modals) dùng cấu trúc **Header cố định + Body `<AutoHideScrollArea>` cuộn độc lập + Footer cố định** để scrollbar không chạm nút `X`, không tràn bo góc và các nút xác nhận/tổng tiền luôn sẵn sàng.
+- **Cross-Browser, Mobile & Accessibility**:
+    - Desktop fine-pointer (`@media (hover: hover) and (pointer: fine)`): Chrome/Edge/Safari/Opera dùng `::-webkit-scrollbar`, Firefox dùng `@supports not selector(::-webkit-scrollbar)` (`scrollbar-width: thin`).
+    - Mobile iOS/Android: giữ nguyên native OS overlay scrollbar, không chặn touch/momentum scrolling hay pull-to-refresh.
+    - Tôn trọng `prefers-reduced-motion`, `forced-colors: active` và `prefers-contrast: more`.

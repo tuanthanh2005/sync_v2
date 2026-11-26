@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 
                 <div
                     v-if="conversations.length > 0"
-                    class="min-h-0 flex-1 divide-y divide-border overflow-y-auto"
+                    class="sv-scrollbar min-h-0 flex-1 divide-y divide-border overflow-y-auto overscroll-contain"
                 >
                     <Link
                         v-for="conv in conversations"
@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
                     </header>
 
                     <div
-                        class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-3.5 sm:p-4"
+                        class="sv-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-3.5 sm:p-4"
                     >
                         <div
                             v-for="msg in activeConversation.messages"
