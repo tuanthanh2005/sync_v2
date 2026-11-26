@@ -29,7 +29,8 @@
         "mobileNavLabel": "Điều hướng di động",
         "searchPlaceholder": "Tìm kiếm bài viết, cộng đồng, người dùng...",
         "explore": "Khám phá",
-        "createPostShort": "Đăng bài"
+        "createPostShort": "Đăng bài",
+        "referral": "Mời bạn & Nhận thưởng"
     },
     "theme": {
         "light": "Sáng",
@@ -463,7 +464,8 @@
             "system": "Hệ thống",
             "monetization": "Kiếm tiền & Doanh thu",
             "seo": "Trung tâm SEO",
-            "ai": "Trung tâm AI"
+            "ai": "Trung tâm AI",
+            "growth": "Trung tâm Tăng trưởng"
         },
         "nav": {
             "dashboard": "Bảng điều khiển",
@@ -511,7 +513,10 @@
             "aiCredentials": "Gemini Keys & Models",
             "aiAgents": "AI Agents & Prompts",
             "aiContent": "Nội dung & Duyệt bài",
-            "aiAssist": "Dịch thuật & Trợ lý AI"
+            "aiAssist": "Dịch thuật & Trợ lý AI",
+            "growthOverview": "Tổng quan Tăng trưởng",
+            "growthReferrals": "Giới thiệu & Chống gian lận",
+            "growthCampaigns": "Chiến dịch & Huy hiệu"
         },
         "common": {
             "search": "Tìm kiếm...",
@@ -919,6 +924,22 @@
             "moderationAssistantHeading": "Trợ lý Kiểm duyệt AI (Chỉ mang tính gợi ý)",
             "moderationAssistantDesc": "Phân loại rủi ro nội dung và đề xuất hướng xử lý. Quản trị viên luôn là người đưa ra quyết định khóa/xóa cuối cùng.",
             "seoOpportunitiesHeading": "Cơ hội từ khóa thực từ Google Search Console"
+        },
+        "growth": {
+            "overviewTitle": "Trung tâm Tăng trưởng, Giữ chân & Nguồn người dùng",
+            "overviewSubtitle": "Chỉ số người dùng thật (loại trừ AI Agent & tài khoản thử nghiệm), tỷ lệ quay lại cohort D1/D7/D30, nguồn Organic/Referral và cấu hình chiến dịch.",
+            "refreshSnapshot": "Cập nhật số liệu",
+            "kpiHumanUsers": "Thành viên người thật",
+            "kpiReferrals": "Giới thiệu hợp lệ / Tổng",
+            "acquisitionSources": "Nguồn thu hút người dùng",
+            "activationFunnel": "Phễu kích hoạt thành viên mới",
+            "communityGrowth": "Tăng trưởng cộng đồng (người thật)",
+            "settingsTitle": "Công tắc & Giới hạn Chương trình Tăng trưởng",
+            "activityLogs": "Nhật ký quản trị Tăng trưởng",
+            "referralsTitle": "Quản lý Giới thiệu, Mốc thưởng cộng dồn & Duyệt gian lận",
+            "referralsSubtitle": "Xác minh lượt giới thiệu sau thời gian chờ, duyệt thủ công ca nghi ngờ, quản trị mốc thưởng Premium cộng dồn và thu hồi an toàn.",
+            "campaignsTitle": "Chiến dịch Tăng trưởng, Early Members, Huy hiệu & Thành tựu",
+            "campaignsSubtitle": "Quản lý chiến dịch launch/referral/early-member/founding, giới hạn 1.000 suất thật, huy hiệu riêng biệt và thành tựu đóng góp thực chất."
         }
     },
     "common": {
@@ -1211,6 +1232,75 @@
             "label": "AI Agent",
             "defaultDisclosure": "AI Agent chính thức của SyncViet — Trợ lý tự động minh bạch",
             "profileBannerTitle": "Tài khoản AI chính thức của SyncViet"
+        }
+    },
+    "growth": {
+        "badges": {
+            "earlyMember": "Thành viên Tiên phong",
+            "foundingMember": "Thành viên Sáng lập",
+            "officialAccount": "Chính thức",
+            "referralAmbassador": "Đại sứ",
+            "communityBuilder": "Người xây cộng đồng"
+        },
+        "referral": {
+            "pageTitle": "Mời bạn bè & Nhận SyncViet Premium",
+            "heading": "Mời bạn bè tham gia SyncViet",
+            "subtitle": "Chia sẻ liên kết giới thiệu cá nhân. Khi bạn bè xác minh email và tham gia hoạt động thực tế, bạn sẽ tự động nhận ngày SyncViet Premium theo mốc cộng dồn.",
+            "viewPremium": "Premium của tôi",
+            "yourCode": "Mã giới thiệu của bạn",
+            "active": "Đang hoạt động",
+            "disabled": "Đã tạm khóa",
+            "copyLink": "Sao chép liên kết",
+            "copied": "Đã sao chép!",
+            "linkCopied": "Đã sao chép liên kết giới thiệu vào bộ nhớ tạm.",
+            "share": "Chia sẻ",
+            "shareMessage": "Tham gia SyncViet cùng mình — cộng đồng kết nối tri thức và thảo luận cởi mở:",
+            "statTotal": "Tổng đã mời",
+            "statPending": "Đang chờ xác minh",
+            "statQualified": "Hợp lệ",
+            "statRejected": "Từ chối",
+            "statDaysEarned": "Ngày Premium nhận được",
+            "progressTitle": "Tiến độ Mốc thưởng Premium Cộng dồn",
+            "progressSummary": "Bạn đã giới thiệu thành công {qualified}/{target} thành viên hợp lệ. Cần thêm {remaining} thành viên nữa để đạt tổng {days} ngày SyncViet Premium.",
+            "verificationWindow": "Thời gian xác minh {hours} giờ",
+            "qualifiedUnit": "hợp lệ",
+            "claimed": "Đã nhận",
+            "cumulativeTotal": "Tổng quyền lợi cộng dồn",
+            "historyTitle": "Lịch sử giới thiệu",
+            "emptyHistory": "Chưa có thành viên nào đăng ký qua liên kết của bạn. Hãy chia sẻ liên kết để bắt đầu nhận Premium.",
+            "rewardHistoryTitle": "Lịch sử phần thưởng Premium"
+        },
+        "earlyMember": {
+            "title": "SyncViet Early Members (1.000 thành viên tiên phong)",
+            "description": "Thành viên người thật xác minh sớm nhận huy hiệu Early Member vĩnh viễn và ngày SyncViet Premium miễn phí khi chương trình đang mở.",
+            "yourNumber": "Bạn là Thành viên Tiên phong #{num}!",
+            "openStatus": "Đang mở cho thành viên xác minh đủ điều kiện",
+            "pausedStatus": "Chương trình hiện đang tạm dừng theo cấu hình Quản trị viên"
+        },
+        "achievements": {
+            "title": "Thành tựu cộng đồng",
+            "unlocked": "Đã mở khóa",
+            "locked": "Chưa đạt"
+        },
+        "preferences": {
+            "title": "Tùy chọn Tóm tắt & Thông báo Giữ chân",
+            "weeklyDigest": "Tóm tắt thảo luận nổi bật hàng tuần",
+            "reengagement": "Thông báo gợi ý khi lâu không ghé thăm (3–30 ngày)",
+            "referralUpdates": "Thông báo tiến độ giới thiệu & nhận thưởng",
+            "marketingEmails": "Email giới thiệu tính năng mới (tùy chọn bật)"
+        },
+        "onboarding": {
+            "pageTitle": "Chào mừng đến với SyncViet",
+            "heading": "Cá nhân hóa trải nghiệm SyncViet của bạn",
+            "subtitle": "Chọn ngôn ngữ, chủ đề quan tâm và cộng đồng phù hợp. Mọi bước đều không bắt buộc và bạn có thể bỏ qua bất cứ lúc nào.",
+            "skip": "Bỏ qua lúc này",
+            "languageStep": "1. Ngôn ngữ hiển thị ưa thích",
+            "interestsStep": "2. Chủ đề bạn quan tâm",
+            "communitiesStep": "3. Cộng đồng công khai gợi ý (Tùy chọn tham gia)",
+            "accountsStep": "4. Tài khoản hữu ích nên khám phá",
+            "join": "Tham gia",
+            "joined": "Đã tham gia",
+            "finish": "Khám phá SyncViet"
         }
     }
 }

@@ -10,6 +10,9 @@ use App\Models\UserSanction;
 use App\Notifications\SocialActivityNotification;
 use App\Services\Ai\AiAutomationControlService;
 use App\Services\Ai\AiPublishingAndSchedulerService;
+use App\Services\Growth\GrowthAnalyticsService;
+use App\Services\Growth\ReferralService;
+use App\Services\Growth\RetentionAndDigestService;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
@@ -25,6 +28,7 @@ use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
 use App\Services\System\LanguageService;
 use Database\Seeders\AiContentCenterSeeder;
+use Database\Seeders\GrowthSeeder;
 use Database\Seeders\MonetizationSeeder;
 use Database\Seeders\SeoSeeder;
 use Illuminate\Foundation\Inspiring;
@@ -48,7 +52,8 @@ Artisan::command('app:rbac:sync', function (
     MonetizationSeeder::seedDefaultsIfEmpty();
     SeoSeeder::seedDefaultsIfEmpty();
     AiContentCenterSeeder::seedDefaultsIfEmpty();
-    $this->info('RBAC catalog, 15 platform languages, draft policies, monetization, SEO engine, and AI Content Center defaults synced.');
+    GrowthSeeder::seedDefaultsIfEmpty();
+    $this->info('RBAC catalog, 15 platform languages, draft policies, monetization, SEO engine, AI Content Center, and Growth defaults synced.');
 })->purpose('Synchronize RBAC roles, permissions, languages, draft policies, monetization, SEO, and AI defaults');
 
 Artisan::command('app:monetization:sync', function (
@@ -310,6 +315,37 @@ Artisan::command('app:ai:run-plans', function (AiAutomationControlService $contr
     $this->info("AI content plans dispatched: {$dispatched}");
 })->purpose('Dispatch bounded due AI content plan draft generation jobs respecting Emergency Stop');
 
+Artisan::command('app:growth:qualify-referrals', function (ReferralService $referrals): void {
+    $res = $referrals->processPendingQualifications(100);
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'Growth referrals: checked=%d qualified=%d under_review=%d rejected=%d rewards_granted=%d',
+        $res['checked'],
+        $res['qualified'],
+        $res['under_review'],
+        $res['rejected'],
+        $res['rewards_granted'],
+    ));
+})->purpose('Evaluate due pending referrals, run fraud signals, and grant cumulative milestone rewards');
+
+Artisan::command('app:growth:snapshot-analytics', function (GrowthAnalyticsService $analytics): void {
+    $row = $analytics->snapshotDailyMetrics();
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info("Growth analytics snapshot saved for {$row->date}: humans={$row->total_human_users} dau={$row->dau_human} qualified_refs={$row->qualified_referrals}");
+})->purpose('Precompute daily human-only Growth Analytics and cohort retention metrics');
+
+Artisan::command('app:growth:retention', function (RetentionAndDigestService $retention): void {
+    $re = $retention->processInactiveReengagement(50);
+    $dig = $retention->processWeeklyDigests(50);
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf('Growth retention: reengagement_sent=%d digest_sent=%d', $re['sent'], $dig['sent']));
+})->purpose('Send frequency-capped retention digests and inactive user re-engagement notifications');
+
+Artisan::command('app:growth:cleanup', function (ReferralService $referrals): void {
+    $deleted = $referrals->cleanupExpiredVisits();
+    $this->info("Growth cleanup: expired referral visits purged={$deleted}");
+})->purpose('Purge expired referral visit tracking rows per retention policy');
+
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
@@ -319,3 +355,7 @@ Schedule::command('app:seo:analytics')->dailyAt('03:15')->withoutOverlapping();
 Schedule::command('app:seo:audit')->weeklyOn(1, '04:00')->withoutOverlapping();
 Schedule::command('app:ai:publish-scheduled')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:ai:run-plans')->hourly()->withoutOverlapping();
+Schedule::command('app:growth:qualify-referrals')->everyFifteenMinutes()->withoutOverlapping();
+Schedule::command('app:growth:snapshot-analytics')->hourly()->withoutOverlapping();
+Schedule::command('app:growth:retention')->dailyAt('09:30')->withoutOverlapping();
+Schedule::command('app:growth:cleanup')->dailyAt('02:30')->withoutOverlapping();

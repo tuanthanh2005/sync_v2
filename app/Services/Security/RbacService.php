@@ -97,6 +97,7 @@ class RbacService
                     'languages.view', 'languages.update', 'languages.export',
                     'seo.view', 'seo.translations', 'seo.audit',
                     'ai.view', 'ai.prompts', 'ai.review', 'ai.publish',
+                    'growth.view', 'growth.campaigns',
                 ],
             ],
             [
@@ -185,6 +186,7 @@ class RbacService
             'backups' => ['view', 'create', 'export'],
             'seo' => ['view', 'manage', 'audit', 'integrations', 'translations', 'redirects'],
             'ai' => ['view', 'manage', 'credentials', 'agents', 'prompts', 'review', 'publish', 'moderation', 'emergency_stop'],
+            'growth' => ['view', 'manage', 'referrals', 'rewards', 'campaigns', 'early_members', 'fraud', 'export'],
         ];
 
         $catalog = [];

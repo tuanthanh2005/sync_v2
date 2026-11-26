@@ -11,11 +11,14 @@ use App\Models\AdCampaign;
 use App\Models\AiContentDraft;
 use App\Models\Appeal;
 use App\Models\BannerCampaign;
+use App\Models\GrowthFraudReview;
+use App\Models\OnboardingProgress;
 use App\Models\Payment;
 use App\Models\PolicyPage;
 use App\Models\Report;
 use App\Models\VerificationRequest;
 use App\Services\Community\CommunityService;
+use App\Services\Growth\EarlyMemberAndBadgeService;
 use App\Services\Messaging\MessagingService;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Monetization\BoostPostService;
@@ -80,6 +83,7 @@ class HandleInertiaRequests extends Middleware
                 'appeals' => Schema::hasTable('appeals') ? Appeal::query()->where('status', 'pending')->count() : 0,
                 'verifications' => Schema::hasTable('verification_requests') ? VerificationRequest::query()->where('status', 'pending')->count() : 0,
                 'ai_drafts' => Schema::hasTable('ai_content_drafts') ? AiContentDraft::query()->where('status', AiDraftStatus::PendingReview->value)->count() : 0,
+                'fraud_reviews' => Schema::hasTable('growth_fraud_reviews') ? GrowthFraudReview::query()->where('status', 'pending')->count() : 0,
             ];
         }
 
@@ -122,6 +126,11 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => $user->avatarUrl(),
                     'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
                     'is_premium' => $user->isPremium(),
+                    'is_ai_agent' => $user->isAiAgent(),
+                    'badges' => app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers([$user->id])[$user->id] ?? [],
+                    'needs_onboarding' => $user->isHumanMember() && Schema::hasTable('onboarding_progress')
+                        ? OnboardingProgress::query()->where('user_id', $user->id)->whereNull('completed_at')->whereNull('skipped_at')->exists()
+                        : false,
                     'premium_until' => $user->premium_until?->toIso8601String(),
                     'role' => $user->role->value,
                     'role_label' => $user->rbacRole !== null ? $user->rbacRole->name : $user->role->label(),
@@ -186,6 +195,12 @@ class HandleInertiaRequests extends Middleware
                         'publishAi' => $user->hasPermission('ai.publish') || $user->hasPermission('ai.manage'),
                         'moderateAi' => $user->hasPermission('ai.moderation') || $user->hasPermission('ai.manage'),
                         'emergencyStopAi' => $user->hasPermission('ai.emergency_stop') || $user->hasPermission('ai.manage'),
+                        'viewGrowth' => $user->hasPermission('growth.view'),
+                        'manageGrowth' => $user->hasPermission('growth.manage'),
+                        'manageGrowthReferrals' => $user->hasPermission('growth.referrals') || $user->hasPermission('growth.manage'),
+                        'manageGrowthRewards' => $user->hasPermission('growth.rewards') || $user->hasPermission('growth.manage'),
+                        'manageGrowthCampaigns' => $user->hasPermission('growth.campaigns') || $user->hasPermission('growth.manage'),
+                        'manageGrowthFraud' => $user->hasPermission('growth.fraud') || $user->hasPermission('growth.manage'),
                     ],
                 ],
             ],

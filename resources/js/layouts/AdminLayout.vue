@@ -14,6 +14,7 @@ import {
     DollarSign,
     FileText,
     Flag,
+    Gift,
     Globe,
     Globe2,
     Hash,
@@ -32,6 +33,7 @@ import {
     PanelLeftClose,
     PanelLeftOpen,
     Plug,
+    Rocket,
     Scale,
     Search,
     Settings,
@@ -118,6 +120,11 @@ import {
     credentials as adminAiCredentials,
     overview as adminAiOverview,
 } from '@/routes/admin/ai';
+import {
+    campaigns as adminGrowthCampaigns,
+    overview as adminGrowthOverview,
+    referrals as adminGrowthReferrals,
+} from '@/routes/admin/growth';
 import { index as adminSettings } from '@/routes/admin/settings';
 import { index as adminUsers } from '@/routes/admin/users';
 import { index as adminVerifications } from '@/routes/admin/verifications';
@@ -541,6 +548,31 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                           label: t('admin.nav.aiAssist'),
                           href: adminAiAssist.url(),
                           icon: Languages,
+                      },
+                  ]
+                : [],
+        },
+        {
+            id: 'growth',
+            label: t('admin.groups.growth'),
+            items: perms.viewGrowth
+                ? [
+                      {
+                          label: t('admin.nav.growthOverview'),
+                          href: adminGrowthOverview.url(),
+                          icon: Rocket,
+                          exact: true,
+                      },
+                      {
+                          label: t('admin.nav.growthReferrals'),
+                          href: adminGrowthReferrals.url(),
+                          icon: Gift,
+                          badge: pending.value?.fraud_reviews || 0,
+                      },
+                      {
+                          label: t('admin.nav.growthCampaigns'),
+                          href: adminGrowthCampaigns.url(),
+                          icon: Crown,
                       },
                   ]
                 : [],

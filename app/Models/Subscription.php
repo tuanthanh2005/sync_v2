@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $source
  * @property string $currency
  * @property int $amount_paid
+ * @property int $promotional_days
  * @property CarbonInterface $starts_at
  * @property CarbonInterface $expires_at
  * @property CarbonInterface|null $grace_ends_at
@@ -45,6 +46,7 @@ class Subscription extends Model
         return [
             'status' => SubscriptionStatus::class,
             'amount_paid' => 'integer',
+            'promotional_days' => 'integer',
             'starts_at' => 'datetime',
             'expires_at' => 'datetime',
             'grace_ends_at' => 'datetime',

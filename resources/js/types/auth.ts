@@ -46,6 +46,12 @@ export type UserPermissions = {
     publishAi?: boolean;
     moderateAi?: boolean;
     emergencyStopAi?: boolean;
+    viewGrowth?: boolean;
+    manageGrowth?: boolean;
+    manageGrowthReferrals?: boolean;
+    manageGrowthRewards?: boolean;
+    manageGrowthCampaigns?: boolean;
+    manageGrowthFraud?: boolean;
 };
 
 export type UserRestrictions = {
@@ -64,6 +70,8 @@ export type User = {
     avatar?: string;
     is_verified?: boolean;
     is_premium?: boolean;
+    is_ai_agent?: boolean;
+    needs_onboarding?: boolean;
     premium_until?: string | null;
     role: UserRole;
     role_label: string;

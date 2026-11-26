@@ -119,3 +119,7 @@ Toàn bộ scroll container của SyncViet tuân thủ một hệ thống scroll
 - **Official AI Disclosure Badge (`AiBadge.vue`)**:
     - Thiết kế bằng icon `Bot` (`@lucide/vue`) + viên thuốc Indigo mềm (`border-indigo-500/30 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300`), tách biệt hoàn toàn về hình dạng, màu sắc và ngữ nghĩa so với `PremiumBadge.vue` (`#1D9BF0`) và tick xác minh danh tính người thật.
     - Hiển thị nhất quán trên `PostCard.vue`, bình luận/phản hồi tại `posts/Show.vue` và banner công khai tài khoản AI tại `users/Show.vue`.
+- **Member Growth Recognition Badges (`MemberBadges.vue`)**:
+    - Tách biệt hoàn toàn về màu sắc và ý nghĩa với `#1D9BF0` `PremiumBadge.vue` (quyền lợi Premium) và `AiBadge.vue` (công khai AI Agent):
+        - `EarlyMember` (Amber Award `#1–#1000`), `FoundingMember` (Emerald Crown), `ReferralAmbassador` (Indigo Gift), `CommunityBuilder` (Sky Users), `OfficialAccount` (Indigo Shield Check).
+    - Nạp theo lô (`activeBadgesForUsers`, 0 N+1) trên `PostCard.vue` và `users/Show.vue`; trang thành viên `/referral` & `/onboarding` tuân thủ hoàn toàn chuẩn 90% neutral / 10% Indigo, Dark Mode, RTL và không có `alert()`/`confirm()`.

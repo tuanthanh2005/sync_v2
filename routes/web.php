@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AppealController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\FinanceController;
+use App\Http\Controllers\Admin\Growth\GrowthCampaignsAndProgramsController;
+use App\Http\Controllers\Admin\Growth\GrowthOverviewController;
+use App\Http\Controllers\Admin\Growth\GrowthReferralsAndFraudController;
 use App\Http\Controllers\Admin\LanguageManagementController;
 use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Admin\Monetization\BannerAdminController;
@@ -34,6 +37,7 @@ use App\Http\Controllers\Billing\PaymentWebhookController;
 use App\Http\Controllers\Billing\WalletController;
 use App\Http\Controllers\Community\CommunityController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Growth\ReferralController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Messaging\MessageController;
@@ -75,6 +79,15 @@ Route::post('/webhooks/payments/{provider}', [PaymentWebhookController::class, '
 Route::post('/locale', LocaleController::class)
     ->middleware('throttle:30,1')
     ->name('locale.update');
+
+// ─── Public Referral Landing Redirect & Signed Unsubscribe ───────────────────
+Route::get('/r/{code}', [ReferralController::class, 'visit'])
+    ->where('code', '[A-Za-z0-9_-]{4,24}')
+    ->middleware('throttle:60,1')
+    ->name('referral.visit');
+Route::get('/growth/unsubscribe/{user}/{channel}', [ReferralController::class, 'unsubscribe'])
+    ->middleware('signed')
+    ->name('growth.unsubscribe');
 
 // ─── Social OAuth ────────────────────────────────────────────────────────────
 Route::prefix('auth/{provider}')
@@ -234,6 +247,16 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::post('/payments/{payment}/sandbox-confirm', [PaymentHistoryController::class, 'sandboxConfirm'])
         ->middleware('throttle:15,1')
         ->name('payments.sandbox-confirm');
+
+    // ── Member Growth: Referral Hub, Onboarding & Retention Preferences ──────
+    Route::get('/referral', [ReferralController::class, 'index'])->name('referral.index');
+    Route::post('/referral/preferences', [ReferralController::class, 'updateNotificationPreferences'])
+        ->middleware('throttle:20,1')
+        ->name('referral.preferences');
+    Route::get('/onboarding', [ReferralController::class, 'onboarding'])->name('onboarding.index');
+    Route::post('/onboarding', [ReferralController::class, 'updateOnboarding'])
+        ->middleware('throttle:30,1')
+        ->name('onboarding.update');
 
     Route::prefix('admin')
         ->name('admin.')
@@ -710,6 +733,72 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
                 Route::post('/moderation/{assessment}/resolve', [AiAssistantAndTranslationController::class, 'resolveAssessment'])
                     ->middleware('permission:ai.moderation,ai.manage')
                     ->name('moderation.resolve');
+            });
+
+            // ── User Growth, Referral, Early Member & Retention Center V1.0 ──────
+            Route::prefix('growth')->name('growth.')->group(function () {
+                Route::get('/', [GrowthOverviewController::class, 'index'])
+                    ->middleware('permission:growth.view')
+                    ->name('overview');
+                Route::post('/analytics/refresh', [GrowthOverviewController::class, 'refreshAnalytics'])
+                    ->middleware('permission:growth.view')
+                    ->name('analytics.refresh');
+                Route::post('/settings', [GrowthOverviewController::class, 'updateSettings'])
+                    ->middleware('permission:growth.manage')
+                    ->name('settings.update');
+
+                Route::get('/referrals', [GrowthReferralsAndFraudController::class, 'index'])
+                    ->middleware('permission:growth.view')
+                    ->name('referrals');
+                Route::post('/referrals/qualify-now', [GrowthReferralsAndFraudController::class, 'runQualificationNow'])
+                    ->middleware('permission:growth.referrals,growth.manage')
+                    ->name('referrals.qualify-now');
+                Route::post('/referrals/{referral}/review', [GrowthReferralsAndFraudController::class, 'reviewReferral'])
+                    ->middleware('permission:growth.fraud,growth.referrals,growth.manage')
+                    ->name('referrals.review');
+                Route::patch('/codes/{referralCode}/toggle', [GrowthReferralsAndFraudController::class, 'toggleCode'])
+                    ->middleware('permission:growth.fraud,growth.referrals,growth.manage')
+                    ->name('codes.toggle');
+                Route::post('/rules', [GrowthReferralsAndFraudController::class, 'storeRule'])
+                    ->middleware('permission:growth.rewards,growth.manage')
+                    ->name('rules.store');
+                Route::patch('/rules/{rule}', [GrowthReferralsAndFraudController::class, 'updateRule'])
+                    ->middleware('permission:growth.rewards,growth.manage')
+                    ->name('rules.update');
+                Route::post('/rewards/manual-grant', [GrowthReferralsAndFraudController::class, 'manualGrant'])
+                    ->middleware('permission:growth.rewards,growth.manage')
+                    ->name('rewards.manual-grant');
+                Route::post('/rewards/{reward}/revoke', [GrowthReferralsAndFraudController::class, 'revokeReward'])
+                    ->middleware('permission:growth.rewards,growth.fraud,growth.manage')
+                    ->name('rewards.revoke');
+                Route::get('/referrals/export-csv', [GrowthReferralsAndFraudController::class, 'exportReferralsCsv'])
+                    ->middleware('permission:growth.export,growth.view')
+                    ->name('referrals.export-csv');
+
+                Route::get('/campaigns', [GrowthCampaignsAndProgramsController::class, 'index'])
+                    ->middleware('permission:growth.view')
+                    ->name('campaigns');
+                Route::post('/campaigns', [GrowthCampaignsAndProgramsController::class, 'storeCampaign'])
+                    ->middleware('permission:growth.campaigns,growth.manage')
+                    ->name('campaigns.store');
+                Route::patch('/campaigns/{campaign}', [GrowthCampaignsAndProgramsController::class, 'updateCampaign'])
+                    ->middleware('permission:growth.campaigns,growth.manage')
+                    ->name('campaigns.update');
+                Route::post('/early-members/enroll', [GrowthCampaignsAndProgramsController::class, 'enrollEarlyMember'])
+                    ->middleware('permission:growth.early_members,growth.manage')
+                    ->name('early-members.enroll');
+                Route::post('/early-members/{earlyMember}/revoke', [GrowthCampaignsAndProgramsController::class, 'revokeEarlyMember'])
+                    ->middleware('permission:growth.early_members,growth.fraud,growth.manage')
+                    ->name('early-members.revoke');
+                Route::post('/badges/grant', [GrowthCampaignsAndProgramsController::class, 'grantBadge'])
+                    ->middleware('permission:growth.early_members,growth.manage')
+                    ->name('badges.grant');
+                Route::post('/badges/{badge}/revoke', [GrowthCampaignsAndProgramsController::class, 'revokeBadge'])
+                    ->middleware('permission:growth.early_members,growth.fraud,growth.manage')
+                    ->name('badges.revoke');
+                Route::patch('/achievements/{achievement}/toggle', [GrowthCampaignsAndProgramsController::class, 'toggleAchievement'])
+                    ->middleware('permission:growth.campaigns,growth.manage')
+                    ->name('achievements.toggle');
             });
 
             // ── System: Languages, Settings, Notifications, Policies, Security, Backups ─

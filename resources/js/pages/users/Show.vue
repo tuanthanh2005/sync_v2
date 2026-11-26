@@ -24,6 +24,7 @@ import EmptyState from '@/components/common/EmptyState.vue';
 import ReportDialog from '@/components/common/ReportDialog.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import AiBadge from '@/components/ai/AiBadge.vue';
+import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -455,6 +456,12 @@ function setFile(field: 'avatar' | 'cover', event: Event): void {
                             v-if="profile_user.is_ai_agent"
                             :disclosure="profile_user.ai_disclosure"
                             size="md"
+                        />
+                        <MemberBadges
+                            v-if="profile_user.badges?.length"
+                            :badges="profile_user.badges"
+                            size="md"
+                            :max="3"
                         />
                         <BadgeCheck
                             v-if="profile_user.is_verified"

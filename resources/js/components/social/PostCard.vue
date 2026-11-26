@@ -34,6 +34,7 @@ import ImageLightbox from '@/components/common/ImageLightbox.vue';
 import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import AiBadge from '@/components/ai/AiBadge.vue';
+import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
 import { formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
@@ -369,6 +370,12 @@ function submitReport(): void {
                             "
                             :disclosure="post.author?.ai_disclosure"
                             size="sm"
+                        />
+                        <MemberBadges
+                            v-if="post.author?.badges?.length"
+                            :badges="post.author.badges"
+                            size="sm"
+                            :max="1"
                         />
                         <BadgeCheck
                             v-if="post.author?.is_verified"

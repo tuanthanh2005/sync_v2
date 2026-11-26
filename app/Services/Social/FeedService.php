@@ -18,6 +18,7 @@ use App\Models\PostPollVote;
 use App\Models\PostReaction;
 use App\Models\User;
 use App\Models\UserBlock;
+use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -168,8 +169,11 @@ class FeedService
             }
         }
 
+        $authorIds = array_values(array_unique(array_map(static fn (mixed $id): int => (int) $id, $posts->pluck('user_id')->all())));
+        $badgesByUser = app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers($authorIds);
+
         return array_values(
-            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts): array {
+            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts, $badgesByUser): array {
                 $item = $this->serializeOne(
                     $post,
                     $viewer,
@@ -177,6 +181,9 @@ class FeedService
                     isset($viewerBookmarks[$post->id]),
                     $post->poll !== null ? ($viewerVotes[$post->poll->id] ?? []) : [],
                 );
+                if (is_array($item['author'] ?? null)) {
+                    $item['author']['badges'] = $badgesByUser[$post->user_id] ?? [];
+                }
                 $item['boost_summary'] = $ownerBoosts[$post->id] ?? null;
 
                 return $item;

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\ActivationMilestone;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Growth\EarlyMemberAndBadgeService;
+use App\Services\Growth\OnboardingAndActivationService;
+use App\Services\Growth\ReferralService;
+use App\Services\Seo\OrganicGrowthService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +21,10 @@ class SocialAuthController extends Controller
 {
     public function __construct(
         private readonly SystemSettingService $settings,
+        private readonly OrganicGrowthService $organicGrowth,
+        private readonly ReferralService $referralService,
+        private readonly OnboardingAndActivationService $onboardingService,
+        private readonly EarlyMemberAndBadgeService $earlyMemberService,
     ) {}
 
     /**
@@ -57,7 +66,8 @@ class SocialAuthController extends Controller
                 ->withErrors(['email' => __('Unable to sign in with Google. Please try again.')]);
         }
 
-        $user = DB::transaction(function () use ($socialUser, $provider) {
+        $wasCreated = false;
+        $user = DB::transaction(function () use ($socialUser, $provider, &$wasCreated) {
             /** @var User|null $existing */
             $existing = User::where('email', $socialUser->getEmail())->first();
 
@@ -76,6 +86,7 @@ class SocialAuthController extends Controller
             }
 
             // Create a new user
+            $wasCreated = true;
             $name = $socialUser->getName() ?? $socialUser->getNickname() ?? 'User';
             $username = $this->generateUsername($name);
 
@@ -91,6 +102,16 @@ class SocialAuthController extends Controller
                 'avatar_url' => $socialUser->getAvatar(),
             ]);
         });
+
+        if ($wasCreated) {
+            $req = request();
+            $this->organicGrowth->attributeNewRegistration($user, $req);
+            $this->referralService->attributeRegistration($user, $req);
+            $this->onboardingService->ensureProgress($user);
+            $this->onboardingService->recordMilestone($user, ActivationMilestone::RegistrationCompleted, 'google_oauth');
+            $this->onboardingService->recordMilestone($user, ActivationMilestone::EmailVerified, 'google_oauth');
+            $this->earlyMemberService->enrollEarlyMemberIfEligible($user);
+        }
 
         // Block suspended / banned / deactivated accounts
         if (! $user->isActive()) {

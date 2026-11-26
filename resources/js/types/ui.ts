@@ -21,6 +21,14 @@ export type PublicLanguageItem = {
     is_rtl: boolean;
 };
 
+export type MemberBadgeItem = {
+    type: string;
+    label_key: string;
+    icon: string;
+    color: string;
+    member_number: number | null;
+};
+
 export type AdminPendingCounts = {
     reports: number;
     ads: number;
@@ -29,6 +37,7 @@ export type AdminPendingCounts = {
     appeals: number;
     verifications: number;
     ai_drafts?: number;
+    fraud_reviews?: number;
 };
 
 export type SystemSettingsPublic = {
@@ -58,6 +67,7 @@ export type SocialAuthor = {
     is_premium?: boolean;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
+    badges?: MemberBadgeItem[];
 };
 
 export type FeedMediaItem = {
@@ -598,6 +608,7 @@ export type ProfileViewUser = {
     account_type?: string;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
+    badges?: MemberBadgeItem[];
     followers_count: number;
     following_count: number;
     posts_count: number;
@@ -618,6 +629,7 @@ export type SearchUserResult = {
     account_type?: string;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
+    badges?: MemberBadgeItem[];
     followers_count: number;
 };
 

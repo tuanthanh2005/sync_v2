@@ -200,6 +200,198 @@ class PremiumSubscriptionService
     }
 
     /**
+     * Grant promotional / referral / early-member Premium time through the existing Subscription system.
+     * - NEVER creates a fake Payment or inflates financial revenue.
+     * - Stacks cleanly on top of any existing active paid Premium (zero lost paid days).
+     * - Tracks `promotional_days` explicitly so selective revocation never removes paid Premium time.
+     *
+     * @param  array<string, mixed>  $metadata
+     */
+    public function grantPromotionalPremium(
+        User $target,
+        int $durationDays,
+        string $source,
+        string $reason,
+        ?User $actor = null,
+        array $metadata = [],
+    ): Subscription {
+        $allowedSources = ['referral_reward', 'early_member_reward', 'founding_member', 'promotional_campaign', 'admin_grant'];
+        $cleanSource = in_array($source, $allowedSources, true) ? $source : 'promotional_campaign';
+        $days = max(1, min(1095, $durationDays));
+
+        MonetizationSeeder::seedDefaultsIfEmpty();
+
+        /** @var PremiumPlan $plan */
+        $plan = PremiumPlan::query()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->firstOrFail();
+
+        return DB::transaction(function () use ($target, $plan, $days, $cleanSource, $reason, $actor, $metadata): Subscription {
+            /** @var User $lockedUser */
+            $lockedUser = User::query()->whereKey($target->id)->lockForUpdate()->firstOrFail();
+
+            $now = now();
+            $previousExpiresAt = $lockedUser->premium_until;
+            $hasActiveTime = $previousExpiresAt !== null && $previousExpiresAt->isFuture() && $lockedUser->premium_suspended_at === null;
+            $baseStart = $hasActiveTime ? $previousExpiresAt->copy() : $now->copy();
+            $newExpiresAt = $baseStart->copy()->addDays($days);
+
+            $subscription = new Subscription([
+                'reason' => trim($reason),
+                'metadata' => [
+                    ...$metadata,
+                    'source' => $cleanSource,
+                    'promotional_days' => $days,
+                    'stacked_on_existing' => $hasActiveTime,
+                ],
+            ]);
+            $subscription->user_id = $lockedUser->id;
+            $subscription->premium_plan_id = $plan->id;
+            $subscription->payment_id = null;
+            $subscription->status = SubscriptionStatus::Active;
+            $subscription->source = $cleanSource;
+            $subscription->currency = 'USD';
+            $subscription->amount_paid = 0;
+            $subscription->promotional_days = $days;
+            $subscription->starts_at = $baseStart;
+            $subscription->expires_at = $newExpiresAt;
+            $subscription->granted_by = $actor?->id;
+            $subscription->save();
+
+            $lockedUser->forceFill([
+                'premium_until' => $newExpiresAt,
+                'premium_suspended_at' => null,
+            ])->save();
+
+            $event = new SubscriptionEvent([
+                'event_type' => 'promotional_grant',
+                'days_delta' => $days,
+                'previous_expires_at' => $previousExpiresAt,
+                'new_expires_at' => $newExpiresAt,
+                'note' => "[{$cleanSource}] {$reason}",
+            ]);
+            $event->subscription_id = $subscription->id;
+            $event->user_id = $lockedUser->id;
+            $event->actor_id = $actor !== null ? $actor->id : $lockedUser->id;
+            $event->created_at = $now;
+            $event->save();
+
+            $this->auditLogger->log(
+                "premium.{$cleanSource}.granted",
+                $subscription,
+                [
+                    'target_user_id' => $lockedUser->id,
+                    'source' => $cleanSource,
+                    'days' => $days,
+                    'new_expires_at' => $newExpiresAt->toIso8601String(),
+                    'reason' => $reason,
+                ],
+                $actor ?? $lockedUser,
+            );
+
+            $lockedUser->notify(new SocialActivityNotification(
+                eventKey: 'premium_reward_granted',
+                titleVi: "Bạn nhận được +{$days} ngày SyncViet Premium miễn phí ({$reason}).",
+                titleEn: "You received +{$days} complimentary days of SyncViet Premium ({$reason}).",
+                url: route('account.premium'),
+                actorName: (string) config('app.name', 'SyncViet'),
+                actorUsername: 'system',
+            ));
+
+            return $subscription;
+        });
+    }
+
+    /**
+     * Selectively revoke a promotional Premium grant without EVER removing legally purchased Premium time.
+     */
+    public function revokePromotionalPremium(Subscription $subscription, string $reason, User $actor): Subscription
+    {
+        if ($subscription->payment_id !== null || $subscription->amount_paid > 0) {
+            throw ValidationException::withMessages([
+                'subscription' => [__('Cannot revoke a paid Premium subscription via promotional clawback.')],
+            ]);
+        }
+
+        $cleanReason = trim($reason) !== '' ? trim($reason) : 'Promotional reward revoked';
+
+        return DB::transaction(function () use ($subscription, $cleanReason, $actor): Subscription {
+            /** @var Subscription $locked */
+            $locked = Subscription::query()->whereKey($subscription->id)->lockForUpdate()->firstOrFail();
+            /** @var User $lockedUser */
+            $lockedUser = User::query()->whereKey($locked->user_id)->lockForUpdate()->firstOrFail();
+
+            if ($locked->status === SubscriptionStatus::Revoked) {
+                return $locked;
+            }
+
+            $now = now();
+            $daysToDeduct = max(0, $locked->promotional_days);
+            $previousUntil = $lockedUser->premium_until;
+
+            $locked->status = SubscriptionStatus::Revoked;
+            $locked->revoked_at = $now;
+            $locked->reason = $cleanReason;
+            $locked->save();
+
+            // Preserve any active paid subscription expiration floor strictly!
+            /** @var Subscription|null $latestPaid */
+            $latestPaid = Subscription::query()
+                ->where('user_id', $lockedUser->id)
+                ->whereNotNull('payment_id')
+                ->where('amount_paid', '>', 0)
+                ->whereNotIn('status', [SubscriptionStatus::Revoked->value, SubscriptionStatus::Cancelled->value])
+                ->orderByDesc('expires_at')
+                ->first();
+
+            $paidFloor = $latestPaid !== null && $latestPaid->expires_at->isFuture()
+                ? $latestPaid->expires_at->copy()
+                : null;
+
+            $newUntil = $previousUntil?->copy()->subDays($daysToDeduct);
+
+            if ($paidFloor !== null) {
+                if ($newUntil === null || $newUntil->lessThan($paidFloor)) {
+                    $newUntil = $paidFloor;
+                }
+            } elseif ($newUntil !== null && $newUntil->isPast()) {
+                $newUntil = null;
+            }
+
+            $lockedUser->forceFill(['premium_until' => $newUntil])->save();
+
+            $event = new SubscriptionEvent([
+                'event_type' => 'promotional_revoked',
+                'days_delta' => -$daysToDeduct,
+                'previous_expires_at' => $previousUntil,
+                'new_expires_at' => $newUntil ?? $now,
+                'note' => $cleanReason,
+            ]);
+            $event->subscription_id = $locked->id;
+            $event->user_id = $lockedUser->id;
+            $event->actor_id = $actor->id;
+            $event->created_at = $now;
+            $event->save();
+
+            $this->auditLogger->log(
+                'premium.promotional.revoked',
+                $locked,
+                [
+                    'target_user_id' => $lockedUser->id,
+                    'days_deducted' => $daysToDeduct,
+                    'preserved_paid_floor' => $paidFloor?->toIso8601String(),
+                    'new_expires_at' => $newUntil?->toIso8601String(),
+                    'reason' => $cleanReason,
+                ],
+                $actor,
+            );
+
+            return $locked;
+        });
+    }
+
+    /**
      * Administratively grant promotional/comp Premium without fabricating any fake Payment record.
      */
     public function adminGrantPremium(

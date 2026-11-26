@@ -8,6 +8,7 @@ import {
     Compass,
     Crown,
     Download,
+    Gift,
     Home,
     Image as ImageIcon,
     LayoutGrid,
@@ -79,6 +80,7 @@ import {
 } from '@/routes/monetization';
 import { index as notificationsIndex } from '@/routes/notifications';
 import { index as paymentsIndex } from '@/routes/payments';
+import { index as referralIndex } from '@/routes/referral';
 import { premium as accountPremiumRoute } from '@/routes/account';
 import { edit as editSecurity } from '@/routes/security';
 import { index as walletIndex } from '@/routes/wallet';
@@ -134,6 +136,7 @@ const isWideServiceLayout = computed(
     () =>
         props.hideRightSidebar ||
         page.component.startsWith('monetization/') ||
+        page.component.startsWith('growth/') ||
         page.component === 'Wallet' ||
         page.component === 'Ads',
 );
@@ -275,6 +278,15 @@ const sidebarGroups = computed<SidebarGroup[]>(() => {
                     href: communitiesIndex(),
                     icon: Users,
                 },
+                ...(!user.value.is_ai_agent
+                    ? [
+                          {
+                              title: t('nav.referral'),
+                              href: referralIndex(),
+                              icon: Gift,
+                          },
+                      ]
+                    : []),
             ],
         },
         {

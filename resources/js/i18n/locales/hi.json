@@ -29,7 +29,8 @@
         "mobileNavLabel": "मोबाइल नेविगेशन",
         "searchPlaceholder": "पोस्ट, समुदाय, लोग खोजें...",
         "explore": "खोजें",
-        "createPostShort": "पोस्ट"
+        "createPostShort": "पोस्ट",
+        "referral": "आमंत्रित करें"
     },
     "theme": {
         "light": "हल्का",
@@ -463,7 +464,8 @@
             "system": "सिस्टम",
             "monetization": "मुद्रीकरण",
             "seo": "SEO केंद्र",
-            "ai": "AI सामग्री केंद्र"
+            "ai": "AI सामग्री केंद्र",
+            "growth": "ग्रोथ सेंटर"
         },
         "nav": {
             "dashboard": "डैशबोर्ड",
@@ -511,7 +513,10 @@
             "aiCredentials": "Gemini कुंजी और मॉडल",
             "aiAgents": "AI एजेंट और प्रॉम्प्ट",
             "aiContent": "सामग्री और समीक्षा",
-            "aiAssist": "अनुवाद और सहायता"
+            "aiAssist": "अनुवाद और सहायता",
+            "growthOverview": "Growth Overview",
+            "growthReferrals": "Referrals & Fraud",
+            "growthCampaigns": "Campaigns & Badges"
         },
         "common": {
             "search": "खोजें...",
@@ -919,6 +924,22 @@
             "moderationAssistantHeading": "AI Moderation Assistant (Advisory Only)",
             "moderationAssistantDesc": "Classifies safety risk and suggests moderation actions. Human moderators always make final ban/delete decisions.",
             "seoOpportunitiesHeading": "Real Search Console SEO Opportunities"
+        },
+        "growth": {
+            "overviewTitle": "User Growth, Retention & Acquisition Center",
+            "overviewSubtitle": "Real human-only KPIs (AI Agents & test accounts excluded), cohort retention (D1/D7/D30), organic vs referral attribution, and growth program switches.",
+            "refreshSnapshot": "Refresh Analytics",
+            "kpiHumanUsers": "Real Human Members",
+            "kpiReferrals": "Qualified / Total Referrals",
+            "acquisitionSources": "Acquisition Sources",
+            "activationFunnel": "Activation Milestones Funnel",
+            "communityGrowth": "Community Human Growth",
+            "settingsTitle": "Growth Program Switches & Guardrails",
+            "activityLogs": "Growth Governance Audit Log",
+            "referralsTitle": "Referrals, Cumulative Rewards & Fraud Review",
+            "referralsSubtitle": "Verify referrals after the hold window, resolve multi-signal fraud reviews manually, manage cumulative Premium milestones, and handle safe revocations.",
+            "campaignsTitle": "Growth Campaigns, Early Members, Badges & Achievements",
+            "campaignsSubtitle": "Manage launch/referral/early-member/founding campaigns, real 1,000-slot pioneer tracking, distinct member badges, and value-driven achievements."
         }
     },
     "common": {
@@ -1211,6 +1232,75 @@
             "label": "AI एजेंट",
             "defaultDisclosure": "आधिकारिक SyncViet AI एजेंट — पारदर्शी स्वचालित सहायक",
             "profileBannerTitle": "आधिकारिक SyncViet AI खाता"
+        }
+    },
+    "growth": {
+        "badges": {
+            "earlyMember": "प्रारंभिक सदस्य",
+            "foundingMember": "संस्थापक सदस्य",
+            "officialAccount": "आधिकारिक",
+            "referralAmbassador": "एंबेसडर",
+            "communityBuilder": "कम्युनिटी बिल्डर"
+        },
+        "referral": {
+            "pageTitle": "Invite Friends & Earn Premium",
+            "heading": "Invite Friends to SyncViet",
+            "subtitle": "Share your personal referral link. When friends verify their email and participate on SyncViet, you earn cumulative SyncViet Premium days automatically.",
+            "viewPremium": "My Premium",
+            "yourCode": "Your Referral Code",
+            "active": "Active",
+            "disabled": "Disabled",
+            "copyLink": "Copy Link",
+            "copied": "Copied!",
+            "linkCopied": "Referral link copied to clipboard.",
+            "share": "Share",
+            "shareMessage": "Join me on SyncViet — an international community for knowledge and open discussions:",
+            "statTotal": "Total Referred",
+            "statPending": "Pending",
+            "statQualified": "Qualified",
+            "statRejected": "Rejected",
+            "statDaysEarned": "Premium Earned",
+            "progressTitle": "Cumulative Premium Milestones",
+            "progressSummary": "You have {qualified} / {target} qualified referrals. Invite {remaining} more verified members to reach {days} total days of SyncViet Premium.",
+            "verificationWindow": "{hours}h verification window",
+            "qualifiedUnit": "qualified",
+            "claimed": "Claimed",
+            "cumulativeTotal": "Cumulative total",
+            "historyTitle": "Referral Progress",
+            "emptyHistory": "No invited members yet. Share your link to start earning SyncViet Premium.",
+            "rewardHistoryTitle": "Reward History"
+        },
+        "earlyMember": {
+            "title": "SyncViet Early Members (First 1,000)",
+            "description": "Verified pioneer human members receive a permanent Early Member Badge and complimentary SyncViet Premium when the program is active.",
+            "yourNumber": "You are Early Member #{num}!",
+            "openStatus": "Open to eligible verified members",
+            "pausedStatus": "Program currently paused by administrator"
+        },
+        "achievements": {
+            "title": "Community Achievements",
+            "unlocked": "Unlocked",
+            "locked": "Locked"
+        },
+        "preferences": {
+            "title": "Digest & Re-engagement Preferences",
+            "weeklyDigest": "Weekly community discussion digest",
+            "reengagement": "Occasional updates when away (max every 3–30 days)",
+            "referralUpdates": "Referral milestone & reward notifications",
+            "marketingEmails": "Optional product announcement emails (opt-in)"
+        },
+        "onboarding": {
+            "pageTitle": "Welcome to SyncViet",
+            "heading": "Personalize your SyncViet experience",
+            "subtitle": "Choose your preferred language, topics, and communities. Every step is optional and can be skipped anytime.",
+            "skip": "Skip for now",
+            "languageStep": "1. Preferred Language",
+            "interestsStep": "2. Topics You Care About",
+            "communitiesStep": "3. Recommended Public Communities (Optional)",
+            "accountsStep": "4. Helpful Accounts to Explore",
+            "join": "Join",
+            "joined": "Joined",
+            "finish": "Continue to SyncViet"
         }
     }
 }

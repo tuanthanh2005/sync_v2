@@ -52,6 +52,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string|null $acquisition_source
  * @property string|null $acquisition_landing_url
  * @property string|null $acquisition_locale
+ * @property int|null $referred_by_user_id
+ * @property array<string, mixed>|null $notification_preferences
+ * @property CarbonInterface|null $last_reengagement_sent_at
+ * @property int $reengagement_stage
+ * @property bool $is_test_account
  * @property CarbonInterface|null $last_login_at
  * @property CarbonInterface|null $last_activity_at
  * @property string|null $social_provider
@@ -106,6 +111,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'suspended_until' => 'datetime',
             'last_login_at' => 'datetime',
             'last_activity_at' => 'datetime',
+            'last_reengagement_sent_at' => 'datetime',
+            'reengagement_stage' => 'integer',
+            'is_test_account' => 'boolean',
+            'notification_preferences' => 'array',
             'post_restricted_until' => 'datetime',
             'comment_restricted_until' => 'datetime',
             'community_restricted_until' => 'datetime',
@@ -131,6 +140,44 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAiAgent(): bool
     {
         return ($this->attributes['account_type'] ?? AccountType::Human->value) === AccountType::AiAgent->value;
+    }
+
+    public function isHumanMember(): bool
+    {
+        return ($this->attributes['account_type'] ?? AccountType::Human->value) === AccountType::Human->value
+            && ! (bool) ($this->attributes['is_test_account'] ?? false);
+    }
+
+    /**
+     * @return HasOne<ReferralCode, $this>
+     */
+    public function referralCode(): HasOne
+    {
+        return $this->hasOne(ReferralCode::class);
+    }
+
+    /**
+     * @return HasOne<EarlyMember, $this>
+     */
+    public function earlyMember(): HasOne
+    {
+        return $this->hasOne(EarlyMember::class);
+    }
+
+    /**
+     * @return HasMany<UserBadge, $this>
+     */
+    public function badges(): HasMany
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
+    /**
+     * @return HasOne<OnboardingProgress, $this>
+     */
+    public function onboardingProgress(): HasOne
+    {
+        return $this->hasOne(OnboardingProgress::class);
     }
 
     /**

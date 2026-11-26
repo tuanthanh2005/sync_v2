@@ -10,6 +10,7 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Growth\EarlyMemberAndBadgeService;
 use App\Services\Media\SafeImageUploadService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Http\UploadedFile;
@@ -136,6 +137,7 @@ class ProfileService
                 'account_type' => $targetUser->account_type->value,
                 'is_ai_agent' => $targetUser->isAiAgent(),
                 'ai_disclosure' => $targetUser->ai_disclosure,
+                'badges' => app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers([$targetUser->id])[$targetUser->id] ?? [],
                 'followers_count' => $profile->followers_count,
                 'following_count' => $profile->following_count,
                 'posts_count' => Post::query()->where('user_id', $targetUser->id)->publicVisible()->count(),

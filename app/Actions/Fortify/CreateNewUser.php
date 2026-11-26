@@ -4,10 +4,13 @@ namespace App\Actions\Fortify;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\Enums\ActivationMilestone;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Services\Account\UsernameGenerator;
+use App\Services\Growth\OnboardingAndActivationService;
+use App\Services\Growth\ReferralService;
 use App\Services\Seo\OrganicGrowthService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +26,8 @@ class CreateNewUser implements CreatesNewUsers
         private readonly UsernameGenerator $usernameGenerator,
         private readonly SystemSettingService $settings,
         private readonly OrganicGrowthService $organicGrowth,
+        private readonly ReferralService $referralService,
+        private readonly OnboardingAndActivationService $onboardingService,
     ) {}
 
     /**
@@ -66,7 +71,14 @@ class CreateNewUser implements CreatesNewUsers
         $user->status = UserStatus::Active;
         $user->save();
 
-        $this->organicGrowth->attributeNewRegistration($user, request());
+        $req = request();
+        $this->organicGrowth->attributeNewRegistration($user, $req);
+        $this->referralService->attributeRegistration($user, $req, isset($input['referral_code']) ? (string) $input['referral_code'] : null);
+        $returnTo = $req->hasSession() && is_string($req->session()->get(ReferralService::SESSION_RETURN_KEY))
+            ? (string) $req->session()->get(ReferralService::SESSION_RETURN_KEY)
+            : null;
+        $this->onboardingService->ensureProgress($user, $returnTo);
+        $this->onboardingService->recordMilestone($user, ActivationMilestone::RegistrationCompleted);
 
         return $user;
     }
