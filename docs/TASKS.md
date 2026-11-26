@@ -94,3 +94,5 @@ Quy ước trạng thái:
 | PWA, Mobile API (Sanctum), Realtime WebSockets, Banner Ads       | TODO       | Tách riêng cho lộ trình mở rộng                               |
 
 | Complete Website Monetization System (Premium, Banner Ads, Boost Post, Advertising Balance, Payments, AdSense Readiness, Store Compliance, Admin Monetization Center, 15-Lang i18n, Tests & Docs) | COMPLETED | Đã triển khai toàn diện, kiểm thử tự động & đồng bộ 15 ngôn ngữ |
+| Advanced International SEO & Automatic Organic Growth Engine V2.0 (Zero-Cloaking SSR, URL Registry, Sharded XML Sitemaps, Hreflang 15 Langs, GSC API, IndexNow, Audit & Funnel) | COMPLETED | 109/109 Pest tests, PHPStan L7 = 0, `vue-tsc` = 0, `vp check` = 0 |
+| AI Content Center, Gemini API Management & Multilingual Content Automation V1.0 (Encrypted Multi-Key, Shared Project+Model Quota, 7 Official AI Agents, `AiBadge`, Versioned Prompts, Quality Gate, Human Review, Anti-Flood Scheduler, 15-Lang SEO V2.0 Translation, Comment/Moderation Assist, Budget Gate & Emergency Stop) | COMPLETED | 17 AI tables, 5 Admin AI pages, 15-lang parity, 14 AI docs & full Pest security suite |

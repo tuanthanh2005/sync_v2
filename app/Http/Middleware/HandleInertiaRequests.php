@@ -3,10 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Enums\AdCampaignStatus;
+use App\Enums\AiDraftStatus;
 use App\Enums\BannerCampaignStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\ReportStatus;
 use App\Models\AdCampaign;
+use App\Models\AiContentDraft;
 use App\Models\Appeal;
 use App\Models\BannerCampaign;
 use App\Models\Payment;
@@ -77,6 +79,7 @@ class HandleInertiaRequests extends Middleware
                 'pending_orders' => Schema::hasTable('payments') ? Payment::query()->whereIn('status', [PaymentStatus::Pending->value, PaymentStatus::Processing->value])->count() : 0,
                 'appeals' => Schema::hasTable('appeals') ? Appeal::query()->where('status', 'pending')->count() : 0,
                 'verifications' => Schema::hasTable('verification_requests') ? VerificationRequest::query()->where('status', 'pending')->count() : 0,
+                'ai_drafts' => Schema::hasTable('ai_content_drafts') ? AiContentDraft::query()->where('status', AiDraftStatus::PendingReview->value)->count() : 0,
             ];
         }
 
@@ -174,6 +177,15 @@ class HandleInertiaRequests extends Middleware
                         'manageSeoIntegrations' => $user->hasPermission('seo.integrations') || $user->hasPermission('seo.manage'),
                         'manageSeoTranslations' => $user->hasPermission('seo.translations') || $user->hasPermission('seo.manage'),
                         'manageSeoRedirects' => $user->hasPermission('seo.redirects') || $user->hasPermission('seo.manage'),
+                        'viewAi' => $user->hasPermission('ai.view'),
+                        'manageAi' => $user->hasPermission('ai.manage'),
+                        'manageAiCredentials' => $user->hasPermission('ai.credentials') || $user->hasPermission('ai.manage'),
+                        'manageAiAgents' => $user->hasPermission('ai.agents') || $user->hasPermission('ai.manage'),
+                        'manageAiPrompts' => $user->hasPermission('ai.prompts') || $user->hasPermission('ai.manage'),
+                        'reviewAi' => $user->hasPermission('ai.review') || $user->hasPermission('ai.manage'),
+                        'publishAi' => $user->hasPermission('ai.publish') || $user->hasPermission('ai.manage'),
+                        'moderateAi' => $user->hasPermission('ai.moderation') || $user->hasPermission('ai.manage'),
+                        'emergencyStopAi' => $user->hasPermission('ai.emergency_stop') || $user->hasPermission('ai.manage'),
                     ],
                 ],
             ],

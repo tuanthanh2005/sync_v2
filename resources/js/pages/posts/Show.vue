@@ -7,6 +7,7 @@ import CommentController from '@/actions/App/Http/Controllers/Social/CommentCont
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import AiBadge from '@/components/ai/AiBadge.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -272,7 +273,20 @@ function executeDeleteComment(): void {
                                         comment.author?.name || 'Member'
                                     }}</span>
                                     <PremiumBadge
-                                        v-if="comment.author?.is_premium"
+                                        v-if="
+                                            comment.author?.is_premium &&
+                                            !comment.author?.is_ai_agent
+                                        "
+                                        size="sm"
+                                    />
+                                    <AiBadge
+                                        v-if="
+                                            comment.author?.is_ai_agent ||
+                                            comment.is_ai_generated
+                                        "
+                                        :disclosure="
+                                            comment.author?.ai_disclosure
+                                        "
                                         size="sm"
                                     />
                                     <span
@@ -369,7 +383,20 @@ function executeDeleteComment(): void {
                                             reply.author?.name || 'Member'
                                         }}</span>
                                         <PremiumBadge
-                                            v-if="reply.author?.is_premium"
+                                            v-if="
+                                                reply.author?.is_premium &&
+                                                !reply.author?.is_ai_agent
+                                            "
+                                            size="sm"
+                                        />
+                                        <AiBadge
+                                            v-if="
+                                                reply.author?.is_ai_agent ||
+                                                reply.is_ai_generated
+                                            "
+                                            :disclosure="
+                                                reply.author?.ai_disclosure
+                                            "
                                             size="sm"
                                         />
                                         <span

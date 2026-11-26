@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\AdReviewController;
+use App\Http\Controllers\Admin\Ai\AiAgentsAndPromptsController;
+use App\Http\Controllers\Admin\Ai\AiAssistantAndTranslationController;
+use App\Http\Controllers\Admin\Ai\AiContentWorkflowController;
+use App\Http\Controllers\Admin\Ai\AiCredentialsAndModelsController;
+use App\Http\Controllers\Admin\Ai\AiOverviewController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AppealController;
 use App\Http\Controllers\Admin\ContentModerationController;
@@ -592,6 +597,119 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
                 Route::post('/settings', [SeoInternationalAndAuditController::class, 'updateSettings'])
                     ->middleware('permission:seo.manage')
                     ->name('settings.update');
+            });
+
+            // ── AI Content Center & Multilingual Automation V1.0 ─────────────────
+            Route::prefix('ai')->name('ai.')->group(function () {
+                Route::get('/', [AiOverviewController::class, 'index'])
+                    ->middleware('permission:ai.view')
+                    ->name('overview');
+                Route::post('/emergency-stop', [AiOverviewController::class, 'toggleEmergencyStop'])
+                    ->middleware('permission:ai.emergency_stop,ai.manage')
+                    ->name('emergency-stop');
+                Route::post('/settings', [AiOverviewController::class, 'updateSettings'])
+                    ->middleware('permission:ai.manage')
+                    ->name('settings.update');
+
+                Route::get('/credentials', [AiCredentialsAndModelsController::class, 'index'])
+                    ->middleware('permission:ai.view')
+                    ->name('credentials');
+                Route::post('/credentials', [AiCredentialsAndModelsController::class, 'storeCredential'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('credentials.store');
+                Route::patch('/credentials/{credential}', [AiCredentialsAndModelsController::class, 'updateCredential'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('credentials.update');
+                Route::delete('/credentials/{credential}', [AiCredentialsAndModelsController::class, 'destroyCredential'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('credentials.destroy');
+                Route::post('/credentials/{credential}/test', [AiCredentialsAndModelsController::class, 'testCredential'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('credentials.test');
+                Route::post('/credentials/{credential}/sync-models', [AiCredentialsAndModelsController::class, 'syncModels'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('credentials.sync-models');
+                Route::patch('/models/{model}', [AiCredentialsAndModelsController::class, 'updateModel'])
+                    ->middleware('permission:ai.credentials,ai.manage')
+                    ->name('models.update');
+
+                Route::get('/agents', [AiAgentsAndPromptsController::class, 'index'])
+                    ->middleware('permission:ai.view')
+                    ->name('agents');
+                Route::post('/agents/seed-starters', [AiAgentsAndPromptsController::class, 'seedStarterAgents'])
+                    ->middleware('permission:ai.agents,ai.manage')
+                    ->name('agents.seed-starters');
+                Route::post('/agents', [AiAgentsAndPromptsController::class, 'storeAgent'])
+                    ->middleware('permission:ai.agents,ai.manage')
+                    ->name('agents.store');
+                Route::patch('/agents/{agent}', [AiAgentsAndPromptsController::class, 'updateAgent'])
+                    ->middleware('permission:ai.agents,ai.manage')
+                    ->name('agents.update');
+                Route::post('/prompts', [AiAgentsAndPromptsController::class, 'storePrompt'])
+                    ->middleware('permission:ai.prompts,ai.manage')
+                    ->name('prompts.store');
+                Route::patch('/prompts/{template}', [AiAgentsAndPromptsController::class, 'updatePrompt'])
+                    ->middleware('permission:ai.prompts,ai.manage')
+                    ->name('prompts.update');
+                Route::post('/prompts/{template}/rollback/{version}', [AiAgentsAndPromptsController::class, 'rollbackPrompt'])
+                    ->middleware('permission:ai.prompts,ai.manage')
+                    ->name('prompts.rollback');
+
+                Route::get('/content', [AiContentWorkflowController::class, 'index'])
+                    ->middleware('permission:ai.view')
+                    ->name('content');
+                Route::post('/sources', [AiContentWorkflowController::class, 'storeSource'])
+                    ->middleware('permission:ai.manage,ai.review')
+                    ->name('sources.store');
+                Route::post('/plans', [AiContentWorkflowController::class, 'storePlan'])
+                    ->middleware('permission:ai.manage')
+                    ->name('plans.store');
+                Route::patch('/plans/{plan}/toggle', [AiContentWorkflowController::class, 'togglePlan'])
+                    ->middleware('permission:ai.manage')
+                    ->name('plans.toggle');
+                Route::post('/generate', [AiContentWorkflowController::class, 'generateNow'])
+                    ->middleware('permission:ai.manage,ai.review')
+                    ->name('generate');
+                Route::patch('/drafts/{draft}', [AiContentWorkflowController::class, 'updateDraft'])
+                    ->middleware('permission:ai.review,ai.manage')
+                    ->name('drafts.update');
+                Route::post('/drafts/{draft}/review', [AiContentWorkflowController::class, 'reviewDraft'])
+                    ->middleware('permission:ai.review,ai.manage')
+                    ->name('drafts.review');
+                Route::post('/drafts/bulk-review', [AiContentWorkflowController::class, 'bulkReview'])
+                    ->middleware('permission:ai.review,ai.manage')
+                    ->name('drafts.bulk-review');
+                Route::post('/drafts/{draft}/schedule', [AiContentWorkflowController::class, 'scheduleDraft'])
+                    ->middleware('permission:ai.publish,ai.manage')
+                    ->name('drafts.schedule');
+                Route::post('/drafts/{draft}/publish', [AiContentWorkflowController::class, 'publishDraft'])
+                    ->middleware('permission:ai.publish,ai.manage')
+                    ->name('drafts.publish');
+                Route::get('/drafts/export-csv', [AiContentWorkflowController::class, 'exportDraftsCsv'])
+                    ->middleware('permission:ai.view')
+                    ->name('drafts.export-csv');
+
+                Route::get('/assist', [AiAssistantAndTranslationController::class, 'index'])
+                    ->middleware('permission:ai.view')
+                    ->name('assist');
+                Route::post('/translate', [AiAssistantAndTranslationController::class, 'translatePost'])
+                    ->middleware('permission:ai.manage,ai.review')
+                    ->name('translate');
+                Route::post('/replies/draft', [AiAssistantAndTranslationController::class, 'generateReplyDraft'])
+                    ->middleware('permission:ai.manage,ai.review')
+                    ->name('replies.draft');
+                Route::post('/replies/{task}/approve', [AiAssistantAndTranslationController::class, 'approveReply'])
+                    ->middleware('permission:ai.review,ai.publish,ai.manage')
+                    ->name('replies.approve');
+                Route::post('/replies/{task}/reject', [AiAssistantAndTranslationController::class, 'rejectReply'])
+                    ->middleware('permission:ai.review,ai.manage')
+                    ->name('replies.reject');
+                Route::post('/moderation/assess', [AiAssistantAndTranslationController::class, 'assessModeration'])
+                    ->middleware('permission:ai.moderation,ai.manage')
+                    ->name('moderation.assess');
+                Route::post('/moderation/{assessment}/resolve', [AiAssistantAndTranslationController::class, 'resolveAssessment'])
+                    ->middleware('permission:ai.moderation,ai.manage')
+                    ->name('moderation.resolve');
             });
 
             // ── System: Languages, Settings, Notifications, Policies, Security, Backups ─

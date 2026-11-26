@@ -37,13 +37,13 @@ class CommentService
             ->whereNull('parent_id')
             ->where('moderation_status', ModerationStatus::Approved->value)
             ->with([
-                'author:id,name,username,status,premium_until,premium_suspended_at',
+                'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'replies' => function ($replyQuery) use ($blockedIds): void {
                     $replyQuery
                         ->where('moderation_status', ModerationStatus::Approved->value)
                         ->with([
-                            'author:id,name,username,status,premium_until,premium_suspended_at',
+                            'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                             'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                         ]);
 
@@ -63,6 +63,7 @@ class CommentService
                 return [
                     'id' => $comment->id,
                     'content' => $comment->content,
+                    'is_ai_generated' => (bool) $comment->is_ai_generated,
                     'created_at' => $comment->created_at?->toIso8601String(),
                     'can_delete' => $viewer !== null && $viewer->isActive() && (
                         $viewer->id === $comment->user_id
@@ -77,6 +78,8 @@ class CommentService
                         'avatar' => $comment->author->profile?->avatarUrl(),
                         'is_verified' => $comment->author->profile !== null && $comment->author->profile->is_verified_badge,
                         'is_premium' => $comment->author->isPremium(),
+                        'is_ai_agent' => $comment->author->isAiAgent(),
+                        'ai_disclosure' => $comment->author->ai_disclosure,
                     ],
                     'replies' => array_values(
                         $comment->replies->map(static function (Comment $reply) use ($post, $viewer): array {
@@ -84,6 +87,7 @@ class CommentService
                                 'id' => $reply->id,
                                 'parent_id' => $reply->parent_id,
                                 'content' => $reply->content,
+                                'is_ai_generated' => (bool) $reply->is_ai_generated,
                                 'created_at' => $reply->created_at?->toIso8601String(),
                                 'can_delete' => $viewer !== null && $viewer->isActive() && (
                                     $viewer->id === $reply->user_id
@@ -98,6 +102,8 @@ class CommentService
                                     'avatar' => $reply->author->profile?->avatarUrl(),
                                     'is_verified' => $reply->author->profile !== null && $reply->author->profile->is_verified_badge,
                                     'is_premium' => $reply->author->isPremium(),
+                                    'is_ai_agent' => $reply->author->isAiAgent(),
+                                    'ai_disclosure' => $reply->author->ai_disclosure,
                                 ],
                             ];
                         })->all(),

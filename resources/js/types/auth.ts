@@ -37,6 +37,15 @@ export type UserPermissions = {
     manageSeoIntegrations?: boolean;
     manageSeoTranslations?: boolean;
     manageSeoRedirects?: boolean;
+    viewAi?: boolean;
+    manageAi?: boolean;
+    manageAiCredentials?: boolean;
+    manageAiAgents?: boolean;
+    manageAiPrompts?: boolean;
+    reviewAi?: boolean;
+    publishAi?: boolean;
+    moderateAi?: boolean;
+    emergencyStopAi?: boolean;
 };
 
 export type UserRestrictions = {

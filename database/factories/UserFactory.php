@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AccountType;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
@@ -31,6 +32,7 @@ class UserFactory extends Factory
             'username' => Str::lower(fake()->unique()->lexify('member_????????')),
             'email' => fake()->unique()->safeEmail(),
             'role' => UserRole::User,
+            'account_type' => AccountType::Human,
             'status' => UserStatus::Active,
             'timezone' => 'Asia/Ho_Chi_Minh',
             'email_verified_at' => now(),

@@ -28,6 +28,7 @@ export type AdminPendingCounts = {
     pending_orders?: number;
     appeals: number;
     verifications: number;
+    ai_drafts?: number;
 };
 
 export type SystemSettingsPublic = {
@@ -55,6 +56,8 @@ export type SocialAuthor = {
     avatar: string | null;
     is_verified: boolean;
     is_premium?: boolean;
+    is_ai_agent?: boolean;
+    ai_disclosure?: string | null;
 };
 
 export type FeedMediaItem = {
@@ -521,6 +524,8 @@ export type PublicFeedPost = {
     comments_count: number;
     shares_count: number;
     published_at: string | null;
+    content_origin?: string;
+    is_ai_assisted?: boolean;
     viewer_reaction: 'like' | 'love' | 'insightful' | null;
     is_bookmarked: boolean;
     can_edit: boolean;
@@ -556,6 +561,7 @@ export type CommentReplyItem = {
     id: number;
     parent_id: number | null;
     content: string;
+    is_ai_generated?: boolean;
     created_at: string | null;
     can_delete: boolean;
     author: SocialAuthor | null;
@@ -564,6 +570,7 @@ export type CommentReplyItem = {
 export type CommentItem = {
     id: number;
     content: string;
+    is_ai_generated?: boolean;
     created_at: string | null;
     can_delete: boolean;
     author: SocialAuthor | null;
@@ -588,6 +595,9 @@ export type ProfileViewUser = {
     cover: string | null;
     is_verified: boolean;
     is_premium?: boolean;
+    account_type?: string;
+    is_ai_agent?: boolean;
+    ai_disclosure?: string | null;
     followers_count: number;
     following_count: number;
     posts_count: number;
@@ -605,6 +615,9 @@ export type SearchUserResult = {
     avatar: string | null;
     is_verified: boolean;
     is_premium?: boolean;
+    account_type?: string;
+    is_ai_agent?: boolean;
+    ai_disclosure?: string | null;
     followers_count: number;
 };
 

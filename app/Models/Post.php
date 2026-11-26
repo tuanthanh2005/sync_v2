@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContentOrigin;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property ModerationStatus $moderation_status
  * @property bool $is_spam
  * @property bool $is_ai_assisted
+ * @property ContentOrigin $content_origin
+ * @property int|null $ai_agent_id
+ * @property int|null $ai_draft_id
  * @property bool $seo_noindex
  * @property int|null $seo_quality_score
  * @property string|null $moderation_reason
@@ -79,6 +83,9 @@ class Post extends Model
             'comments_locked' => 'boolean',
             'is_spam' => 'boolean',
             'is_ai_assisted' => 'boolean',
+            'content_origin' => ContentOrigin::class,
+            'ai_agent_id' => 'integer',
+            'ai_draft_id' => 'integer',
             'seo_noindex' => 'boolean',
             'seo_quality_score' => 'integer',
             'moderated_at' => 'datetime',

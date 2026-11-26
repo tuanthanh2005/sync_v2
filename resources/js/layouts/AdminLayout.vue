@@ -6,6 +6,7 @@ import {
     BadgeCheck,
     BarChart3,
     Bell,
+    Bot,
     ChevronDown,
     CreditCard,
     Crown,
@@ -18,9 +19,12 @@ import {
     Hash,
     HeartPulse,
     Image as ImageIcon,
+    Key,
     KeyRound,
+    Languages,
     LayoutDashboard,
     Link2,
+    ListChecks,
     Megaphone,
     Menu,
     MessageSquareText,
@@ -36,6 +40,7 @@ import {
     ShieldBan,
     ShieldCheck,
     Sliders,
+    Sparkles,
     TrendingUp,
     Users,
     Vote,
@@ -106,6 +111,13 @@ import {
     overview as adminSeoOverview,
     urls as adminSeoUrls,
 } from '@/routes/admin/seo';
+import {
+    agents as adminAiAgents,
+    assist as adminAiAssist,
+    content as adminAiContent,
+    credentials as adminAiCredentials,
+    overview as adminAiOverview,
+} from '@/routes/admin/ai';
 import { index as adminSettings } from '@/routes/admin/settings';
 import { index as adminUsers } from '@/routes/admin/users';
 import { index as adminVerifications } from '@/routes/admin/verifications';
@@ -494,6 +506,41 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                           label: t('admin.nav.seoAuditGrowth'),
                           href: adminSeoAudit.url(),
                           icon: ShieldCheck,
+                      },
+                  ]
+                : [],
+        },
+        {
+            id: 'ai',
+            label: t('admin.groups.ai'),
+            items: perms.viewAi
+                ? [
+                      {
+                          label: t('admin.nav.aiOverview'),
+                          href: adminAiOverview.url(),
+                          icon: Bot,
+                          exact: true,
+                      },
+                      {
+                          label: t('admin.nav.aiCredentials'),
+                          href: adminAiCredentials.url(),
+                          icon: Key,
+                      },
+                      {
+                          label: t('admin.nav.aiAgents'),
+                          href: adminAiAgents.url(),
+                          icon: Sparkles,
+                      },
+                      {
+                          label: t('admin.nav.aiContent'),
+                          href: adminAiContent.url(),
+                          icon: ListChecks,
+                          badge: pending.value?.ai_drafts || 0,
+                      },
+                      {
+                          label: t('admin.nav.aiAssist'),
+                          href: adminAiAssist.url(),
+                          icon: Languages,
                       },
                   ]
                 : [],

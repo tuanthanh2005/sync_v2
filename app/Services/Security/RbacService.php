@@ -56,6 +56,7 @@ class RbacService
                     'policies.view', 'policies.create', 'policies.update', 'policies.delete',
                     'security.view', 'security.export', 'backups.view', 'backups.create', 'backups.export',
                     'seo.view', 'seo.manage', 'seo.audit', 'seo.integrations', 'seo.translations', 'seo.redirects',
+                    'ai.view', 'ai.manage', 'ai.credentials', 'ai.agents', 'ai.prompts', 'ai.review', 'ai.publish', 'ai.moderation', 'ai.emergency_stop',
                 ],
             ],
             [
@@ -95,6 +96,7 @@ class RbacService
                     'policies.view', 'policies.update',
                     'languages.view', 'languages.update', 'languages.export',
                     'seo.view', 'seo.translations', 'seo.audit',
+                    'ai.view', 'ai.prompts', 'ai.review', 'ai.publish',
                 ],
             ],
             [
@@ -182,6 +184,7 @@ class RbacService
             'security' => ['view', 'export', 'manage'],
             'backups' => ['view', 'create', 'export'],
             'seo' => ['view', 'manage', 'audit', 'integrations', 'translations', 'redirects'],
+            'ai' => ['view', 'manage', 'credentials', 'agents', 'prompts', 'review', 'publish', 'moderation', 'emergency_stop'],
         ];
 
         $catalog = [];

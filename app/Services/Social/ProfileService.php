@@ -80,7 +80,7 @@ class ProfileService
             $postQuery = Post::query()
                 ->where('user_id', $targetUser->id)
                 ->with([
-                    'author:id,name,username,status,premium_until,premium_suspended_at',
+                    'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                     'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                     'media',
                     'poll.options',
@@ -133,6 +133,9 @@ class ProfileService
                 'cover' => $profile->coverUrl(),
                 'is_verified' => $profile->is_verified_badge,
                 'is_premium' => $targetUser->isPremium(),
+                'account_type' => $targetUser->account_type->value,
+                'is_ai_agent' => $targetUser->isAiAgent(),
+                'ai_disclosure' => $targetUser->ai_disclosure,
                 'followers_count' => $profile->followers_count,
                 'following_count' => $profile->following_count,
                 'posts_count' => Post::query()->where('user_id', $targetUser->id)->publicVisible()->count(),

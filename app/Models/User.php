@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccountType;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use Carbon\CarbonInterface;
@@ -24,6 +25,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $username
  * @property string $email
  * @property UserRole $role
+ * @property AccountType $account_type
+ * @property string|null $ai_disclosure
  * @property int|null $rbac_role_id
  * @property UserStatus $status
  * @property CarbonInterface|null $suspended_until
@@ -120,8 +123,22 @@ class User extends Authenticatable implements MustVerifyEmail
             'can_message' => 'boolean',
             'can_advertise' => 'boolean',
             'role' => UserRole::class,
+            'account_type' => AccountType::class,
             'status' => UserStatus::class,
         ];
+    }
+
+    public function isAiAgent(): bool
+    {
+        return ($this->attributes['account_type'] ?? AccountType::Human->value) === AccountType::AiAgent->value;
+    }
+
+    /**
+     * @return HasOne<AiAgent, $this>
+     */
+    public function aiAgent(): HasOne
+    {
+        return $this->hasOne(AiAgent::class, 'user_id');
     }
 
     public function hasRole(UserRole ...$roles): bool

@@ -372,7 +372,7 @@ class CommunityService
                 $authorQuery->where('status', UserStatus::Active->value);
             })
             ->with([
-                'author:id,name,username,status,premium_until,premium_suspended_at',
+                'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'media',
@@ -405,7 +405,7 @@ class CommunityService
             CommunityMember::query()
                 ->where('community_id', $community->id)
                 ->with([
-                    'user:id,name,username,status,premium_until,premium_suspended_at',
+                    'user:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                     'user.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 ])
                 ->orderByDesc('points')
@@ -425,6 +425,8 @@ class CommunityService
                         'avatar' => $member->user->profile?->avatarUrl(),
                         'is_verified' => $member->user->profile !== null && $member->user->profile->is_verified_badge,
                         'is_premium' => $member->user->isPremium(),
+                        'is_ai_agent' => $member->user->isAiAgent(),
+                        'ai_disclosure' => $member->user->ai_disclosure,
                     ],
                 ])
                 ->all(),

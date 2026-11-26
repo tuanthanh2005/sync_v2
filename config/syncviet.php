@@ -76,4 +76,21 @@ return [
         'pagespeed_api_key' => env('PAGESPEED_INSIGHTS_API_KEY'),
         'default_og_image' => '/og-default.svg',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | AI Content Center & Gemini API Management V1.0
+    |--------------------------------------------------------------------------
+    */
+    'ai' => [
+        'gemini_base_url' => rtrim((string) env('GEMINI_API_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'), '/'),
+        'request_timeout_seconds' => (int) env('AI_REQUEST_TIMEOUT_SECONDS', 35),
+        'max_concurrency' => (int) env('AI_MAX_CONCURRENCY', 1),
+        'queue_name' => (string) env('AI_QUEUE_NAME', 'ai'),
+        'max_agents_limit' => (int) env('AI_MAX_AGENTS_LIMIT', 30),
+        'default_daily_draft_limit' => (int) env('AI_DAILY_DRAFT_LIMIT', 10),
+        'default_daily_publish_limit' => (int) env('AI_DAILY_PUBLISH_LIMIT', 5),
+        'default_daily_translation_limit' => (int) env('AI_DAILY_TRANSLATION_LIMIT', 10),
+        'default_daily_reply_limit' => (int) env('AI_DAILY_REPLY_LIMIT', 5),
+    ],
 ];

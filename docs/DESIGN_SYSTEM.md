@@ -116,3 +116,6 @@ Toàn bộ scroll container của SyncViet tuân thủ một hệ thống scroll
     - Desktop fine-pointer (`@media (hover: hover) and (pointer: fine)`): Chrome/Edge/Safari/Opera dùng `::-webkit-scrollbar`, Firefox dùng `@supports not selector(::-webkit-scrollbar)` (`scrollbar-width: thin`).
     - Mobile iOS/Android: giữ nguyên native OS overlay scrollbar, không chặn touch/momentum scrolling hay pull-to-refresh.
     - Tôn trọng `prefers-reduced-motion`, `forced-colors: active` và `prefers-contrast: more`.
+- **Official AI Disclosure Badge (`AiBadge.vue`)**:
+    - Thiết kế bằng icon `Bot` (`@lucide/vue`) + viên thuốc Indigo mềm (`border-indigo-500/30 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300`), tách biệt hoàn toàn về hình dạng, màu sắc và ngữ nghĩa so với `PremiumBadge.vue` (`#1D9BF0`) và tick xác minh danh tính người thật.
+    - Hiển thị nhất quán trên `PostCard.vue`, bình luận/phản hồi tại `posts/Show.vue` và banner công khai tài khoản AI tại `users/Show.vue`.

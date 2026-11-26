@@ -2,7 +2,9 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\AccountType;
 use App\Enums\AdCampaignStatus;
+use App\Enums\ContentOrigin;
 use App\Enums\PaymentStatus;
 use App\Enums\PolicyStatus;
 use App\Enums\ReportStatus;
@@ -10,6 +12,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\AdCampaign;
 use App\Models\AdCreditEntry;
+use App\Models\AiAgent;
 use App\Models\Appeal;
 use App\Models\AuditLog;
 use App\Models\BackupRecord;
@@ -41,17 +44,21 @@ class AdminAnalyticsService
         $dayAgo = $now->subDay();
         $monthAgo = $now->subDays(30);
 
+        $humanUsers = static fn () => User::query()->where('account_type', AccountType::Human->value);
+
         $metrics = [
-            'total_users' => User::query()->count(),
-            'new_users_7d' => User::query()->where('created_at', '>=', $weekAgo)->count(),
-            'active_users' => User::query()->where('status', UserStatus::Active->value)->count(),
-            'verified_users' => User::query()->whereNotNull('email_verified_at')->count(),
-            'unverified_users' => User::query()->whereNull('email_verified_at')->count(),
-            'staff_users' => User::query()->whereIn('role', [UserRole::Admin->value, UserRole::Moderator->value])->count(),
-            'suspended_users' => User::query()->where('status', UserStatus::Suspended->value)->count(),
-            'banned_users' => User::query()->where('status', UserStatus::Banned->value)->count(),
-            'dau' => User::query()->where('last_activity_at', '>=', $dayAgo)->count(),
-            'mau' => User::query()->where('last_activity_at', '>=', $monthAgo)->count(),
+            'total_users' => $humanUsers()->count(),
+            'new_users_7d' => $humanUsers()->where('created_at', '>=', $weekAgo)->count(),
+            'active_users' => $humanUsers()->where('status', UserStatus::Active->value)->count(),
+            'verified_users' => $humanUsers()->whereNotNull('email_verified_at')->count(),
+            'unverified_users' => $humanUsers()->whereNull('email_verified_at')->count(),
+            'staff_users' => $humanUsers()->whereIn('role', [UserRole::Admin->value, UserRole::Moderator->value])->count(),
+            'suspended_users' => $humanUsers()->where('status', UserStatus::Suspended->value)->count(),
+            'banned_users' => $humanUsers()->where('status', UserStatus::Banned->value)->count(),
+            'dau' => $humanUsers()->where('last_activity_at', '>=', $dayAgo)->count(),
+            'mau' => $humanUsers()->where('last_activity_at', '>=', $monthAgo)->count(),
+            'ai_agents_count' => Schema::hasTable('ai_agents') ? AiAgent::query()->where('is_enabled', true)->count() : 0,
+            'ai_posts_count' => Post::query()->where('content_origin', ContentOrigin::AiGenerated->value)->count(),
             'total_posts' => Post::query()->count(),
             'total_comments' => Comment::query()->count(),
             'total_communities' => Community::query()->count(),
@@ -132,15 +139,15 @@ class AdminAnalyticsService
         $currentStart = now()->subDays($safeDays);
         $prevStart = now()->subDays($safeDays * 2);
 
-        $curUsers = User::query()->where('created_at', '>=', $currentStart)->count();
-        $prevUsers = User::query()->whereBetween('created_at', [$prevStart, $currentStart])->count();
+        $curUsers = User::query()->where('account_type', AccountType::Human->value)->where('created_at', '>=', $currentStart)->count();
+        $prevUsers = User::query()->where('account_type', AccountType::Human->value)->whereBetween('created_at', [$prevStart, $currentStart])->count();
         $curPosts = Post::query()->where('created_at', '>=', $currentStart)->count();
         $prevPosts = Post::query()->whereBetween('created_at', [$prevStart, $currentStart])->count();
 
         return [
             'period' => $safeDays,
             'totals' => [
-                'users' => User::query()->count(),
+                'users' => User::query()->where('account_type', AccountType::Human->value)->count(),
                 'posts' => Post::query()->count(),
                 'comments' => Comment::query()->count(),
                 'communities' => Community::query()->count(),
@@ -258,8 +265,14 @@ class AdminAnalyticsService
      */
     private function aggregateDailyCounts(string $table, CarbonImmutable $from): array
     {
-        $rows = DB::table($table)
-            ->where('created_at', '>=', $from)
+        $query = DB::table($table)
+            ->where('created_at', '>=', $from);
+
+        if ($table === 'users') {
+            $query->where('account_type', AccountType::Human->value);
+        }
+
+        $rows = $query
             ->selectRaw('DATE(created_at) as day, COUNT(*) as total')
             ->groupBy('day')
             ->get();

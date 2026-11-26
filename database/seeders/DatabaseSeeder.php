@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             MonetizationSeeder::class,
             SeoSeeder::class,
+            AiContentCenterSeeder::class,
         ]);
 
         if (app()->isProduction()) {

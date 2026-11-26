@@ -2,10 +2,14 @@
 
 use App\Enums\SanctionType;
 use App\Enums\UserStatus;
+use App\Jobs\Ai\GenerateAiContentJob;
 use App\Models\AdminNotification;
+use App\Models\AiContentPlan;
 use App\Models\User;
 use App\Models\UserSanction;
 use App\Notifications\SocialActivityNotification;
+use App\Services\Ai\AiAutomationControlService;
+use App\Services\Ai\AiPublishingAndSchedulerService;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
@@ -20,6 +24,7 @@ use App\Services\Seo\SeoAuditService;
 use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
 use App\Services\System\LanguageService;
+use Database\Seeders\AiContentCenterSeeder;
 use Database\Seeders\MonetizationSeeder;
 use Database\Seeders\SeoSeeder;
 use Illuminate\Foundation\Inspiring;
@@ -42,8 +47,9 @@ Artisan::command('app:rbac:sync', function (
     $policyService->ensureDefaultPoliciesExist();
     MonetizationSeeder::seedDefaultsIfEmpty();
     SeoSeeder::seedDefaultsIfEmpty();
-    $this->info('RBAC catalog, 15 platform languages, draft policies, monetization, and SEO engine defaults synced.');
-})->purpose('Synchronize RBAC roles, permissions, languages, draft policies, and monetization defaults');
+    AiContentCenterSeeder::seedDefaultsIfEmpty();
+    $this->info('RBAC catalog, 15 platform languages, draft policies, monetization, SEO engine, and AI Content Center defaults synced.');
+})->purpose('Synchronize RBAC roles, permissions, languages, draft policies, monetization, SEO, and AI defaults');
 
 Artisan::command('app:monetization:sync', function (
     PremiumSubscriptionService $premiumService,
@@ -244,6 +250,66 @@ Artisan::command('app:seo:audit', function (SeoAuditService $audit): void {
     ));
 })->purpose('Execute automated technical SEO audit checks and persist findings');
 
+Artisan::command('app:ai:publish-scheduled', function (AiPublishingAndSchedulerService $scheduler): void {
+    $res = $scheduler->processDueSchedules(2);
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'AI scheduler: published=%d skipped_stale=%d failed=%d',
+        $res['published'],
+        $res['skipped'],
+        $res['failed'],
+    ));
+})->purpose('Publish due human-approved AI scheduled posts respecting Emergency Stop and anti-flood limits');
+
+Artisan::command('app:ai:run-plans', function (AiAutomationControlService $control): void {
+    if (! Schema::hasTable('ai_content_plans') || ! $control->isSwitchEnabled('ai_generation_enabled')) {
+        $this->info('AI content plan runner skipped (disabled or Emergency Stop active).');
+
+        return;
+    }
+
+    $duePlans = AiContentPlan::query()
+        ->where('is_active', true)
+        ->whereNotNull('agent_id')
+        ->orderBy('last_generated_at')
+        ->limit(10)
+        ->get();
+
+    $dispatched = 0;
+    foreach ($duePlans as $plan) {
+        if ($dispatched >= 2) {
+            break;
+        }
+
+        if ($plan->last_generated_at !== null && $plan->last_generated_at->diffInMinutes(now()) < max(60, $plan->min_interval_minutes)) {
+            continue;
+        }
+
+        if ($plan->agent_id === null) {
+            continue;
+        }
+
+        $plan->forceFill([
+            'last_generated_at' => now(),
+        ])->save();
+
+        GenerateAiContentJob::dispatch([
+            'agent_id' => $plan->agent_id,
+            'plan_id' => $plan->id,
+            'community_id' => $plan->community_id,
+            'topic' => $plan->topic,
+            'language_code' => $plan->target_language,
+            'content_type' => $plan->content_type,
+            'category' => $plan->category,
+            'manual_trigger' => false,
+        ]);
+        $dispatched++;
+    }
+
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info("AI content plans dispatched: {$dispatched}");
+})->purpose('Dispatch bounded due AI content plan draft generation jobs respecting Emergency Stop');
+
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
@@ -251,3 +317,5 @@ Schedule::command('app:seo:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:seo:inspect')->hourly()->withoutOverlapping();
 Schedule::command('app:seo:analytics')->dailyAt('03:15')->withoutOverlapping();
 Schedule::command('app:seo:audit')->weeklyOn(1, '04:00')->withoutOverlapping();
+Schedule::command('app:ai:publish-scheduled')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('app:ai:run-plans')->hourly()->withoutOverlapping();

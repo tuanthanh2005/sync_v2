@@ -23,6 +23,7 @@ import ProfileViewController from '@/actions/App/Http/Controllers/Social/Profile
 import EmptyState from '@/components/common/EmptyState.vue';
 import ReportDialog from '@/components/common/ReportDialog.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import AiBadge from '@/components/ai/AiBadge.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -444,7 +445,15 @@ function setFile(field: 'avatar' | 'cover', event: Event): void {
                             {{ profile_user.name }}
                         </h1>
                         <PremiumBadge
-                            v-if="profile_user.is_premium"
+                            v-if="
+                                profile_user.is_premium &&
+                                !profile_user.is_ai_agent
+                            "
+                            size="md"
+                        />
+                        <AiBadge
+                            v-if="profile_user.is_ai_agent"
+                            :disclosure="profile_user.ai_disclosure"
                             size="md"
                         />
                         <BadgeCheck
@@ -452,6 +461,19 @@ function setFile(field: 'avatar' | 'cover', event: Event): void {
                             class="size-5 text-primary"
                             aria-hidden="true"
                         />
+                    </div>
+                    <div
+                        v-if="profile_user.is_ai_agent"
+                        class="rounded-xl border border-indigo-500/25 bg-indigo-500/5 px-3.5 py-2.5 text-xs text-muted-foreground"
+                    >
+                        <strong class="font-semibold text-foreground">{{
+                            t('ai.badge.profileBannerTitle')
+                        }}</strong>
+                        —
+                        {{
+                            profile_user.ai_disclosure ||
+                            t('ai.badge.defaultDisclosure')
+                        }}
                     </div>
                     <p class="text-sm text-muted-foreground">
                         @{{ profile_user.username }}

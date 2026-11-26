@@ -70,7 +70,7 @@ class FeedService
         $query = Post::query()
             ->publicVisible()
             ->with([
-                'author:id,name,username,status,premium_until,premium_suspended_at',
+                'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -239,6 +239,8 @@ class FeedService
             'comments_count' => $post->comments_count,
             'shares_count' => $post->shares_count,
             'published_at' => ($post->published_at ?? $post->created_at)?->toIso8601String(),
+            'content_origin' => $post->content_origin->value,
+            'is_ai_assisted' => (bool) $post->is_ai_assisted,
             'viewer_reaction' => $viewerReaction,
             'is_bookmarked' => $isBookmarked,
             'can_edit' => $viewer !== null && $viewer->isActive() && $viewer->id === $post->user_id,
@@ -257,6 +259,8 @@ class FeedService
                 'avatar' => $profile?->avatarUrl(),
                 'is_verified' => $profile !== null && $profile->is_verified_badge,
                 'is_premium' => $author->isPremium(),
+                'is_ai_agent' => $author->isAiAgent(),
+                'ai_disclosure' => $author->ai_disclosure,
             ],
             'community' => $post->community === null ? null : [
                 'id' => $post->community->id,

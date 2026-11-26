@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $parent_id
  * @property string $content
  * @property ModerationStatus $moderation_status
+ * @property bool $is_ai_generated
+ * @property int|null $ai_agent_id
  * @property bool $is_spam
  * @property string|null $moderation_reason
  * @property int|null $moderated_by
@@ -40,6 +42,8 @@ class Comment extends Model
     {
         return [
             'moderation_status' => ModerationStatus::class,
+            'is_ai_generated' => 'boolean',
+            'ai_agent_id' => 'integer',
             'is_spam' => 'boolean',
             'moderated_at' => 'datetime',
         ];

@@ -33,6 +33,7 @@ import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import ImageLightbox from '@/components/common/ImageLightbox.vue';
 import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import AiBadge from '@/components/ai/AiBadge.vue';
 import InputError from '@/components/InputError.vue';
 import { formatDateTime } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
@@ -355,7 +356,18 @@ function submitReport(): void {
                             {{ post.author?.name ?? 'Member' }}
                         </Link>
                         <PremiumBadge
-                            v-if="post.author?.is_premium"
+                            v-if="
+                                post.author?.is_premium &&
+                                !post.author?.is_ai_agent
+                            "
+                            size="sm"
+                        />
+                        <AiBadge
+                            v-if="
+                                post.author?.is_ai_agent ||
+                                post.content_origin === 'ai_generated'
+                            "
+                            :disclosure="post.author?.ai_disclosure"
                             size="sm"
                         />
                         <BadgeCheck

@@ -77,7 +77,7 @@ class SearchService
         $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
         $usersQuery = User::query()
-            ->select(['id', 'name', 'username', 'status', 'premium_until', 'premium_suspended_at'])
+            ->select(['id', 'name', 'username', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
             ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
             ->where('status', UserStatus::Active->value)
             ->where(function (Builder $query) use ($likePattern): void {
@@ -99,6 +99,8 @@ class SearchService
                     'avatar' => $user->profile?->avatarUrl(),
                     'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
                     'is_premium' => $user->isPremium(),
+                    'is_ai_agent' => $user->isAiAgent(),
+                    'ai_disclosure' => $user->ai_disclosure,
                     'followers_count' => $user->profile !== null ? $user->profile->followers_count : 0,
                 ];
             })->all(),
