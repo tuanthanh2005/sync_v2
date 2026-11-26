@@ -6,11 +6,15 @@ use App\Enums\SeoVerificationMethod;
 use App\Models\SeoApiConnection;
 use App\Models\User;
 use App\Services\Security\AuditLogger;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 class GoogleSiteVerificationService
 {
     public const PROVIDER = 'google_site_verification';
+
+    public const META_CACHE_KEY = 'syncviet.seo.google_meta_token.v1';
 
     public function __construct(
         private readonly SeoConfigService $config,
@@ -82,6 +86,8 @@ class GoogleSiteVerificationService
             'method' => $method->value,
             'property' => $property,
         ], $actor);
+
+        Cache::forget(self::META_CACHE_KEY);
 
         return $connection;
     }
@@ -180,28 +186,47 @@ class GoogleSiteVerificationService
 
     public function activeMetaToken(): ?string
     {
-        $connection = SeoApiConnection::query()->where('provider', self::PROVIDER)->first();
-        if ($connection === null || $connection->verification_method !== SeoVerificationMethod::HtmlMeta->value) {
+        try {
+            if (! Schema::hasTable('seo_api_connections')) {
+                return null;
+            }
+
+            /** @var string $cached */
+            $cached = Cache::remember(self::META_CACHE_KEY, now()->addMinutes(15), static function (): string {
+                $connection = SeoApiConnection::query()->where('provider', self::PROVIDER)->first();
+                if ($connection === null || $connection->verification_method !== SeoVerificationMethod::HtmlMeta->value) {
+                    return '';
+                }
+
+                return trim((string) ($connection->verification_token ?? ''));
+            });
+
+            return $cached !== '' ? $cached : null;
+        } catch (\Throwable) {
             return null;
         }
-
-        $token = trim((string) ($connection->verification_token ?? ''));
-
-        return $token !== '' ? $token : null;
     }
 
     public function htmlFileContentIfMatches(string $filenameWithoutExt): ?string
     {
-        $connection = SeoApiConnection::query()->where('provider', self::PROVIDER)->first();
-        if ($connection === null || $connection->verification_method !== SeoVerificationMethod::HtmlFile->value) {
+        try {
+            if (! Schema::hasTable('seo_api_connections')) {
+                return null;
+            }
+
+            $connection = SeoApiConnection::query()->where('provider', self::PROVIDER)->first();
+            if ($connection === null || $connection->verification_method !== SeoVerificationMethod::HtmlFile->value) {
+                return null;
+            }
+
+            $token = trim((string) ($connection->verification_token ?? ''));
+            if ($token === '' || ! hash_equals($token, $filenameWithoutExt)) {
+                return null;
+            }
+
+            return "google-site-verification: {$token}.html\n";
+        } catch (\Throwable) {
             return null;
         }
-
-        $token = trim((string) ($connection->verification_token ?? ''));
-        if ($token === '' || ! hash_equals($token, $filenameWithoutExt)) {
-            return null;
-        }
-
-        return "google-site-verification: {$token}.html\n";
     }
 }

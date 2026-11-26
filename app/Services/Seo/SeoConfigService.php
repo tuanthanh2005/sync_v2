@@ -57,31 +57,35 @@ class SeoConfigService
      */
     public function all(): array
     {
-        if (! Schema::hasTable('seo_settings')) {
-            return [];
-        }
-
-        /** @var array<string, string|null> $cached */
-        $cached = Cache::remember(self::CACHE_KEY, now()->addMinutes(15), static function (): array {
-            $rows = SeoSetting::query()->get(['key', 'value', 'is_encrypted']);
-            $result = [];
-
-            foreach ($rows as $row) {
-                if ($row->is_encrypted && is_string($row->value) && $row->value !== '') {
-                    try {
-                        $result[$row->key] = Crypt::decryptString($row->value);
-                    } catch (\Throwable) {
-                        $result[$row->key] = null;
-                    }
-                } else {
-                    $result[$row->key] = $row->value;
-                }
+        try {
+            if (! Schema::hasTable('seo_settings')) {
+                return [];
             }
 
-            return $result;
-        });
+            /** @var array<string, string|null> $cached */
+            $cached = Cache::remember(self::CACHE_KEY, now()->addMinutes(15), static function (): array {
+                $rows = SeoSetting::query()->get(['key', 'value', 'is_encrypted']);
+                $result = [];
 
-        return $cached;
+                foreach ($rows as $row) {
+                    if ($row->is_encrypted && is_string($row->value) && $row->value !== '') {
+                        try {
+                            $result[$row->key] = Crypt::decryptString($row->value);
+                        } catch (\Throwable) {
+                            $result[$row->key] = null;
+                        }
+                    } else {
+                        $result[$row->key] = $row->value;
+                    }
+                }
+
+                return $result;
+            });
+
+            return $cached;
+        } catch (\Throwable) {
+            return [];
+        }
     }
 
     public function string(string $key, string $default = ''): string

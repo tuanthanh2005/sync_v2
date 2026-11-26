@@ -53,7 +53,15 @@ class OrganicGrowthService
      */
     public function captureOrganicVisitIfApplicable(Request $request): void
     {
-        if (! $request->isMethod('GET') || $request->expectsJson() || ! Schema::hasTable('seo_organic_events')) {
+        if (! $request->isMethod('GET') || $request->expectsJson() || ! $request->hasSession()) {
+            return;
+        }
+
+        try {
+            if (! Schema::hasTable('seo_organic_events')) {
+                return;
+            }
+        } catch (\Throwable) {
             return;
         }
 

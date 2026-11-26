@@ -1,9 +1,16 @@
 @php
-    $seoConfig = app(\App\Services\Seo\SeoConfigService::class);
-    $googleVerify = app(\App\Services\Seo\GoogleSiteVerificationService::class);
-    $ga4 = $seoConfig->ga4PublicConfig();
-    $googleMetaToken = $googleVerify->activeMetaToken();
-    $bingMetaToken = trim($seoConfig->string('bing_meta_verification', ''));
+    $ga4 = ['enabled' => false, 'measurement_id' => null, 'require_consent' => true];
+    $googleMetaToken = null;
+    $bingMetaToken = '';
+    try {
+        $seoConfig = app(\App\Services\Seo\SeoConfigService::class);
+        $googleVerify = app(\App\Services\Seo\GoogleSiteVerificationService::class);
+        $ga4 = $seoConfig->ga4PublicConfig();
+        $googleMetaToken = $googleVerify->activeMetaToken();
+        $bingMetaToken = trim($seoConfig->string('bing_meta_verification', ''));
+    } catch (\Throwable) {
+        // Never break rendering if SEO tables are not yet migrated during deployment.
+    }
     $seoData = is_array($seo ?? null) ? $seo : [];
     $canonicalUrl = $seoData['canonical'] ?? $seoData['url'] ?? null;
     $robotsDirective = $seoData['robots'] ?? (! empty($seoData['noindex']) ? 'noindex, nofollow' : null);

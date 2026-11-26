@@ -24,19 +24,24 @@ class SeoRedirectMiddleware
         if (
             in_array($request->method(), ['GET', 'HEAD'], true)
             && ! $request->is('admin*', 'webhooks/*', 'up', 'build/*', 'storage/*')
-            && Schema::hasTable('seo_redirects')
         ) {
-            $redirect = $this->redirects->findActiveRedirect($request->getPathInfo());
-            if ($redirect !== null && $this->canonicalUrls->isSafeRedirectTarget($redirect->target_url)) {
-                $targetPath = $this->canonicalUrls->normalizePath($redirect->target_url);
-                $currentPath = $this->canonicalUrls->normalizePath($request->getPathInfo());
+            try {
+                if (Schema::hasTable('seo_redirects')) {
+                    $redirect = $this->redirects->findActiveRedirect($request->getPathInfo());
+                    if ($redirect !== null && $this->canonicalUrls->isSafeRedirectTarget($redirect->target_url)) {
+                        $targetPath = $this->canonicalUrls->normalizePath($redirect->target_url);
+                        $currentPath = $this->canonicalUrls->normalizePath($request->getPathInfo());
 
-                if ($targetPath !== $currentPath) {
-                    $redirect->increment('hit_count');
-                    $redirect->forceFill(['last_hit_at' => now()])->saveQuietly();
+                        if ($targetPath !== $currentPath) {
+                            $redirect->increment('hit_count');
+                            $redirect->forceFill(['last_hit_at' => now()])->saveQuietly();
 
-                    return redirect()->to($redirect->target_url, $redirect->status_code);
+                            return redirect()->to($redirect->target_url, $redirect->status_code);
+                        }
+                    }
                 }
+            } catch (\Throwable) {
+                // Never block incoming requests if seo_redirects table is unavailable during deploy.
             }
         }
 
