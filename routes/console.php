@@ -27,6 +27,7 @@ use App\Services\Seo\KeywordIntelligenceService;
 use App\Services\Seo\SeoAuditService;
 use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
+use App\Services\Social\PostViewTrackingService;
 use App\Services\System\LanguageService;
 use Database\Seeders\AiContentCenterSeeder;
 use Database\Seeders\GrowthSeeder;
@@ -360,6 +361,11 @@ Artisan::command('app:backup:database', function (DatabaseBackupService $backup)
     ));
 })->purpose('Create a private gzip-compressed logical SQL backup with SHA-256 checksum and prune expired archives');
 
+Artisan::command('app:views:prune', function (PostViewTrackingService $views): void {
+    $deleted = $views->pruneOldEvents();
+    $this->info("Post view events pruned: {$deleted}");
+})->purpose('Prune expired raw post view events per retention policy while preserving post view counters');
+
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
@@ -373,4 +379,5 @@ Schedule::command('app:growth:qualify-referrals')->everyFifteenMinutes()->withou
 Schedule::command('app:growth:snapshot-analytics')->hourly()->withoutOverlapping();
 Schedule::command('app:growth:retention')->dailyAt('09:30')->withoutOverlapping();
 Schedule::command('app:growth:cleanup')->dailyAt('02:30')->withoutOverlapping();
+Schedule::command('app:views:prune')->dailyAt('02:45')->withoutOverlapping();
 Schedule::command('app:backup:database')->dailyAt('02:00')->withoutOverlapping();

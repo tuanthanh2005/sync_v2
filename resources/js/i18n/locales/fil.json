@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Legal at Impormasyon",
         "openInNewTab": "Magbubukas sa bagong tab",
         "noPublishedLinks": "Malapit nang lumabas dito ang mga link ng impormasyon at patakaran.",
-        "supportContact": "Suporta"
+        "supportContact": "Suporta",
+        "more": "Higit pa"
     },
     "policy": {
         "draftBadge": "Burador (Preview ng Admin lamang)",
         "publishedBadge": "Nakapaskil",
         "updatedAt": "Huling na-update",
         "emptyContent": "Hindi pa nailalathala ang dokumentong ito.",
-        "backHome": "Bumalik sa daloy"
+        "backHome": "Bumalik sa daloy",
+        "effectiveAt": "May bisa simula"
     },
     "home": {
         "pageTitle": "Daloy ng Balita",
@@ -132,7 +134,13 @@
             "signInPrompt": "Mangyaring mag-sign in upang makapagbahagi ng paskil at makilahok sa talakayan.",
             "discardTitle": "Itapon ang hindi na-save na draft?",
             "discardDescription": "Permanenteng mabubura ang hindi mo na-save na draft ng post.",
-            "discardConfirm": "Itapon ang draft"
+            "discardConfirm": "Itapon ang draft",
+            "addImage": "Larawan",
+            "addLink": "Link",
+            "addPoll": "Botohan",
+            "discardDraftConfirm": "Itapon",
+            "discardDraftDesc": "Mabubura ang iyong hindi na-save na teksto, larawan, o mga pagpipilian sa botohan.",
+            "discardDraftTitle": "Itapon ang burador ng post?"
         },
         "empty": {
             "title": "Tuklasin ang komunidad ng {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 oras",
             "duration3d": "3 araw",
             "duration7d": "7 araw"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — itapat ang cursor o pindutin nang matagal upang pumili ng reaksyon",
+        "reactionTriggerHint": "Itapat o pindutin nang matagal para sa mga reaksyon",
+        "shareAction": "Ibahagi",
+        "sharesExact": "{count} beses na ibinahagi",
+        "viewsExact": "{count} panonood"
     },
     "profile": {
         "postsTab": "Mga Paskil",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Sinasala ayon sa hashtag",
         "clearFilter": "Alisin ang panala",
         "emptyTitle": "Walang katugmang resulta",
-        "emptyDescription": "Subukan ang ibang salita o mas maikling paghahanap."
+        "emptyDescription": "Subukan ang ibang salita o mas maikling paghahanap.",
+        "clearHistory": "Burahin",
+        "errorLoadFailed": "Hindi ma-load ang mga resulta ng paghahanap sa ngayon. Pakisubukang muli.",
+        "exploreCategories": "Mag-browse ayon sa kategorya",
+        "exploreHeading": "Tuklasin ang SyncViet",
+        "exploreMore": "Tumuklas ng mga aktibong paksa at komunidad",
+        "exploreSubtitle": "Tumuklas ng mga usapan, aktibong komunidad, paksa, at kilalang boses.",
+        "exploreTitle": "Tuklasin",
+        "featuredPosts": "Mga tampok na talakayan",
+        "filterTabsLabel": "Mga kategorya ng resulta ng paghahanap",
+        "latestPosts": "Mga pinakabagong post",
+        "noResultsForQuery": "Walang nakitang resulta para sa \"{query}\"",
+        "noResultsTips": "Suriin ang iyong baybay, subukan ang mas kaunting salita, o tuklasin ang mga aktibong paksa sa ibaba.",
+        "notableAccounts": "Mga taong matutuklasan",
+        "recentSearches": "Mga kamakailang paghahanap",
+        "recommendationsHeading": "Baka magustuhan mong tuklasin",
+        "resultsTitle": "Paghahanap: {query}",
+        "suggestedCommunities": "Mga komunidad na sasalihan",
+        "suggestionsLabel": "Mga mungkahi sa paghahanap",
+        "tabs": {
+            "all": "Lahat",
+            "communities": "Mga Komunidad",
+            "posts": "Mga Post",
+            "topics": "Mga Paksa",
+            "users": "Mga Tao"
+        },
+        "topicsOfInterest": "Mga paksang nakakaakit ng interes",
+        "viewAll": "Tingnan lahat"
     },
     "sidebar": {
         "communityTitle": "Pandaigdigang Komunidad",
@@ -888,7 +928,9 @@
                 "ads": "Makina ng Pag-aanunsyo",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "Hinaharang ng Mode ng Pagpapanatili ang trapiko ng hindi kawani gamit ang HTTP 503 habang nananatiling aktibo ang access ng Admin."
+            "maintenanceWarning": "Hinaharang ng Mode ng Pagpapanatili ang trapiko ng hindi kawani gamit ang HTTP 503 habang nananatiling aktibo ang access ng Admin.",
+            "brandingAssetsHint": "Mag-upload ng mga logo ng brand, favicon, at default na Open Graph na larawan nang direkta mula sa iyong device.",
+            "brandingAssetsTitle": "Mga visual asset ng brand at SEO"
         },
         "notifications": {
             "title": "Sentro ng Abiso ng Admin",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Iminungkahi: {action} ({status})",
             "acknowledge": "Kilalanin",
             "dismiss": "Balewalain"
+        },
+        "cms": {
+            "allStatuses": "Lahat ng status",
+            "allTypes": "Lahat ng uri ng pahina",
+            "canonicalUrlLabel": "Canonical URL (opsyonal)",
+            "changeNoteLabel": "Tala ng rebisyon (opsyonal)",
+            "changeNotePlaceholder": "Maikling ilarawan ang nabago sa bersyong ito...",
+            "contactInfoLabel": "Linya ng impormasyon sa pakikipag-ugnayan",
+            "contactInfoPlaceholder": "hal., Global Support · Lun–Biy",
+            "copyrightLabel": "Custom na linya ng copyright (opsyonal)",
+            "createPage": "Gumawa ng pahina",
+            "createPageHint": "Nagsisimula ang mga bagong pahina ng CMS bilang burador at nakatago hanggang sa ilathala mo ang mga ito.",
+            "deleteLinkConfirmDesc": "Alisin ang \"{label}\" mula sa footer? Hindi na mababawi ang aksyong ito.",
+            "effectiveAtLabel": "Petsa ng pagkakabisa",
+            "footerBrandingHeading": "Kontak sa suporta at branding ng footer",
+            "footerBrandingHint": "Totoong email address ng suporta lamang (hindi mga placeholder domain) ang ipinapakita sa publiko. Iwanang blangko upang itago.",
+            "indexEligibleLabel": "Payagan ang mga search engine na i-index ang nailathalang pahinang ito",
+            "inlineImageInserted": "Na-upload at naipasok ang larawan sa nilalaman.",
+            "insertImage": "Magpasok ng larawan",
+            "insertImageHint": "Mag-upload ng larawan mula sa iyong device. Naka-disable ang mga panlabas na hotlink ng larawan para sa seguridad.",
+            "languageSelectorLabel": "Wikang ine-edit (ipinapakita ng berdeng tuldok ang nailathalang kopya)",
+            "liveFooterPreview": "Live na preview ng compact footer",
+            "localesCount": "{count} wika",
+            "metaDescriptionLabel": "SEO meta description",
+            "noRevisions": "Wala pang naitalang kasaysayan ng rebisyon. I-save ang mga pagbabago upang gumawa ng unang snapshot.",
+            "ogImageHint": "Inirerekomendang 1200×630 JPG, PNG, o WebP mula sa iyong device.",
+            "ogImageLabel": "Larawan sa pagbabahagi sa social media (Open Graph)",
+            "pageTypeLabel": "Uri ng pahina",
+            "pageTypes": {
+                "business": "Negosyo",
+                "company": "Kumpanya",
+                "general": "Pangkalahatan",
+                "legal": "Legal",
+                "support": "Suporta"
+            },
+            "placementLabel": "Lokasyon sa footer",
+            "placementMain": "Pangunahing bar",
+            "placementMore": "Menu ng Higit pa",
+            "previewToggle": "I-preview",
+            "removeOgImage": "Alisin ang kasalukuyang Open Graph na larawan kapag nag-save",
+            "restoreConfirmDesc": "Ibalik ang nilalaman mula sa bersyon v{version}? Mananatiling ligtas na nakaimbak sa kasaysayan ang kasalukuyang nilalaman.",
+            "restoreConfirmTitle": "Ibalik ang mas lumang bersyon",
+            "restoreVersion": "Ibalik",
+            "saveFooterBranding": "I-save ang branding ng footer",
+            "saveSeoSettings": "I-save ang mga setting ng SEO",
+            "saveTranslation": "I-save ang salin",
+            "searchPagesPlaceholder": "I-filter ang mga pahina ayon sa pamagat o slug...",
+            "seoTitleLabel": "Custom na pamagat ng SEO",
+            "serpPreviewTitle": "Preview ng resulta sa paghahanap",
+            "slugLabel": "URL slug",
+            "statusArchived": "Naka-archive",
+            "subTabs": {
+                "content": "Nilalaman at Mga Wika",
+                "revisions": "Kasaysayan ({count})",
+                "seo": "SEO at Social"
+            },
+            "supportEmailLabel": "Pampublikong email ng suporta",
+            "tabs": {
+                "footer": "Footer at Kontak ({count})",
+                "pages": "Mga Pahina ng CMS ({count})"
+            },
+            "translationContentLabel": "Isinaling nilalamang HTML",
+            "translationHint": "Ang paglalathala ng saling {locale} na ito ay magpapagana sa {path} na may mga reciprocal na hreflang tag.",
+            "translationSummaryLabel": "Isinaling buod",
+            "translationTitleLabel": "Isinaling pamagat",
+            "uploadAndInsert": "I-upload at ipasok"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "I-disable",
         "extra": {
             "userFallback": "Gumagamit"
-        }
+        },
+        "next": "Susunod",
+        "previous": "Nakaraan"
     },
     "pwa": {
         "installApp": "I-install ang SyncViet App"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Tingnan ang mga recovery code"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Malapit na",
+        "modal": {
+            "attachmentsLabel": "Idagdag sa iyong post",
+            "continueEditing": "Ipagpatuloy ang pag-edit",
+            "insertEmoji": "Magpasok ng emoji",
+            "insertHashtag": "Magdagdag ng hashtag",
+            "personalizedPlaceholder": "Ano ang nasa isip mo, {name}?",
+            "resumeDraftPrompt": "Mayroon kang hindi na-save na burador na handang ipagpatuloy.",
+            "title": "Gumawa ng post"
+        },
+        "videoComingSoonTooltip": "Malapit na ang pag-post ng video"
+    },
+    "upload": {
+        "addCover": "Magdagdag ng cover photo",
+        "admin": {
+            "healthLabel": "Patakaran sa Pag-upload ng Larawan at PHP Runtime",
+            "mismatchBadge": "Limitado sa {effective} MB",
+            "readyBadge": "Handa (< {max} MB)",
+            "runtimeMismatch": "Pinapayagan ng patakaran sa pag-upload ng app ang hanggang {policy} MB, ngunit nililimitahan ng PHP ng server sa {effective} MB ang mga upload.",
+            "runtimeReady": "Ganap na sinusuportahan ng mga limitasyon ng PHP ng server ang patakaran sa pag-upload ng larawan (< {max} MB)."
+        },
+        "altTextLabel": "Alt text (accessibility)",
+        "altTextPlaceholder": "Maikling ilarawan ang larawang ito (opsyonal)",
+        "applyCrop": "Ilapat ang pag-crop",
+        "avatarHint": "JPG, PNG, o WebP mula sa iyong device · Mas maliit sa {max} MB · 1:1 crop",
+        "cancelUpload": "Kanselahin",
+        "changeAvatar": "Palitan ang avatar",
+        "changeCover": "Palitan ang cover",
+        "chooseImage": "Pumili ng larawan mula sa device",
+        "cropAvatarTitle": "I-crop ang larawan sa profile",
+        "cropCoverTitle": "Ayusin ang posisyon ng cover photo",
+        "currentImage": "Kasalukuyang larawan",
+        "currentImageAlt": "Kasalukuyang na-upload na larawan",
+        "dragToReposition": "I-drag ang larawan upang ayusin ang pagkaka-frame",
+        "dropOrBrowse": "I-drag at i-drop ang larawan dito, o pumili mula sa iyong device",
+        "errors": {
+            "failed": "Hindi ma-upload ang larawan. Pakisubukang muli.",
+            "fileTooLargeWithSize": "Ang napiling file ay {size} MB. Mangyaring pumili ng larawang mas maliit sa {max} MB.",
+            "maxSize": "Ang laki ng file ng larawan ay dapat mas maliit sa {max} MB.",
+            "tooManyFiles": "Maaari kang maglakip ng hanggang {max} larawan lamang.",
+            "totalSizeExceeded": "Ang kabuuang laki ng mga napiling larawan ay lumampas sa limitasyong {max} MB bawat kahilingan.",
+            "unsupportedFormat": "Hindi sinusuportahang format. Mangyaring pumili ng JPG, PNG, o WebP na larawan.",
+            "uploadFailed": "Nabigo ang pag-upload. Pakisuri ang iyong koneksyon at subukang muli.",
+            "videoComingSoon": "Malapit na ang pag-upload ng video. Mangyaring pumili ng JPG, PNG, o WebP na larawan."
+        },
+        "fileCountProgress": "{current}/{max} larawan",
+        "formatsAndLimit": "JPG, PNG, WebP · Mas maliit sa {max} MB",
+        "moveNext": "Ilipat sa kanan",
+        "movePrev": "Ilipat sa kaliwa",
+        "ownershipPolicyNotice": "Mag-upload lamang ng mga larawang pagmamay-ari mo o may pahintulot kang ibahagi.",
+        "previewAlt": "Preview ng napiling larawan",
+        "removeCover": "Alisin ang cover",
+        "removeImage": "Alisin ang larawan",
+        "replaceImage": "Palitan ang larawan",
+        "resetCrop": "I-reset",
+        "retry": "Subukang muli",
+        "title": "Mag-upload ng larawan",
+        "uploadCancelled": "Kinansela ang pag-upload.",
+        "uploading": "Nag-a-upload...",
+        "zoomLabel": "I-zoom"
     }
 }

@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Información y aspectos legales",
         "openInNewTab": "Se abre en una nueva pestaña",
         "noPublishedLinks": "Los enlaces de información y políticas aparecerán aquí pronto.",
-        "supportContact": "Soporte"
+        "supportContact": "Soporte",
+        "more": "Más"
     },
     "policy": {
         "draftBadge": "Borrador (solo vista previa de administrador)",
         "publishedBadge": "Publicado",
         "updatedAt": "Última actualización",
         "emptyContent": "Este documento aún no se ha publicado.",
-        "backHome": "Volver al inicio"
+        "backHome": "Volver al inicio",
+        "effectiveAt": "En vigor desde"
     },
     "home": {
         "pageTitle": "Noticias",
@@ -132,7 +134,13 @@
             "signInPrompt": "Inicia sesión para compartir publicaciones y unirte al debate.",
             "discardTitle": "¿Descartar borrador sin guardar?",
             "discardDescription": "Tu borrador sin guardar se eliminará de forma permanente.",
-            "discardConfirm": "Descartar borrador"
+            "discardConfirm": "Descartar borrador",
+            "addImage": "Foto",
+            "addLink": "Enlace",
+            "addPoll": "Encuesta",
+            "discardDraftConfirm": "Descartar",
+            "discardDraftDesc": "Se borrarán el texto, las fotos y las opciones de encuesta que no hayas guardado.",
+            "discardDraftTitle": "¿Descartar borrador de publicación?"
         },
         "empty": {
             "title": "Explora la comunidad de {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 horas",
             "duration3d": "3 días",
             "duration7d": "7 días"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — pasa el cursor o mantén pulsado para elegir una reacción",
+        "reactionTriggerHint": "Pasa el cursor o mantén pulsado para reaccionar",
+        "shareAction": "Compartir",
+        "sharesExact": "{count} veces compartido",
+        "viewsExact": "{count} visualizaciones"
     },
     "profile": {
         "postsTab": "Publicaciones",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Filtrando por hashtag",
         "clearFilter": "Borrar filtro",
         "emptyTitle": "No hay resultados coincidentes",
-        "emptyDescription": "Prueba con otra palabra clave o una consulta más corta."
+        "emptyDescription": "Prueba con otra palabra clave o una consulta más corta.",
+        "clearHistory": "Limpiar",
+        "errorLoadFailed": "No se pudieron cargar los resultados de búsqueda en este momento. Por favor, inténtalo de nuevo.",
+        "exploreCategories": "Explorar por categoría",
+        "exploreHeading": "Explorar SyncViet",
+        "exploreMore": "Descubre temas y comunidades activas",
+        "exploreSubtitle": "Descubre conversaciones, comunidades activas, temas y voces destacadas.",
+        "exploreTitle": "Explorar",
+        "featuredPosts": "Debates destacados",
+        "filterTabsLabel": "Categorías de resultados de búsqueda",
+        "latestPosts": "Últimas publicaciones",
+        "noResultsForQuery": "No se encontraron resultados para \"{query}\"",
+        "noResultsTips": "Revisa la ortografía, prueba con menos palabras o explora los temas activos a continuación.",
+        "notableAccounts": "Personas por descubrir",
+        "recentSearches": "Búsquedas recientes",
+        "recommendationsHeading": "Quizá te interese explorar",
+        "resultsTitle": "Búsqueda: {query}",
+        "suggestedCommunities": "Comunidades recomendadas",
+        "suggestionsLabel": "Sugerencias de búsqueda",
+        "tabs": {
+            "all": "Todo",
+            "communities": "Comunidades",
+            "posts": "Publicaciones",
+            "topics": "Temas",
+            "users": "Personas"
+        },
+        "topicsOfInterest": "Temas de interés",
+        "viewAll": "Ver todo"
     },
     "sidebar": {
         "communityTitle": "Comunidad global",
@@ -888,7 +928,9 @@
                 "ads": "Motor publicitario",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "El modo de mantenimiento bloquea el tráfico que no es del personal con HTTP 503 mientras mantiene activo el acceso de administrador."
+            "maintenanceWarning": "El modo de mantenimiento bloquea el tráfico que no es del personal con HTTP 503 mientras mantiene activo el acceso de administrador.",
+            "brandingAssetsHint": "Sube los logotipos de marca, el favicon y la imagen de Open Graph predeterminada directamente desde tu dispositivo.",
+            "brandingAssetsTitle": "Recursos visuales de marca y SEO"
         },
         "notifications": {
             "title": "Centro de notificaciones administrativas",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Sugerido: {action} ({status})",
             "acknowledge": "Reconocer",
             "dismiss": "Descartar"
+        },
+        "cms": {
+            "allStatuses": "Todos los estados",
+            "allTypes": "Todos los tipos de página",
+            "canonicalUrlLabel": "URL canónica (opcional)",
+            "changeNoteLabel": "Nota de revisión (opcional)",
+            "changeNotePlaceholder": "Describe brevemente qué cambió en esta versión...",
+            "contactInfoLabel": "Línea de información de contacto",
+            "contactInfoPlaceholder": "p. ej., Soporte global · Lun–Vie",
+            "copyrightLabel": "Línea de derechos de autor personalizada (opcional)",
+            "createPage": "Crear página",
+            "createPageHint": "Las nuevas páginas CMS comienzan como borradores y permanecen ocultas hasta que las publiques.",
+            "deleteLinkConfirmDesc": "¿Eliminar \"{label}\" del pie de página? Esta acción no se puede deshacer.",
+            "effectiveAtLabel": "Fecha de entrada en vigor",
+            "footerBrandingHeading": "Contacto de soporte e identidad del pie de página",
+            "footerBrandingHint": "Solo se muestran públicamente direcciones de soporte reales y no de marcador de posición. Déjalo vacío para ocultar.",
+            "indexEligibleLabel": "Permitir que los motores de búsqueda indexen esta página publicada",
+            "inlineImageInserted": "Imagen subida e insertada en el contenido.",
+            "insertImage": "Insertar imagen",
+            "insertImageHint": "Sube una imagen desde tu dispositivo. Los enlaces directos a imágenes externas están deshabilitados por seguridad.",
+            "languageSelectorLabel": "Idioma de edición (el punto verde indica texto publicado)",
+            "liveFooterPreview": "Vista previa en vivo del pie de página compacto",
+            "localesCount": "{count} idiomas",
+            "metaDescriptionLabel": "Metadescripción SEO",
+            "noRevisions": "Aún no hay historial de revisiones registrado. Guarda los cambios para crear la primera instantánea.",
+            "ogImageHint": "Recomendado 1200×630 en formato JPG, PNG o WebP desde tu dispositivo.",
+            "ogImageLabel": "Imagen para compartir en redes sociales (Open Graph)",
+            "pageTypeLabel": "Tipo de página",
+            "pageTypes": {
+                "business": "Negocios",
+                "company": "Empresa",
+                "general": "General",
+                "legal": "Legal",
+                "support": "Soporte"
+            },
+            "placementLabel": "Ubicación en el pie de página",
+            "placementMain": "Barra principal",
+            "placementMore": "Menú Más",
+            "previewToggle": "Vista previa",
+            "removeOgImage": "Eliminar la imagen de Open Graph actual al guardar",
+            "restoreConfirmDesc": "¿Restaurar el contenido de la versión v{version}? El contenido actual seguirá guardado de forma segura en el historial.",
+            "restoreConfirmTitle": "Restaurar versión anterior",
+            "restoreVersion": "Restaurar",
+            "saveFooterBranding": "Guardar pie de página",
+            "saveSeoSettings": "Guardar configuración SEO",
+            "saveTranslation": "Guardar traducción",
+            "searchPagesPlaceholder": "Filtrar páginas por título o slug...",
+            "seoTitleLabel": "Título SEO personalizado",
+            "serpPreviewTitle": "Vista previa en resultados de búsqueda",
+            "slugLabel": "Slug de URL",
+            "statusArchived": "Archivada",
+            "subTabs": {
+                "content": "Contenido e idiomas",
+                "revisions": "Historial ({count})",
+                "seo": "SEO y redes sociales"
+            },
+            "supportEmailLabel": "Correo de soporte público",
+            "tabs": {
+                "footer": "Pie de página y contacto ({count})",
+                "pages": "Páginas CMS ({count})"
+            },
+            "translationContentLabel": "Contenido HTML traducido",
+            "translationHint": "Publicar esta traducción ({locale}) activa {path} con etiquetas hreflang recíprocas.",
+            "translationSummaryLabel": "Resumen traducido",
+            "translationTitleLabel": "Título traducido",
+            "uploadAndInsert": "Subir e insertar"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Desactivar",
         "extra": {
             "userFallback": "Usuario"
-        }
+        },
+        "next": "Siguiente",
+        "previous": "Anterior"
     },
     "pwa": {
         "installApp": "Instalar aplicación SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Ver códigos de recuperación"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Próximamente",
+        "modal": {
+            "attachmentsLabel": "Añadir a tu publicación",
+            "continueEditing": "Seguir editando",
+            "insertEmoji": "Insertar emoji",
+            "insertHashtag": "Añadir hashtag",
+            "personalizedPlaceholder": "¿Qué tienes en mente, {name}?",
+            "resumeDraftPrompt": "Tienes un borrador sin guardar listo para continuar.",
+            "title": "Crear publicación"
+        },
+        "videoComingSoonTooltip": "La publicación de videos estará disponible próximamente"
+    },
+    "upload": {
+        "addCover": "Añadir foto de portada",
+        "admin": {
+            "healthLabel": "Política de subida de imágenes y entorno PHP",
+            "mismatchBadge": "Limitado a {effective} MB",
+            "readyBadge": "Listo (< {max} MB)",
+            "runtimeMismatch": "La política de subida de la aplicación permite hasta {policy} MB, pero los límites PHP del servidor actualmente restringen las subidas a {effective} MB.",
+            "runtimeReady": "Los límites PHP del servidor admiten por completo la política de subida de imágenes (< {max} MB)."
+        },
+        "altTextLabel": "Texto alternativo (accesibilidad)",
+        "altTextPlaceholder": "Describe brevemente esta imagen (opcional)",
+        "applyCrop": "Aplicar recorte",
+        "avatarHint": "JPG, PNG o WebP desde tu dispositivo · Menos de {max} MB · Recorte 1:1",
+        "cancelUpload": "Cancelar",
+        "changeAvatar": "Cambiar avatar",
+        "changeCover": "Cambiar portada",
+        "chooseImage": "Elegir imagen del dispositivo",
+        "cropAvatarTitle": "Recortar foto de perfil",
+        "cropCoverTitle": "Reposicionar foto de portada",
+        "currentImage": "Imagen actual",
+        "currentImageAlt": "Imagen subida actualmente",
+        "dragToReposition": "Arrastra la imagen para ajustar el encuadre",
+        "dropOrBrowse": "Arrastra y suelta una imagen aquí, o selecciónala desde tu dispositivo",
+        "errors": {
+            "failed": "No se pudo subir la imagen. Por favor, inténtalo de nuevo.",
+            "fileTooLargeWithSize": "El archivo seleccionado pesa {size} MB. Por favor, elige una imagen menor de {max} MB.",
+            "maxSize": "El tamaño del archivo de imagen debe ser menor de {max} MB.",
+            "tooManyFiles": "Puedes adjuntar como máximo {max} imágenes.",
+            "totalSizeExceeded": "El tamaño total de las imágenes seleccionadas supera el límite de {max} MB por solicitud.",
+            "unsupportedFormat": "Formato no compatible. Por favor, selecciona una imagen JPG, PNG o WebP.",
+            "uploadFailed": "Error al subir. Comprueba tu conexión e inténtalo de nuevo.",
+            "videoComingSoon": "La subida de videos estará disponible próximamente. Por favor, elige una imagen JPG, PNG o WebP."
+        },
+        "fileCountProgress": "{current}/{max} imágenes",
+        "formatsAndLimit": "JPG, PNG, WebP · Menos de {max} MB",
+        "moveNext": "Mover a la derecha",
+        "movePrev": "Mover a la izquierda",
+        "ownershipPolicyNotice": "Sube únicamente imágenes de tu propiedad o que tengas permiso para compartir.",
+        "previewAlt": "Vista previa de la imagen seleccionada",
+        "removeCover": "Quitar portada",
+        "removeImage": "Quitar imagen",
+        "replaceImage": "Reemplazar imagen",
+        "resetCrop": "Restablecer",
+        "retry": "Reintentar",
+        "title": "Subir imagen",
+        "uploadCancelled": "Subida cancelada.",
+        "uploading": "Subiendo...",
+        "zoomLabel": "Zoom"
     }
 }

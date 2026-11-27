@@ -2,23 +2,22 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Facades\Lang;
+
 enum PolicyStatus: string
 {
     case Draft = 'draft';
     case Published = 'published';
+    case Archived = 'archived';
 
-    public function label(string $locale = 'vi'): string
+    public function label(?string $locale = null): string
     {
-        if ($locale === 'en') {
-            return match ($this) {
-                self::Draft => 'Draft',
-                self::Published => 'Published',
-            };
-        }
+        $resolvedLocale = $locale ?? app()->getLocale();
 
         return match ($this) {
-            self::Draft => 'Bản nháp',
-            self::Published => 'Đã xuất bản',
+            self::Draft => (string) Lang::get('Draft', [], $resolvedLocale),
+            self::Published => (string) Lang::get('Published', [], $resolvedLocale),
+            self::Archived => (string) Lang::get('Archived', [], $resolvedLocale),
         };
     }
 

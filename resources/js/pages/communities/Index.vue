@@ -3,10 +3,12 @@ import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { BadgeCheck, Globe, Lock, Plus, Search, Users } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { toast } from 'vue-sonner';
+import { appToast } from '@/lib/toast';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import EmptyState from '@/components/common/EmptyState.vue';
 import InputError from '@/components/InputError.vue';
+import AvatarUploader from '@/components/upload/AvatarUploader.vue';
+import CoverImageUploader from '@/components/upload/CoverImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -79,7 +81,7 @@ function submitSearch(): void {
 
 function toggleJoin(community: CommunitySummary): void {
     if (!user.value) {
-        toast.info(t('home.composer.signInPrompt'));
+        appToast.info(t('home.composer.signInPrompt'));
         router.visit(login());
 
         return;
@@ -90,11 +92,6 @@ function toggleJoin(community: CommunitySummary): void {
         {},
         { preserveScroll: true },
     );
-}
-
-function setFile(field: 'avatar' | 'cover', event: Event): void {
-    const input = event.target as HTMLInputElement;
-    createForm[field] = input.files?.[0] ?? null;
 }
 
 function submitCreate(): void {
@@ -225,31 +222,21 @@ function submitCreate(): void {
                             />
                         </div>
 
-                        <div class="grid gap-3 sm:grid-cols-2">
-                            <div class="grid gap-1">
-                                <Label for="comm-avatar">{{
-                                    t('communities.extra.avatar')
-                                }}</Label>
-                                <input
-                                    id="comm-avatar"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp"
-                                    class="text-xs"
-                                    @change="setFile('avatar', $event)"
-                                />
-                            </div>
-                            <div class="grid gap-1">
-                                <Label for="comm-cover">{{
-                                    t('communities.extra.cover')
-                                }}</Label>
-                                <input
-                                    id="comm-cover"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp"
-                                    class="text-xs"
-                                    @change="setFile('cover', $event)"
-                                />
-                            </div>
+                        <div class="space-y-3">
+                            <CoverImageUploader
+                                v-model="createForm.cover"
+                                :allow-remove="false"
+                                :external-error="createForm.errors.cover"
+                                :disabled="createForm.processing"
+                            />
+                            <AvatarUploader
+                                v-model="createForm.avatar"
+                                :display-name="createForm.name || 'C'"
+                                :allow-remove="false"
+                                rounded-class="rounded-2xl"
+                                :external-error="createForm.errors.avatar"
+                                :disabled="createForm.processing"
+                            />
                         </div>
 
                         <DialogFooter class="gap-2">

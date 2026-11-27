@@ -7,9 +7,8 @@ import {
     Check,
     Copy,
     ExternalLink,
+    Eye,
     Flag,
-    Heart,
-    Lightbulb,
     Lock,
     MessageCircle,
     MoreHorizontal,
@@ -17,7 +16,6 @@ import {
     Pin,
     PinOff,
     Share2,
-    ThumbsUp,
     Trash2,
     Users,
     Zap,
@@ -36,7 +34,16 @@ import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import AiBadge from '@/components/ai/AiBadge.vue';
 import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
-import { formatDateTime } from '@/lib/formatters';
+import ReactionPicker from '@/components/social/ReactionPicker.vue';
+import {
+    usePostViewTracker,
+    type PostViewSource,
+} from '@/composables/usePostViewTracker';
+import {
+    formatCompactNumber,
+    formatDateTime,
+    formatNumber,
+} from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -68,12 +75,14 @@ const props = withDefaults(
         categories?: CategoryOption[];
         canPin?: boolean;
         communitySlug?: string | null;
+        viewSource?: PostViewSource;
     }>(),
     {
         truncate: true,
         categories: () => [],
         canPin: false,
         communitySlug: null,
+        viewSource: 'feed',
     },
 );
 
@@ -82,13 +91,19 @@ const page = usePage();
 const user = computed(() => page.props.auth.user);
 const { getInitials } = useInitials();
 
+const articleRef = ref<HTMLElement | null>(null);
 const isContentExpanded = ref(false);
 const isEditing = ref(false);
-const showReactionMenu = ref(false);
 const reportOpen = ref(false);
 const boostModalOpen = ref(false);
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
+
+usePostViewTracker(articleRef, {
+    postId: props.post.id,
+    source: props.viewSource,
+    isPromoted: Boolean(props.post.is_sponsored),
+});
 
 // Optimistic local interaction state with rollback on network/server failure
 const optimisticReaction = ref(props.post.viewer_reaction);
@@ -172,8 +187,6 @@ function requireUser(): boolean {
 }
 
 function submitReaction(type: 'like' | 'love' | 'insightful'): void {
-    showReactionMenu.value = false;
-
     if (!requireUser() || reacting.value) {
         return;
     }
@@ -328,6 +341,7 @@ function submitReport(): void {
 
 <template>
     <article
+        ref="articleRef"
         class="rounded-xl border border-border bg-card p-3.5 shadow-xs transition-colors sm:p-5"
     >
         <!-- Header -->
@@ -803,95 +817,39 @@ function submitReport(): void {
             </a>
         </div>
 
-        <!-- Engagement Footer (44px mobile touch targets + Optimistic UI) -->
+        <!-- Engagement Action Bar (Uniform icons, tabular-nums, zero dropdown arrow) -->
         <footer
-            class="mt-3.5 flex items-center justify-between gap-1 border-t border-border pt-2 text-xs text-muted-foreground select-none"
+            class="mt-3.5 flex items-center justify-between gap-1 border-t border-border pt-2 text-xs text-muted-foreground"
         >
-            <div class="flex items-center gap-0.5 sm:gap-2">
-                <div class="relative flex items-center">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        :class="[
-                            'min-h-10 gap-1.5 rounded-lg px-2.5 text-xs active:scale-95 sm:min-h-9',
-                            optimisticReaction
-                                ? 'bg-primary-soft font-semibold text-accent-foreground'
-                                : 'text-muted-foreground hover:text-foreground',
-                        ]"
-                        @click="submitReaction(optimisticReaction || 'like')"
-                        @contextmenu.prevent="
-                            showReactionMenu = !showReactionMenu
-                        "
-                    >
-                        <Heart
-                            v-if="optimisticReaction === 'love'"
-                            class="size-4 text-destructive"
-                        />
-                        <Lightbulb
-                            v-else-if="optimisticReaction === 'insightful'"
-                            class="size-4 text-warning"
-                        />
-                        <ThumbsUp v-else class="size-4" />
-                        <span>{{ optimisticReactionsCount }}</span>
-                    </Button>
-
-                    <!-- Reaction quick picker toggle -->
-                    <button
-                        type="button"
-                        class="flex size-9 items-center justify-center rounded-lg text-xs text-muted-foreground hover:bg-muted sm:size-8"
-                        :aria-label="t('accessibility.chooseReaction')"
-                        @click="showReactionMenu = !showReactionMenu"
-                    >
-                        ▾
-                    </button>
-
-                    <div
-                        v-if="showReactionMenu"
-                        class="absolute bottom-full left-0 z-20 mb-1.5 flex items-center gap-1 rounded-full border border-border bg-card p-1 shadow-md"
-                    >
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            class="min-h-9 rounded-full px-3 text-xs"
-                            @click="submitReaction('like')"
-                        >
-                            <ThumbsUp class="mr-1 size-3.5 text-primary" />
-                            {{ t('post.like') }}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            class="min-h-9 rounded-full px-3 text-xs"
-                            @click="submitReaction('love')"
-                        >
-                            <Heart class="mr-1 size-3.5 text-destructive" />
-                            {{ t('post.love') }}
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            class="min-h-9 rounded-full px-3 text-xs"
-                            @click="submitReaction('insightful')"
-                        >
-                            <Lightbulb class="mr-1 size-3.5 text-warning" />
-                            {{ t('post.insightful') }}
-                        </Button>
-                    </div>
-                </div>
+            <div class="flex flex-wrap items-center gap-0.5 sm:gap-1.5">
+                <ReactionPicker
+                    :post-id="post.id"
+                    :active-reaction="optimisticReaction"
+                    :count="optimisticReactionsCount"
+                    :disabled="reacting"
+                    @select="submitReaction"
+                />
 
                 <Button
                     variant="ghost"
                     size="sm"
-                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground active:scale-95 sm:min-h-9"
+                    :title="
+                        t('post.commentsTitle', { count: post.comments_count })
+                    "
+                    :aria-label="
+                        t('post.commentsTitle', { count: post.comments_count })
+                    "
+                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:bg-surface-hover hover:text-foreground sm:min-h-9"
                     as-child
                 >
                     <Link :href="PostController.show.url(post.id)">
-                        <MessageCircle class="size-4" />
-                        <span>{{ post.comments_count }}</span>
+                        <MessageCircle
+                            class="size-4 shrink-0"
+                            aria-hidden="true"
+                        />
+                        <span class="tabular-nums">{{
+                            formatCompactNumber(post.comments_count, locale)
+                        }}</span>
                     </Link>
                 </Button>
 
@@ -899,12 +857,40 @@ function submitReport(): void {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:text-foreground active:scale-95 sm:min-h-9"
+                    :title="t('post.shareAction')"
+                    :aria-label="
+                        t('post.sharesExact', {
+                            count: formatNumber(post.shares_count, locale),
+                        })
+                    "
+                    class="min-h-10 gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground hover:bg-surface-hover hover:text-foreground sm:min-h-9"
                     @click="handleShare"
                 >
-                    <Share2 class="size-4" />
-                    <span>{{ post.shares_count }}</span>
+                    <Share2 class="size-4 shrink-0" aria-hidden="true" />
+                    <span class="tabular-nums">{{
+                        formatCompactNumber(post.shares_count, locale)
+                    }}</span>
                 </Button>
+
+                <span
+                    data-test="post-views-count"
+                    :title="
+                        t('post.viewsExact', {
+                            count: formatNumber(post.views_count ?? 0, locale),
+                        })
+                    "
+                    :aria-label="
+                        t('post.viewsExact', {
+                            count: formatNumber(post.views_count ?? 0, locale),
+                        })
+                    "
+                    class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground sm:min-h-9"
+                >
+                    <Eye class="size-4 shrink-0" aria-hidden="true" />
+                    <span class="tabular-nums">{{
+                        formatCompactNumber(post.views_count ?? 0, locale)
+                    }}</span>
+                </span>
             </div>
 
             <Button
@@ -912,11 +898,16 @@ function submitReport(): void {
                 variant="ghost"
                 size="icon"
                 :class="[
-                    'size-10 rounded-lg active:scale-95 sm:size-9',
+                    'size-10 shrink-0 rounded-lg sm:size-9',
                     optimisticBookmarked
                         ? 'text-primary'
-                        : 'text-muted-foreground hover:text-foreground',
+                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
                 ]"
+                :title="
+                    optimisticBookmarked
+                        ? t('post.bookmarked')
+                        : t('post.bookmark')
+                "
                 :aria-label="
                     optimisticBookmarked
                         ? t('post.bookmarked')

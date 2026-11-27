@@ -48,6 +48,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $reactions_count
  * @property int $comments_count
  * @property int $shares_count
+ * @property int $views_count
+ * @property int $organic_views_count
+ * @property int $promoted_views_count
+ * @property int $unique_viewers_count
  * @property CarbonInterface|null $published_at
  * @property CarbonInterface|null $created_at
  * @property CarbonInterface|null $updated_at
@@ -92,6 +96,10 @@ class Post extends Model
             'reactions_count' => 'integer',
             'comments_count' => 'integer',
             'shares_count' => 'integer',
+            'views_count' => 'integer',
+            'organic_views_count' => 'integer',
+            'promoted_views_count' => 'integer',
+            'unique_viewers_count' => 'integer',
             'published_at' => 'datetime',
         ];
     }

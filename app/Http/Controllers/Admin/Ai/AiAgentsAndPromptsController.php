@@ -10,9 +10,11 @@ use App\Models\AiPromptTemplate;
 use App\Models\AiPromptVersion;
 use App\Models\Community;
 use App\Models\User;
+use App\Rules\ValidUploadedImage;
 use App\Services\Ai\AiAgentService;
 use App\Services\Ai\AiAutomationControlService;
 use App\Services\Ai\AiPromptService;
+use App\Services\Social\ProfileService;
 use App\Services\System\LanguageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -170,11 +172,25 @@ class AiAgentsAndPromptsController extends Controller
             'daily_comment_limit' => ['sometimes', 'integer', 'min:0', 'max:50'],
             'preferred_model_id' => ['nullable', 'integer', 'exists:ai_models,id'],
             'system_prompt' => ['sometimes', 'string', 'min:20', 'max:4000'],
+            'avatar' => ['nullable', 'file', new ValidUploadedImage('ai_agent')],
+            'cover' => ['nullable', 'file', new ValidUploadedImage('ai_agent')],
         ]);
 
         /** @var User $actor */
         $actor = $request->user();
-        $agent->forceFill($validated)->save();
+        $agentFields = array_diff_key($validated, array_flip(['avatar', 'cover']));
+        if ($agentFields !== []) {
+            $agent->forceFill($agentFields)->save();
+        }
+
+        if (($request->hasFile('avatar') || $request->hasFile('cover')) && $agent->user !== null) {
+            app(ProfileService::class)->updateDetails(
+                $agent->user,
+                [],
+                $request->file('avatar'),
+                $request->file('cover'),
+            );
+        }
 
         $this->control->logActivity('ai.agent.updated', $actor, $agent->id, AiAgent::class, $agent->id, [
             'is_enabled' => $agent->is_enabled,

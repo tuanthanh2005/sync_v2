@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Thông tin & Pháp lý",
         "openInNewTab": "Mở trong tab mới",
         "noPublishedLinks": "Thông tin & chính sách sẽ được cập nhật sớm.",
-        "supportContact": "Hỗ trợ"
+        "supportContact": "Hỗ trợ",
+        "more": "Xem thêm"
     },
     "policy": {
         "draftBadge": "Bản nháp (Chỉ Quản trị viên xem trước)",
         "publishedBadge": "Đã xuất bản",
         "updatedAt": "Cập nhật lần cuối",
         "emptyContent": "Nội dung chính sách này chưa được cập nhật.",
-        "backHome": "Quay lại bảng tin"
+        "backHome": "Quay lại bảng tin",
+        "effectiveAt": "Hiệu lực"
     },
     "home": {
         "pageTitle": "Bảng tin",
@@ -132,7 +134,13 @@
             "signInPrompt": "Vui lòng đăng nhập để đăng bài và tham gia thảo luận.",
             "discardTitle": "Hủy bản nháp chưa lưu?",
             "discardDescription": "Nội dung bài viết bạn đang soạn sẽ bị xóa vĩnh viễn.",
-            "discardConfirm": "Hủy bản nháp"
+            "discardConfirm": "Hủy bản nháp",
+            "addImage": "Ảnh",
+            "addLink": "Liên kết",
+            "addPoll": "Bình chọn",
+            "discardDraftConfirm": "Hủy bỏ",
+            "discardDraftDesc": "Nội dung, hình ảnh và tùy chọn bình chọn chưa lưu sẽ bị xóa.",
+            "discardDraftTitle": "Hủy bản nháp bài viết?"
         },
         "empty": {
             "title": "Khám phá cộng đồng {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 giờ",
             "duration3d": "3 ngày",
             "duration7d": "7 ngày"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — rê chuột hoặc nhấn giữ để chọn cảm xúc",
+        "reactionTriggerHint": "Rê chuột hoặc nhấn giữ để chọn cảm xúc",
+        "shareAction": "Chia sẻ",
+        "sharesExact": "{count} lượt chia sẻ",
+        "viewsExact": "{count} lượt xem"
     },
     "profile": {
         "postsTab": "Bài viết",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Đang lọc theo hashtag",
         "clearFilter": "Xóa bộ lọc",
         "emptyTitle": "Không tìm thấy kết quả phù hợp",
-        "emptyDescription": "Thử tìm với từ khóa khác ngắn gọn hơn."
+        "emptyDescription": "Thử tìm với từ khóa khác ngắn gọn hơn.",
+        "clearHistory": "Xóa",
+        "errorLoadFailed": "Không thể tải kết quả tìm kiếm lúc này. Vui lòng thử lại.",
+        "exploreCategories": "Duyệt theo chủ đề",
+        "exploreHeading": "Khám phá SyncViet",
+        "exploreMore": "Khám phá các chủ đề và cộng đồng nổi bật",
+        "exploreSubtitle": "Khám phá thảo luận, cộng đồng sôi nổi, chủ đề và thành viên tiêu biểu.",
+        "exploreTitle": "Khám phá",
+        "featuredPosts": "Thảo luận nổi bật",
+        "filterTabsLabel": "Phân loại kết quả tìm kiếm",
+        "latestPosts": "Bài viết mới nhất",
+        "noResultsForQuery": "Không tìm thấy kết quả cho \"{query}\"",
+        "noResultsTips": "Kiểm tra lại chính tả, thử từ khóa ngắn hơn hoặc khám phá nội dung bên dưới.",
+        "notableAccounts": "Thành viên đáng chú ý",
+        "recentSearches": "Tìm kiếm gần đây",
+        "recommendationsHeading": "Có thể bạn sẽ quan tâm",
+        "resultsTitle": "Tìm kiếm: {query}",
+        "suggestedCommunities": "Cộng đồng gợi ý",
+        "suggestionsLabel": "Gợi ý tìm kiếm",
+        "tabs": {
+            "all": "Tất cả",
+            "communities": "Cộng đồng",
+            "posts": "Bài viết",
+            "topics": "Chủ đề",
+            "users": "Mọi người"
+        },
+        "topicsOfInterest": "Chủ đề đang được quan tâm",
+        "viewAll": "Xem tất cả"
     },
     "sidebar": {
         "communityTitle": "Cộng đồng toàn cầu",
@@ -888,7 +928,9 @@
                 "ads": "Động cơ quảng cáo",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "Chế độ bảo trì sẽ trả về HTTP 503 cho người dùng thường nhưng vẫn giữ quyền truy cập Admin."
+            "maintenanceWarning": "Chế độ bảo trì sẽ trả về HTTP 503 cho người dùng thường nhưng vẫn giữ quyền truy cập Admin.",
+            "brandingAssetsHint": "Tải logo sáng/tối, favicon và ảnh Open Graph mặc định trực tiếp từ thiết bị.",
+            "brandingAssetsTitle": "Tài nguyên hình ảnh thương hiệu & SEO"
         },
         "notifications": {
             "title": "Trung tâm Thông báo Quản trị",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Đề xuất: {action} ({status})",
             "acknowledge": "Xác nhận đã xem",
             "dismiss": "Bỏ qua"
+        },
+        "cms": {
+            "allStatuses": "Tất cả trạng thái",
+            "allTypes": "Tất cả loại trang",
+            "canonicalUrlLabel": "URL chuẩn Canonical (tùy chọn)",
+            "changeNoteLabel": "Ghi chú phiên bản (tùy chọn)",
+            "changeNotePlaceholder": "Mô tả ngắn thay đổi trong phiên bản này...",
+            "contactInfoLabel": "Dòng thông tin liên hệ",
+            "contactInfoPlaceholder": "VD: Hỗ trợ toàn cầu · Thứ 2–Thứ 6",
+            "copyrightLabel": "Dòng bản quyền tùy chỉnh (tùy chọn)",
+            "createPage": "Tạo trang mới",
+            "createPageHint": "Trang CMS mới mặc định ở trạng thái nháp và ẩn cho đến khi bạn xuất bản.",
+            "deleteLinkConfirmDesc": "Xóa liên kết \"{label}\" khỏi chân trang? Thao tác này không thể hoàn tác.",
+            "effectiveAtLabel": "Ngày hiệu lực",
+            "footerBrandingHeading": "Email hỗ trợ & nhận diện chân trang",
+            "footerBrandingHint": "Chỉ hiển thị địa chỉ hỗ trợ thật (chặn tên miền mẫu). Để trống nếu không muốn hiển thị.",
+            "indexEligibleLabel": "Cho phép công cụ tìm kiếm lập chỉ mục trang đã xuất bản này",
+            "inlineImageInserted": "Đã tải ảnh lên và chèn vào nội dung.",
+            "insertImage": "Chèn ảnh",
+            "insertImageHint": "Tải ảnh trực tiếp từ thiết bị. Hệ thống không hỗ trợ chèn ảnh hotlink từ website ngoài.",
+            "languageSelectorLabel": "Ngôn ngữ đang chỉnh sửa (chấm xanh biểu thị đã xuất bản)",
+            "liveFooterPreview": "Xem trước chân trang gọn",
+            "localesCount": "{count} ngôn ngữ",
+            "metaDescriptionLabel": "Mô tả SEO (Meta description)",
+            "noRevisions": "Chưa có lịch sử phiên bản. Lưu thay đổi để tạo bản ghi đầu tiên.",
+            "ogImageHint": "Khuyến nghị ảnh 1200×630 định dạng JPG, PNG hoặc WebP từ thiết bị.",
+            "ogImageLabel": "Ảnh chia sẻ mạng xã hội (Open Graph)",
+            "pageTypeLabel": "Loại trang",
+            "pageTypes": {
+                "business": "Kinh doanh",
+                "company": "Công ty",
+                "general": "Chung",
+                "legal": "Pháp lý",
+                "support": "Hỗ trợ"
+            },
+            "placementLabel": "Vị trí hiển thị Footer",
+            "placementMain": "Thanh chính",
+            "placementMore": "Menu Xem thêm",
+            "previewToggle": "Xem trước",
+            "removeOgImage": "Gỡ ảnh Open Graph hiện tại khi lưu",
+            "restoreConfirmDesc": "Khôi phục nội dung từ phiên bản v{version}? Nội dung hiện tại vẫn được lưu trong lịch sử.",
+            "restoreConfirmTitle": "Khôi phục phiên bản trước",
+            "restoreVersion": "Khôi phục",
+            "saveFooterBranding": "Lưu cấu hình chân trang",
+            "saveSeoSettings": "Lưu cấu hình SEO",
+            "saveTranslation": "Lưu bản dịch",
+            "searchPagesPlaceholder": "Lọc trang theo tiêu đề hoặc đường dẫn...",
+            "seoTitleLabel": "Tiêu đề SEO tùy chỉnh",
+            "serpPreviewTitle": "Xem trước hiển thị tìm kiếm",
+            "slugLabel": "Đường dẫn (slug)",
+            "statusArchived": "Đã lưu trữ",
+            "subTabs": {
+                "content": "Nội dung & Ngôn ngữ",
+                "revisions": "Lịch sử ({count})",
+                "seo": "SEO & Mạng xã hội"
+            },
+            "supportEmailLabel": "Email hỗ trợ công khai",
+            "tabs": {
+                "footer": "Chân trang & Liên hệ ({count})",
+                "pages": "Trang CMS ({count})"
+            },
+            "translationContentLabel": "Nội dung HTML đã dịch",
+            "translationHint": "Xuất bản bản dịch {locale} sẽ kích hoạt đường dẫn {path} kèm thẻ hreflang tương hỗ.",
+            "translationSummaryLabel": "Tóm tắt bản dịch",
+            "translationTitleLabel": "Tiêu đề bản dịch",
+            "uploadAndInsert": "Tải lên & chèn"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Tắt",
         "extra": {
             "userFallback": "Người dùng"
-        }
+        },
+        "next": "Tiếp theo",
+        "previous": "Trước"
     },
     "pwa": {
         "installApp": "Cài đặt ứng dụng SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Xem mã khôi phục"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Sắp ra mắt",
+        "modal": {
+            "attachmentsLabel": "Thêm vào bài viết",
+            "continueEditing": "Tiếp tục chỉnh sửa",
+            "insertEmoji": "Chèn biểu tượng cảm xúc",
+            "insertHashtag": "Thêm hashtag",
+            "personalizedPlaceholder": "{name} ơi, bạn đang nghĩ gì thế?",
+            "resumeDraftPrompt": "Bạn đang có bản nháp chưa đăng, bấm để tiếp tục.",
+            "title": "Tạo bài viết"
+        },
+        "videoComingSoonTooltip": "Tính năng đăng video đang phát triển"
+    },
+    "upload": {
+        "addCover": "Thêm ảnh bìa",
+        "admin": {
+            "healthLabel": "Chính sách tải ảnh & Giới hạn PHP",
+            "mismatchBadge": "Giới hạn thực tế {effective} MB",
+            "readyBadge": "Sẵn sàng (< {max} MB)",
+            "runtimeMismatch": "Chính sách ứng dụng cho phép dưới {policy} MB, nhưng cấu hình PHP máy chủ hiện giới hạn ở {effective} MB.",
+            "runtimeReady": "Cấu hình PHP máy chủ đáp ứng đầy đủ chính sách tải ảnh (< {max} MB)."
+        },
+        "altTextLabel": "Văn bản thay thế (Alt text)",
+        "altTextPlaceholder": "Mô tả ngắn nội dung ảnh (tùy chọn)",
+        "applyCrop": "Áp dụng vùng cắt",
+        "avatarHint": "JPG, PNG hoặc WebP từ thiết bị · Nhỏ hơn {max} MB · Cắt tỉ lệ 1:1",
+        "cancelUpload": "Hủy",
+        "changeAvatar": "Đổi ảnh đại diện",
+        "changeCover": "Đổi ảnh bìa",
+        "chooseImage": "Chọn ảnh từ thiết bị",
+        "cropAvatarTitle": "Cắt ảnh đại diện",
+        "cropCoverTitle": "Căn chỉnh ảnh bìa",
+        "currentImage": "Ảnh hiện tại",
+        "currentImageAlt": "Ảnh đang sử dụng",
+        "dragToReposition": "Kéo ảnh để căn chỉnh khung hình",
+        "dropOrBrowse": "Kéo thả ảnh vào đây hoặc chọn từ thiết bị",
+        "errors": {
+            "failed": "Không thể tải ảnh lên. Vui lòng thử lại.",
+            "fileTooLargeWithSize": "Tệp bạn chọn có dung lượng {size} MB. Vui lòng chọn ảnh nhỏ hơn {max} MB.",
+            "maxSize": "Dung lượng hình ảnh phải nhỏ hơn {max} MB.",
+            "tooManyFiles": "Bạn chỉ có thể đính kèm tối đa {max} hình ảnh.",
+            "totalSizeExceeded": "Tổng dung lượng hình ảnh vượt quá giới hạn {max} MB mỗi lần gửi.",
+            "unsupportedFormat": "Định dạng ảnh không được hỗ trợ. Vui lòng chọn ảnh JPG, PNG hoặc WebP.",
+            "uploadFailed": "Tải ảnh thất bại. Vui lòng kiểm tra kết nối và thử lại.",
+            "videoComingSoon": "Tính năng đăng video đang được phát triển. Vui lòng chọn ảnh JPG, PNG hoặc WebP."
+        },
+        "fileCountProgress": "{current}/{max} ảnh",
+        "formatsAndLimit": "JPG, PNG, WebP · Nhỏ hơn {max} MB",
+        "moveNext": "Chuyển sang phải",
+        "movePrev": "Chuyển sang trái",
+        "ownershipPolicyNotice": "Chỉ tải lên hình ảnh thuộc quyền sở hữu của bạn hoặc có quyền sử dụng hợp pháp.",
+        "previewAlt": "Xem trước hình ảnh đã chọn",
+        "removeCover": "Gỡ ảnh bìa",
+        "removeImage": "Gỡ ảnh",
+        "replaceImage": "Thay ảnh khác",
+        "resetCrop": "Đặt lại",
+        "retry": "Thử lại",
+        "title": "Tải hình ảnh",
+        "uploadCancelled": "Đã hủy tải ảnh.",
+        "uploading": "Đang tải lên...",
+        "zoomLabel": "Thu phóng"
     }
 }

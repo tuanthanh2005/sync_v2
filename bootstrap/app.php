@@ -15,9 +15,11 @@ use App\Http\Middleware\TrustConfiguredProxies;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -53,4 +55,28 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (PostTooLargeException $exception, Request $request) {
+            $message = __('The uploaded file is too large. Each image must be smaller than :max MB.', ['max' => 40]);
+
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => $message,
+                    'errors' => [
+                        'images' => [$message],
+                    ],
+                ], 413);
+            }
+
+            if ($request->header('X-Inertia') !== null) {
+                Inertia::flash('toast', [
+                    'type' => 'error',
+                    'message' => $message,
+                ]);
+
+                return back()->withErrors(['images' => $message]);
+            }
+
+            return back()->withErrors(['images' => $message])->with('error', $message);
+        });
     })->create();

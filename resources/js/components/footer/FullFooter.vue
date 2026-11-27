@@ -13,6 +13,15 @@ const page = usePage();
 
 const brandName = computed(() => page.props.name);
 const footer = computed(() => page.props.footer);
+
+const copyrightLine = computed(
+    () =>
+        footer.value.copyrightText ||
+        t('footer.copyright', {
+            year: footer.value.year,
+            brand: brandName.value,
+        }),
+);
 </script>
 
 <template>
@@ -20,7 +29,7 @@ const footer = computed(() => page.props.footer);
         :aria-label="t('accessibility.footer')"
         class="border-t border-border bg-card text-card-foreground"
     >
-        <div class="mx-auto max-w-[1360px] px-4 py-10 lg:px-6">
+        <div class="mx-auto max-w-[1360px] px-4 py-8 lg:px-6">
             <div class="grid gap-8 md:grid-cols-12">
                 <div class="space-y-3 md:col-span-4">
                     <Link :href="home()" class="inline-flex items-center">
@@ -32,22 +41,22 @@ const footer = computed(() => page.props.footer);
                         {{ t('sidebar.guestSummary') }}
                     </p>
                     <div class="flex items-center gap-2 pt-1">
-                        <LocaleSwitcher />
+                        <LocaleSwitcher compact />
                         <ThemeToggle />
                     </div>
                 </div>
 
                 <div
                     v-if="footer.groups.length > 0"
-                    class="grid gap-6 sm:grid-cols-3 md:col-span-8"
+                    class="grid gap-6 sm:grid-cols-2 md:col-span-8 lg:grid-cols-4"
                 >
                     <div
                         v-for="group in footer.groups"
                         :key="group.key"
-                        class="space-y-3"
+                        class="space-y-2.5"
                     >
                         <h3
-                            class="text-xs font-semibold tracking-wider text-foreground uppercase"
+                            class="text-[11px] font-semibold tracking-wider text-foreground uppercase"
                         >
                             {{ group.label }}
                         </h3>
@@ -57,34 +66,27 @@ const footer = computed(() => page.props.footer);
                         />
                     </div>
                 </div>
-
-                <div v-else class="flex items-center md:col-span-8">
-                    <p class="text-xs text-muted-foreground">
-                        {{ t('footer.draftNotice') }}
-                    </p>
-                </div>
             </div>
 
             <div
-                class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground"
+                class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5 text-xs text-muted-foreground"
             >
-                <p>
-                    {{
-                        t('footer.copyright', {
-                            year: footer.year,
-                            brand: brandName,
-                        })
-                    }}
-                </p>
-                <p v-if="footer.supportEmail">
-                    {{ t('footer.supportContact') }}:
+                <p>{{ copyrightLine }}</p>
+                <div
+                    v-if="footer.supportEmail || footer.contactInfo"
+                    class="flex flex-wrap items-center gap-3"
+                >
+                    <span v-if="footer.contactInfo">
+                        {{ footer.contactInfo }}
+                    </span>
                     <a
+                        v-if="footer.supportEmail"
                         :href="`mailto:${footer.supportEmail}`"
                         class="font-medium text-primary hover:underline"
                     >
                         {{ footer.supportEmail }}
                     </a>
-                </p>
+                </div>
             </div>
         </div>
     </footer>

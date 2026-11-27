@@ -12,6 +12,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ReasonDialog from '@/components/common/ReasonDialog.vue';
 import InputError from '@/components/InputError.vue';
+import ImageUploader from '@/components/upload/ImageUploader.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,7 +56,6 @@ const createForm = useForm<{
     auto_approve: boolean;
     desktop_image: File | null;
     mobile_image: File | null;
-    desktop_image_url: string;
 }>({
     owner_username: '',
     banner_placement_id: props.placements[0]?.id ?? 0,
@@ -72,7 +72,6 @@ const createForm = useForm<{
     auto_approve: true,
     desktop_image: null,
     mobile_image: null,
-    desktop_image_url: '',
 });
 
 const reasonOpen = ref(false);
@@ -104,18 +103,20 @@ function savePlacement(pl: BannerPlacementItem): void {
     );
 }
 
-function handleFile(kind: 'desktop' | 'mobile', e: Event): void {
-    const file = (e.target as HTMLInputElement).files?.[0] ?? null;
-    if (kind === 'desktop') createForm.desktop_image = file;
-    else createForm.mobile_image = file;
-}
-
 function submitAdminCampaign(): void {
     createForm.post(storeAdminCampaignRoute.url(), {
         forceFormData: true,
         preserveScroll: true,
-        onSuccess: () =>
-            createForm.reset('name', 'headline', 'target_url', 'alt_text'),
+        onSuccess: () => {
+            createForm.reset(
+                'name',
+                'headline',
+                'target_url',
+                'alt_text',
+                'desktop_image',
+                'mobile_image',
+            );
+        },
     });
 }
 
@@ -254,30 +255,43 @@ function submitReasonAction(reason: string): void {
                     </div>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-3">
-                    <div class="grid gap-1">
-                        <Label>{{
+                    <ImageUploader
+                        :model-value="createForm.desktop_image"
+                        context="banner"
+                        compact
+                        :label="
                             t('admin.monetizationCenter.banners.desktopImage')
-                        }}</Label>
-                        <input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            @change="handleFile('desktop', $event)"
-                        />
-                        <InputError
-                            :message="createForm.errors.desktop_image"
-                        />
-                    </div>
-                    <div class="grid gap-1">
-                        <Label>{{
+                        "
+                        :uploading="createForm.processing"
+                        :progress="createForm.progress?.percentage ?? null"
+                        :external-error="createForm.errors.desktop_image"
+                        :show-ownership-notice="false"
+                        @update:model-value="
+                            (val) =>
+                                (createForm.desktop_image = Array.isArray(val)
+                                    ? (val[0] ?? null)
+                                    : val)
+                        "
+                    />
+                    <ImageUploader
+                        :model-value="createForm.mobile_image"
+                        context="banner"
+                        compact
+                        :label="
                             t('admin.monetizationCenter.banners.mobileImage')
-                        }}</Label>
-                        <input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            @change="handleFile('mobile', $event)"
-                        />
-                    </div>
-                    <div class="grid gap-1">
+                        "
+                        :uploading="createForm.processing"
+                        :progress="createForm.progress?.percentage ?? null"
+                        :external-error="createForm.errors.mobile_image"
+                        :show-ownership-notice="false"
+                        @update:model-value="
+                            (val) =>
+                                (createForm.mobile_image = Array.isArray(val)
+                                    ? (val[0] ?? null)
+                                    : val)
+                        "
+                    />
+                    <div class="grid content-start gap-1">
                         <Label>{{
                             t(
                                 'admin.monetizationCenter.banners.ownerUsernameOptional',

@@ -25,6 +25,8 @@ class FooterLinkStoreRequest extends FormRequest
             'policy_page_id' => ['nullable', 'integer', 'exists:policy_pages,id'],
             'label_vi' => ['required', 'string', 'max:120'],
             'label_en' => ['required', 'string', 'max:120'],
+            'translations' => ['nullable', 'array'],
+            'translations.*' => ['nullable', 'string', 'max:120'],
             'url' => [
                 'required_without:policy_page_id',
                 'nullable',
@@ -41,11 +43,12 @@ class FooterLinkStoreRequest extends FormRequest
                     $isHttp = is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
 
                     if (! $isRelative && ! $isHttp) {
-                        $fail('URL phải là đường dẫn nội bộ (/...) hoặc liên kết http/https hợp lệ.');
+                        $fail(__('URL must be an internal path starting with / or a valid http/https link.'));
                     }
                 },
             ],
             'footer_group' => ['required', 'string', Rule::in(FooterGroup::values())],
+            'placement' => ['sometimes', 'string', Rule::in(['main', 'more'])],
             'sort_order' => ['required', 'integer', 'min:0', 'max:9999'],
             'is_visible' => ['required', 'boolean'],
             'open_in_new_tab' => ['sometimes', 'boolean'],

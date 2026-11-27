@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Legal & Information",
         "openInNewTab": "Opens in a new tab",
         "noPublishedLinks": "Information and policy links will appear here soon.",
-        "supportContact": "Support"
+        "supportContact": "Support",
+        "more": "More"
     },
     "policy": {
         "draftBadge": "Draft (Admin preview only)",
         "publishedBadge": "Published",
         "updatedAt": "Last updated",
         "emptyContent": "This document has not been published yet.",
-        "backHome": "Back to feed"
+        "backHome": "Back to feed",
+        "effectiveAt": "Effective"
     },
     "home": {
         "pageTitle": "News Feed",
@@ -132,7 +134,13 @@
             "signInPrompt": "Please sign in to share posts and join the discussion.",
             "discardTitle": "Discard unsaved draft?",
             "discardDescription": "Your unsaved post draft will be permanently discarded.",
-            "discardConfirm": "Discard draft"
+            "discardConfirm": "Discard draft",
+            "addImage": "Photo",
+            "addLink": "Link",
+            "addPoll": "Poll",
+            "discardDraftConfirm": "Discard",
+            "discardDraftDesc": "Your unsaved text, photos, or poll options will be cleared.",
+            "discardDraftTitle": "Discard post draft?"
         },
         "empty": {
             "title": "Explore the {brand} community",
@@ -176,7 +184,12 @@
             "duration24h": "24 hours",
             "duration3d": "3 days",
             "duration7d": "7 days"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — hover or hold to choose reaction",
+        "reactionTriggerHint": "Hover or hold for reactions",
+        "shareAction": "Share",
+        "sharesExact": "{count} shares",
+        "viewsExact": "{count} views"
     },
     "profile": {
         "postsTab": "Posts",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Filtering by hashtag",
         "clearFilter": "Clear filter",
         "emptyTitle": "No matching results",
-        "emptyDescription": "Try another keyword or shorter query."
+        "emptyDescription": "Try another keyword or shorter query.",
+        "clearHistory": "Clear",
+        "errorLoadFailed": "Unable to load search results right now. Please try again.",
+        "exploreCategories": "Browse by category",
+        "exploreHeading": "Explore SyncViet",
+        "exploreMore": "Discover active topics and communities",
+        "exploreSubtitle": "Discover conversations, active communities, topics, and notable voices.",
+        "exploreTitle": "Explore",
+        "featuredPosts": "Featured discussions",
+        "filterTabsLabel": "Search result categories",
+        "latestPosts": "Latest posts",
+        "noResultsForQuery": "No results found for \"{query}\"",
+        "noResultsTips": "Check your spelling, try fewer words, or explore active topics below.",
+        "notableAccounts": "People to discover",
+        "recentSearches": "Recent searches",
+        "recommendationsHeading": "You might like to explore",
+        "resultsTitle": "Search: {query}",
+        "suggestedCommunities": "Communities to join",
+        "suggestionsLabel": "Search suggestions",
+        "tabs": {
+            "all": "All",
+            "communities": "Communities",
+            "posts": "Posts",
+            "topics": "Topics",
+            "users": "People"
+        },
+        "topicsOfInterest": "Topics of interest",
+        "viewAll": "View all"
     },
     "sidebar": {
         "communityTitle": "Global Community",
@@ -888,7 +928,9 @@
                 "ads": "Advertising Engine",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "Maintenance Mode blocks non-staff traffic with HTTP 503 while keeping Admin access active."
+            "maintenanceWarning": "Maintenance Mode blocks non-staff traffic with HTTP 503 while keeping Admin access active.",
+            "brandingAssetsHint": "Upload brand logos, favicon, and default Open Graph image directly from your device.",
+            "brandingAssetsTitle": "Brand & SEO visual assets"
         },
         "notifications": {
             "title": "Admin Notification Center",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Suggested: {action} ({status})",
             "acknowledge": "Acknowledge",
             "dismiss": "Dismiss"
+        },
+        "cms": {
+            "allStatuses": "All statuses",
+            "allTypes": "All page types",
+            "canonicalUrlLabel": "Canonical URL (optional)",
+            "changeNoteLabel": "Revision note (optional)",
+            "changeNotePlaceholder": "Briefly describe what changed in this version...",
+            "contactInfoLabel": "Contact information line",
+            "contactInfoPlaceholder": "e.g., Global Support · Mon–Fri",
+            "copyrightLabel": "Custom copyright line (optional)",
+            "createPage": "Create page",
+            "createPageHint": "New CMS pages start as drafts and remain hidden until you publish them.",
+            "deleteLinkConfirmDesc": "Remove \"{label}\" from the footer? This action cannot be undone.",
+            "effectiveAtLabel": "Effective date",
+            "footerBrandingHeading": "Support contact & footer branding",
+            "footerBrandingHint": "Only real, non-placeholder support addresses are shown publicly. Leave empty to hide.",
+            "indexEligibleLabel": "Allow search engines to index this published page",
+            "inlineImageInserted": "Image uploaded and inserted into content.",
+            "insertImage": "Insert image",
+            "insertImageHint": "Upload an image from your device. External image hotlinks are disabled for security.",
+            "languageSelectorLabel": "Editing language (green dot indicates published copy)",
+            "liveFooterPreview": "Live compact footer preview",
+            "localesCount": "{count} languages",
+            "metaDescriptionLabel": "SEO meta description",
+            "noRevisions": "No revision history recorded yet. Save changes to create the first snapshot.",
+            "ogImageHint": "Recommended 1200×630 JPG, PNG, or WebP from your device.",
+            "ogImageLabel": "Social share image (Open Graph)",
+            "pageTypeLabel": "Page type",
+            "pageTypes": {
+                "business": "Business",
+                "company": "Company",
+                "general": "General",
+                "legal": "Legal",
+                "support": "Support"
+            },
+            "placementLabel": "Footer placement",
+            "placementMain": "Main bar",
+            "placementMore": "More menu",
+            "previewToggle": "Preview",
+            "removeOgImage": "Remove current Open Graph image on save",
+            "restoreConfirmDesc": "Restore content from version v{version}? Current content will remain safely stored in history.",
+            "restoreConfirmTitle": "Restore earlier version",
+            "restoreVersion": "Restore",
+            "saveFooterBranding": "Save footer branding",
+            "saveSeoSettings": "Save SEO settings",
+            "saveTranslation": "Save translation",
+            "searchPagesPlaceholder": "Filter pages by title or slug...",
+            "seoTitleLabel": "Custom SEO title",
+            "serpPreviewTitle": "Search result preview",
+            "slugLabel": "URL slug",
+            "statusArchived": "Archived",
+            "subTabs": {
+                "content": "Content & Languages",
+                "revisions": "History ({count})",
+                "seo": "SEO & Social"
+            },
+            "supportEmailLabel": "Public support email",
+            "tabs": {
+                "footer": "Footer & Contact ({count})",
+                "pages": "CMS Pages ({count})"
+            },
+            "translationContentLabel": "Translated HTML content",
+            "translationHint": "Publishing this {locale} translation activates {path} with reciprocal hreflang tags.",
+            "translationSummaryLabel": "Translated summary",
+            "translationTitleLabel": "Translated title",
+            "uploadAndInsert": "Upload & insert"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Disable",
         "extra": {
             "userFallback": "User"
-        }
+        },
+        "next": "Next",
+        "previous": "Previous"
     },
     "pwa": {
         "installApp": "Install SyncViet App"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "View recovery codes"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Coming soon",
+        "modal": {
+            "attachmentsLabel": "Add to your post",
+            "continueEditing": "Keep editing",
+            "insertEmoji": "Insert emoji",
+            "insertHashtag": "Add hashtag",
+            "personalizedPlaceholder": "What's on your mind, {name}?",
+            "resumeDraftPrompt": "You have an unsaved draft ready to continue.",
+            "title": "Create post"
+        },
+        "videoComingSoonTooltip": "Video posting is coming soon"
+    },
+    "upload": {
+        "addCover": "Add cover photo",
+        "admin": {
+            "healthLabel": "Image Upload Policy & PHP Runtime",
+            "mismatchBadge": "Limited to {effective} MB",
+            "readyBadge": "Ready (< {max} MB)",
+            "runtimeMismatch": "App upload policy allows up to {policy} MB, but server PHP limits currently cap uploads at {effective} MB.",
+            "runtimeReady": "Server PHP limits support the full image upload policy (< {max} MB)."
+        },
+        "altTextLabel": "Alt text (accessibility)",
+        "altTextPlaceholder": "Describe this image briefly (optional)",
+        "applyCrop": "Apply crop",
+        "avatarHint": "JPG, PNG, or WebP from your device · Smaller than {max} MB · 1:1 crop",
+        "cancelUpload": "Cancel",
+        "changeAvatar": "Change avatar",
+        "changeCover": "Change cover",
+        "chooseImage": "Choose image from device",
+        "cropAvatarTitle": "Crop profile photo",
+        "cropCoverTitle": "Reposition cover photo",
+        "currentImage": "Current image",
+        "currentImageAlt": "Current uploaded image",
+        "dragToReposition": "Drag the image to adjust framing",
+        "dropOrBrowse": "Drag & drop an image here, or choose from your device",
+        "errors": {
+            "failed": "Unable to upload the image. Please try again.",
+            "fileTooLargeWithSize": "Selected file is {size} MB. Please choose an image smaller than {max} MB.",
+            "maxSize": "Image file size must be smaller than {max} MB.",
+            "tooManyFiles": "You can attach at most {max} images.",
+            "totalSizeExceeded": "Total selected image size exceeds the {max} MB request limit.",
+            "unsupportedFormat": "Unsupported format. Please select a JPG, PNG, or WebP image.",
+            "uploadFailed": "Upload failed. Please check your connection and try again.",
+            "videoComingSoon": "Video uploads are coming soon. Please choose a JPG, PNG, or WebP image."
+        },
+        "fileCountProgress": "{current}/{max} images",
+        "formatsAndLimit": "JPG, PNG, WebP · Smaller than {max} MB",
+        "moveNext": "Move right",
+        "movePrev": "Move left",
+        "ownershipPolicyNotice": "Upload only images you own or have permission to share.",
+        "previewAlt": "Selected image preview",
+        "removeCover": "Remove cover",
+        "removeImage": "Remove image",
+        "replaceImage": "Replace image",
+        "resetCrop": "Reset",
+        "retry": "Retry",
+        "title": "Upload image",
+        "uploadCancelled": "Upload cancelled.",
+        "uploading": "Uploading...",
+        "zoomLabel": "Zoom"
     }
 }

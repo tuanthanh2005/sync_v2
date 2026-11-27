@@ -66,7 +66,13 @@ Route::get('/feed/more', [HomeController::class, 'more'])
 Route::get('/search', SearchController::class)
     ->middleware('throttle:60,1')
     ->name('search');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])
+    ->middleware('throttle:90,1')
+    ->name('search.suggestions');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::post('/posts/views/batch', [PostInteractionController::class, 'trackViews'])
+    ->middleware('throttle:60,1')
+    ->name('posts.views.batch');
 Route::get('/u/{user:username}', [ProfileViewController::class, 'show'])->name('users.show');
 Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
 Route::get('/communities/{community:slug}', [CommunityController::class, 'show'])->name('communities.show');
@@ -146,6 +152,7 @@ Route::prefix('{locale}')
         Route::get('/topics', [TopicController::class, 'index'])->name('topics.localized.index');
         Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.localized.show');
         Route::get('/communities/{community:slug}', [CommunityController::class, 'showLocalized'])->name('communities.localized.show');
+        Route::get('/policies/{policyPage:slug}', [PolicyPageController::class, 'showLocalized'])->name('policies.localized.show');
     });
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
@@ -828,6 +835,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::post('/settings', [SystemSettingsController::class, 'update'])
                 ->middleware('permission:settings.update')
                 ->name('settings.update');
+            Route::post('/settings/branding-asset', [SystemSettingsController::class, 'uploadBrandingAsset'])
+                ->middleware('permission:settings.update')
+                ->name('settings.branding-asset');
 
             Route::get('/notifications', [NotificationCenterController::class, 'index'])
                 ->middleware('permission:notifications.view')
@@ -862,8 +872,18 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::middleware(['role:admin'])->group(function () {
                 Route::get('/policies', [PolicyManagementController::class, 'index'])
                     ->name('policies.index');
+                Route::post('/policies', [PolicyManagementController::class, 'storePolicy'])
+                    ->name('policies.store');
                 Route::patch('/policies/{policyPage:slug}', [PolicyManagementController::class, 'updatePolicy'])
                     ->name('policies.update');
+                Route::post('/policies/{policyPage:slug}/translations', [PolicyManagementController::class, 'saveTranslation'])
+                    ->name('policies.translations.save');
+                Route::post('/policies/{policyPage:slug}/revisions/{revision}/restore', [PolicyManagementController::class, 'restoreRevision'])
+                    ->name('policies.revisions.restore');
+                Route::post('/policies/upload-image', [PolicyManagementController::class, 'uploadImage'])
+                    ->name('policies.upload-image');
+                Route::post('/policies/footer-settings', [PolicyManagementController::class, 'updateFooterSettings'])
+                    ->name('policies.footer-settings');
                 Route::post('/footer-links', [PolicyManagementController::class, 'storeLink'])
                     ->name('footer-links.store');
                 Route::patch('/footer-links/{footerLink}', [PolicyManagementController::class, 'updateLink'])

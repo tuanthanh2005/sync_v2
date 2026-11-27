@@ -44,6 +44,15 @@ defineProps<{
         last_backup_type?: string | null;
         last_backup_status?: string;
         cron_last_heartbeat: string | null;
+        upload_limits?: {
+            policy_max_mb: number;
+            effective_max_mb: number;
+            php_upload_max_raw: string;
+            php_post_max_raw: string;
+            php_memory_limit_raw: string;
+            infrastructure_ready: boolean;
+            webp_available: boolean;
+        };
         integrations?: {
             payment_methods_enabled: string[];
             webhook_secret_configured: boolean;
@@ -363,6 +372,40 @@ function backupStatusLabel(status?: string): string {
                                 0
                             }}
                         </span>
+                    </div>
+                    <div
+                        v-if="health.upload_limits"
+                        class="flex items-center justify-between gap-2 rounded-lg border border-border/80 p-3"
+                    >
+                        <span class="text-muted-foreground">
+                            {{ t('upload.admin.healthLabel') }}
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-[11px] font-semibold">
+                                {{ health.upload_limits.php_upload_max_raw }} /
+                                {{ health.upload_limits.php_post_max_raw }}
+                            </span>
+                            <Badge
+                                :variant="
+                                    health.upload_limits.infrastructure_ready
+                                        ? 'secondary'
+                                        : 'destructive'
+                                "
+                            >
+                                {{
+                                    health.upload_limits.infrastructure_ready
+                                        ? t('upload.admin.readyBadge', {
+                                              max: health.upload_limits
+                                                  .policy_max_mb,
+                                          })
+                                        : t('upload.admin.mismatchBadge', {
+                                              effective:
+                                                  health.upload_limits
+                                                      .effective_max_mb,
+                                          })
+                                }}
+                            </Badge>
+                        </div>
                     </div>
                 </div>
             </section>

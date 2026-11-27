@@ -259,19 +259,21 @@ class SeoRegistryService
 
     public function syncPolicy(PolicyPage $policy): SeoUrlRegistry
     {
+        $policy->loadMissing('translations');
         $eval = $this->qualityGate->evaluatePolicy($policy);
-        $path = '/policies/'.$policy->slug;
+        $defaultLocale = $this->config->defaultLocale();
+        $path = $this->canonicalUrls->policyPath($policy);
         $canonicalUrl = $this->canonicalUrls->absoluteUrl($path);
-        $titleEn = $policy->titleForLocale('en');
-        $contentEn = (string) ($policy->contentForLocale('en') ?? '');
+        $titleEn = $policy->titleForLocale($defaultLocale);
+        $contentEn = (string) ($policy->contentForLocale($defaultLocale) ?? '');
 
         $registry = $this->upsertEntry([
             'url' => $canonicalUrl,
             'path' => $path,
             'entity_type' => SeoEntityType::Policy,
             'entity_id' => $policy->id,
-            'locale' => $this->config->defaultLocale(),
-            'source_locale' => $this->config->defaultLocale(),
+            'locale' => $defaultLocale,
+            'source_locale' => $defaultLocale,
             'canonical_url' => $canonicalUrl,
             'index_eligibility' => $eval['eligibility'],
             'exclusion_reason' => $eval['reason'],
@@ -280,9 +282,64 @@ class SeoRegistryService
             'quality_score' => $eval['quality_score'],
             'content_hash' => $this->qualityGate->contentFingerprint($titleEn.' '.$contentEn),
             'lastmod_at' => $policy->updated_at ?? now(),
-            'is_noindex_forced' => false,
-            'metadata_snapshot' => ['slug' => $policy->slug, 'title' => $titleEn],
+            'is_noindex_forced' => ! $policy->index_eligible,
+            'metadata_snapshot' => [
+                'slug' => $policy->slug,
+                'page_type' => $policy->page_type,
+                'title' => $titleEn,
+            ],
         ]);
+
+        // Sync genuine published non-default translations so localized CMS pages enter sitemap-pages cleanly.
+        $enabledLocales = $this->config->enabledLocales();
+        $publishedLocales = array_values(array_filter(
+            $policy->availablePublishedLocales(),
+            static fn (string $code): bool => $code !== $defaultLocale && in_array($code, $enabledLocales, true),
+        ));
+
+        foreach ($publishedLocales as $locale) {
+            $locPath = $this->canonicalUrls->policyPath($policy, $locale);
+            $locCanonical = $this->canonicalUrls->absoluteUrl($locPath);
+            $locTitle = $policy->titleForLocale($locale);
+            $locContent = (string) ($policy->contentForLocale($locale) ?? '');
+
+            $this->upsertEntry([
+                'url' => $locCanonical,
+                'path' => $locPath,
+                'entity_type' => SeoEntityType::Policy,
+                'entity_id' => $policy->id,
+                'locale' => $locale,
+                'source_locale' => $defaultLocale,
+                'canonical_url' => $locCanonical,
+                'index_eligibility' => $eval['eligibility'],
+                'exclusion_reason' => $eval['reason'],
+                'http_status' => $policy->isPubliclyAccessible() ? 200 : 404,
+                'priority_score' => 62,
+                'quality_score' => $eval['quality_score'],
+                'content_hash' => $this->qualityGate->contentFingerprint($locTitle.' '.$locContent),
+                'lastmod_at' => $policy->updated_at ?? now(),
+                'is_noindex_forced' => ! $policy->index_eligible,
+                'metadata_snapshot' => [
+                    'slug' => $policy->slug,
+                    'page_type' => $policy->page_type,
+                    'title' => $locTitle,
+                    'localized' => true,
+                ],
+            ]);
+        }
+
+        // Exclude any stale localized registry rows that are no longer published.
+        SeoUrlRegistry::query()
+            ->where('entity_type', SeoEntityType::Policy->value)
+            ->where('entity_id', $policy->id)
+            ->whereNotIn('locale', array_merge([$defaultLocale], $publishedLocales))
+            ->update([
+                'index_eligibility' => SeoIndexEligibility::Excluded->value,
+                'status' => SeoUrlStatus::Excluded->value,
+                'exclusion_reason' => 'translation_unpublished',
+                'is_in_sitemap' => false,
+                'lastmod_at' => now(),
+            ]);
 
         $this->markSitemapDirty('pages', null);
 

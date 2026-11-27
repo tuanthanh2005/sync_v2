@@ -133,8 +133,8 @@ class CommunityService
                 'name' => [__('Your account is currently restricted from creating communities.')],
             ]);
         }
-        $storedAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'communities/avatars') : null;
-        $storedCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'communities/covers') : null;
+        $storedAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'communities/avatars', 'community_avatar', 'avatar') : null;
+        $storedCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'communities/covers', 'community_cover', 'cover') : null;
 
         try {
             $community = DB::transaction(function () use ($owner, $data, $storedAvatar, $storedCover): Community {
@@ -210,7 +210,9 @@ class CommunityService
      *     name: string,
      *     category: string,
      *     description?: string|null,
-     *     rules?: list<string>|null
+     *     rules?: list<string>|null,
+     *     remove_avatar?: bool,
+     *     remove_cover?: bool
      * }  $data
      */
     public function update(
@@ -220,8 +222,11 @@ class CommunityService
         ?UploadedFile $avatar = null,
         ?UploadedFile $cover = null,
     ): Community {
-        $newAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'communities/avatars') : null;
-        $newCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'communities/covers') : null;
+        $newAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'communities/avatars', 'community_avatar', 'avatar') : null;
+        $newCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'communities/covers', 'community_cover', 'cover') : null;
+
+        $removeAvatar = $newAvatar === null && filter_var($data['remove_avatar'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $removeCover = $newCover === null && filter_var($data['remove_cover'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
         $oldAvatarDisk = $community->avatar_disk;
         $oldAvatarPath = $community->avatar_path;
@@ -245,20 +250,26 @@ class CommunityService
         if ($newAvatar !== null) {
             $community->avatar_disk = $newAvatar['disk'];
             $community->avatar_path = $newAvatar['path'];
+        } elseif ($removeAvatar) {
+            $community->avatar_disk = null;
+            $community->avatar_path = null;
         }
 
         if ($newCover !== null) {
             $community->cover_disk = $newCover['disk'];
             $community->cover_path = $newCover['path'];
+        } elseif ($removeCover) {
+            $community->cover_disk = null;
+            $community->cover_path = null;
         }
 
         $community->save();
 
-        if ($newAvatar !== null) {
+        if ($newAvatar !== null || $removeAvatar) {
             $this->imageUploadService->deleteIfExists($oldAvatarDisk, $oldAvatarPath);
         }
 
-        if ($newCover !== null) {
+        if ($newCover !== null || $removeCover) {
             $this->imageUploadService->deleteIfExists($oldCoverDisk, $oldCoverPath);
         }
 

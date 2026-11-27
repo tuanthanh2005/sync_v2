@@ -4,6 +4,7 @@ namespace App\Services\System;
 
 use App\Models\SystemSetting;
 use App\Models\User;
+use App\Services\Media\SafeImageUploadService;
 use App\Services\Security\AuditLogger;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
@@ -25,12 +26,15 @@ class SystemSettingService
             'site_name' => ['group' => 'general', 'type' => 'string', 'value' => config('app.name', 'SyncViet'), 'is_public' => true],
             'site_slogan' => ['group' => 'general', 'type' => 'string', 'value' => 'Global Social Community', 'is_public' => true],
             'site_description' => ['group' => 'general', 'type' => 'string', 'value' => 'Connect without boundaries. Discover ideas, share stories, and build trusted communities.', 'is_public' => true],
-            'contact_email' => ['group' => 'general', 'type' => 'string', 'value' => config('mail.from.address', 'support@syncviet.com'), 'is_public' => true],
+            'contact_email' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
+            'support_contact_info' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
+            'footer_copyright_text' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
             'default_locale' => ['group' => 'general', 'type' => 'string', 'value' => config('app.locale', 'en'), 'is_public' => true],
             'default_theme' => ['group' => 'general', 'type' => 'string', 'value' => 'system', 'is_public' => true],
             'logo_light_path' => ['group' => 'branding', 'type' => 'string', 'value' => '', 'is_public' => true],
             'logo_dark_path' => ['group' => 'branding', 'type' => 'string', 'value' => '', 'is_public' => true],
             'favicon_path' => ['group' => 'branding', 'type' => 'string', 'value' => '', 'is_public' => true],
+            'og_image_path' => ['group' => 'branding', 'type' => 'string', 'value' => '', 'is_public' => true],
 
             // Feature Flags (all map to real implemented platform modules)
             'feature_registration' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => true],
@@ -54,10 +58,15 @@ class SystemSettingService
             'maintenance_enabled' => ['group' => 'features', 'type' => 'boolean', 'value' => false, 'is_public' => true],
             'maintenance_message' => ['group' => 'features', 'type' => 'string', 'value' => 'SyncViet is undergoing scheduled maintenance. Please check back shortly.', 'is_public' => true],
 
-            // Content Settings
+            // Content & Image Upload Policy Settings (Admin may lower caps, NEVER exceed 40 MB)
             'content_post_max_length' => ['group' => 'content', 'type' => 'integer', 'value' => 3000, 'is_public' => true],
             'content_post_max_images' => ['group' => 'content', 'type' => 'integer', 'value' => 4, 'is_public' => true],
-            'content_upload_max_mb' => ['group' => 'content', 'type' => 'integer', 'value' => 5, 'is_public' => true],
+            'content_upload_max_mb' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
+            'upload_max_mb_avatar' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
+            'upload_max_mb_cover' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
+            'upload_max_mb_post' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
+            'upload_max_mb_banner' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
+            'upload_max_mb_cms' => ['group' => 'content', 'type' => 'integer', 'value' => 40, 'is_public' => true],
             'content_comment_max_length' => ['group' => 'content', 'type' => 'integer', 'value' => 1500, 'is_public' => true],
             'content_posts_per_hour_limit' => ['group' => 'content', 'type' => 'integer', 'value' => 20, 'is_public' => false],
             'content_comments_per_hour_limit' => ['group' => 'content', 'type' => 'integer', 'value' => 60, 'is_public' => false],
@@ -178,7 +187,16 @@ class SystemSettingService
             'limits' => [
                 'postMaxLength' => (int) $all['content_post_max_length'],
                 'postMaxImages' => (int) $all['content_post_max_images'],
-                'uploadMaxMb' => (int) $all['content_upload_max_mb'],
+                'uploadMaxMb' => min(40, max(1, (int) $all['content_upload_max_mb'])),
+                'uploadMaxBytes' => min(40, max(1, (int) $all['content_upload_max_mb'])) * 1_000_000,
+                'uploadMaxPostRequestBytes' => (int) config('syncviet.uploads.max_post_request_bytes', SafeImageUploadService::MAX_POST_REQUEST_BYTES),
+                'uploadLimitsByContext' => [
+                    'avatar' => min(40, max(1, min((int) $all['content_upload_max_mb'], (int) $all['upload_max_mb_avatar']))) * 1_000_000,
+                    'cover' => min(40, max(1, min((int) $all['content_upload_max_mb'], (int) $all['upload_max_mb_cover']))) * 1_000_000,
+                    'post' => min(40, max(1, min((int) $all['content_upload_max_mb'], (int) $all['upload_max_mb_post']))) * 1_000_000,
+                    'banner' => min(40, max(1, min((int) $all['content_upload_max_mb'], (int) $all['upload_max_mb_banner']))) * 1_000_000,
+                    'cms' => min(40, max(1, min((int) $all['content_upload_max_mb'], (int) $all['upload_max_mb_cms']))) * 1_000_000,
+                ],
                 'commentMaxLength' => (int) $all['content_comment_max_length'],
             ],
         ];
@@ -196,10 +214,21 @@ class SystemSettingService
                 continue;
             }
 
+            $uploadLimitKeys = [
+                'content_upload_max_mb',
+                'upload_max_mb_avatar',
+                'upload_max_mb_cover',
+                'upload_max_mb_post',
+                'upload_max_mb_banner',
+                'upload_max_mb_cms',
+            ];
+
             $meta = $defaults[$key];
             $storedValue = match ($meta['type']) {
                 'boolean' => filter_var($rawValue, FILTER_VALIDATE_BOOLEAN) ? '1' : '0',
-                'integer' => (string) max(0, (int) $rawValue),
+                'integer' => in_array($key, $uploadLimitKeys, true)
+                    ? (string) max(1, min(40, (int) $rawValue))
+                    : (string) max(0, (int) $rawValue),
                 'json' => json_encode($rawValue) ?: '[]',
                 default => trim((string) $rawValue),
             };

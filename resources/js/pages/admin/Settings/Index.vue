@@ -1,12 +1,34 @@
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3';
-import { AlertTriangle, Save, Settings } from '@lucide/vue';
-import { ref } from 'vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
+import {
+    AlertTriangle,
+    CheckCircle2,
+    Image as ImageIcon,
+    Save,
+    Settings,
+} from '@lucide/vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import SystemSettingsController from '@/actions/App/Http/Controllers/Admin/SystemSettingsController';
+import ImageUploader from '@/components/upload/ImageUploader.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { update as updateSettingsRoute } from '@/routes/admin/settings';
+
+type UploadRuntimeInfo = {
+    policy_max_bytes: number;
+    policy_max_mb: number;
+    max_post_request_bytes: number;
+    php_upload_max_raw: string;
+    php_post_max_raw: string;
+    php_memory_limit_raw: string;
+    effective_max_mb: number;
+    infrastructure_ready: boolean;
+    gd_available: boolean;
+    webp_available: boolean;
+    exif_available: boolean;
+};
 
 const props = defineProps<{
     settings: Record<string, string | number | boolean>;
@@ -14,12 +36,37 @@ const props = defineProps<{
         string,
         { group: string; type: string; value: unknown; is_public: boolean }
     >;
+    brandingUrls?: Record<string, string | null>;
+    uploadRuntime?: UploadRuntimeInfo;
 }>();
 
 const { t } = useI18n();
 const activeTab = ref<'general' | 'features' | 'content' | 'ads' | 'seo'>(
     'general',
 );
+const runtimeSpecsLine = computed(() => {
+    const info = props.uploadRuntime;
+    if (!info) {
+        return '';
+    }
+
+    return `upload_max_filesize=${info.php_upload_max_raw} · post_max_size=${info.php_post_max_raw} · memory_limit=${info.php_memory_limit_raw} · WebP=${info.webp_available ? 'OK' : 'OFF'}`;
+});
+
+const BRANDING_ASSET_KEYS = [
+    'logo_light_path',
+    'logo_dark_path',
+    'favicon_path',
+    'og_image_path',
+] as const;
+
+const brandingUploading = ref<Record<string, boolean>>({});
+const brandingFiles = ref<Record<string, File | null>>({
+    logo_light_path: null,
+    logo_dark_path: null,
+    favicon_path: null,
+    og_image_path: null,
+});
 
 const form = useForm<{ settings: Record<string, string | number | boolean> }>({
     settings: { ...props.settings },
@@ -27,12 +74,57 @@ const form = useForm<{ settings: Record<string, string | number | boolean> }>({
 
 function keysForGroup(groups: string[]): string[] {
     return Object.entries(props.schema)
-        .filter(([, meta]) => groups.includes(meta.group))
+        .filter(
+            ([key, meta]) =>
+                groups.includes(meta.group) &&
+                !(BRANDING_ASSET_KEYS as readonly string[]).includes(key),
+        )
         .map(([key]) => key);
 }
 
 function submit(): void {
     form.post(updateSettingsRoute.url(), { preserveScroll: true });
+}
+
+function uploadBrandingAsset(assetKey: string, file: File | null): void {
+    brandingFiles.value[assetKey] = file;
+    if (!file) {
+        return;
+    }
+
+    brandingUploading.value[assetKey] = true;
+    router.post(
+        SystemSettingsController.uploadBrandingAsset.url(),
+        {
+            asset_key: assetKey,
+            image: file,
+        },
+        {
+            forceFormData: true,
+            preserveScroll: true,
+            onFinish: () => {
+                brandingUploading.value[assetKey] = false;
+                brandingFiles.value[assetKey] = null;
+            },
+        },
+    );
+}
+
+function removeBrandingAsset(assetKey: string): void {
+    brandingUploading.value[assetKey] = true;
+    router.post(
+        SystemSettingsController.uploadBrandingAsset.url(),
+        {
+            asset_key: assetKey,
+            remove: true,
+        },
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                brandingUploading.value[assetKey] = false;
+            },
+        },
+    );
 }
 </script>
 
@@ -71,6 +163,88 @@ function submit(): void {
                 {{ t(`admin.settings.tabs.${tab}`) }}
             </Button>
         </div>
+
+        <!-- Branding Device Uploads (Zero External URL Import) -->
+        <section
+            v-if="activeTab === 'general'"
+            class="space-y-4 rounded-xl border border-border bg-card p-5"
+        >
+            <div class="flex items-center gap-2">
+                <ImageIcon class="size-4 text-primary" aria-hidden="true" />
+                <h2 class="text-sm font-semibold text-foreground">
+                    {{ t('admin.settings.brandingAssetsTitle') }}
+                </h2>
+            </div>
+            <p class="text-xs text-muted-foreground">
+                {{ t('admin.settings.brandingAssetsHint') }}
+            </p>
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div
+                    v-for="assetKey in BRANDING_ASSET_KEYS"
+                    :key="assetKey"
+                    class="space-y-2 rounded-xl border border-border/70 bg-muted/15 p-3.5"
+                >
+                    <p class="font-mono text-xs font-semibold text-foreground">
+                        {{ assetKey }}
+                    </p>
+                    <ImageUploader
+                        :model-value="brandingFiles[assetKey]"
+                        :existing-url="brandingUrls?.[assetKey] ?? null"
+                        context="cms"
+                        compact
+                        :uploading="Boolean(brandingUploading[assetKey])"
+                        :show-ownership-notice="false"
+                        @update:model-value="
+                            (val) =>
+                                uploadBrandingAsset(
+                                    assetKey,
+                                    Array.isArray(val) ? (val[0] ?? null) : val,
+                                )
+                        "
+                        @remove-existing="removeBrandingAsset(assetKey)"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <!-- Honest PHP Upload Runtime Diagnostics Banner -->
+        <section
+            v-if="activeTab === 'content' && uploadRuntime"
+            :class="[
+                'flex items-start gap-3 rounded-xl border p-4 text-xs',
+                uploadRuntime.infrastructure_ready
+                    ? 'border-success/35 bg-success-soft/35 text-success-soft-foreground'
+                    : 'border-warning/45 bg-warning-soft/45 text-warning-soft-foreground',
+            ]"
+        >
+            <CheckCircle2
+                v-if="uploadRuntime.infrastructure_ready"
+                class="mt-0.5 size-4 shrink-0"
+                aria-hidden="true"
+            />
+            <AlertTriangle
+                v-else
+                class="mt-0.5 size-4 shrink-0"
+                aria-hidden="true"
+            />
+            <div class="space-y-1">
+                <p class="font-semibold">
+                    {{
+                        uploadRuntime.infrastructure_ready
+                            ? t('upload.admin.runtimeReady', {
+                                  max: uploadRuntime.policy_max_mb,
+                              })
+                            : t('upload.admin.runtimeMismatch', {
+                                  policy: uploadRuntime.policy_max_mb,
+                                  effective: uploadRuntime.effective_max_mb,
+                              })
+                    }}
+                </p>
+                <p class="font-mono text-[11px] opacity-90">
+                    {{ runtimeSpecsLine }}
+                </p>
+            </div>
+        </section>
 
         <form
             @submit.prevent="submit"
@@ -123,6 +297,8 @@ function submit(): void {
                         :id="`setting-${key}`"
                         :model-value="Number(form.settings[key] ?? 0)"
                         type="number"
+                        :min="key.includes('upload_max_mb') ? 1 : 0"
+                        :max="key.includes('upload_max_mb') ? 40 : undefined"
                         class="h-9 text-xs"
                         @update:model-value="
                             (v) => (form.settings[key] = Number(v))

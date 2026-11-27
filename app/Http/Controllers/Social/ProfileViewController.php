@@ -62,7 +62,7 @@ class ProfileViewController extends Controller
         $user = $request->user();
         abort_if($user === null, 403);
 
-        /** @var array{headline?: string|null, bio?: string|null, location?: string|null, website_url?: string|null} $validated */
+        /** @var array{headline?: string|null, bio?: string|null, location?: string|null, website_url?: string|null, remove_avatar?: bool, remove_cover?: bool} $validated */
         $validated = $request->validated();
 
         $this->profileService->updateDetails(

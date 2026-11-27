@@ -53,6 +53,9 @@ export type SystemSettingsPublic = {
         postMaxLength: number;
         postMaxImages: number;
         uploadMaxMb: number;
+        uploadMaxBytes?: number;
+        uploadMaxPostRequestBytes?: number;
+        uploadLimitsByContext?: Record<string, number>;
         commentMaxLength: number;
     };
 };
@@ -443,6 +446,10 @@ export type AdEligiblePostItem = {
     reactions_count: number;
     comments_count: number;
     shares_count: number;
+    views_count?: number;
+    organic_views_count?: number;
+    promoted_views_count?: number;
+    unique_viewers_count?: number;
     published_at: string | null;
     image: string | null;
 };
@@ -533,6 +540,10 @@ export type PublicFeedPost = {
     reactions_count: number;
     comments_count: number;
     shares_count: number;
+    views_count?: number;
+    organic_views_count?: number;
+    promoted_views_count?: number;
+    unique_viewers_count?: number;
     published_at: string | null;
     content_origin?: string;
     is_ai_assisted?: boolean;
@@ -590,6 +601,7 @@ export type CommentItem = {
 export type CategoryOption = {
     value: string;
     label: string;
+    icon?: string;
 };
 
 export type ProfileViewUser = {
@@ -688,6 +700,7 @@ export type FooterLinkItem = {
     href: string;
     group: string;
     group_label: string;
+    placement?: 'main' | 'more';
     open_in_new_tab: boolean;
 };
 
@@ -700,7 +713,11 @@ export type FooterGroupSection = {
 export type FooterSharedData = {
     year: number;
     supportEmail?: string | null;
+    contactInfo?: string | null;
+    copyrightText?: string | null;
     links: FooterLinkItem[];
+    mainLinks?: FooterLinkItem[];
+    moreLinks?: FooterLinkItem[];
     groups: FooterGroupSection[];
 };
 
@@ -722,43 +739,94 @@ export type LoginHistoryItem = {
 export type PolicyPublicView = {
     id: number;
     slug: string;
+    page_type?: string;
     title: string;
     summary: string | null;
     content: string | null;
-    status: 'draft' | 'published';
+    status: 'draft' | 'published' | 'archived';
     status_label: string;
     is_visible: boolean;
+    og_image?: string | null;
+    effective_at?: string | null;
+    published_at: string | null;
+    updated_at: string | null;
+    active_locale?: string;
+    available_locales?: Array<{
+        code: string;
+        native_name: string;
+        href: string;
+    }>;
+};
+
+export type AdminPolicyTranslationRecord = {
+    locale: string;
+    title: string;
+    summary: string | null;
+    content: string | null;
+    seo_title: string | null;
+    meta_description: string | null;
+    status: 'draft' | 'published';
     published_at: string | null;
     updated_at: string | null;
 };
 
+export type AdminPolicyRevisionRecord = {
+    id: number;
+    locale: string;
+    version_number: number;
+    title: string;
+    change_note: string | null;
+    author_name: string | null;
+    created_at: string | null;
+};
+
+export type FooterGroupValue =
+    | 'company'
+    | 'platform'
+    | 'support'
+    | 'legal'
+    | 'business';
+
 export type AdminPolicyRecord = {
     id: number;
     slug: string;
+    page_type: 'company' | 'support' | 'legal' | 'business' | 'general';
     title_vi: string;
     title_en: string;
     summary_vi: string | null;
     summary_en: string | null;
     content_vi: string | null;
     content_en: string | null;
-    status: 'draft' | 'published';
+    seo_title: string | null;
+    meta_description: string | null;
+    canonical_url: string | null;
+    og_image: string | null;
+    index_eligible: boolean;
+    status: 'draft' | 'published' | 'archived';
     status_label: string;
     is_visible: boolean;
-    footer_group: 'platform' | 'legal' | 'support';
+    footer_group: FooterGroupValue;
+    placement: 'main' | 'more';
     sort_order: number;
     published_at: string | null;
+    effective_at: string | null;
+    archived_at: string | null;
     updated_at: string | null;
+    translations: Record<string, AdminPolicyTranslationRecord>;
+    revisions: AdminPolicyRevisionRecord[];
 };
 
 export type AdminFooterLinkRecord = {
     id: number;
     policy_page_id: number | null;
     policy_slug: string | null;
-    policy_status: 'draft' | 'published' | null;
+    policy_status: 'draft' | 'published' | 'archived' | null;
     label_vi: string;
     label_en: string;
+    translations?: Record<string, string>;
     url: string | null;
-    footer_group: 'platform' | 'legal' | 'support';
+    footer_group: FooterGroupValue;
+    placement: 'main' | 'more';
     sort_order: number;
     is_visible: boolean;
     open_in_new_tab: boolean;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Community;
 
 use App\Enums\PostCategory;
+use App\Rules\ValidUploadedImage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,8 +26,8 @@ class CommunityStoreRequest extends FormRequest
             'visibility' => ['nullable', 'string', Rule::in(['public', 'private'])],
             'rules' => ['nullable', 'array', 'max:10'],
             'rules.*' => ['nullable', 'string', 'max:240'],
-            'avatar' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'cover' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'avatar' => ['nullable', 'file', new ValidUploadedImage('community_avatar')],
+            'cover' => ['nullable', 'file', new ValidUploadedImage('community_cover')],
         ];
     }
 }

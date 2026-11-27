@@ -50,7 +50,12 @@ export function initializeFlashToast(): void {
             | number
             | undefined;
 
-        if (status === 403) {
+        if (status === 413) {
+            event.preventDefault();
+            appToast.error(
+                String(i18n.global.t('upload.errors.maxSize', { max: 40 })),
+            );
+        } else if (status === 403) {
             appToast.error(String(i18n.global.t('toast.forbidden')));
         } else if (status === 429) {
             appToast.warning(String(i18n.global.t('toast.rateLimited')));

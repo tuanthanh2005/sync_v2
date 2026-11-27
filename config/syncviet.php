@@ -30,6 +30,42 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Global Image Upload Policy & Security Limits
+    |--------------------------------------------------------------------------
+    | Strict global limit: every uploaded image MUST be smaller than 40 MB
+    | (40,000,000 bytes; files >= 40,000,000 bytes are rejected).
+    | External image URL import is strictly disabled across the entire platform.
+    */
+    'uploads' => [
+        'max_image_bytes' => 40_000_000,
+        'max_post_request_bytes' => 80_000_000,
+        'max_input_dimension' => 8000,
+        'max_total_pixels' => 25_000_000,
+        'convert_to_webp' => true,
+        'allowed_mimes' => [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+        ],
+        'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
+        'contexts' => [
+            'avatar' => ['max_bytes' => 40_000_000, 'max_dimension' => 512, 'setting_key' => 'upload_max_mb_avatar'],
+            'cover' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_cover'],
+            'post' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_post'],
+            'comment' => ['max_bytes' => 40_000_000, 'max_dimension' => 1600, 'setting_key' => 'upload_max_mb_post'],
+            'community_avatar' => ['max_bytes' => 40_000_000, 'max_dimension' => 512, 'setting_key' => 'upload_max_mb_avatar'],
+            'community_cover' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_cover'],
+            'banner' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_banner'],
+            'branding' => ['max_bytes' => 40_000_000, 'max_dimension' => 1024, 'setting_key' => 'upload_max_mb_cms'],
+            'favicon' => ['max_bytes' => 40_000_000, 'max_dimension' => 512, 'setting_key' => 'upload_max_mb_cms'],
+            'og_image' => ['max_bytes' => 40_000_000, 'max_dimension' => 1200, 'setting_key' => 'upload_max_mb_cms'],
+            'cms' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_cms'],
+            'ai_agent' => ['max_bytes' => 40_000_000, 'max_dimension' => 1920, 'setting_key' => 'upload_max_mb_avatar'],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Local Development Seeder Password (never used in production)
     |--------------------------------------------------------------------------
     */

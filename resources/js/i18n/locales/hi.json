@@ -79,14 +79,16 @@
         "mobileSectionTitle": "कानूनी और जानकारी",
         "openInNewTab": "नए टैब में खुलता है",
         "noPublishedLinks": "जानकारी और नीति के लिंक जल्द ही यहां दिखाई देंगे।",
-        "supportContact": "सहायता"
+        "supportContact": "सहायता",
+        "more": "अधिक"
     },
     "policy": {
         "draftBadge": "ड्राफ़्ट (केवल एडमिन पूर्वावलोकन)",
         "publishedBadge": "प्रकाशित",
         "updatedAt": "अंतिम अपडेट",
         "emptyContent": "यह दस्तावेज़ अभी तक प्रकाशित नहीं हुआ है।",
-        "backHome": "फ़ीड पर वापस जाएं"
+        "backHome": "फ़ीड पर वापस जाएं",
+        "effectiveAt": "प्रभावी"
     },
     "home": {
         "pageTitle": "समाचार फ़ीड",
@@ -132,7 +134,13 @@
             "signInPrompt": "पोस्ट साझा करने और चर्चा में भाग लेने के लिए कृपया साइन इन करें।",
             "discardTitle": "असहेजा ड्राफ्ट हटाएँ?",
             "discardDescription": "आपका असहेजा पोस्ट ड्राफ्ट स्थायी रूप से हटा दिया जाएगा।",
-            "discardConfirm": "ड्राफ्ट हटाएँ"
+            "discardConfirm": "ड्राफ्ट हटाएँ",
+            "addImage": "फ़ोटो",
+            "addLink": "लिंक",
+            "addPoll": "पोल",
+            "discardDraftConfirm": "हटाएं",
+            "discardDraftDesc": "आपका सहेजा न गया टेक्स्ट, फ़ोटो या पोल विकल्प हटा दिए जाएंगे।",
+            "discardDraftTitle": "पोस्ट ड्राफ़्ट हटाएं?"
         },
         "empty": {
             "title": "{brand} समुदाय को जानें",
@@ -176,7 +184,12 @@
             "duration24h": "24 घंटे",
             "duration3d": "3 दिन",
             "duration7d": "7 दिन"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — प्रतिक्रिया चुनने के लिए होवर करें या दबाए रखें",
+        "reactionTriggerHint": "प्रतिक्रियाओं के लिए होवर करें या दबाए रखें",
+        "shareAction": "साझा करें",
+        "sharesExact": "{count} शेयर",
+        "viewsExact": "{count} बार देखा गया"
     },
     "profile": {
         "postsTab": "पोस्ट",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "हैशटैग के आधार पर फ़िल्टर किया जा रहा है",
         "clearFilter": "फ़िल्टर साफ़ करें",
         "emptyTitle": "कोई मेल खाने वाला परिणाम नहीं मिला",
-        "emptyDescription": "कोई अन्य कीवर्ड या छोटा खोज शब्द आज़माएं।"
+        "emptyDescription": "कोई अन्य कीवर्ड या छोटा खोज शब्द आज़माएं।",
+        "clearHistory": "साफ़ करें",
+        "errorLoadFailed": "अभी खोज परिणाम लोड करने में असमर्थ। कृपया पुनः प्रयास करें।",
+        "exploreCategories": "श्रेणी के अनुसार ब्राउज़ करें",
+        "exploreHeading": "SyncViet खोजें",
+        "exploreMore": "सक्रिय विषय और समुदाय खोजें",
+        "exploreSubtitle": "चर्चाएं, सक्रिय समुदाय, विषय और प्रमुख आवाज़ें खोजें।",
+        "exploreTitle": "खोजें",
+        "featuredPosts": "प्रमुख चर्चाएं",
+        "filterTabsLabel": "खोज परिणाम श्रेणियां",
+        "latestPosts": "नवीनतम पोस्ट",
+        "noResultsForQuery": "\"{query}\" के लिए कोई परिणाम नहीं मिला",
+        "noResultsTips": "अपनी वर्तनी जांचें, कम शब्दों का उपयोग करें, या नीचे सक्रिय विषय देखें।",
+        "notableAccounts": "जानने योग्य लोग",
+        "recentSearches": "हाल की खोजें",
+        "recommendationsHeading": "शायद आप यह देखना पसंद करें",
+        "resultsTitle": "खोज: {query}",
+        "suggestedCommunities": "जुड़ने के लिए समुदाय",
+        "suggestionsLabel": "खोज सुझाव",
+        "tabs": {
+            "all": "सभी",
+            "communities": "समुदाय",
+            "posts": "पोस्ट",
+            "topics": "विषय",
+            "users": "लोग"
+        },
+        "topicsOfInterest": "रुचि के विषय",
+        "viewAll": "सभी देखें"
     },
     "sidebar": {
         "communityTitle": "वैश्विक समुदाय",
@@ -888,7 +928,9 @@
                 "ads": "विज्ञापन इंजन",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "रखरखाव मोड एडमिन पहुंच को सक्रिय रखते हुए गैर-स्टाफ़ ट्रैफ़िक को HTTP 503 से अवरुद्ध करता है।"
+            "maintenanceWarning": "रखरखाव मोड एडमिन पहुंच को सक्रिय रखते हुए गैर-स्टाफ़ ट्रैफ़िक को HTTP 503 से अवरुद्ध करता है।",
+            "brandingAssetsHint": "अपने डिवाइस से सीधे ब्रांड लोगो, फ़ेविकॉन और डिफ़ॉल्ट Open Graph छवि अपलोड करें।",
+            "brandingAssetsTitle": "ब्रांड और SEO विज़ुअल संपत्तियां"
         },
         "notifications": {
             "title": "एडमिन सूचना केंद्र",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "सुझाव: {action} ({status})",
             "acknowledge": "स्वीकार करें",
             "dismiss": "खारिज करें"
+        },
+        "cms": {
+            "allStatuses": "सभी स्थितियां",
+            "allTypes": "सभी पृष्ठ प्रकार",
+            "canonicalUrlLabel": "कैनोनिकल URL (वैकल्पिक)",
+            "changeNoteLabel": "संशोधन नोट (वैकल्पिक)",
+            "changeNotePlaceholder": "संक्षेप में बताएं कि इस संस्करण में क्या बदला है...",
+            "contactInfoLabel": "संपर्क जानकारी पंक्ति",
+            "contactInfoPlaceholder": "उदा., वैश्विक सहायता · सोम–शुक्र",
+            "copyrightLabel": "कस्टम कॉपीराइट पंक्ति (वैकल्पिक)",
+            "createPage": "पृष्ठ बनाएं",
+            "createPageHint": "नए CMS पृष्ठ ड्राफ़्ट के रूप में शुरू होते हैं और जब तक आप उन्हें प्रकाशित नहीं करते तब तक छिपे रहते हैं।",
+            "deleteLinkConfirmDesc": "क्या फ़ुटर से \"{label}\" को हटाना है? यह कार्रवाई पूर्ववत नहीं की जा सकती।",
+            "effectiveAtLabel": "प्रभावी तिथि",
+            "footerBrandingHeading": "सहायता संपर्क और फ़ुटर ब्रांडिंग",
+            "footerBrandingHint": "केवल वास्तविक, गैर-प्लेसहोल्डर सहायता ईमेल पते ही सार्वजनिक रूप से दिखाए जाते हैं। छिपाने के लिए खाली छोड़ दें।",
+            "indexEligibleLabel": "खोज इंजन को इस प्रकाशित पृष्ठ को इंडेक्स करने की अनुमति दें",
+            "inlineImageInserted": "छवि अपलोड की गई और सामग्री में शामिल की गई।",
+            "insertImage": "छवि डालें",
+            "insertImageHint": "अपने डिवाइस से छवि अपलोड करें। सुरक्षा के लिए बाहरी छवि हॉटलिंक अक्षम हैं।",
+            "languageSelectorLabel": "संपादन भाषा (हरा बिंदु प्रकाशित प्रति को दर्शाता है)",
+            "liveFooterPreview": "लाइव कॉम्पैक्ट फ़ुटर पूर्वावलोकन",
+            "localesCount": "{count} भाषाएं",
+            "metaDescriptionLabel": "SEO मेटा विवरण",
+            "noRevisions": "अभी तक कोई संशोधन इतिहास दर्ज नहीं है। पहला स्नैपशॉट बनाने के लिए परिवर्तन सहेजें।",
+            "ogImageHint": "अपने डिवाइस से 1200×630 JPG, PNG या WebP अनुशंसित।",
+            "ogImageLabel": "सोशल शेयर छवि (Open Graph)",
+            "pageTypeLabel": "पृष्ठ प्रकार",
+            "pageTypes": {
+                "business": "व्यवसाय",
+                "company": "कंपनी",
+                "general": "सामान्य",
+                "legal": "कानूनी",
+                "support": "सहायता"
+            },
+            "placementLabel": "फ़ुटर स्थान",
+            "placementMain": "मुख्य बार",
+            "placementMore": "अधिक मेनू",
+            "previewToggle": "पूर्वावलोकन",
+            "removeOgImage": "सहेजने पर वर्तमान Open Graph छवि हटाएं",
+            "restoreConfirmDesc": "क्या संस्करण v{version} से सामग्री पुनर्स्थापित करें? वर्तमान सामग्री इतिहास में सुरक्षित रहेगी।",
+            "restoreConfirmTitle": "पिछला संस्करण पुनर्स्थापित करें",
+            "restoreVersion": "पुनर्स्थापित करें",
+            "saveFooterBranding": "फ़ुटर ब्रांडिंग सहेजें",
+            "saveSeoSettings": "SEO सेटिंग्स सहेजें",
+            "saveTranslation": "अनुवाद सहेजें",
+            "searchPagesPlaceholder": "शीर्षक या स्लग के आधार पर पृष्ठ फ़िल्टर करें...",
+            "seoTitleLabel": "कस्टम SEO शीर्षक",
+            "serpPreviewTitle": "खोज परिणाम पूर्वावलोकन",
+            "slugLabel": "URL स्लग",
+            "statusArchived": "संग्रहीत",
+            "subTabs": {
+                "content": "सामग्री और भाषाएं",
+                "revisions": "इतिहास ({count})",
+                "seo": "SEO और सोशल"
+            },
+            "supportEmailLabel": "सार्वजनिक सहायता ईमेल",
+            "tabs": {
+                "footer": "फ़ुटर और संपर्क ({count})",
+                "pages": "CMS पृष्ठ ({count})"
+            },
+            "translationContentLabel": "अनुवादित HTML सामग्री",
+            "translationHint": "इस {locale} अनुवाद को प्रकाशित करने से पारस्परिक hreflang टैग के साथ {path} सक्रिय हो जाता है।",
+            "translationSummaryLabel": "अनुवादित सारांश",
+            "translationTitleLabel": "अनुवादित शीर्षक",
+            "uploadAndInsert": "अपलोड करें और डालें"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "अक्षम करें",
         "extra": {
             "userFallback": "उपयोगकर्ता"
-        }
+        },
+        "next": "अगला",
+        "previous": "पिछला"
     },
     "pwa": {
         "installApp": "SyncViet ऐप इंस्टॉल करें"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "रिकवरी कोड देखें"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "जल्द आ रहा है",
+        "modal": {
+            "attachmentsLabel": "अपनी पोस्ट में जोड़ें",
+            "continueEditing": "संपादन जारी रखें",
+            "insertEmoji": "इमोजी डालें",
+            "insertHashtag": "हैशटैग जोड़ें",
+            "personalizedPlaceholder": "{name}, आपके मन में क्या है?",
+            "resumeDraftPrompt": "आपके पास एक सहेजा न गया ड्राफ़्ट है जिसे आप जारी रख सकते हैं।",
+            "title": "पोस्ट बनाएं"
+        },
+        "videoComingSoonTooltip": "वीडियो पोस्ट करने की सुविधा जल्द आ रही है"
+    },
+    "upload": {
+        "addCover": "कवर फ़ोटो जोड़ें",
+        "admin": {
+            "healthLabel": "छवि अपलोड नीति और PHP रनटाइम",
+            "mismatchBadge": "{effective} MB तक सीमित",
+            "readyBadge": "तैयार (< {max} MB)",
+            "runtimeMismatch": "ऐप की अपलोड नीति {policy} MB तक की अनुमति देती है, लेकिन सर्वर PHP सीमाएं वर्तमान में अपलोड को {effective} MB तक सीमित करती हैं।",
+            "runtimeReady": "सर्वर PHP सीमाएं पूर्ण छवि अपलोड नीति (< {max} MB) का समर्थन करती हैं।"
+        },
+        "altTextLabel": "वैकल्पिक टेक्स्ट (सुगम्यता)",
+        "altTextPlaceholder": "इस छवि का संक्षिप्त विवरण लिखें (वैकल्पिक)",
+        "applyCrop": "क्रॉप लागू करें",
+        "avatarHint": "आपके डिवाइस से JPG, PNG या WebP · {max} MB से कम · 1:1 क्रॉप",
+        "cancelUpload": "रद्द करें",
+        "changeAvatar": "अवतार बदलें",
+        "changeCover": "कवर बदलें",
+        "chooseImage": "डिवाइस से छवि चुनें",
+        "cropAvatarTitle": "प्रोफ़ाइल फ़ोटो क्रॉप करें",
+        "cropCoverTitle": "कवर फ़ोटो की स्थिति समायोजित करें",
+        "currentImage": "वर्तमान छवि",
+        "currentImageAlt": "वर्तमान में अपलोड की गई छवि",
+        "dragToReposition": "फ़्रेम समायोजित करने के लिए छवि को खींचें",
+        "dropOrBrowse": "छवि को यहां खींचें और छोड़ें, या अपने डिवाइस से चुनें",
+        "errors": {
+            "failed": "छवि अपलोड करने में असमर्थ। कृपया पुनः प्रयास करें।",
+            "fileTooLargeWithSize": "चयनित फ़ाइल {size} MB की है। कृपया {max} MB से छोटी छवि चुनें।",
+            "maxSize": "छवि फ़ाइल का आकार {max} MB से कम होना चाहिए।",
+            "tooManyFiles": "आप अधिकतम {max} छवियां संलग्न कर सकते हैं।",
+            "totalSizeExceeded": "चयनित छवियों का कुल आकार {max} MB की अनुरोध सीमा से अधिक है।",
+            "unsupportedFormat": "असमर्थित प्रारूप। कृपया JPG, PNG या WebP छवि चुनें।",
+            "uploadFailed": "अपलोड विफल रहा। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।",
+            "videoComingSoon": "वीडियो अपलोड जल्द आ रहा है। कृपया JPG, PNG या WebP छवि चुनें।"
+        },
+        "fileCountProgress": "{current}/{max} छवियां",
+        "formatsAndLimit": "JPG, PNG, WebP · {max} MB से कम",
+        "moveNext": "दाएं ले जाएं",
+        "movePrev": "बाएं ले जाएं",
+        "ownershipPolicyNotice": "केवल वही छवियां अपलोड करें जिनका स्वामित्व आपके पास है या जिन्हें साझा करने की अनुमति है।",
+        "previewAlt": "चयनित छवि का पूर्वावलोकन",
+        "removeCover": "कवर हटाएं",
+        "removeImage": "छवि हटाएं",
+        "replaceImage": "छवि बदलें",
+        "resetCrop": "रीसेट करें",
+        "retry": "पुनः प्रयास करें",
+        "title": "छवि अपलोड करें",
+        "uploadCancelled": "अपलोड रद्द किया गया।",
+        "uploading": "अपलोड हो रहा है...",
+        "zoomLabel": "ज़ूम"
     }
 }

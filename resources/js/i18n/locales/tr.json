@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Yasal ve Bilgi",
         "openInNewTab": "Yeni sekmede açılır",
         "noPublishedLinks": "Bilgi ve politika bağlantıları yakında burada yer alacaktır.",
-        "supportContact": "Destek"
+        "supportContact": "Destek",
+        "more": "Daha fazla"
     },
     "policy": {
         "draftBadge": "Taslak (Yalnızca yönetici önizlemesi)",
         "publishedBadge": "Yayımlandı",
         "updatedAt": "Son güncelleme",
         "emptyContent": "Bu belge henüz yayımlanmadı.",
-        "backHome": "Akışa dön"
+        "backHome": "Akışa dön",
+        "effectiveAt": "Yürürlük"
     },
     "home": {
         "pageTitle": "Haber Akışı",
@@ -132,7 +134,13 @@
             "signInPrompt": "Gönderi paylaşmak ve tartışmalara katılmak için lütfen giriş yapın.",
             "discardTitle": "Kaydedilmemiş taslak silinsin mi?",
             "discardDescription": "Kaydedilmemiş gönderi taslağınız kalıcı olarak silinecek.",
-            "discardConfirm": "Taslağı sil"
+            "discardConfirm": "Taslağı sil",
+            "addImage": "Fotoğraf",
+            "addLink": "Bağlantı",
+            "addPoll": "Anket",
+            "discardDraftConfirm": "Taslağı sil",
+            "discardDraftDesc": "Kaydedilmemiş metin, fotoğraf veya anket seçenekleriniz temizlenecektir.",
+            "discardDraftTitle": "Gönderi taslağı silinsin mi?"
         },
         "empty": {
             "title": "{brand} topluluğunu keşfedin",
@@ -176,7 +184,12 @@
             "duration24h": "24 saat",
             "duration3d": "3 gün",
             "duration7d": "7 gün"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — tepki seçmek için üzerine gelin veya basılı tutun",
+        "reactionTriggerHint": "Tepkiler için üzerine gelin veya basılı tutun",
+        "shareAction": "Paylaş",
+        "sharesExact": "{count} paylaşım",
+        "viewsExact": "{count} görüntülenme"
     },
     "profile": {
         "postsTab": "Gönderiler",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Etikete göre filtreleniyor",
         "clearFilter": "Filtreyi temizle",
         "emptyTitle": "Eşleşen sonuç bulunamadı",
-        "emptyDescription": "Başka bir anahtar kelime veya daha kısa bir arama deneyin."
+        "emptyDescription": "Başka bir anahtar kelime veya daha kısa bir arama deneyin.",
+        "clearHistory": "Temizle",
+        "errorLoadFailed": "Arama sonuçları şu anda yüklenemiyor. Lütfen tekrar deneyin.",
+        "exploreCategories": "Kategoriye göre göz at",
+        "exploreHeading": "SyncViet'i Keşfet",
+        "exploreMore": "Aktif konuları ve toplulukları keşfet",
+        "exploreSubtitle": "Sohbetleri, aktif toplulukları, konuları ve öne çıkan isimleri keşfedin.",
+        "exploreTitle": "Keşfet",
+        "featuredPosts": "Öne çıkan tartışmalar",
+        "filterTabsLabel": "Arama sonucu kategorileri",
+        "latestPosts": "En yeni gönderiler",
+        "noResultsForQuery": "\"{query}\" için sonuç bulunamadı",
+        "noResultsTips": "Yazımınızı kontrol edin, daha az kelime deneyin veya aşağıdaki aktif konuları keşfedin.",
+        "notableAccounts": "Keşfedilecek kişiler",
+        "recentSearches": "Son aramalar",
+        "recommendationsHeading": "Bunları keşfetmek isteyebilirsiniz",
+        "resultsTitle": "Arama: {query}",
+        "suggestedCommunities": "Katılabileceğiniz topluluklar",
+        "suggestionsLabel": "Arama önerileri",
+        "tabs": {
+            "all": "Tümü",
+            "communities": "Topluluklar",
+            "posts": "Gönderiler",
+            "topics": "Konular",
+            "users": "Kişiler"
+        },
+        "topicsOfInterest": "İlgi çekici konular",
+        "viewAll": "Tümünü gör"
     },
     "sidebar": {
         "communityTitle": "Küresel Topluluk",
@@ -888,7 +928,9 @@
                 "ads": "Reklam Motoru",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "Bakım Modu, yönetici erişimini açık tutarken personel dışındaki trafiği HTTP 503 ile engeller."
+            "maintenanceWarning": "Bakım Modu, yönetici erişimini açık tutarken personel dışındaki trafiği HTTP 503 ile engeller.",
+            "brandingAssetsHint": "Marka logolarını, site simgesini (favicon) ve varsayılan Open Graph görselini doğrudan cihazınızdan yükleyin.",
+            "brandingAssetsTitle": "Marka ve SEO görsel varlıkları"
         },
         "notifications": {
             "title": "Yönetici Bildirim Merkezi",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Önerilen: {action} ({status})",
             "acknowledge": "Onayla / Bildim",
             "dismiss": "Yok Say"
+        },
+        "cms": {
+            "allStatuses": "Tüm durumlar",
+            "allTypes": "Tüm sayfa türleri",
+            "canonicalUrlLabel": "Standart (Canonical) URL (isteğe bağlı)",
+            "changeNoteLabel": "Revizyon notu (isteğe bağlı)",
+            "changeNotePlaceholder": "Bu sürümde nelerin değiştiğini kısaca açıklayın...",
+            "contactInfoLabel": "İletişim bilgisi satırı",
+            "contactInfoPlaceholder": "Örn. Küresel Destek · Pzt–Cum",
+            "copyrightLabel": "Özel telif hakkı satırı (isteğe bağlı)",
+            "createPage": "Sayfa oluştur",
+            "createPageHint": "Yeni CMS sayfaları taslak olarak başlar ve siz yayımlayana kadar gizli kalır.",
+            "deleteLinkConfirmDesc": "\"{label}\" bağlantısı alt bilgiden kaldırılsın mı? Bu işlem geri alınamaz.",
+            "effectiveAtLabel": "Yürürlük tarihi",
+            "footerBrandingHeading": "Destek iletişimi ve alt bilgi markalaması",
+            "footerBrandingHint": "Yalnızca gerçek ve yer tutucu olmayan destek adresleri herkese açık gösterilir. Gizlemek için boş bırakın.",
+            "indexEligibleLabel": "Arama motorlarının bu yayımlanan sayfayı dizine eklemesine izin ver",
+            "inlineImageInserted": "Görsel yüklendi ve içeriğe eklendi.",
+            "insertImage": "Görsel ekle",
+            "insertImageHint": "Cihazınızdan bir görsel yükleyin. Güvenlik nedeniyle harici görsel bağlantıları devre dışı bırakılmıştır.",
+            "languageSelectorLabel": "Düzenleme dili (yeşil nokta yayımlanmış sürümü gösterir)",
+            "liveFooterPreview": "Canlı kompakt alt bilgi önizlemesi",
+            "localesCount": "{count} dil",
+            "metaDescriptionLabel": "SEO meta açıklaması",
+            "noRevisions": "Henüz kaydedilmiş bir revizyon geçmişi yok. İlk anlık görüntüyü oluşturmak için değişiklikleri kaydedin.",
+            "ogImageHint": "Cihazınızdan 1200×630 boyutunda JPG, PNG veya WebP önerilir.",
+            "ogImageLabel": "Sosyal paylaşım görseli (Open Graph)",
+            "pageTypeLabel": "Sayfa türü",
+            "pageTypes": {
+                "business": "İş Dünyası",
+                "company": "Şirket",
+                "general": "Genel",
+                "legal": "Yasal",
+                "support": "Destek"
+            },
+            "placementLabel": "Alt bilgi yerleşimi",
+            "placementMain": "Ana çubuk",
+            "placementMore": "Daha fazla menüsü",
+            "previewToggle": "Önizleme",
+            "removeOgImage": "Kaydederken mevcut Open Graph görselini kaldır",
+            "restoreConfirmDesc": "İçerik v{version} sürümünden geri yüklensin mi? Mevcut içerik geçmişte güvenle saklanmaya devam edecektir.",
+            "restoreConfirmTitle": "Önceki sürümü geri yükle",
+            "restoreVersion": "Geri yükle",
+            "saveFooterBranding": "Alt bilgi markalamasını kaydet",
+            "saveSeoSettings": "SEO ayarlarını kaydet",
+            "saveTranslation": "Çeviriyi kaydet",
+            "searchPagesPlaceholder": "Sayfaları başlığa veya URL kısaltmasına (slug) göre filtrele...",
+            "seoTitleLabel": "Özel SEO başlığı",
+            "serpPreviewTitle": "Arama sonucu önizlemesi",
+            "slugLabel": "URL kısaltması (slug)",
+            "statusArchived": "Arşivlendi",
+            "subTabs": {
+                "content": "İçerik ve Diller",
+                "revisions": "Geçmiş ({count})",
+                "seo": "SEO ve Sosyal Medya"
+            },
+            "supportEmailLabel": "Herkese açık destek e-postası",
+            "tabs": {
+                "footer": "Alt Bilgi ve İletişim ({count})",
+                "pages": "CMS Sayfaları ({count})"
+            },
+            "translationContentLabel": "Çevrilmiş HTML içeriği",
+            "translationHint": "Bu {locale} çevirisini yayımlamak, karşılıklı hreflang etiketleriyle {path} yolunu etkinleştirir.",
+            "translationSummaryLabel": "Çevrilmiş özet",
+            "translationTitleLabel": "Çevrilmiş başlık",
+            "uploadAndInsert": "Yükle ve ekle"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Devre Dışı Bırak",
         "extra": {
             "userFallback": "Kullanıcı"
-        }
+        },
+        "next": "Sonraki",
+        "previous": "Önceki"
     },
     "pwa": {
         "installApp": "SyncViet Uygulamasını Yükle"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Kurtarma kodlarını görüntüle"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Yakında",
+        "modal": {
+            "attachmentsLabel": "Gönderine ekle",
+            "continueEditing": "Düzenlemeye devam et",
+            "insertEmoji": "Emoji ekle",
+            "insertHashtag": "Etiket (hashtag) ekle",
+            "personalizedPlaceholder": "Aklında ne var, {name}?",
+            "resumeDraftPrompt": "Devam etmeye hazır kaydedilmemiş bir taslağınız var.",
+            "title": "Gönderi oluştur"
+        },
+        "videoComingSoonTooltip": "Video paylaşımı yakında geliyor"
+    },
+    "upload": {
+        "addCover": "Kapak fotoğrafı ekle",
+        "admin": {
+            "healthLabel": "Görsel Yükleme Politikası ve PHP Çalışma Ortamı",
+            "mismatchBadge": "{effective} MB ile sınırlı",
+            "readyBadge": "Hazır (< {max} MB)",
+            "runtimeMismatch": "Uygulama yükleme politikası {policy} MB'a kadar izin veriyor ancak sunucu PHP sınırları şu anda yüklemeleri {effective} MB ile kısıtlıyor.",
+            "runtimeReady": "Sunucu PHP sınırları görsel yükleme politikasını tam olarak destekliyor (< {max} MB)."
+        },
+        "altTextLabel": "Alternatif metin (erişilebilirlik)",
+        "altTextPlaceholder": "Bu görseli kısaca açıklayın (isteğe bağlı)",
+        "applyCrop": "Kırpmayı uygula",
+        "avatarHint": "Cihazınızdan JPG, PNG veya WebP · {max} MB'tan küçük · 1:1 kırpma",
+        "cancelUpload": "İptal",
+        "changeAvatar": "Profil fotoğrafını değiştir",
+        "changeCover": "Kapağı değiştir",
+        "chooseImage": "Cihazdan görsel seç",
+        "cropAvatarTitle": "Profil fotoğrafını kırp",
+        "cropCoverTitle": "Kapak fotoğrafını yeniden konumlandır",
+        "currentImage": "Mevcut görsel",
+        "currentImageAlt": "Mevcut yüklü görsel",
+        "dragToReposition": "Çerçeveyi ayarlamak için görseli sürükleyin",
+        "dropOrBrowse": "Bir görseli buraya sürükleyip bırakın veya cihazınızdan seçin",
+        "errors": {
+            "failed": "Görsel yüklenemedi. Lütfen tekrar deneyin.",
+            "fileTooLargeWithSize": "Seçilen dosya {size} MB boyutunda. Lütfen {max} MB'tan küçük bir görsel seçin.",
+            "maxSize": "Görsel dosya boyutu {max} MB'tan küçük olmalıdır.",
+            "tooManyFiles": "En fazla {max} görsel ekleyebilirsiniz.",
+            "totalSizeExceeded": "Seçilen görsellerin toplam boyutu {max} MB istek sınırını aşıyor.",
+            "unsupportedFormat": "Desteklenmeyen biçim. Lütfen JPG, PNG veya WebP biçiminde bir görsel seçin.",
+            "uploadFailed": "Yükleme başarısız oldu. Lütfen bağlantınızı kontrol edip tekrar deneyin.",
+            "videoComingSoon": "Video yükleme özelliği yakında geliyor. Lütfen JPG, PNG veya WebP biçiminde bir görsel seçin."
+        },
+        "fileCountProgress": "{current}/{max} görsel",
+        "formatsAndLimit": "JPG, PNG, WebP · {max} MB'tan küçük",
+        "moveNext": "Sağa taşı",
+        "movePrev": "Sola taşı",
+        "ownershipPolicyNotice": "Yalnızca size ait olan veya paylaşma izniniz bulunan görselleri yükleyin.",
+        "previewAlt": "Seçilen görsel önizlemesi",
+        "removeCover": "Kapağı kaldır",
+        "removeImage": "Görseli kaldır",
+        "replaceImage": "Görseli değiştir",
+        "resetCrop": "Sıfırla",
+        "retry": "Tekrar dene",
+        "title": "Görsel yükle",
+        "uploadCancelled": "Yükleme iptal edildi.",
+        "uploading": "Yükleniyor...",
+        "zoomLabel": "Yakınlaştır"
     }
 }

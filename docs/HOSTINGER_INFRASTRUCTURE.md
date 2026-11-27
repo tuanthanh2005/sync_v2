@@ -10,7 +10,16 @@ Reference Hosting Tier (verify exact live limits in Hostinger hPanel):
 ### Built-In Shared-Hosting Protections
 
 1. **80%+ Query Overhead Eliminated (`AUD-016`)**: Request-scoped memoization cut `/` from `101 -> 30` queries and `/robots.txt` from `64 -> 4` queries under `CACHE_STORE=database`.
-2. **Strict Upload RAM Ceiling (`AUD-011`)**: `5 MB` file limit + `16 MP` total pixel decompression ceiling prevents GD worker OOM.
+2. **Global Device-Only Image Upload Policy (`< 40 MB`, Social Core V1.0)**:
+    - Application enforces a strict global image ceiling of `< 40,000,000` bytes (`40 MB`; files `>= 40,000,000` bytes rejected), with Admin-configurable smaller per-context caps (`avatar`, `cover`, `post`, `banner`, `cms`) and an `80 MB` multi-file request ceiling (`max_post_request_bytes`), plus `25 MP` / `8000 px` GD decompression-bomb protection, magic-byte MIME verification, EXIF/GPS strip, and automatic WebP conversion.
+    - **Mandatory Hostinger hPanel PHP Configuration** (verify under _Advanced → PHP Configuration → PHP Options_):
+        - `upload_max_filesize = 45M`
+        - `post_max_size = 90M`
+        - `memory_limit = 512M`
+        - `max_execution_time = 120`
+        - `max_input_time = 120`
+    - **Cloudflare Free Plan Note**: Cloudflare Free enforces a `100 MB` maximum HTTP request body size (`413`), which cleanly accommodates `< 40 MB` single images and `< 80 MB` multi-image post requests.
+    - **Honest Runtime Diagnostics**: `/admin/settings` (Content tab) and `/admin/system-health` inspect live `ini_get('upload_max_filesize')` and `ini_get('post_max_size')` and display a clear warning banner whenever PHP INI limits are lower than the configured app ceiling (e.g., default local `2M`/`8M`).
 3. **Log Rotation & Backup Pruning (`AUD-007`, `AUD-012`)**: Daily rotating logs (`LOG_STACK=daily`, `LOG_DAILY_DAYS=14`) + automatic database backup pruning (`SYNCVIET_BACKUP_RETENTION_DAYS=7`) protect the `50 GB` disk and `600,000` inode cap.
 4. **Priority-Ordered Bounded Queue Worker (No Supervisor Required)**:
    Run two lightweight hPanel Cron jobs (replacing `/opt/alt/php84/usr/bin/php` with verified Hostinger PHP 8.4 binary):

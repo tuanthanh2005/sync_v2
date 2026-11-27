@@ -1,7 +1,27 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { ArrowRight, ArrowUp, MessageSquareText } from '@lucide/vue';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import {
+    ArrowRight,
+    ArrowUp,
+    BriefcaseBusiness,
+    Clock,
+    Cpu,
+    LayoutGrid,
+    MessageCircleQuestion,
+    MessageSquareText,
+    ShoppingBag,
+    TrendingUp,
+    Wallet,
+} from '@lucide/vue';
+import type { Component } from 'vue';
+import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 import HomeController from '@/actions/App/Http/Controllers/HomeController';
 import EmptyState from '@/components/common/EmptyState.vue';
@@ -83,18 +103,59 @@ watch(
     },
 );
 
-const tabs = computed(() => [
-    { key: 'trending', label: t('home.feed.tabs.trending') },
-    { key: 'latest', label: t('home.feed.tabs.latest') },
-    { key: 'finance', label: t('home.feed.tabs.finance') },
-    { key: 'technology', label: t('home.feed.tabs.technology') },
-    { key: 'business', label: t('home.feed.tabs.business') },
-    { key: 'qa', label: t('home.feed.tabs.qa') },
-    { key: 'marketplace', label: t('home.feed.tabs.marketplace') },
-]);
+const tabs = computed<Array<{ key: string; label: string; icon: Component }>>(
+    () => [
+        {
+            key: 'trending',
+            label: t('home.feed.tabs.trending'),
+            icon: TrendingUp,
+        },
+        { key: 'latest', label: t('home.feed.tabs.latest'), icon: Clock },
+        { key: 'finance', label: t('home.feed.tabs.finance'), icon: Wallet },
+        { key: 'technology', label: t('home.feed.tabs.technology'), icon: Cpu },
+        {
+            key: 'business',
+            label: t('home.feed.tabs.business'),
+            icon: BriefcaseBusiness,
+        },
+        {
+            key: 'qa',
+            label: t('home.feed.tabs.qa'),
+            icon: MessageCircleQuestion,
+        },
+        {
+            key: 'marketplace',
+            label: t('home.feed.tabs.marketplace'),
+            icon: ShoppingBag,
+        },
+    ],
+);
+
+const tabButtonRefs = ref<Record<string, HTMLButtonElement | null>>({});
+
+function scrollActiveTabIntoView(tabKey: string): void {
+    void nextTick(() => {
+        const el = tabButtonRefs.value[tabKey];
+        if (el && typeof el.scrollIntoView === 'function') {
+            el.scrollIntoView({
+                inline: 'center',
+                block: 'nearest',
+                behavior: 'smooth',
+            });
+        }
+    });
+}
+
+watch(
+    () => props.activeTab,
+    (tabKey) => {
+        scrollActiveTabIntoView(tabKey);
+    },
+);
 
 function switchTab(tabKey: string): void {
     hasNewPostsBanner.value = false;
+    scrollActiveTabIntoView(tabKey);
     router.get(
         HomeController.index.url({ query: { tab: tabKey } }),
         {},
@@ -307,27 +368,40 @@ onBeforeUnmount(() => {
             </Button>
         </div>
 
-        <!-- News Feed Category Tabs (Horizontal Snap Strip on Mobile) -->
+        <!-- News Feed Category Tabs with Lucide Icons (Horizontal Scroll on Mobile) -->
         <div
             role="tablist"
             :aria-label="t('home.feed.categoriesLabel')"
-            class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-0.5 select-none sm:flex-wrap sm:overflow-visible"
+            class="sv-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 select-none sm:flex-wrap sm:overflow-visible"
         >
             <button
                 v-for="tab in tabs"
                 :key="tab.key"
+                :ref="
+                    (el) => {
+                        tabButtonRefs[tab.key] = el as HTMLButtonElement | null;
+                    }
+                "
                 type="button"
                 role="tab"
                 :aria-selected="activeTab === tab.key"
                 :class="[
-                    'min-h-9 shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                    'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
                     activeTab === tab.key
-                        ? 'bg-primary-soft font-semibold text-accent-foreground'
-                        : 'border border-border bg-card text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                        ? 'border-primary/25 bg-primary-soft font-semibold text-accent-foreground'
+                        : 'border-border bg-card text-muted-foreground hover:bg-surface-hover hover:text-foreground',
                 ]"
                 @click="switchTab(tab.key)"
             >
-                {{ tab.label }}
+                <component
+                    :is="tab.icon || LayoutGrid"
+                    :class="[
+                        'size-4 shrink-0',
+                        activeTab === tab.key ? 'text-primary' : '',
+                    ]"
+                    aria-hidden="true"
+                />
+                <span>{{ tab.label }}</span>
             </button>
         </div>
 

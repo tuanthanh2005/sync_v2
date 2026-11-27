@@ -6,6 +6,7 @@ use App\Enums\SeoEntityType;
 use App\Enums\SeoIndexEligibility;
 use App\Models\Community;
 use App\Models\Hashtag;
+use App\Models\PolicyPage;
 use App\Models\Post;
 use App\Models\SeoContentTranslation;
 use App\Models\SeoUrlRegistry;
@@ -119,6 +120,47 @@ class HreflangService
             ['hreflang' => $locale, 'href' => $canonical],
             ['hreflang' => 'x-default', 'href' => $canonical],
         ];
+    }
+
+    /**
+     * Emit reciprocal hreflang tags ONLY for locales that have genuine published CMS translations.
+     *
+     * @return list<array{hreflang: string, href: string}>
+     */
+    public function forPolicy(PolicyPage $policy): array
+    {
+        if (! $policy->isPubliclyAccessible()) {
+            return [];
+        }
+
+        $enabled = $this->config->enabledLocales();
+        $defaultLocale = $this->config->defaultLocale();
+        $publishedLocales = array_values(array_intersect($policy->availablePublishedLocales(), $enabled));
+
+        $defaultUrl = $this->canonicalUrls->policyCanonicalUrl($policy);
+        $links = [];
+        $seen = [];
+
+        foreach ($publishedLocales as $locale) {
+            if (! $this->languageDetection->isValidBcp47($locale)) {
+                continue;
+            }
+
+            $href = $locale === $defaultLocale
+                ? $defaultUrl
+                : $this->canonicalUrls->policyCanonicalUrl($policy, $locale);
+
+            $links[] = ['hreflang' => $locale, 'href' => $href];
+            $seen[$locale] = true;
+        }
+
+        if ($links === []) {
+            return [];
+        }
+
+        $links[] = ['hreflang' => 'x-default', 'href' => $defaultUrl];
+
+        return $links;
     }
 
     /**

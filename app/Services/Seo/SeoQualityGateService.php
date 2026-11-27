@@ -292,11 +292,15 @@ class SeoQualityGateService
             return $this->excluded('draft_policy', 0);
         }
 
+        if (! $policy->index_eligible) {
+            return $this->excluded('admin_forced_noindex', 0);
+        }
+
         return [
             'eligibility' => SeoIndexEligibility::Eligible,
             'reason' => null,
             'quality_score' => 90,
-            'robots' => 'index, follow',
+            'robots' => 'index, follow, max-image-preview:large',
         ];
     }
 

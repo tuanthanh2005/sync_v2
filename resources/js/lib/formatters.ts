@@ -28,6 +28,27 @@ export function formatNumber(value: number, locale = 'en'): string {
     }
 }
 
+export function formatCompactNumber(value: number, locale = 'en'): string {
+    const safe = Math.max(0, Math.floor(value || 0));
+
+    if (safe < 1000) {
+        return formatNumber(safe, locale);
+    }
+
+    try {
+        return new Intl.NumberFormat(resolveIntlLocale(locale), {
+            notation: 'compact',
+            maximumFractionDigits: safe >= 100_000 ? 0 : 1,
+        }).format(safe);
+    } catch {
+        if (safe >= 1_000_000) {
+            return `${(safe / 1_000_000).toFixed(1)}M`;
+        }
+
+        return `${(safe / 1000).toFixed(1)}K`;
+    }
+}
+
 export function formatCurrencyVnd(amount: number, locale = 'en'): string {
     try {
         return new Intl.NumberFormat(resolveIntlLocale(locale), {

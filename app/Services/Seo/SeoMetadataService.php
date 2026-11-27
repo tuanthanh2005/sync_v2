@@ -219,25 +219,47 @@ class SeoMetadataService
     /**
      * @return array<string, mixed>
      */
-    public function forPolicy(PolicyPage $policy, ?string $locale = null): array
+    public function forPolicy(PolicyPage $policy, ?string $locale = null, bool $isLocalizedRoute = false): array
     {
         $lang = $locale ?: app()->getLocale();
         $siteName = (string) config('app.name', 'SyncViet');
         $eval = $this->qualityGate->evaluatePolicy($policy);
-        $canonical = $this->canonicalUrls->policyCanonicalUrl($policy);
+
+        $defaultCanonical = $this->canonicalUrls->policyCanonicalUrl(
+            $policy,
+            $isLocalizedRoute ? $lang : null,
+        );
+        $customCanonical = is_string($policy->canonical_url) && trim($policy->canonical_url) !== '' && ! $isLocalizedRoute
+            ? ($this->canonicalUrls->isSafeRedirectTarget($policy->canonical_url)
+                ? (str_starts_with($policy->canonical_url, '/') ? $this->canonicalUrls->absoluteUrl($policy->canonical_url) : $policy->canonical_url)
+                : $defaultCanonical)
+            : $defaultCanonical;
+
         $title = $policy->titleForLocale($lang);
-        $summary = $policy->summaryForLocale($lang) ?: $policy->contentForLocale($lang) ?: $title;
+        $customSeoTitle = $policy->seoTitleForLocale($lang);
+        $resolvedTitle = $customSeoTitle !== null ? $customSeoTitle : "{$title} | {$siteName}";
+
+        $summary = $policy->metaDescriptionForLocale($lang)
+            ?: $policy->summaryForLocale($lang)
+            ?: $policy->contentForLocale($lang)
+            ?: $title;
+
+        $ogImage = $policy->ogImageUrl();
+        $resolvedOgImage = $ogImage !== null
+            ? (str_starts_with($ogImage, 'http') ? $ogImage : $this->canonicalUrls->absoluteUrl($ogImage))
+            : $this->config->defaultOgImageUrl();
 
         return $this->assemble([
-            'title' => "{$title} | {$siteName}",
+            'title' => $resolvedTitle,
             'description' => Str::limit(trim(strip_tags($summary)), 160),
-            'canonical' => $canonical,
+            'canonical' => $customCanonical,
             'robots' => $eval['robots'],
             'og_type' => 'website',
-            'og_image' => $this->config->defaultOgImageUrl(),
+            'og_image' => $resolvedOgImage,
             'locale' => $lang,
-            'hreflang' => [],
-            'schema' => $this->structuredData->forPolicy($policy, $canonical, $lang),
+            'modified_time' => $policy->updated_at?->toIso8601String(),
+            'hreflang' => $this->hreflang->forPolicy($policy),
+            'schema' => $this->structuredData->forPolicy($policy, $customCanonical, $lang),
         ]);
     }
 

@@ -27,6 +27,15 @@ const DEDUP_WINDOW_MS = 2500;
 
 function sanitizeMessage(raw: string): string {
     const trimmed = raw.trim();
+    const lower = trimmed.toLowerCase();
+
+    if (
+        lower.includes('payload too large') ||
+        lower.includes('http 413') ||
+        lower.includes('posttoolargeexception')
+    ) {
+        return String(i18n.global.t('upload.errors.maxSize', { max: 40 }));
+    }
 
     if (
         trimmed === '' ||
@@ -34,6 +43,9 @@ function sanitizeMessage(raw: string): string {
         trimmed.includes('SQLSTATE[') ||
         trimmed.includes('vendor/laravel/') ||
         trimmed.includes('vendor\\laravel\\') ||
+        lower.includes('php upload error') ||
+        lower.includes('internal server error') ||
+        lower.includes('validation exception') ||
         trimmed.length > 320
     ) {
         return String(i18n.global.t('toast.unexpectedError'));

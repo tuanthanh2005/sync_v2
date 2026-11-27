@@ -16,7 +16,7 @@ import {
 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { toast } from 'vue-sonner';
+import { appToast } from '@/lib/toast';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import EmptyState from '@/components/common/EmptyState.vue';
@@ -24,6 +24,8 @@ import BannerSlot from '@/components/monetization/BannerSlot.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
+import AvatarUploader from '@/components/upload/AvatarUploader.vue';
+import CoverImageUploader from '@/components/upload/CoverImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -71,10 +73,22 @@ const { getInitials } = useInitials();
 const editOpen = ref(false);
 const rulesInput = ref(props.community.rules.join('\n'));
 
-const editForm = useForm({
+const editForm = useForm<{
+    name: string;
+    category: string;
+    description: string;
+    avatar: File | null;
+    cover: File | null;
+    remove_avatar: boolean;
+    remove_cover: boolean;
+}>({
     name: props.community.name,
     category: props.community.category,
     description: props.community.description ?? '',
+    avatar: null,
+    cover: null,
+    remove_avatar: false,
+    remove_cover: false,
 });
 
 function navigateCommunity(
@@ -95,7 +109,7 @@ function navigateCommunity(
 
 function toggleJoin(): void {
     if (!user.value) {
-        toast.info(t('home.composer.signInPrompt'));
+        appToast.info(t('home.composer.signInPrompt'));
         router.visit(login());
 
         return;
@@ -117,23 +131,29 @@ async function shareCommunity(): Promise<void> {
         // Ignore clipboard errors gracefully
     }
 
-    toast.success(t('post.shareCopied'));
+    appToast.success(t('post.shareCopied'));
 }
 
 function submitEdit(): void {
     editForm
         .transform((data) => ({
             ...data,
+            _method: 'patch',
             rules: rulesInput.value
                 .split(/\r?\n/)
                 .map((line) => line.trim())
                 .filter(Boolean)
                 .slice(0, 10),
         }))
-        .patch(CommunityController.update.url(props.community.slug), {
+        .post(CommunityController.update.url(props.community.slug), {
+            forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 editOpen.value = false;
+                editForm.avatar = null;
+                editForm.cover = null;
+                editForm.remove_avatar = false;
+                editForm.remove_cover = false;
             },
         });
 }
@@ -264,6 +284,22 @@ function submitEdit(): void {
                                     @submit.prevent="submitEdit"
                                     class="space-y-4"
                                 >
+                                    <CoverImageUploader
+                                        v-model="editForm.cover"
+                                        v-model:removed="editForm.remove_cover"
+                                        :current-url="community.cover"
+                                        :external-error="editForm.errors.cover"
+                                        :disabled="editForm.processing"
+                                    />
+                                    <AvatarUploader
+                                        v-model="editForm.avatar"
+                                        v-model:removed="editForm.remove_avatar"
+                                        :current-url="community.avatar"
+                                        :display-name="community.name"
+                                        rounded-class="rounded-2xl"
+                                        :external-error="editForm.errors.avatar"
+                                        :disabled="editForm.processing"
+                                    />
                                     <div class="grid gap-1.5">
                                         <Label for="edit-comm-name">{{
                                             t('communities.name')
@@ -464,6 +500,7 @@ function submitEdit(): void {
                         :categories="categories"
                         :can-pin="community.can_moderate"
                         :community-slug="community.slug"
+                        view-source="community"
                     />
                 </div>
             </section>

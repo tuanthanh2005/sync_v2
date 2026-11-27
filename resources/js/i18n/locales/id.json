@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Hukum & Informasi",
         "openInNewTab": "Buka di tab baru",
         "noPublishedLinks": "Tautan informasi dan kebijakan akan segera ditampilkan di sini.",
-        "supportContact": "Dukungan"
+        "supportContact": "Dukungan",
+        "more": "Lainnya"
     },
     "policy": {
         "draftBadge": "Draf (Hanya pratinjau Admin)",
         "publishedBadge": "Diterbitkan",
         "updatedAt": "Terakhir diperbarui",
         "emptyContent": "Dokumen ini belum diterbitkan.",
-        "backHome": "Kembali ke beranda"
+        "backHome": "Kembali ke beranda",
+        "effectiveAt": "Berlaku sejak"
     },
     "home": {
         "pageTitle": "Linimasa Berita",
@@ -132,7 +134,13 @@
             "signInPrompt": "Silakan masuk untuk membagikan postingan dan bergabung dalam diskusi.",
             "discardTitle": "Buang draf yang belum disimpan?",
             "discardDescription": "Draf postingan yang belum disimpan akan dihapus secara permanen.",
-            "discardConfirm": "Buang draf"
+            "discardConfirm": "Buang draf",
+            "addImage": "Foto",
+            "addLink": "Tautan",
+            "addPoll": "Polling",
+            "discardDraftConfirm": "Buang",
+            "discardDraftDesc": "Teks, foto, atau opsi polling yang belum disimpan akan dihapus.",
+            "discardDraftTitle": "Buang draf postingan?"
         },
         "empty": {
             "title": "Jelajahi komunitas {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 jam",
             "duration3d": "3 hari",
             "duration7d": "7 hari"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — arahkan kursor atau tekan lama untuk memilih reaksi",
+        "reactionTriggerHint": "Arahkan kursor atau tekan lama untuk reaksi",
+        "shareAction": "Bagikan",
+        "sharesExact": "{count} kali dibagikan",
+        "viewsExact": "{count} tayangan"
     },
     "profile": {
         "postsTab": "Postingan",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Memfilter berdasarkan tagar",
         "clearFilter": "Hapus filter",
         "emptyTitle": "Tidak ada hasil yang cocok",
-        "emptyDescription": "Coba kata kunci lain atau pencarian yang lebih singkat."
+        "emptyDescription": "Coba kata kunci lain atau pencarian yang lebih singkat.",
+        "clearHistory": "Hapus",
+        "errorLoadFailed": "Tidak dapat memuat hasil pencarian saat ini. Silakan coba lagi.",
+        "exploreCategories": "Jelajahi menurut kategori",
+        "exploreHeading": "Jelajahi SyncViet",
+        "exploreMore": "Temukan topik dan komunitas aktif",
+        "exploreSubtitle": "Temukan percakapan, komunitas aktif, topik, dan tokoh berpengaruh.",
+        "exploreTitle": "Jelajahi",
+        "featuredPosts": "Diskusi unggulan",
+        "filterTabsLabel": "Kategori hasil pencarian",
+        "latestPosts": "Postingan terbaru",
+        "noResultsForQuery": "Tidak ada hasil ditemukan untuk \"{query}\"",
+        "noResultsTips": "Periksa ejaan Anda, coba kata yang lebih sedikit, atau jelajahi topik aktif di bawah.",
+        "notableAccounts": "Orang untuk ditemukan",
+        "recentSearches": "Pencarian terbaru",
+        "recommendationsHeading": "Mungkin Anda tertarik menjelajahi",
+        "resultsTitle": "Pencarian: {query}",
+        "suggestedCommunities": "Komunitas untuk diikuti",
+        "suggestionsLabel": "Saran pencarian",
+        "tabs": {
+            "all": "Semua",
+            "communities": "Komunitas",
+            "posts": "Postingan",
+            "topics": "Topik",
+            "users": "Orang"
+        },
+        "topicsOfInterest": "Topik yang diminati",
+        "viewAll": "Lihat semua"
     },
     "sidebar": {
         "communityTitle": "Komunitas Global",
@@ -888,7 +928,9 @@
                 "ads": "Mesin Periklanan",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "Mode Pemeliharaan memblokir lalu lintas non-staf dengan HTTP 503 sambil menjaga akses Admin tetap aktif."
+            "maintenanceWarning": "Mode Pemeliharaan memblokir lalu lintas non-staf dengan HTTP 503 sambil menjaga akses Admin tetap aktif.",
+            "brandingAssetsHint": "Unggah logo merek, favicon, dan gambar Open Graph default langsung dari perangkat Anda.",
+            "brandingAssetsTitle": "Aset visual merek & SEO"
         },
         "notifications": {
             "title": "Pusat Notifikasi Admin",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Disarankan: {action} ({status})",
             "acknowledge": "Konfirmasi Telah Dibaca",
             "dismiss": "Abaikan"
+        },
+        "cms": {
+            "allStatuses": "Semua status",
+            "allTypes": "Semua jenis halaman",
+            "canonicalUrlLabel": "URL kanonis (opsional)",
+            "changeNoteLabel": "Catatan revisi (opsional)",
+            "changeNotePlaceholder": "Jelaskan secara singkat apa yang berubah pada versi ini...",
+            "contactInfoLabel": "Baris informasi kontak",
+            "contactInfoPlaceholder": "mis., Dukungan Global · Sen–Jum",
+            "copyrightLabel": "Baris hak cipta kustom (opsional)",
+            "createPage": "Buat halaman",
+            "createPageHint": "Halaman CMS baru dimulai sebagai draf dan tetap tersembunyi hingga Anda menerbitkannya.",
+            "deleteLinkConfirmDesc": "Hapus \"{label}\" dari footer? Tindakan ini tidak dapat dibatalkan.",
+            "effectiveAtLabel": "Tanggal berlaku",
+            "footerBrandingHeading": "Kontak dukungan & branding footer",
+            "footerBrandingHint": "Hanya alamat dukungan asli (bukan domain contoh) yang ditampilkan secara publik. Biarkan kosong untuk menyembunyikan.",
+            "indexEligibleLabel": "Izinkan mesin pencari mengindeks halaman yang diterbitkan ini",
+            "inlineImageInserted": "Gambar diunggah dan disisipkan ke dalam konten.",
+            "insertImage": "Sisipkan gambar",
+            "insertImageHint": "Unggah gambar dari perangkat Anda. Hotlink gambar eksternal dinonaktifkan demi keamanan.",
+            "languageSelectorLabel": "Bahasa yang diedit (titik hijau menandakan salinan yang diterbitkan)",
+            "liveFooterPreview": "Pratinjau langsung footer ringkas",
+            "localesCount": "{count} bahasa",
+            "metaDescriptionLabel": "Deskripsi meta SEO",
+            "noRevisions": "Belum ada riwayat revisi yang tercatat. Simpan perubahan untuk membuat cuplikan pertama.",
+            "ogImageHint": "Disarankan 1200×630 JPG, PNG, atau WebP dari perangkat Anda.",
+            "ogImageLabel": "Gambar berbagi sosial (Open Graph)",
+            "pageTypeLabel": "Jenis halaman",
+            "pageTypes": {
+                "business": "Bisnis",
+                "company": "Perusahaan",
+                "general": "Umum",
+                "legal": "Hukum",
+                "support": "Dukungan"
+            },
+            "placementLabel": "Penempatan footer",
+            "placementMain": "Bilah utama",
+            "placementMore": "Menu Lainnya",
+            "previewToggle": "Pratinjau",
+            "removeOgImage": "Hapus gambar Open Graph saat ini saat menyimpan",
+            "restoreConfirmDesc": "Pulihkan konten dari versi v{version}? Konten saat ini akan tetap tersimpan aman di riwayat.",
+            "restoreConfirmTitle": "Pulihkan versi sebelumnya",
+            "restoreVersion": "Pulihkan",
+            "saveFooterBranding": "Simpan branding footer",
+            "saveSeoSettings": "Simpan pengaturan SEO",
+            "saveTranslation": "Simpan terjemahan",
+            "searchPagesPlaceholder": "Filter halaman menurut judul atau slug...",
+            "seoTitleLabel": "Judul SEO kustom",
+            "serpPreviewTitle": "Pratinjau hasil pencarian",
+            "slugLabel": "Slug URL",
+            "statusArchived": "Diarsipkan",
+            "subTabs": {
+                "content": "Konten & Bahasa",
+                "revisions": "Riwayat ({count})",
+                "seo": "SEO & Sosial"
+            },
+            "supportEmailLabel": "Email dukungan publik",
+            "tabs": {
+                "footer": "Footer & Kontak ({count})",
+                "pages": "Halaman CMS ({count})"
+            },
+            "translationContentLabel": "Konten HTML terjemahan",
+            "translationHint": "Menerbitkan terjemahan {locale} ini akan mengaktifkan {path} dengan tag hreflang timbal balik.",
+            "translationSummaryLabel": "Ringkasan terjemahan",
+            "translationTitleLabel": "Judul terjemahan",
+            "uploadAndInsert": "Unggah & sisipkan"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Nonaktifkan",
         "extra": {
             "userFallback": "Pengguna"
-        }
+        },
+        "next": "Berikutnya",
+        "previous": "Sebelumnya"
     },
     "pwa": {
         "installApp": "Pasang Aplikasi SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Lihat kode pemulihan"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Segera hadir",
+        "modal": {
+            "attachmentsLabel": "Tambahkan ke postingan Anda",
+            "continueEditing": "Lanjutkan mengedit",
+            "insertEmoji": "Sisipkan emoji",
+            "insertHashtag": "Tambahkan tagar",
+            "personalizedPlaceholder": "Apa yang sedang Anda pikirkan, {name}?",
+            "resumeDraftPrompt": "Anda memiliki draf yang belum disimpan dan siap dilanjutkan.",
+            "title": "Buat postingan"
+        },
+        "videoComingSoonTooltip": "Fitur posting video akan segera hadir"
+    },
+    "upload": {
+        "addCover": "Tambahkan foto sampul",
+        "admin": {
+            "healthLabel": "Kebijakan Unggah Gambar & Runtime PHP",
+            "mismatchBadge": "Dibatasi hingga {effective} MB",
+            "readyBadge": "Siap (< {max} MB)",
+            "runtimeMismatch": "Kebijakan unggah aplikasi mengizinkan hingga {policy} MB, tetapi batas PHP server saat ini membatasi unggahan pada {effective} MB.",
+            "runtimeReady": "Batas PHP server mendukung penuh kebijakan unggah gambar (< {max} MB)."
+        },
+        "altTextLabel": "Teks alternatif (aksesibilitas)",
+        "altTextPlaceholder": "Jelaskan gambar ini secara singkat (opsional)",
+        "applyCrop": "Terapkan pemotongan",
+        "avatarHint": "JPG, PNG, atau WebP dari perangkat Anda · Lebih kecil dari {max} MB · Potongan 1:1",
+        "cancelUpload": "Batal",
+        "changeAvatar": "Ganti foto profil",
+        "changeCover": "Ganti sampul",
+        "chooseImage": "Pilih gambar dari perangkat",
+        "cropAvatarTitle": "Potong foto profil",
+        "cropCoverTitle": "Atur posisi foto sampul",
+        "currentImage": "Gambar saat ini",
+        "currentImageAlt": "Gambar yang sedang diunggah",
+        "dragToReposition": "Seret gambar untuk menyesuaikan bingkai",
+        "dropOrBrowse": "Seret & lepas gambar di sini, atau pilih dari perangkat Anda",
+        "errors": {
+            "failed": "Tidak dapat mengunggah gambar. Silakan coba lagi.",
+            "fileTooLargeWithSize": "File yang dipilih berukuran {size} MB. Harap pilih gambar yang lebih kecil dari {max} MB.",
+            "maxSize": "Ukuran file gambar harus lebih kecil dari {max} MB.",
+            "tooManyFiles": "Anda dapat melampirkan maksimal {max} gambar.",
+            "totalSizeExceeded": "Total ukuran gambar yang dipilih melebihi batas permintaan {max} MB.",
+            "unsupportedFormat": "Format tidak didukung. Harap pilih gambar JPG, PNG, atau WebP.",
+            "uploadFailed": "Unggahan gagal. Harap periksa koneksi Anda dan coba lagi.",
+            "videoComingSoon": "Unggah video akan segera hadir. Harap pilih gambar JPG, PNG, atau WebP."
+        },
+        "fileCountProgress": "{current}/{max} gambar",
+        "formatsAndLimit": "JPG, PNG, WebP · Lebih kecil dari {max} MB",
+        "moveNext": "Geser ke kanan",
+        "movePrev": "Geser ke kiri",
+        "ownershipPolicyNotice": "Hanya unggah gambar yang Anda miliki atau memiliki izin untuk dibagikan.",
+        "previewAlt": "Pratinjau gambar terpilih",
+        "removeCover": "Hapus sampul",
+        "removeImage": "Hapus gambar",
+        "replaceImage": "Ganti gambar",
+        "resetCrop": "Atur ulang",
+        "retry": "Coba lagi",
+        "title": "Unggah gambar",
+        "uploadCancelled": "Unggahan dibatalkan.",
+        "uploading": "Mengunggah...",
+        "zoomLabel": "Perbesar"
     }
 }

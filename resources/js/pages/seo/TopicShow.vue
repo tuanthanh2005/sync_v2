@@ -97,6 +97,7 @@ const isGuest = computed(() => !page.props.auth.user);
                 :key="post.id"
                 :post="post"
                 :truncate="true"
+                view-source="topic"
             />
         </div>
 

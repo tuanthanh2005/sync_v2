@@ -8,6 +8,8 @@ use App\Http\Requests\Social\PostPollVoteRequest;
 use App\Http\Requests\Social\PostReactionRequest;
 use App\Models\Post;
 use App\Services\Social\PostService;
+use App\Services\Social\PostViewTrackingService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -17,6 +19,7 @@ class PostInteractionController extends Controller
 {
     public function __construct(
         private readonly PostService $postService,
+        private readonly PostViewTrackingService $viewTrackingService,
     ) {}
 
     public function react(PostReactionRequest $request, Post $post): RedirectResponse
@@ -78,5 +81,26 @@ class PostInteractionController extends Controller
         $this->postService->incrementShare($post);
 
         return back();
+    }
+
+    public function trackViews(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'views' => ['required', 'array', 'min:1', 'max:25'],
+            'views.*.post_id' => ['required', 'integer', 'min:1'],
+            'views.*.source' => ['nullable', 'string', 'in:feed,detail,profile,community,search,topic'],
+            'views.*.is_promoted' => ['nullable', 'boolean'],
+        ]);
+
+        /** @var list<array{post_id: int, source?: string, is_promoted?: bool}> $views */
+        $views = array_values($validated['views']);
+
+        $result = $this->viewTrackingService->recordBatch(
+            $request,
+            $request->user(),
+            $views,
+        );
+
+        return response()->json($result);
     }
 }

@@ -30,6 +30,7 @@ use App\Models\Report;
 use App\Models\User;
 use App\Models\VerificationRequest;
 use App\Services\Ai\AiAutomationControlService;
+use App\Services\Media\SafeImageUploadService;
 use App\Services\Seo\SeoConfigService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
@@ -254,6 +255,7 @@ class AdminAnalyticsService
                 'last_backup_type' => $lastBackup?->type,
                 'last_backup_status' => $lastBackup !== null ? $lastBackup->status : 'none',
                 'cron_last_heartbeat' => Cache::get('syncviet.cron.last_heartbeat'),
+                'upload_limits' => app(SafeImageUploadService::class)->runtimeLimits(),
                 'integrations' => [
                     'payment_methods_enabled' => $enabledPaymentMethods,
                     'webhook_secret_configured' => trim((string) config('syncviet.payment_webhook_secret', '')) !== '',

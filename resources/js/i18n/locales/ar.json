@@ -79,14 +79,16 @@
         "mobileSectionTitle": "القانون والمعلومات",
         "openInNewTab": "يُفتح في علامة تبويب جديدة",
         "noPublishedLinks": "ستظهر روابط المعلومات والسياسات هنا قريبًا.",
-        "supportContact": "الدعم الفني"
+        "supportContact": "الدعم الفني",
+        "more": "المزيد"
     },
     "policy": {
         "draftBadge": "مسودة (معاينة للمشرفين فقط)",
         "publishedBadge": "منشورة",
         "updatedAt": "آخر تحديث",
         "emptyContent": "لم يتم نشر هذه الوثيقة بعد.",
-        "backHome": "العودة إلى الموجز"
+        "backHome": "العودة إلى الموجز",
+        "effectiveAt": "ساري المفعول منذ"
     },
     "home": {
         "pageTitle": "موجز الأخبار",
@@ -132,7 +134,13 @@
             "signInPrompt": "يُرجى تسجيل الدخول لمشاركة المنشورات والانضمام إلى النقاش.",
             "discardTitle": "تجاهل المسودة غير المحفوظة؟",
             "discardDescription": "سيتم حذف مسودة المنشور غير المحفوظة نهائياً.",
-            "discardConfirm": "تجاهل المسودة"
+            "discardConfirm": "تجاهل المسودة",
+            "addImage": "صورة",
+            "addLink": "رابط",
+            "addPoll": "استطلاع",
+            "discardDraftConfirm": "تجاهل",
+            "discardDraftDesc": "سيتم مسح النص أو الصور أو خيارات الاستطلاع غير المحفوظة.",
+            "discardDraftTitle": "هل تريد تجاهل مسودة المنشور؟"
         },
         "empty": {
             "title": "استكشف مجتمع {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 ساعة",
             "duration3d": "3 أيام",
             "duration7d": "7 أيام"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — مرّر المؤشر أو اضغط مطولًا لاختيار تفاعل",
+        "reactionTriggerHint": "مرّر المؤشر أو اضغط مطولًا للتفاعلات",
+        "shareAction": "مشاركة",
+        "sharesExact": "{count} مشاركة",
+        "viewsExact": "{count} مشاهدة"
     },
     "profile": {
         "postsTab": "المنشورات",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "التصفية حسب الوسم",
         "clearFilter": "مسح التصفية",
         "emptyTitle": "لا توجد نتائج مطابقة",
-        "emptyDescription": "جرّب كلمة مفتاحية أخرى أو عبارة بحث أقصر."
+        "emptyDescription": "جرّب كلمة مفتاحية أخرى أو عبارة بحث أقصر.",
+        "clearHistory": "مسح",
+        "errorLoadFailed": "تعذّر تحميل نتائج البحث حاليًا. يُرجى المحاولة مرة أخرى.",
+        "exploreCategories": "تصفّح حسب الفئة",
+        "exploreHeading": "استكشف SyncViet",
+        "exploreMore": "اكتشف المواضيع والمجتمعات النشطة",
+        "exploreSubtitle": "اكتشف النقاشات والمجتمعات النشطة والمواضيع والأصوات المميزة.",
+        "exploreTitle": "استكشاف",
+        "featuredPosts": "نقاشات مميزة",
+        "filterTabsLabel": "فئات نتائج البحث",
+        "latestPosts": "أحدث المنشورات",
+        "noResultsForQuery": "لم يتم العثور على نتائج لـ \"{query}\"",
+        "noResultsTips": "تحقق من الإملاء، أو جرّب كلمات أقل، أو استكشف المواضيع النشطة أدناه.",
+        "notableAccounts": "أشخاص يُنصح باكتشافهم",
+        "recentSearches": "عمليات البحث الأخيرة",
+        "recommendationsHeading": "قد يعجبك استكشافه",
+        "resultsTitle": "بحث: {query}",
+        "suggestedCommunities": "مجتمعات يمكنك الانضمام إليها",
+        "suggestionsLabel": "اقتراحات البحث",
+        "tabs": {
+            "all": "الكل",
+            "communities": "المجتمعات",
+            "posts": "المنشورات",
+            "topics": "المواضيع",
+            "users": "الأشخاص"
+        },
+        "topicsOfInterest": "مواضيع قد تهمك",
+        "viewAll": "عرض الكل"
     },
     "sidebar": {
         "communityTitle": "المجتمع العالمي",
@@ -888,7 +928,9 @@
                 "ads": "محرك الإعلانات",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "يحجب وضع الصيانة زيارات غير المشرفين برمز HTTP 503 مع إبقاء وصول الإدارة نشطًا."
+            "maintenanceWarning": "يحجب وضع الصيانة زيارات غير المشرفين برمز HTTP 503 مع إبقاء وصول الإدارة نشطًا.",
+            "brandingAssetsHint": "ارفع شعارات العلامة التجارية والأيقونة المفضلة (Favicon) وصورة Open Graph الافتراضية مباشرة من جهازك.",
+            "brandingAssetsTitle": "الأصول المرئية للعلامة التجارية وSEO"
         },
         "notifications": {
             "title": "مركز إشعارات الإدارة",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "المقترح: {action} ({status})",
             "acknowledge": "إقرار بالاطلاع",
             "dismiss": "تجاهل"
+        },
+        "cms": {
+            "allStatuses": "جميع الحالات",
+            "allTypes": "جميع أنواع الصفحات",
+            "canonicalUrlLabel": "رابط URL الأساسي Canonical (اختياري)",
+            "changeNoteLabel": "ملاحظة التعديل (اختياري)",
+            "changeNotePlaceholder": "صف باختصار ما تغيّر في هذا الإصدار...",
+            "contactInfoLabel": "سطر معلومات التواصل",
+            "contactInfoPlaceholder": "مثال: الدعم العالمي · الإثنين–الجمعة",
+            "copyrightLabel": "سطر حقوق النشر المخصص (اختياري)",
+            "createPage": "إنشاء صفحة",
+            "createPageHint": "تبدأ صفحات CMS الجديدة كمسودات وتبقى مخفية حتى تقوم بنشرها.",
+            "deleteLinkConfirmDesc": "هل تريد إزالة \"{label}\" من التذييل؟ لا يمكن التراجع عن هذا الإجراء.",
+            "effectiveAtLabel": "تاريخ السريان",
+            "footerBrandingHeading": "تواصل الدعم وهوية التذييل",
+            "footerBrandingHint": "تُعرض عناوين الدعم الحقيقية وغير الوهمية فقط للعامة. اتركه فارغًا للإخفاء.",
+            "indexEligibleLabel": "السماح لمحركات البحث بفهرسة هذه الصفحة المنشورة",
+            "inlineImageInserted": "تم رفع الصورة وإدراجها في المحتوى.",
+            "insertImage": "إدراج صورة",
+            "insertImageHint": "ارفع صورة من جهازك. تم تعطيل روابط الصور الخارجية المباشرة لأسباب أمنية.",
+            "languageSelectorLabel": "لغة التحرير (النقطة الخضراء تشير إلى النسخة المنشورة)",
+            "liveFooterPreview": "معاينة مباشرة للتذييل المختصر",
+            "localesCount": "{count} لغة",
+            "metaDescriptionLabel": "وصف SEO التعريفي (Meta Description)",
+            "noRevisions": "لم يُسجَّل أي سجل مراجعات بعد. احفظ التغييرات لإنشاء أول نسخة محفوظة.",
+            "ogImageHint": "يُوصى بصورة بأبعاد 1200×630 بصيغة JPG أو PNG أو WebP من جهازك.",
+            "ogImageLabel": "صورة المشاركة الاجتماعية (Open Graph)",
+            "pageTypeLabel": "نوع الصفحة",
+            "pageTypes": {
+                "business": "الأعمال",
+                "company": "الشركة",
+                "general": "عام",
+                "legal": "قانوني",
+                "support": "الدعم"
+            },
+            "placementLabel": "موضع الظهور في التذييل",
+            "placementMain": "الشريط الرئيسي",
+            "placementMore": "قائمة المزيد",
+            "previewToggle": "معاينة",
+            "removeOgImage": "إزالة صورة Open Graph الحالية عند الحفظ",
+            "restoreConfirmDesc": "هل تريد استعادة المحتوى من الإصدار v{version}؟ سيبقى المحتوى الحالي محفوظًا بأمان في السجل.",
+            "restoreConfirmTitle": "استعادة إصدار سابق",
+            "restoreVersion": "استعادة",
+            "saveFooterBranding": "حفظ هوية التذييل",
+            "saveSeoSettings": "حفظ إعدادات SEO",
+            "saveTranslation": "حفظ الترجمة",
+            "searchPagesPlaceholder": "تصفية الصفحات حسب العنوان أو المسار (slug)...",
+            "seoTitleLabel": "عنوان SEO مخصص",
+            "serpPreviewTitle": "معاينة نتيجة البحث",
+            "slugLabel": "المسار المختصر للرابط (URL slug)",
+            "statusArchived": "مؤرشفة",
+            "subTabs": {
+                "content": "المحتوى واللغات",
+                "revisions": "السجل ({count})",
+                "seo": "SEO والشبكات الاجتماعية"
+            },
+            "supportEmailLabel": "بريد الدعم الإلكتروني العام",
+            "tabs": {
+                "footer": "التذييل والتواصل ({count})",
+                "pages": "صفحات CMS ({count})"
+            },
+            "translationContentLabel": "محتوى HTML المترجم",
+            "translationHint": "نشر هذه الترجمة للغة {locale} يفعّل المسار {path} مع وسوم hreflang المتبادلة.",
+            "translationSummaryLabel": "الملخص المترجم",
+            "translationTitleLabel": "العنوان المترجم",
+            "uploadAndInsert": "رفع وإدراج"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "تعطيل",
         "extra": {
             "userFallback": "مستخدم"
-        }
+        },
+        "next": "التالي",
+        "previous": "السابق"
     },
     "pwa": {
         "installApp": "تثبيت تطبيق SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "عرض رموز الاسترداد"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "قريبًا",
+        "modal": {
+            "attachmentsLabel": "إضافة إلى منشورك",
+            "continueEditing": "متابعة التحرير",
+            "insertEmoji": "إدراج رمز تعبيري",
+            "insertHashtag": "إضافة وسم (هاشتاغ)",
+            "personalizedPlaceholder": "بمَ تفكر يا {name}؟",
+            "resumeDraftPrompt": "لديك مسودة غير محفوظة جاهزة للمتابعة.",
+            "title": "إنشاء منشور"
+        },
+        "videoComingSoonTooltip": "نشر الفيديو قادم قريبًا"
+    },
+    "upload": {
+        "addCover": "إضافة صورة غلاف",
+        "admin": {
+            "healthLabel": "سياسة رفع الصور وبيئة تشغيل PHP",
+            "mismatchBadge": "محدود بـ {effective} ميجابايت",
+            "readyBadge": "جاهز (أقل من {max} ميجابايت)",
+            "runtimeMismatch": "تسمح سياسة الرفع في التطبيق حتى {policy} ميجابايت، لكن قيود PHP على الخادم تحدّ الرفع حاليًا عند {effective} ميجابايت.",
+            "runtimeReady": "تدعم حدود PHP على الخادم سياسة رفع الصور بالكامل (أقل من {max} ميجابايت)."
+        },
+        "altTextLabel": "النص البديل (إمكانية الوصول)",
+        "altTextPlaceholder": "صف هذه الصورة باختصار (اختياري)",
+        "applyCrop": "تطبيق القص",
+        "avatarHint": "JPG أو PNG أو WebP من جهازك · أقل من {max} ميجابايت · قص بنسبة 1:1",
+        "cancelUpload": "إلغاء",
+        "changeAvatar": "تغيير الصورة الشخصية",
+        "changeCover": "تغيير صورة الغلاف",
+        "chooseImage": "اختيار صورة من الجهاز",
+        "cropAvatarTitle": "قص الصورة الشخصية",
+        "cropCoverTitle": "ضبط موضع صورة الغلاف",
+        "currentImage": "الصورة الحالية",
+        "currentImageAlt": "الصورة المرفوعة حاليًا",
+        "dragToReposition": "اسحب الصورة لضبط الإطار",
+        "dropOrBrowse": "اسحب صورة وأفلتها هنا، أو اخترها من جهازك",
+        "errors": {
+            "failed": "تعذّر رفع الصورة. يُرجى المحاولة مرة أخرى.",
+            "fileTooLargeWithSize": "حجم الملف المحدد هو {size} ميجابايت. يُرجى اختيار صورة أصغر من {max} ميجابايت.",
+            "maxSize": "يجب أن يكون حجم ملف الصورة أصغر من {max} ميجابايت.",
+            "tooManyFiles": "يمكنك إرفاق {max} صور كحد أقصى.",
+            "totalSizeExceeded": "يتجاوز إجمالي حجم الصور المحددة الحد الأقصى للطلب البالغ {max} ميجابايت.",
+            "unsupportedFormat": "صيغة غير مدعومة. يُرجى اختيار صورة بصيغة JPG أو PNG أو WebP.",
+            "uploadFailed": "فشل الرفع. يُرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+            "videoComingSoon": "ميزة رفع الفيديو قادمة قريبًا. يُرجى اختيار صورة بصيغة JPG أو PNG أو WebP."
+        },
+        "fileCountProgress": "{current}/{max} صور",
+        "formatsAndLimit": "JPG، PNG، WebP · أصغر من {max} ميجابايت",
+        "moveNext": "تحريك لليمين",
+        "movePrev": "تحريك لليسار",
+        "ownershipPolicyNotice": "ارفع فقط الصور التي تملكها أو لديك إذن بمشاركتها.",
+        "previewAlt": "معاينة الصورة المحددة",
+        "removeCover": "إزالة الغلاف",
+        "removeImage": "إزالة الصورة",
+        "replaceImage": "استبدال الصورة",
+        "resetCrop": "إعادة تعيين",
+        "retry": "إعادة المحاولة",
+        "title": "رفع صورة",
+        "uploadCancelled": "تم إلغاء الرفع.",
+        "uploading": "جارٍ الرفع...",
+        "zoomLabel": "التكبير"
     }
 }

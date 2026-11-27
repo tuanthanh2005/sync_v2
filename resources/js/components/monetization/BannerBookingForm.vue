@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { router, useForm } from '@inertiajs/vue3';
-import { CheckCircle2, Upload } from '@lucide/vue';
-import { computed, ref } from 'vue';
+import { CheckCircle2 } from '@lucide/vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PaymentConfirmModal from '@/components/monetization/PaymentConfirmModal.vue';
 import PendingLimitModal from '@/components/monetization/PendingLimitModal.vue';
+import ImageUploader from '@/components/upload/ImageUploader.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,7 +27,6 @@ const props = defineProps<{
 const { t, locale } = useI18n();
 
 const urlPlaceholder = 'https://example.com';
-const optionalUrlPlaceholder = 'https://example.com/banner.png';
 
 const durationDays = ref<number>(7);
 const previewMode = ref<'desktop' | 'mobile'>('desktop');
@@ -80,22 +80,49 @@ const bookingForm = useForm({
     confirmed: true,
     desktop_image: null as File | null,
     mobile_image: null as File | null,
-    desktop_image_url: '',
-    mobile_image_url: '',
 });
 
 const previewImageSrc = computed(() => {
     if (previewMode.value === 'desktop') {
-        return desktopPreviewUrl.value || bookingForm.desktop_image_url || '';
+        return desktopPreviewUrl.value || '';
     }
 
-    return (
-        mobilePreviewUrl.value ||
-        bookingForm.mobile_image_url ||
-        desktopPreviewUrl.value ||
-        bookingForm.desktop_image_url ||
-        ''
-    );
+    return mobilePreviewUrl.value || desktopPreviewUrl.value || '';
+});
+
+watch(
+    () => bookingForm.desktop_image,
+    (file) => {
+        if (desktopPreviewUrl.value) {
+            URL.revokeObjectURL(desktopPreviewUrl.value);
+            desktopPreviewUrl.value = null;
+        }
+        if (file instanceof File) {
+            desktopPreviewUrl.value = URL.createObjectURL(file);
+        }
+    },
+);
+
+watch(
+    () => bookingForm.mobile_image,
+    (file) => {
+        if (mobilePreviewUrl.value) {
+            URL.revokeObjectURL(mobilePreviewUrl.value);
+            mobilePreviewUrl.value = null;
+        }
+        if (file instanceof File) {
+            mobilePreviewUrl.value = URL.createObjectURL(file);
+        }
+    },
+);
+
+onBeforeUnmount(() => {
+    if (desktopPreviewUrl.value) {
+        URL.revokeObjectURL(desktopPreviewUrl.value);
+    }
+    if (mobilePreviewUrl.value) {
+        URL.revokeObjectURL(mobilePreviewUrl.value);
+    }
 });
 
 const previewAlt = computed(() => bookingForm.alt_text || 'Preview');
@@ -110,18 +137,6 @@ const previewCta = computed(
     () => bookingForm.cta_label || t('monetization.banner.ctaPlaceholder'),
 );
 const selectedMethodUpper = computed(() => bookingForm.provider.toUpperCase());
-
-function handleFile(kind: 'desktop' | 'mobile', event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0] ?? null;
-    if (kind === 'desktop') {
-        bookingForm.desktop_image = file;
-        desktopPreviewUrl.value = file ? URL.createObjectURL(file) : null;
-    } else {
-        bookingForm.mobile_image = file;
-        mobilePreviewUrl.value = file ? URL.createObjectURL(file) : null;
-    }
-}
 
 function openBookingConfirm(): void {
     if (!props.isAuthenticated) {
@@ -339,65 +354,39 @@ function submitBooking(): void {
                 </div>
 
                 <div class="grid gap-3 sm:grid-cols-2">
-                    <div
-                        class="space-y-2 rounded-xl border border-dashed border-border p-3"
-                    >
-                        <Label
-                            for="banner-desktop-file"
-                            class="flex items-center gap-1.5 text-xs"
-                        >
-                            <Upload class="size-3.5 text-primary" />
-                            <span>{{
-                                t('monetization.banner.desktopImage')
-                            }}</span>
-                        </Label>
-                        <input
-                            id="banner-desktop-file"
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            class="w-full text-xs"
-                            @change="handleFile('desktop', $event)"
-                        />
-                        <Input
-                            v-model="bookingForm.desktop_image_url"
-                            type="url"
-                            :placeholder="optionalUrlPlaceholder"
-                            class="text-xs"
-                        />
-                        <InputError
-                            :message="bookingForm.errors.desktop_image"
-                        />
-                    </div>
+                    <ImageUploader
+                        :model-value="bookingForm.desktop_image"
+                        context="banner"
+                        compact
+                        :label="t('monetization.banner.desktopImage')"
+                        :uploading="bookingForm.processing"
+                        :progress="bookingForm.progress?.percentage ?? null"
+                        :external-error="bookingForm.errors.desktop_image"
+                        :show-ownership-notice="false"
+                        @update:model-value="
+                            (val) =>
+                                (bookingForm.desktop_image = Array.isArray(val)
+                                    ? (val[0] ?? null)
+                                    : val)
+                        "
+                    />
 
-                    <div
-                        class="space-y-2 rounded-xl border border-dashed border-border p-3"
-                    >
-                        <Label
-                            for="banner-mobile-file"
-                            class="flex items-center gap-1.5 text-xs"
-                        >
-                            <Upload class="size-3.5 text-primary" />
-                            <span>{{
-                                t('monetization.banner.mobileImage')
-                            }}</span>
-                        </Label>
-                        <input
-                            id="banner-mobile-file"
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            class="w-full text-xs"
-                            @change="handleFile('mobile', $event)"
-                        />
-                        <Input
-                            v-model="bookingForm.mobile_image_url"
-                            type="url"
-                            :placeholder="optionalUrlPlaceholder"
-                            class="text-xs"
-                        />
-                        <InputError
-                            :message="bookingForm.errors.mobile_image"
-                        />
-                    </div>
+                    <ImageUploader
+                        :model-value="bookingForm.mobile_image"
+                        context="banner"
+                        compact
+                        :label="t('monetization.banner.mobileImage')"
+                        :uploading="bookingForm.processing"
+                        :progress="bookingForm.progress?.percentage ?? null"
+                        :external-error="bookingForm.errors.mobile_image"
+                        :show-ownership-notice="false"
+                        @update:model-value="
+                            (val) =>
+                                (bookingForm.mobile_image = Array.isArray(val)
+                                    ? (val[0] ?? null)
+                                    : val)
+                        "
+                    />
                 </div>
 
                 <Button

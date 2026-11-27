@@ -13,6 +13,8 @@ use App\Notifications\SocialActivityNotification;
 use App\Services\Growth\EarlyMemberAndBadgeService;
 use App\Services\Media\SafeImageUploadService;
 use App\Services\Notification\NotificationService;
+use App\Services\Security\AuditLogger;
+use App\Services\System\SystemSettingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -23,6 +25,8 @@ class ProfileService
         private readonly FeedService $feedService,
         private readonly SafeImageUploadService $imageUploadService,
         private readonly NotificationService $notificationService,
+        private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
     ) {}
 
     public function getOrCreateProfile(User $user): Profile
@@ -152,7 +156,14 @@ class ProfileService
     }
 
     /**
-     * @param  array{headline?: string|null, bio?: string|null, location?: string|null, website_url?: string|null}  $data
+     * @param  array{
+     *     headline?: string|null,
+     *     bio?: string|null,
+     *     location?: string|null,
+     *     website_url?: string|null,
+     *     remove_avatar?: bool,
+     *     remove_cover?: bool
+     * }  $data
      */
     public function updateDetails(
         User $user,
@@ -160,41 +171,90 @@ class ProfileService
         ?UploadedFile $avatar = null,
         ?UploadedFile $cover = null,
     ): Profile {
+        if (($avatar !== null || $cover !== null) && ! $this->settings->featureEnabled('feature_image_upload')) {
+            throw ValidationException::withMessages([
+                $avatar !== null ? 'avatar' : 'cover' => [__('Image uploads are currently disabled.')],
+            ]);
+        }
+
         $profile = $this->getOrCreateProfile($user);
 
-        $newAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'avatars') : null;
-        $newCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'covers') : null;
+        $newAvatar = null;
+        $newCover = null;
 
-        $oldAvatarDisk = $profile->avatar_disk;
-        $oldAvatarPath = $profile->avatar_path;
-        $oldCoverDisk = $profile->cover_disk;
-        $oldCoverPath = $profile->cover_path;
+        try {
+            $newAvatar = $avatar !== null ? $this->imageUploadService->storeImage($avatar, 'avatars', 'avatar', 'avatar') : null;
+            $newCover = $cover !== null ? $this->imageUploadService->storeImage($cover, 'covers', 'cover', 'cover') : null;
 
-        $profile->fill([
-            'headline' => isset($data['headline']) && trim($data['headline']) !== '' ? trim($data['headline']) : null,
-            'bio' => isset($data['bio']) && trim($data['bio']) !== '' ? trim($data['bio']) : null,
-            'location' => isset($data['location']) && trim($data['location']) !== '' ? trim($data['location']) : null,
-            'website_url' => isset($data['website_url']) && trim($data['website_url']) !== '' ? trim($data['website_url']) : null,
-        ]);
+            $removeAvatar = $newAvatar === null && filter_var($data['remove_avatar'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $removeCover = $newCover === null && filter_var($data['remove_cover'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
-        if ($newAvatar !== null) {
-            $profile->avatar_disk = $newAvatar['disk'];
-            $profile->avatar_path = $newAvatar['path'];
-        }
+            $oldAvatarDisk = $profile->avatar_disk;
+            $oldAvatarPath = $profile->avatar_path;
+            $oldCoverDisk = $profile->cover_disk;
+            $oldCoverPath = $profile->cover_path;
 
-        if ($newCover !== null) {
-            $profile->cover_disk = $newCover['disk'];
-            $profile->cover_path = $newCover['path'];
-        }
+            $profile->fill([
+                'headline' => isset($data['headline']) && trim($data['headline']) !== '' ? trim($data['headline']) : null,
+                'bio' => isset($data['bio']) && trim($data['bio']) !== '' ? trim($data['bio']) : null,
+                'location' => isset($data['location']) && trim($data['location']) !== '' ? trim($data['location']) : null,
+                'website_url' => isset($data['website_url']) && trim($data['website_url']) !== '' ? trim($data['website_url']) : null,
+            ]);
 
-        $profile->save();
+            if ($newAvatar !== null) {
+                $profile->avatar_disk = $newAvatar['disk'];
+                $profile->avatar_path = $newAvatar['path'];
+            } elseif ($removeAvatar) {
+                $profile->avatar_disk = null;
+                $profile->avatar_path = null;
+            }
 
-        if ($newAvatar !== null) {
-            $this->imageUploadService->deleteIfExists($oldAvatarDisk, $oldAvatarPath);
-        }
+            if ($newCover !== null) {
+                $profile->cover_disk = $newCover['disk'];
+                $profile->cover_path = $newCover['path'];
+            } elseif ($removeCover) {
+                $profile->cover_disk = null;
+                $profile->cover_path = null;
+            }
 
-        if ($newCover !== null) {
-            $this->imageUploadService->deleteIfExists($oldCoverDisk, $oldCoverPath);
+            $profile->save();
+
+            if ($newAvatar !== null || $removeAvatar) {
+                $this->imageUploadService->deleteIfExists($oldAvatarDisk, $oldAvatarPath);
+                $this->auditLogger->log(
+                    $newAvatar !== null ? 'profile.avatar_updated' : 'profile.avatar_removed',
+                    $profile,
+                    [
+                        'user_id' => $user->id,
+                        'path' => $newAvatar['path'] ?? null,
+                        'size_bytes' => $newAvatar['size_bytes'] ?? null,
+                    ],
+                    $user,
+                );
+            }
+
+            if ($newCover !== null || $removeCover) {
+                $this->imageUploadService->deleteIfExists($oldCoverDisk, $oldCoverPath);
+                $this->auditLogger->log(
+                    $newCover !== null ? 'profile.cover_updated' : 'profile.cover_removed',
+                    $profile,
+                    [
+                        'user_id' => $user->id,
+                        'path' => $newCover['path'] ?? null,
+                        'size_bytes' => $newCover['size_bytes'] ?? null,
+                    ],
+                    $user,
+                );
+            }
+        } catch (\Throwable $exception) {
+            if ($newAvatar !== null) {
+                $this->imageUploadService->deleteIfExists($newAvatar['disk'], $newAvatar['path']);
+            }
+            if ($newCover !== null) {
+                $this->imageUploadService->deleteIfExists($newCover['disk'], $newCover['path']);
+            }
+
+            throw $exception;
         }
 
         return $profile;

@@ -79,14 +79,16 @@
         "mobileSectionTitle": "Informações e termos legais",
         "openInNewTab": "Abre em uma nova aba",
         "noPublishedLinks": "Links de informações e políticas aparecerão aqui em breve.",
-        "supportContact": "Suporte"
+        "supportContact": "Suporte",
+        "more": "Mais"
     },
     "policy": {
         "draftBadge": "Rascunho (pré-visualização somente para administradores)",
         "publishedBadge": "Publicado",
         "updatedAt": "Última atualização",
         "emptyContent": "Este documento ainda não foi publicado.",
-        "backHome": "Voltar ao início"
+        "backHome": "Voltar ao início",
+        "effectiveAt": "Vigente em"
     },
     "home": {
         "pageTitle": "Feed de notícias",
@@ -132,7 +134,13 @@
             "signInPrompt": "Entre na sua conta para publicar e participar da discussão.",
             "discardTitle": "Descartar rascunho não salvo?",
             "discardDescription": "Seu rascunho não salvo será excluído permanentemente.",
-            "discardConfirm": "Descartar rascunho"
+            "discardConfirm": "Descartar rascunho",
+            "addImage": "Foto",
+            "addLink": "Link",
+            "addPoll": "Enquete",
+            "discardDraftConfirm": "Descartar",
+            "discardDraftDesc": "Seu texto, fotos ou opções de enquete não salvos serão apagados.",
+            "discardDraftTitle": "Descartar rascunho da publicação?"
         },
         "empty": {
             "title": "Explore a comunidade {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 horas",
             "duration3d": "3 dias",
             "duration7d": "7 dias"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — passe o cursor ou segure para escolher uma reação",
+        "reactionTriggerHint": "Passe o cursor ou segure para reagir",
+        "shareAction": "Compartilhar",
+        "sharesExact": "{count} compartilhamentos",
+        "viewsExact": "{count} visualizações"
     },
     "profile": {
         "postsTab": "Publicações",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "Filtrando por hashtag",
         "clearFilter": "Limpar filtro",
         "emptyTitle": "Nenhum resultado encontrado",
-        "emptyDescription": "Tente outra palavra-chave ou uma busca mais curta."
+        "emptyDescription": "Tente outra palavra-chave ou uma busca mais curta.",
+        "clearHistory": "Limpar",
+        "errorLoadFailed": "Não foi possível carregar os resultados da pesquisa agora. Por favor, tente novamente.",
+        "exploreCategories": "Navegar por categoria",
+        "exploreHeading": "Explorar o SyncViet",
+        "exploreMore": "Descubra tópicos e comunidades ativas",
+        "exploreSubtitle": "Descubra conversas, comunidades ativas, tópicos e vozes de destaque.",
+        "exploreTitle": "Explorar",
+        "featuredPosts": "Discussões em destaque",
+        "filterTabsLabel": "Categorias de resultados da pesquisa",
+        "latestPosts": "Publicações mais recentes",
+        "noResultsForQuery": "Nenhum resultado encontrado para \"{query}\"",
+        "noResultsTips": "Verifique a ortografia, tente menos palavras ou explore os tópicos ativos abaixo.",
+        "notableAccounts": "Pessoas para descobrir",
+        "recentSearches": "Pesquisas recentes",
+        "recommendationsHeading": "Talvez você goste de explorar",
+        "resultsTitle": "Pesquisa: {query}",
+        "suggestedCommunities": "Comunidades para participar",
+        "suggestionsLabel": "Sugestões de pesquisa",
+        "tabs": {
+            "all": "Tudo",
+            "communities": "Comunidades",
+            "posts": "Publicações",
+            "topics": "Tópicos",
+            "users": "Pessoas"
+        },
+        "topicsOfInterest": "Tópicos de interesse",
+        "viewAll": "Ver tudo"
     },
     "sidebar": {
         "communityTitle": "Comunidade global",
@@ -888,7 +928,9 @@
                 "ads": "Motor de anúncios",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "O modo de manutenção bloqueia o tráfego de não colaboradores com HTTP 503 enquanto mantém o acesso de administrador ativo."
+            "maintenanceWarning": "O modo de manutenção bloqueia o tráfego de não colaboradores com HTTP 503 enquanto mantém o acesso de administrador ativo.",
+            "brandingAssetsHint": "Envie logotipos da marca, favicon e a imagem Open Graph padrão diretamente do seu dispositivo.",
+            "brandingAssetsTitle": "Recursos visuais de marca e SEO"
         },
         "notifications": {
             "title": "Central de notificações administrativas",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "Sugerido: {action} ({status})",
             "acknowledge": "Reconhecer",
             "dismiss": "Dispensar"
+        },
+        "cms": {
+            "allStatuses": "Todos os status",
+            "allTypes": "Todos os tipos de página",
+            "canonicalUrlLabel": "URL canônica (opcional)",
+            "changeNoteLabel": "Nota de revisão (opcional)",
+            "changeNotePlaceholder": "Descreva brevemente o que mudou nesta versão...",
+            "contactInfoLabel": "Linha de informações de contato",
+            "contactInfoPlaceholder": "ex.: Suporte global · Seg–Sex",
+            "copyrightLabel": "Linha de direitos autorais personalizada (opcional)",
+            "createPage": "Criar página",
+            "createPageHint": "Novas páginas CMS começam como rascunhos e permanecem ocultas até que você as publique.",
+            "deleteLinkConfirmDesc": "Remover \"{label}\" do rodapé? Esta ação não pode ser desfeita.",
+            "effectiveAtLabel": "Data de vigência",
+            "footerBrandingHeading": "Contato de suporte e identidade do rodapé",
+            "footerBrandingHint": "Apenas endereços de suporte reais (não fictícios) são exibidos publicamente. Deixe em branco para ocultar.",
+            "indexEligibleLabel": "Permitir que mecanismos de busca indexem esta página publicada",
+            "inlineImageInserted": "Imagem enviada e inserida no conteúdo.",
+            "insertImage": "Inserir imagem",
+            "insertImageHint": "Envie uma imagem do seu dispositivo. Links diretos de imagens externas são desativados por segurança.",
+            "languageSelectorLabel": "Idioma de edição (o ponto verde indica texto publicado)",
+            "liveFooterPreview": "Pré-visualização ao vivo do rodapé compacto",
+            "localesCount": "{count} idiomas",
+            "metaDescriptionLabel": "Meta descrição de SEO",
+            "noRevisions": "Nenhum histórico de revisões registrado ainda. Salve as alterações para criar o primeiro registro.",
+            "ogImageHint": "Recomendado 1200×630 em JPG, PNG ou WebP do seu dispositivo.",
+            "ogImageLabel": "Imagem de compartilhamento social (Open Graph)",
+            "pageTypeLabel": "Tipo de página",
+            "pageTypes": {
+                "business": "Negócios",
+                "company": "Empresa",
+                "general": "Geral",
+                "legal": "Jurídico",
+                "support": "Suporte"
+            },
+            "placementLabel": "Posição no rodapé",
+            "placementMain": "Barra principal",
+            "placementMore": "Menu Mais",
+            "previewToggle": "Pré-visualizar",
+            "removeOgImage": "Remover a imagem Open Graph atual ao salvar",
+            "restoreConfirmDesc": "Restaurar o conteúdo da versão v{version}? O conteúdo atual permanecerá salvo com segurança no histórico.",
+            "restoreConfirmTitle": "Restaurar versão anterior",
+            "restoreVersion": "Restaurar",
+            "saveFooterBranding": "Salvar configurações do rodapé",
+            "saveSeoSettings": "Salvar configurações de SEO",
+            "saveTranslation": "Salvar tradução",
+            "searchPagesPlaceholder": "Filtrar páginas por título ou slug...",
+            "seoTitleLabel": "Título de SEO personalizado",
+            "serpPreviewTitle": "Pré-visualização nos resultados de busca",
+            "slugLabel": "Slug da URL",
+            "statusArchived": "Arquivada",
+            "subTabs": {
+                "content": "Conteúdo e idiomas",
+                "revisions": "Histórico ({count})",
+                "seo": "SEO e redes sociais"
+            },
+            "supportEmailLabel": "E-mail de suporte público",
+            "tabs": {
+                "footer": "Rodapé e contato ({count})",
+                "pages": "Páginas CMS ({count})"
+            },
+            "translationContentLabel": "Conteúdo HTML traduzido",
+            "translationHint": "Publicar esta tradução ({locale}) ativa {path} com tags hreflang recíprocas.",
+            "translationSummaryLabel": "Resumo traduzido",
+            "translationTitleLabel": "Título traduzido",
+            "uploadAndInsert": "Enviar e inserir"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "Desativar",
         "extra": {
             "userFallback": "Usuário"
-        }
+        },
+        "next": "Próximo",
+        "previous": "Anterior"
     },
     "pwa": {
         "installApp": "Instalar aplicativo SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "Ver códigos de recuperação"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "Em breve",
+        "modal": {
+            "attachmentsLabel": "Adicionar à sua publicação",
+            "continueEditing": "Continuar editando",
+            "insertEmoji": "Inserir emoji",
+            "insertHashtag": "Adicionar hashtag",
+            "personalizedPlaceholder": "No que você está pensando, {name}?",
+            "resumeDraftPrompt": "Você tem um rascunho não salvo pronto para continuar.",
+            "title": "Criar publicação"
+        },
+        "videoComingSoonTooltip": "A publicação de vídeos estará disponível em breve"
+    },
+    "upload": {
+        "addCover": "Adicionar foto de capa",
+        "admin": {
+            "healthLabel": "Política de envio de imagens e runtime PHP",
+            "mismatchBadge": "Limitado a {effective} MB",
+            "readyBadge": "Pronto (< {max} MB)",
+            "runtimeMismatch": "A política de envio do aplicativo permite até {policy} MB, mas os limites de PHP do servidor atualmente restringem os envios a {effective} MB.",
+            "runtimeReady": "Os limites de PHP do servidor suportam totalmente a política de envio de imagens (< {max} MB)."
+        },
+        "altTextLabel": "Texto alternativo (acessibilidade)",
+        "altTextPlaceholder": "Descreva brevemente esta imagem (opcional)",
+        "applyCrop": "Aplicar recorte",
+        "avatarHint": "JPG, PNG ou WebP do seu dispositivo · Menor que {max} MB · Recorte 1:1",
+        "cancelUpload": "Cancelar",
+        "changeAvatar": "Alterar avatar",
+        "changeCover": "Alterar capa",
+        "chooseImage": "Escolher imagem do dispositivo",
+        "cropAvatarTitle": "Recortar foto de perfil",
+        "cropCoverTitle": "Reposicionar foto de capa",
+        "currentImage": "Imagem atual",
+        "currentImageAlt": "Imagem enviada atualmente",
+        "dragToReposition": "Arraste a imagem para ajustar o enquadramento",
+        "dropOrBrowse": "Arraste e solte uma imagem aqui ou escolha do seu dispositivo",
+        "errors": {
+            "failed": "Não foi possível enviar a imagem. Por favor, tente novamente.",
+            "fileTooLargeWithSize": "O arquivo selecionado tem {size} MB. Escolha uma imagem menor que {max} MB.",
+            "maxSize": "O tamanho do arquivo de imagem deve ser menor que {max} MB.",
+            "tooManyFiles": "Você pode anexar no máximo {max} imagens.",
+            "totalSizeExceeded": "O tamanho total das imagens selecionadas excede o limite de {max} MB por envio.",
+            "unsupportedFormat": "Formato não suportado. Selecione uma imagem JPG, PNG ou WebP.",
+            "uploadFailed": "Falha no envio. Verifique sua conexão e tente novamente.",
+            "videoComingSoon": "O envio de vídeos estará disponível em breve. Escolha uma imagem JPG, PNG ou WebP."
+        },
+        "fileCountProgress": "{current}/{max} imagens",
+        "formatsAndLimit": "JPG, PNG, WebP · Menor que {max} MB",
+        "moveNext": "Mover para a direita",
+        "movePrev": "Mover para a esquerda",
+        "ownershipPolicyNotice": "Envie apenas imagens de sua propriedade ou que você tenha permissão para compartilhar.",
+        "previewAlt": "Pré-visualização da imagem selecionada",
+        "removeCover": "Remover capa",
+        "removeImage": "Remover imagem",
+        "replaceImage": "Substituir imagem",
+        "resetCrop": "Redefinir",
+        "retry": "Tentar novamente",
+        "title": "Enviar imagem",
+        "uploadCancelled": "Envio cancelado.",
+        "uploading": "Enviando...",
+        "zoomLabel": "Zoom"
     }
 }

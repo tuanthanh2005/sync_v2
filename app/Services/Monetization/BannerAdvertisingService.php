@@ -149,18 +149,16 @@ class BannerAdvertisingService
 
         $desktopAsset = $this->resolveCreativeAsset(
             $desktopImage,
-            $data['desktop_image_url'] ?? null,
             'banners/desktop',
             'desktop_image',
         );
         $mobileAsset = $this->resolveCreativeAsset(
             $mobileImage,
-            $data['mobile_image_url'] ?? null,
             'banners/mobile',
             'mobile_image',
         );
         $logoAsset = $logoFile !== null
-            ? $this->imageUploadService->storeImage($logoFile, 'banners/logos')
+            ? $this->imageUploadService->storeImage($logoFile, 'banners/logos', 'branding', 'logo')
             : null;
 
         if ($desktopAsset === null && $mobileAsset === null) {
@@ -643,25 +641,18 @@ class BannerAdvertisingService
     }
 
     /**
-     * @return array{disk: string, path: string, mime_type: string, width: int, height: int, size_bytes: int}|null
+     * Strictly store banner creative files uploaded from the user's device.
+     * External image URL importing is disabled platform-wide.
+     *
+     * @return array{disk: string, path: string, thumbnail_path: string|null, mime_type: string, width: int, height: int, size_bytes: int}|null
      */
     private function resolveCreativeAsset(
         ?UploadedFile $file,
-        ?string $imageUrl,
         string $directory,
         string $errorField,
     ): ?array {
         if ($file !== null) {
-            return $this->imageUploadService->storeImage($file, $directory);
-        }
-
-        if (is_string($imageUrl) && trim($imageUrl) !== '') {
-            return $this->imageUploadService->importImageFromUrl(
-                trim($imageUrl),
-                $this->linkGuard,
-                $directory,
-                $errorField,
-            );
+            return $this->imageUploadService->storeImage($file, $directory, 'banner', $errorField);
         }
 
         return null;

@@ -186,6 +186,7 @@ class PostController extends Controller
          *     category?: string|null,
          *     visibility?: string|null,
          *     link_url?: string|null,
+         *     image_alts?: list<string|null>|null,
          *     poll_question?: string|null,
          *     poll_options?: list<string>|null,
          *     poll_duration_hours?: int|null

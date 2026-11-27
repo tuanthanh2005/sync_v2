@@ -507,17 +507,12 @@ function isItemActive(item: NavItem): boolean {
 
                             <!-- Mobile Drawer Footer Links & Controls -->
                             <div
-                                class="shrink-0 space-y-3 border-t border-border p-4"
+                                class="shrink-0 space-y-2.5 border-t border-border p-4"
                             >
-                                <p
-                                    class="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase"
-                                >
-                                    {{ t('footer.mobileSectionTitle') }}
-                                </p>
                                 <FooterLinkList
                                     v-if="footer.links.length > 0"
                                     :items="footer.links"
-                                    variant="inline"
+                                    variant="dots"
                                 />
                                 <div
                                     class="flex items-center justify-between pt-1"
@@ -527,6 +522,7 @@ function isItemActive(item: NavItem): boolean {
                                 </div>
                                 <p class="text-[11px] text-muted-foreground">
                                     {{
+                                        footer.copyrightText ||
                                         t('footer.copyright', {
                                             year: footer.year,
                                             brand: brandName,

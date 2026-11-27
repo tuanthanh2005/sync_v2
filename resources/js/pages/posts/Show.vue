@@ -154,7 +154,7 @@ function executeDeleteComment(): void {
             </Button>
         </div>
 
-        <PostCard :post="post" :truncate="false" />
+        <PostCard :post="post" :truncate="false" view-source="detail" />
 
         <!-- Subtle Guest Organic Conversion CTA -->
         <section

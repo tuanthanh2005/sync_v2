@@ -79,14 +79,16 @@
         "mobileSectionTitle": "법적 고지 및 안내",
         "openInNewTab": "새 탭에서 열기",
         "noPublishedLinks": "안내 및 정책 링크가 곧 이곳에 표시됩니다.",
-        "supportContact": "고객지원"
+        "supportContact": "고객지원",
+        "more": "더보기"
     },
     "policy": {
         "draftBadge": "초안 (관리자 미리보기 전용)",
         "publishedBadge": "게시됨",
         "updatedAt": "최종 업데이트",
         "emptyContent": "이 문서는 아직 게시되지 않았습니다.",
-        "backHome": "피드로 돌아가기"
+        "backHome": "피드로 돌아가기",
+        "effectiveAt": "시행일"
     },
     "home": {
         "pageTitle": "뉴스 피드",
@@ -132,7 +134,13 @@
             "signInPrompt": "게시물을 작성하고 토론에 참여하려면 로그인해 주세요.",
             "discardTitle": "저장하지 않은 초안을 삭제할까요?",
             "discardDescription": "저장되지 않은 게시물 초안이 영구적으로 삭제됩니다.",
-            "discardConfirm": "초안 삭제"
+            "discardConfirm": "초안 삭제",
+            "addImage": "사진",
+            "addLink": "링크",
+            "addPoll": "투표",
+            "discardDraftConfirm": "삭제",
+            "discardDraftDesc": "저장되지 않은 텍스트, 사진 또는 투표 선택지가 모두 삭제됩니다.",
+            "discardDraftTitle": "게시물 초안을 삭제할까요?"
         },
         "empty": {
             "title": "{brand} 커뮤니티를 둘러보세요",
@@ -176,7 +184,12 @@
             "duration24h": "24시간",
             "duration3d": "3일",
             "duration7d": "7일"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — 마우스를 올리거나 길게 눌러 반응 선택",
+        "reactionTriggerHint": "마우스를 올리거나 길게 눌러 반응 선택",
+        "shareAction": "공유",
+        "sharesExact": "공유 {count}회",
+        "viewsExact": "조회 {count}회"
     },
     "profile": {
         "postsTab": "게시물",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "해시태그로 필터링 중",
         "clearFilter": "필터 초기화",
         "emptyTitle": "일치하는 결과가 없습니다",
-        "emptyDescription": "다른 키워드나 더 짧은 검색어로 다시 시도해 보세요."
+        "emptyDescription": "다른 키워드나 더 짧은 검색어로 다시 시도해 보세요.",
+        "clearHistory": "지우기",
+        "errorLoadFailed": "지금은 검색 결과를 불러올 수 없습니다. 다시 시도해 주세요.",
+        "exploreCategories": "카테고리별 탐색",
+        "exploreHeading": "SyncViet 탐색",
+        "exploreMore": "활발한 주제와 커뮤니티를 발견해 보세요",
+        "exploreSubtitle": "다양한 토론, 활발한 커뮤니티, 주제 및 주목할 만한 멤버를 발견해 보세요.",
+        "exploreTitle": "탐색",
+        "featuredPosts": "추천 토론",
+        "filterTabsLabel": "검색 결과 카테고리",
+        "latestPosts": "최신 게시물",
+        "noResultsForQuery": "\"{query}\"에 대한 검색 결과가 없습니다",
+        "noResultsTips": "철자를 확인하거나 더 짧은 검색어를 시도해 보거나 아래의 활발한 주제를 탐색해 보세요.",
+        "notableAccounts": "주목할 만한 멤버",
+        "recentSearches": "최근 검색어",
+        "recommendationsHeading": "추천 탐색 콘텐츠",
+        "resultsTitle": "검색: {query}",
+        "suggestedCommunities": "추천 커뮤니티",
+        "suggestionsLabel": "추천 검색어",
+        "tabs": {
+            "all": "전체",
+            "communities": "커뮤니티",
+            "posts": "게시물",
+            "topics": "주제",
+            "users": "사람"
+        },
+        "topicsOfInterest": "관심 주제",
+        "viewAll": "모두 보기"
     },
     "sidebar": {
         "communityTitle": "글로벌 커뮤니티",
@@ -888,7 +928,9 @@
                 "ads": "광고 엔진",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "점검 모드를 활성화하면 관리자 접근은 유지하면서 일반 트래픽에 HTTP 503을 반환합니다."
+            "maintenanceWarning": "점검 모드를 활성화하면 관리자 접근은 유지하면서 일반 트래픽에 HTTP 503을 반환합니다.",
+            "brandingAssetsHint": "브랜드 로고, 파비콘 및 기본 Open Graph 이미지를 기기에서 직접 업로드하세요.",
+            "brandingAssetsTitle": "브랜드 및 SEO 시각 자산"
         },
         "notifications": {
             "title": "관리자 알림 센터",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "제안된 조치: {action} ({status})",
             "acknowledge": "확인",
             "dismiss": "무시"
+        },
+        "cms": {
+            "allStatuses": "모든 상태",
+            "allTypes": "모든 페이지 유형",
+            "canonicalUrlLabel": "표준 URL (선택 사항)",
+            "changeNoteLabel": "수정 메모 (선택 사항)",
+            "changeNotePlaceholder": "이 버전에서 변경된 내용을 간략히 설명해 주세요...",
+            "contactInfoLabel": "연락처 정보 문구",
+            "contactInfoPlaceholder": "예: 글로벌 지원 · 월–금",
+            "copyrightLabel": "사용자 지정 저작권 문구 (선택 사항)",
+            "createPage": "페이지 만들기",
+            "createPageHint": "새 CMS 페이지는 초안 상태로 시작되며 게시하기 전까지 숨겨집니다.",
+            "deleteLinkConfirmDesc": "푸터에서 \"{label}\" 항목을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+            "effectiveAtLabel": "시행일",
+            "footerBrandingHeading": "지원 연락처 및 푸터 브랜딩",
+            "footerBrandingHint": "실제 유효한 지원 이메일 주소만 공개 표시됩니다(예시용 도메인 제외). 숨기려면 비워 두세요.",
+            "indexEligibleLabel": "검색 엔진이 이 게시된 페이지를 색인하도록 허용",
+            "inlineImageInserted": "이미지를 업로드하고 콘텐츠에 삽입했습니다.",
+            "insertImage": "이미지 삽입",
+            "insertImageHint": "기기에서 이미지를 업로드해 주세요. 보안을 위해 외부 이미지 핫링크는 비활성화되어 있습니다.",
+            "languageSelectorLabel": "편집 언어 (초록색 점은 게시된 본문을 나타냅니다)",
+            "liveFooterPreview": "컴팩트 푸터 실시간 미리보기",
+            "localesCount": "{count}개 언어",
+            "metaDescriptionLabel": "SEO 메타 설명",
+            "noRevisions": "아직 수정 기록이 없습니다. 변경 사항을 저장하면 첫 번째 스냅샷이 생성됩니다.",
+            "ogImageHint": "기기에서 업로드하는 1200×630 JPG, PNG 또는 WebP 이미지를 권장합니다.",
+            "ogImageLabel": "소셜 공유 이미지 (Open Graph)",
+            "pageTypeLabel": "페이지 유형",
+            "pageTypes": {
+                "business": "비즈니스",
+                "company": "회사 정보",
+                "general": "일반",
+                "legal": "법적 고지",
+                "support": "고객지원"
+            },
+            "placementLabel": "푸터 표시 위치",
+            "placementMain": "기본 바",
+            "placementMore": "더보기 메뉴",
+            "previewToggle": "미리보기",
+            "removeOgImage": "저장 시 현재 Open Graph 이미지 제거",
+            "restoreConfirmDesc": "버전 v{version}의 콘텐츠를 복원하시겠습니까? 현재 콘텐츠는 기록에 안전하게 보관됩니다.",
+            "restoreConfirmTitle": "이전 버전 복원",
+            "restoreVersion": "복원",
+            "saveFooterBranding": "푸터 브랜딩 저장",
+            "saveSeoSettings": "SEO 설정 저장",
+            "saveTranslation": "번역 저장",
+            "searchPagesPlaceholder": "제목 또는 슬러그로 페이지 필터링...",
+            "seoTitleLabel": "사용자 지정 SEO 제목",
+            "serpPreviewTitle": "검색 결과 미리보기",
+            "slugLabel": "URL 슬러그",
+            "statusArchived": "보관됨",
+            "subTabs": {
+                "content": "콘텐츠 및 언어",
+                "revisions": "기록 ({count})",
+                "seo": "SEO 및 소셜"
+            },
+            "supportEmailLabel": "공개 지원 이메일",
+            "tabs": {
+                "footer": "푸터 및 연락처 ({count})",
+                "pages": "CMS 페이지 ({count})"
+            },
+            "translationContentLabel": "번역된 HTML 콘텐츠",
+            "translationHint": "이 {locale} 번역을 게시하면 상호 hreflang 태그와 함께 {path} 경로가 활성화됩니다.",
+            "translationSummaryLabel": "번역된 요약",
+            "translationTitleLabel": "번역된 제목",
+            "uploadAndInsert": "업로드 및 삽입"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "비활성화",
         "extra": {
             "userFallback": "사용자"
-        }
+        },
+        "next": "다음",
+        "previous": "이전"
     },
     "pwa": {
         "installApp": "SyncViet 앱 설치"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "복구 코드 보기"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "출시 예정",
+        "modal": {
+            "attachmentsLabel": "게시물에 추가",
+            "continueEditing": "계속 편집",
+            "insertEmoji": "이모지 삽입",
+            "insertHashtag": "해시태그 추가",
+            "personalizedPlaceholder": "{name}님, 무슨 생각을 하고 계신가요?",
+            "resumeDraftPrompt": "저장되지 않은 초안이 있습니다. 이어서 작성할 수 있습니다.",
+            "title": "게시물 작성"
+        },
+        "videoComingSoonTooltip": "동영상 게시 기능은 곧 출시됩니다"
+    },
+    "upload": {
+        "addCover": "커버 사진 추가",
+        "admin": {
+            "healthLabel": "이미지 업로드 정책 및 PHP 런타임",
+            "mismatchBadge": "{effective} MB로 제한됨",
+            "readyBadge": "준비됨 ({max} MB 미만)",
+            "runtimeMismatch": "앱 업로드 정책은 최대 {policy} MB까지 허용하지만, 서버 PHP 제한으로 인해 현재 업로드가 {effective} MB로 제한됩니다.",
+            "runtimeReady": "서버 PHP 제한이 이미지 업로드 정책({max} MB 미만)을 완벽하게 지원합니다."
+        },
+        "altTextLabel": "대체 텍스트 (접근성)",
+        "altTextPlaceholder": "이미지를 간략히 설명해 주세요 (선택 사항)",
+        "applyCrop": "자르기 적용",
+        "avatarHint": "기기의 JPG, PNG 또는 WebP · {max} MB 미만 · 1:1 비율 자르기",
+        "cancelUpload": "취소",
+        "changeAvatar": "프로필 사진 변경",
+        "changeCover": "커버 변경",
+        "chooseImage": "기기에서 이미지 선택",
+        "cropAvatarTitle": "프로필 사진 자르기",
+        "cropCoverTitle": "커버 사진 위치 조정",
+        "currentImage": "현재 이미지",
+        "currentImageAlt": "현재 업로드된 이미지",
+        "dragToReposition": "이미지를 드래그하여 위치 조정",
+        "dropOrBrowse": "여기에 이미지를 드래그 앤 드롭하거나 기기에서 선택하세요",
+        "errors": {
+            "failed": "이미지를 업로드할 수 없습니다. 다시 시도해 주세요.",
+            "fileTooLargeWithSize": "선택한 파일 크기는 {size} MB입니다. {max} MB 미만의 이미지를 선택해 주세요.",
+            "maxSize": "이미지 파일 크기는 {max} MB 미만이어야 합니다.",
+            "tooManyFiles": "이미지는 최대 {max}개까지 첨부할 수 있습니다.",
+            "totalSizeExceeded": "선택한 이미지의 총 크기가 요청당 제한({max} MB)을 초과했습니다.",
+            "unsupportedFormat": "지원되지 않는 형식입니다. JPG, PNG 또는 WebP 이미지를 선택해 주세요.",
+            "uploadFailed": "업로드에 실패했습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요.",
+            "videoComingSoon": "동영상 업로드는 곧 지원될 예정입니다. JPG, PNG 또는 WebP 이미지를 선택해 주세요."
+        },
+        "fileCountProgress": "{current}/{max}개 이미지",
+        "formatsAndLimit": "JPG, PNG, WebP · {max} MB 미만",
+        "moveNext": "오른쪽으로 이동",
+        "movePrev": "왼쪽으로 이동",
+        "ownershipPolicyNotice": "본인이 소유하거나 공유 권한이 있는 이미지만 업로드해 주세요.",
+        "previewAlt": "선택한 이미지 미리보기",
+        "removeCover": "커버 제거",
+        "removeImage": "이미지 제거",
+        "replaceImage": "이미지 교체",
+        "resetCrop": "초기화",
+        "retry": "다시 시도",
+        "title": "이미지 업로드",
+        "uploadCancelled": "업로드가 취소되었습니다.",
+        "uploading": "업로드 중...",
+        "zoomLabel": "확대/축소"
     }
 }

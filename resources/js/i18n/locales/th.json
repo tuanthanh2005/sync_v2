@@ -79,14 +79,16 @@
         "mobileSectionTitle": "กฎหมายและข้อมูล",
         "openInNewTab": "เปิดในแท็บใหม่",
         "noPublishedLinks": "ลิงก์ข้อมูลและนโยบายจะปรากฏที่นี่เร็วๆ นี้",
-        "supportContact": "ฝ่ายสนับสนุน"
+        "supportContact": "ฝ่ายสนับสนุน",
+        "more": "เพิ่มเติม"
     },
     "policy": {
         "draftBadge": "ฉบับร่าง (แสดงตัวอย่างเฉพาะผู้ดูแลระบบ)",
         "publishedBadge": "เผยแพร่แล้ว",
         "updatedAt": "อัปเดตล่าสุด",
         "emptyContent": "เอกสารนี้ยังไม่ได้รับการเผยแพร่",
-        "backHome": "กลับไปยังฟีดข่าว"
+        "backHome": "กลับไปยังฟีดข่าว",
+        "effectiveAt": "มีผลบังคับใช้"
     },
     "home": {
         "pageTitle": "ฟีดข่าว",
@@ -132,7 +134,13 @@
             "signInPrompt": "โปรดเข้าสู่ระบบเพื่อแบ่งปันโพสต์และร่วมการสนทนา",
             "discardTitle": "ละทิ้งฉบับร่างที่ยังไม่ได้บันทึก?",
             "discardDescription": "ฉบับร่างโพสต์ที่ยังไม่ได้บันทึกจะถูกลบอย่างถาวร",
-            "discardConfirm": "ละทิ้งฉบับร่าง"
+            "discardConfirm": "ละทิ้งฉบับร่าง",
+            "addImage": "รูปภาพ",
+            "addLink": "ลิงก์",
+            "addPoll": "โพล",
+            "discardDraftConfirm": "ละทิ้ง",
+            "discardDraftDesc": "ข้อความ รูปภาพ หรือตัวเลือกโพลที่ยังไม่ได้บันทึกของคุณจะถูกล้างออก",
+            "discardDraftTitle": "ละทิ้งฉบับร่างโพสต์ใช่หรือไม่?"
         },
         "empty": {
             "title": "สำรวจชุมชน {brand}",
@@ -176,7 +184,12 @@
             "duration24h": "24 ชั่วโมง",
             "duration3d": "3 วัน",
             "duration7d": "7 วัน"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — วางเมาส์หรือกดค้างเพื่อเลือกความรู้สึก",
+        "reactionTriggerHint": "วางเมาส์หรือกดค้างเพื่อเลือกความรู้สึก",
+        "shareAction": "แชร์",
+        "sharesExact": "แชร์ {count} ครั้ง",
+        "viewsExact": "ดู {count} ครั้ง"
     },
     "profile": {
         "postsTab": "โพสต์",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "กำลังกรองตามแฮชแท็ก",
         "clearFilter": "ล้างตัวกรอง",
         "emptyTitle": "ไม่พบผลลัพธ์ที่ตรงกัน",
-        "emptyDescription": "ลองใช้คำค้นหาอื่นหรือคำที่สั้นลง"
+        "emptyDescription": "ลองใช้คำค้นหาอื่นหรือคำที่สั้นลง",
+        "clearHistory": "ล้าง",
+        "errorLoadFailed": "ไม่สามารถโหลดผลการค้นหาได้ในขณะนี้ โปรดลองอีกครั้ง",
+        "exploreCategories": "เรียกดูตามหมวดหมู่",
+        "exploreHeading": "สำรวจ SyncViet",
+        "exploreMore": "ค้นพบหัวข้อและชุมชนที่กำลังคึกคัก",
+        "exploreSubtitle": "ค้นพบการสนทนา ชุมชนที่คึกคัก หัวข้อ และบุคคลที่น่าสนใจ",
+        "exploreTitle": "สำรวจ",
+        "featuredPosts": "กระทู้แนะนำ",
+        "filterTabsLabel": "หมวดหมู่ผลการค้นหา",
+        "latestPosts": "โพสต์ล่าสุด",
+        "noResultsForQuery": "ไม่พบผลลัพธ์สำหรับ \"{query}\"",
+        "noResultsTips": "ตรวจสอบตัวสะกด ลองใช้คำที่สั้นลง หรือสำรวจหัวข้อยอดนิยมด้านล่าง",
+        "notableAccounts": "ผู้คนที่น่าติดตาม",
+        "recentSearches": "การค้นหาล่าสุด",
+        "recommendationsHeading": "สิ่งที่คุณอาจสนใจ",
+        "resultsTitle": "ค้นหา: {query}",
+        "suggestedCommunities": "ชุมชนที่น่าเข้าร่วม",
+        "suggestionsLabel": "คำแนะนำการค้นหา",
+        "tabs": {
+            "all": "ทั้งหมด",
+            "communities": "ชุมชน",
+            "posts": "โพสต์",
+            "topics": "หัวข้อ",
+            "users": "ผู้คน"
+        },
+        "topicsOfInterest": "หัวข้อที่น่าสนใจ",
+        "viewAll": "ดูทั้งหมด"
     },
     "sidebar": {
         "communityTitle": "ชุมชนระดับโลก",
@@ -888,7 +928,9 @@
                 "ads": "ระบบโฆษณา",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "โหมดบำรุงรักษาจะบล็อกผู้ใช้งานที่ไม่ใช่เจ้าหน้าที่ด้วย HTTP 503 โดยยังคงให้ผู้ดูแลระบบเข้าใช้งานได้"
+            "maintenanceWarning": "โหมดบำรุงรักษาจะบล็อกผู้ใช้งานที่ไม่ใช่เจ้าหน้าที่ด้วย HTTP 503 โดยยังคงให้ผู้ดูแลระบบเข้าใช้งานได้",
+            "brandingAssetsHint": "อัปโหลดโลโก้แบรนด์ favicon และรูปภาพ Open Graph เริ่มต้นโดยตรงจากอุปกรณ์ของคุณ",
+            "brandingAssetsTitle": "ไฟล์ภาพแบรนด์และ SEO"
         },
         "notifications": {
             "title": "ศูนย์แจ้งเตือนผู้ดูแลระบบ",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "แนะนำ: {action} ({status})",
             "acknowledge": "รับทราบ",
             "dismiss": "ปิดไป"
+        },
+        "cms": {
+            "allStatuses": "ทุกสถานะ",
+            "allTypes": "ทุกประเภทหน้า",
+            "canonicalUrlLabel": "Canonical URL (ไม่บังคับ)",
+            "changeNoteLabel": "บันทึกการแก้ไข (ไม่บังคับ)",
+            "changeNotePlaceholder": "อธิบายสั้นๆ ว่ามีการเปลี่ยนแปลงอะไรในเวอร์ชันนี้...",
+            "contactInfoLabel": "บรรทัดข้อมูลติดต่อ",
+            "contactInfoPlaceholder": "เช่น ฝ่ายสนับสนุนทั่วโลก · จันทร์–ศุกร์",
+            "copyrightLabel": "บรรทัดลิขสิทธิ์กำหนดเอง (ไม่บังคับ)",
+            "createPage": "สร้างหน้าใหม่",
+            "createPageHint": "หน้า CMS ใหม่จะเริ่มต้นเป็นฉบับร่างและถูกซ่อนไว้จนกว่าคุณจะเผยแพร่",
+            "deleteLinkConfirmDesc": "ลบ \"{label}\" ออกจากส่วนท้ายเว็บใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+            "effectiveAtLabel": "วันที่มีผลบังคับใช้",
+            "footerBrandingHeading": "ช่องทางติดต่อฝ่ายสนับสนุนและแบรนด์ส่วนท้ายเว็บ",
+            "footerBrandingHint": "ระบบจะแสดงเฉพาะที่อยู่อีเมลสนับสนุนจริง (ไม่ใช่โดเมนตัวอย่าง) ต่อสาธารณะ เว้นว่างไว้หากต้องการซ่อน",
+            "indexEligibleLabel": "อนุญาตให้เครื่องมือค้นหาจัดทำดัชนีหน้าเว็บที่เผยแพร่นี้",
+            "inlineImageInserted": "อัปโหลดและแทรกรูปภาพลงในเนื้อหาแล้ว",
+            "insertImage": "แทรกรูปภาพ",
+            "insertImageHint": "อัปโหลดรูปภาพจากอุปกรณ์ของคุณ ระบบปิดการแทรกลิงก์รูปภาพภายนอก (hotlink) เพื่อความปลอดภัย",
+            "languageSelectorLabel": "ภาษาที่กำลังแก้ไข (จุดสีเขียวหมายถึงฉบับที่เผยแพร่แล้ว)",
+            "liveFooterPreview": "ตัวอย่างส่วนท้ายเว็บแบบกระชับแบบเรียลไทม์",
+            "localesCount": "{count} ภาษา",
+            "metaDescriptionLabel": "คำอธิบายเมตา SEO",
+            "noRevisions": "ยังไม่มีประวัติการแก้ไข บันทึกการเปลี่ยนแปลงเพื่อสร้างเวอร์ชันแรก",
+            "ogImageHint": "แนะนำขนาด 1200×630 ไฟล์ JPG, PNG หรือ WebP จากอุปกรณ์ของคุณ",
+            "ogImageLabel": "รูปภาพสำหรับการแชร์บนโซเชียล (Open Graph)",
+            "pageTypeLabel": "ประเภทหน้า",
+            "pageTypes": {
+                "business": "ธุรกิจ",
+                "company": "บริษัท",
+                "general": "ทั่วไป",
+                "legal": "กฎหมาย",
+                "support": "ฝ่ายสนับสนุน"
+            },
+            "placementLabel": "ตำแหน่งแสดงผลในส่วนท้ายเว็บ",
+            "placementMain": "แถบหลัก",
+            "placementMore": "เมนูเพิ่มเติม",
+            "previewToggle": "แสดงตัวอย่าง",
+            "removeOgImage": "ลบรูปภาพ Open Graph ปัจจุบันเมื่อบันทึก",
+            "restoreConfirmDesc": "กู้คืนเนื้อหาจากเวอร์ชัน v{version} ใช่หรือไม่? เนื้อหาปัจจุบันจะยังคงถูกเก็บไว้อย่างปลอดภัยในประวัติ",
+            "restoreConfirmTitle": "กู้คืนเวอร์ชันก่อนหน้า",
+            "restoreVersion": "กู้คืน",
+            "saveFooterBranding": "บันทึกแบรนด์ส่วนท้ายเว็บ",
+            "saveSeoSettings": "บันทึกการตั้งค่า SEO",
+            "saveTranslation": "บันทึกคำแปล",
+            "searchPagesPlaceholder": "กรองหน้าตามชื่อหรือ slug...",
+            "seoTitleLabel": "ชื่อ SEO กำหนดเอง",
+            "serpPreviewTitle": "ตัวอย่างผลการค้นหา",
+            "slugLabel": "URL slug",
+            "statusArchived": "เก็บถาวรแล้ว",
+            "subTabs": {
+                "content": "เนื้อหาและภาษา",
+                "revisions": "ประวัติ ({count})",
+                "seo": "SEO และโซเชียล"
+            },
+            "supportEmailLabel": "อีเมลฝ่ายสนับสนุนสาธารณะ",
+            "tabs": {
+                "footer": "ส่วนท้ายเว็บและการติดต่อ ({count})",
+                "pages": "หน้า CMS ({count})"
+            },
+            "translationContentLabel": "เนื้อหา HTML ที่แปลแล้ว",
+            "translationHint": "การเผยแพร่คำแปลภาษา {locale} นี้จะเปิดใช้งาน {path} พร้อมแท็ก hreflang แบบเชื่อมโยงซึ่งกันและกัน",
+            "translationSummaryLabel": "บทสรุปที่แปลแล้ว",
+            "translationTitleLabel": "หัวข้อที่แปลแล้ว",
+            "uploadAndInsert": "อัปโหลดและแทรก"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "ปิดใช้งาน",
         "extra": {
             "userFallback": "ผู้ใช้"
-        }
+        },
+        "next": "ถัดไป",
+        "previous": "ก่อนหน้า"
     },
     "pwa": {
         "installApp": "ติดตั้งแอป SyncViet"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "ดูรหัสกู้คืน"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "เร็วๆ นี้",
+        "modal": {
+            "attachmentsLabel": "เพิ่มลงในโพสต์ของคุณ",
+            "continueEditing": "แก้ไขต่อ",
+            "insertEmoji": "แทรกอีโมจิ",
+            "insertHashtag": "เพิ่มแฮชแท็ก",
+            "personalizedPlaceholder": "คุณกำลังคิดอะไรอยู่ {name}?",
+            "resumeDraftPrompt": "คุณมีฉบับร่างที่ยังไม่ได้บันทึกพร้อมให้ทำต่อ",
+            "title": "สร้างโพสต์"
+        },
+        "videoComingSoonTooltip": "ฟีเจอร์โพสต์วิดีโอจะเปิดให้บริการเร็วๆ นี้"
+    },
+    "upload": {
+        "addCover": "เพิ่มรูปภาพหน้าปก",
+        "admin": {
+            "healthLabel": "นโยบายการอัปโหลดรูปภาพและ PHP Runtime",
+            "mismatchBadge": "จำกัดอยู่ที่ {effective} MB",
+            "readyBadge": "พร้อมใช้งาน (< {max} MB)",
+            "runtimeMismatch": "นโยบายแอปอนุญาตให้อัปโหลดสูงสุด {policy} MB แต่การตั้งค่า PHP ของเซิร์ฟเวอร์จำกัดไว้ที่ {effective} MB",
+            "runtimeReady": "การตั้งค่า PHP ของเซิร์ฟเวอร์รองรับนโยบายการอัปโหลดรูปภาพอย่างเต็มรูปแบบ (< {max} MB)"
+        },
+        "altTextLabel": "ข้อความอธิบายภาพ (การเข้าถึง)",
+        "altTextPlaceholder": "อธิบายรูปภาพนี้สั้นๆ (ไม่บังคับ)",
+        "applyCrop": "ใช้การครอบตัด",
+        "avatarHint": "JPG, PNG หรือ WebP จากอุปกรณ์ของคุณ · น้อยกว่า {max} MB · ครอบตัดอัตราส่วน 1:1",
+        "cancelUpload": "ยกเลิก",
+        "changeAvatar": "เปลี่ยนรูปโปรไฟล์",
+        "changeCover": "เปลี่ยนรูปหน้าปก",
+        "chooseImage": "เลือกรูปภาพจากอุปกรณ์",
+        "cropAvatarTitle": "ครอบตัดรูปโปรไฟล์",
+        "cropCoverTitle": "จัดตำแหน่งรูปภาพหน้าปก",
+        "currentImage": "รูปภาพปัจจุบัน",
+        "currentImageAlt": "รูปภาพที่อัปโหลดในปัจจุบัน",
+        "dragToReposition": "ลากรูปภาพเพื่อปรับกรอบ",
+        "dropOrBrowse": "ลากและวางรูปภาพที่นี่ หรือเลือกจากอุปกรณ์ของคุณ",
+        "errors": {
+            "failed": "ไม่สามารถอัปโหลดรูปภาพได้ โปรดลองอีกครั้ง",
+            "fileTooLargeWithSize": "ไฟล์ที่เลือกมีขนาด {size} MB โปรดเลือกรูปภาพที่มีขนาดน้อยกว่า {max} MB",
+            "maxSize": "ขนาดไฟล์รูปภาพต้องน้อยกว่า {max} MB",
+            "tooManyFiles": "คุณสามารถแนบรูปภาพได้สูงสุด {max} รูป",
+            "totalSizeExceeded": "ขนาดรวมของรูปภาพที่เลือกเกินขีดจำกัดคำขอ {max} MB",
+            "unsupportedFormat": "รูปแบบไฟล์ไม่รองรับ โปรดเลือกรูปภาพ JPG, PNG หรือ WebP",
+            "uploadFailed": "การอัปโหลดล้มเหลว โปรดตรวจสอบการเชื่อมต่อของคุณแล้วลองอีกครั้ง",
+            "videoComingSoon": "การอัปโหลดวิดีโอจะพร้อมใช้งานเร็วๆ นี้ โปรดเลือกรูปภาพ JPG, PNG หรือ WebP"
+        },
+        "fileCountProgress": "{current}/{max} รูป",
+        "formatsAndLimit": "JPG, PNG, WebP · น้อยกว่า {max} MB",
+        "moveNext": "ย้ายไปทางขวา",
+        "movePrev": "ย้ายไปทางซ้าย",
+        "ownershipPolicyNotice": "อัปโหลดเฉพาะรูปภาพที่คุณเป็นเจ้าของหรือได้รับอนุญาตให้เผยแพร่เท่านั้น",
+        "previewAlt": "ตัวอย่างรูปภาพที่เลือก",
+        "removeCover": "ลบรูปหน้าปก",
+        "removeImage": "ลบรูปภาพ",
+        "replaceImage": "เปลี่ยนรูปภาพ",
+        "resetCrop": "รีเซ็ต",
+        "retry": "ลองอีกครั้ง",
+        "title": "อัปโหลดรูปภาพ",
+        "uploadCancelled": "ยกเลิกการอัปโหลดแล้ว",
+        "uploading": "กำลังอัปโหลด...",
+        "zoomLabel": "ซูม"
     }
 }

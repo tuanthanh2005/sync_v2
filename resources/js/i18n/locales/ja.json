@@ -79,14 +79,16 @@
         "mobileSectionTitle": "法的情報・案内",
         "openInNewTab": "新しいタブで開く",
         "noPublishedLinks": "情報およびポリシーのリンクはまもなくここに公開されます。",
-        "supportContact": "サポート"
+        "supportContact": "サポート",
+        "more": "その他"
     },
     "policy": {
         "draftBadge": "下書き（管理者プレビュー専用）",
         "publishedBadge": "公開済み",
         "updatedAt": "最終更新",
         "emptyContent": "この文書はまだ公開されていません。",
-        "backHome": "フィードに戻る"
+        "backHome": "フィードに戻る",
+        "effectiveAt": "発効日"
     },
     "home": {
         "pageTitle": "ニュースフィード",
@@ -132,7 +134,13 @@
             "signInPrompt": "投稿を共有してディスカッションに参加するにはログインしてください。",
             "discardTitle": "未保存の下書きを破棄しますか？",
             "discardDescription": "保存されていない投稿の下書きは完全に削除されます。",
-            "discardConfirm": "下書きを破棄"
+            "discardConfirm": "下書きを破棄",
+            "addImage": "写真",
+            "addLink": "リンク",
+            "addPoll": "投票",
+            "discardDraftConfirm": "破棄",
+            "discardDraftDesc": "未保存のテキスト、写真、または投票の選択肢は消去されます。",
+            "discardDraftTitle": "投稿の下書きを破棄しますか？"
         },
         "empty": {
             "title": "{brand}コミュニティを探索しよう",
@@ -176,7 +184,12 @@
             "duration24h": "24時間",
             "duration3d": "3日間",
             "duration7d": "7日間"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — ホバーまたは長押しでリアクションを選択",
+        "reactionTriggerHint": "ホバーまたは長押しでリアクションを選択",
+        "shareAction": "共有",
+        "sharesExact": "{count} 件の共有",
+        "viewsExact": "{count} 回表示"
     },
     "profile": {
         "postsTab": "投稿",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "ハッシュタグで絞り込み中",
         "clearFilter": "フィルターをクリア",
         "emptyTitle": "一致する結果が見つかりません",
-        "emptyDescription": "別のキーワードや、より短い検索語をお試しください。"
+        "emptyDescription": "別のキーワードや、より短い検索語をお試しください。",
+        "clearHistory": "消去",
+        "errorLoadFailed": "現在、検索結果を読み込めません。もう一度お試しください。",
+        "exploreCategories": "カテゴリー別に閲覧",
+        "exploreHeading": "SyncViet を探索",
+        "exploreMore": "注目のトピックやコミュニティを見つける",
+        "exploreSubtitle": "話題のディスカッション、活発なコミュニティ、トピック、注目のメンバーを見つけましょう。",
+        "exploreTitle": "探索",
+        "featuredPosts": "注目のディスカッション",
+        "filterTabsLabel": "検索結果のカテゴリー",
+        "latestPosts": "最新の投稿",
+        "noResultsForQuery": "「{query}」に一致する結果は見つかりませんでした",
+        "noResultsTips": "スペルを確認するか、短いキーワードを試すか、下の活発なトピックを探索してみてください。",
+        "notableAccounts": "おすすめのメンバー",
+        "recentSearches": "最近の検索",
+        "recommendationsHeading": "おすすめのコンテンツ",
+        "resultsTitle": "検索：{query}",
+        "suggestedCommunities": "おすすめのコミュニティ",
+        "suggestionsLabel": "検索候補",
+        "tabs": {
+            "all": "すべて",
+            "communities": "コミュニティ",
+            "posts": "投稿",
+            "topics": "トピック",
+            "users": "ユーザー"
+        },
+        "topicsOfInterest": "注目のトピック",
+        "viewAll": "すべて表示"
     },
     "sidebar": {
         "communityTitle": "グローバルコミュニティ",
@@ -888,7 +928,9 @@
                 "ads": "広告エンジン",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "メンテナンスモードを有効にすると、管理者のアクセスを維持したまま一般トラフィックにHTTP 503を返します。"
+            "maintenanceWarning": "メンテナンスモードを有効にすると、管理者のアクセスを維持したまま一般トラフィックにHTTP 503を返します。",
+            "brandingAssetsHint": "ブランドロゴ、ファビコン、デフォルトの Open Graph 画像を端末から直接アップロードします。",
+            "brandingAssetsTitle": "ブランド・SEO ビジュアルアセット"
         },
         "notifications": {
             "title": "管理者通知センター",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "推奨措置: {action} ({status})",
             "acknowledge": "確認済みにする",
             "dismiss": "却下"
+        },
+        "cms": {
+            "allStatuses": "すべてのステータス",
+            "allTypes": "すべてのページタイプ",
+            "canonicalUrlLabel": "正規 URL（任意）",
+            "changeNoteLabel": "改訂メモ（任意）",
+            "changeNotePlaceholder": "このバージョンでの変更内容を簡潔に入力してください...",
+            "contactInfoLabel": "連絡先情報ライン",
+            "contactInfoPlaceholder": "例：グローバルサポート · 月〜金",
+            "copyrightLabel": "カスタム著作権表記（任意）",
+            "createPage": "ページを作成",
+            "createPageHint": "新しい CMS ページは下書きとして作成され、公開するまで非表示になります。",
+            "deleteLinkConfirmDesc": "フッターから「{label}」を削除しますか？この操作は元に戻せません。",
+            "effectiveAtLabel": "発効日",
+            "footerBrandingHeading": "サポート連絡先・フッターブランディング",
+            "footerBrandingHint": "実在する有効なサポートメールアドレスのみ公開表示されます（プレースホルダー用アドレスは不可）。非表示にする場合は空欄にしてください。",
+            "indexEligibleLabel": "検索エンジンによるこの公開ページのインデックス登録を許可する",
+            "inlineImageInserted": "画像をアップロードして本文に挿入しました。",
+            "insertImage": "画像を挿入",
+            "insertImageHint": "端末から画像をアップロードしてください。セキュリティのため外部画像の直リンクは無効になっています。",
+            "languageSelectorLabel": "編集中の言語（緑の点は公開済みの本文を示します）",
+            "liveFooterPreview": "コンパクトフッターのライブプレビュー",
+            "localesCount": "{count} 言語",
+            "metaDescriptionLabel": "SEO メタディスクリプション",
+            "noRevisions": "改訂履歴はまだ記録されていません。変更を保存すると最初のスナップショットが作成されます。",
+            "ogImageHint": "端末からの 1200×630 の JPG、PNG、または WebP 画像を推奨します。",
+            "ogImageLabel": "SNS シェア用画像（Open Graph）",
+            "pageTypeLabel": "ページタイプ",
+            "pageTypes": {
+                "business": "ビジネス",
+                "company": "会社情報",
+                "general": "一般",
+                "legal": "法的情報",
+                "support": "サポート"
+            },
+            "placementLabel": "フッター表示位置",
+            "placementMain": "メインバー",
+            "placementMore": "その他メニュー",
+            "previewToggle": "プレビュー",
+            "removeOgImage": "保存時に現在の Open Graph 画像を削除する",
+            "restoreConfirmDesc": "バージョン v{version} の内容を復元しますか？現在の内容は履歴に安全に保存されます。",
+            "restoreConfirmTitle": "以前のバージョンを復元",
+            "restoreVersion": "復元",
+            "saveFooterBranding": "フッターブランディングを保存",
+            "saveSeoSettings": "SEO 設定を保存",
+            "saveTranslation": "翻訳を保存",
+            "searchPagesPlaceholder": "タイトルまたはスラッグでページを絞り込み...",
+            "seoTitleLabel": "カスタム SEO タイトル",
+            "serpPreviewTitle": "検索結果プレビュー",
+            "slugLabel": "URL スラッグ",
+            "statusArchived": "アーカイブ済み",
+            "subTabs": {
+                "content": "コンテンツと言語",
+                "revisions": "履歴 ({count})",
+                "seo": "SEO・ソーシャル"
+            },
+            "supportEmailLabel": "公開サポートメール",
+            "tabs": {
+                "footer": "フッター・連絡先 ({count})",
+                "pages": "CMS ページ ({count})"
+            },
+            "translationContentLabel": "翻訳済み HTML コンテンツ",
+            "translationHint": "この {locale} 翻訳を公開すると、相互 hreflang タグ付きで {path} が有効になります。",
+            "translationSummaryLabel": "翻訳済み概要",
+            "translationTitleLabel": "翻訳済みタイトル",
+            "uploadAndInsert": "アップロードして挿入"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "無効化",
         "extra": {
             "userFallback": "ユーザー"
-        }
+        },
+        "next": "次へ",
+        "previous": "前へ"
     },
     "pwa": {
         "installApp": "SyncVietアプリをインストール"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "リカバリーコードを表示"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "近日公開",
+        "modal": {
+            "attachmentsLabel": "投稿に追加",
+            "continueEditing": "編集を続ける",
+            "insertEmoji": "絵文字を挿入",
+            "insertHashtag": "ハッシュタグを追加",
+            "personalizedPlaceholder": "{name}さん、いま何を考えていますか？",
+            "resumeDraftPrompt": "未保存の下書きがあります。続きから編集できます。",
+            "title": "投稿を作成"
+        },
+        "videoComingSoonTooltip": "動画投稿機能は近日公開予定です"
+    },
+    "upload": {
+        "addCover": "カバー写真を追加",
+        "admin": {
+            "healthLabel": "画像アップロードポリシーと PHP ランタイム",
+            "mismatchBadge": "{effective} MB に制限",
+            "readyBadge": "準備完了（{max} MB 未満）",
+            "runtimeMismatch": "アプリのアップロードポリシーは最大 {policy} MB まで許可していますが、サーバーの PHP 制限により現在は {effective} MB が上限になっています。",
+            "runtimeReady": "サーバーの PHP 制限は画像アップロードポリシー（{max} MB 未満）を完全にサポートしています。"
+        },
+        "altTextLabel": "代替テキスト（アクセシビリティ）",
+        "altTextPlaceholder": "この画像を簡潔に説明してください（任意）",
+        "applyCrop": "トリミングを適用",
+        "avatarHint": "端末からの JPG、PNG、または WebP · {max} MB 未満 · 1:1 トリミング",
+        "cancelUpload": "キャンセル",
+        "changeAvatar": "アバターを変更",
+        "changeCover": "カバーを変更",
+        "chooseImage": "端末から画像を選択",
+        "cropAvatarTitle": "プロフィール写真をトリミング",
+        "cropCoverTitle": "カバー写真の位置を調整",
+        "currentImage": "現在の画像",
+        "currentImageAlt": "現在アップロードされている画像",
+        "dragToReposition": "画像をドラッグして表示位置を調整",
+        "dropOrBrowse": "ここに画像をドラッグ＆ドロップ、または端末から選択",
+        "errors": {
+            "failed": "画像をアップロードできませんでした。もう一度お試しください。",
+            "fileTooLargeWithSize": "選択したファイルは {size} MB です。{max} MB 未満の画像を選択してください。",
+            "maxSize": "画像ファイルサイズは {max} MB 未満である必要があります。",
+            "tooManyFiles": "添付できる画像は最大 {max} 枚までです。",
+            "totalSizeExceeded": "選択した画像の合計サイズが 1 回のリクエスト上限（{max} MB）を超えています。",
+            "unsupportedFormat": "非対応の形式です。JPG、PNG、または WebP 画像を選択してください。",
+            "uploadFailed": "アップロードに失敗しました。接続を確認してもう一度お試しください。",
+            "videoComingSoon": "動画のアップロードは近日公開予定です。JPG、PNG、または WebP 画像を選択してください。"
+        },
+        "fileCountProgress": "{current}/{max} 枚",
+        "formatsAndLimit": "JPG、PNG、WebP · {max} MB 未満",
+        "moveNext": "右へ移動",
+        "movePrev": "左へ移動",
+        "ownershipPolicyNotice": "ご自身が権利を所有しているか、共有許可を得ている画像のみをアップロードしてください。",
+        "previewAlt": "選択した画像のプレビュー",
+        "removeCover": "カバーを削除",
+        "removeImage": "画像を削除",
+        "replaceImage": "画像を差し替え",
+        "resetCrop": "リセット",
+        "retry": "再試行",
+        "title": "画像をアップロード",
+        "uploadCancelled": "アップロードをキャンセルしました。",
+        "uploading": "アップロード中...",
+        "zoomLabel": "ズーム"
     }
 }

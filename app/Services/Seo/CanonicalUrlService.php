@@ -139,9 +139,18 @@ class CanonicalUrlService
         return $page > 1 ? $base.'?page='.$page : $base;
     }
 
-    public function policyCanonicalUrl(PolicyPage $policy): string
+    public function policyPath(PolicyPage $policy, ?string $locale = null): string
     {
-        return $this->absoluteUrl('/policies/'.$policy->slug);
+        if ($locale !== null && $locale !== '' && $locale !== $this->config->defaultLocale()) {
+            return '/'.$locale.'/policies/'.$policy->slug;
+        }
+
+        return '/policies/'.$policy->slug;
+    }
+
+    public function policyCanonicalUrl(PolicyPage $policy, ?string $locale = null): string
+    {
+        return $this->absoluteUrl($this->policyPath($policy, $locale));
     }
 
     public function fromRequest(Request $request, bool $allowPageParam = false): string

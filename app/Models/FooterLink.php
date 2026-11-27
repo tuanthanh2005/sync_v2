@@ -9,15 +9,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * @property int $id
  * @property int|null $policy_page_id
  * @property string $label_vi
  * @property string $label_en
+ * @property array<string, string>|null $translations
  * @property string|null $route_name
  * @property string|null $url
  * @property FooterGroup $footer_group
+ * @property string $placement
  * @property int $sort_order
  * @property bool $is_visible
  * @property bool $open_in_new_tab
@@ -30,9 +33,11 @@ use Illuminate\Support\Carbon;
     'policy_page_id',
     'label_vi',
     'label_en',
+    'translations',
     'route_name',
     'url',
     'footer_group',
+    'placement',
     'sort_order',
     'is_visible',
     'open_in_new_tab',
@@ -50,6 +55,7 @@ class FooterLink extends Model
     {
         return [
             'footer_group' => FooterGroup::class,
+            'translations' => 'array',
             'sort_order' => 'integer',
             'is_visible' => 'boolean',
             'open_in_new_tab' => 'boolean',
@@ -74,6 +80,14 @@ class FooterLink extends Model
 
     public function labelForLocale(string $locale): string
     {
-        return $locale === 'en' ? $this->label_en : $this->label_vi;
+        if (is_array($this->translations) && isset($this->translations[$locale]) && trim((string) $this->translations[$locale]) !== '') {
+            return trim((string) $this->translations[$locale]);
+        }
+
+        if ($locale === 'vi') {
+            return $this->label_vi ?: $this->label_en;
+        }
+
+        return (string) Lang::get($this->label_en, [], $locale);
     }
 }

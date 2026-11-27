@@ -79,14 +79,16 @@
         "mobileSectionTitle": "法律与信息",
         "openInNewTab": "在新标签页打开",
         "noPublishedLinks": "相关信息与政策链接即将在此显示。",
-        "supportContact": "支持与帮助"
+        "supportContact": "支持与帮助",
+        "more": "更多"
     },
     "policy": {
         "draftBadge": "草稿（仅管理员可预览）",
         "publishedBadge": "已发布",
         "updatedAt": "最后更新",
         "emptyContent": "此文档尚未发布。",
-        "backHome": "返回动态"
+        "backHome": "返回动态",
+        "effectiveAt": "生效日期"
     },
     "home": {
         "pageTitle": "信息流",
@@ -132,7 +134,13 @@
             "signInPrompt": "请先登录以发布帖子并参与讨论。",
             "discardTitle": "放弃未保存的草稿？",
             "discardDescription": "您未保存的帖子草稿将被永久删除。",
-            "discardConfirm": "放弃草稿"
+            "discardConfirm": "放弃草稿",
+            "addImage": "图片",
+            "addLink": "链接",
+            "addPoll": "投票",
+            "discardDraftConfirm": "放弃",
+            "discardDraftDesc": "您未保存的文字、图片或投票选项将被清空。",
+            "discardDraftTitle": "放弃帖子草稿？"
         },
         "empty": {
             "title": "探索 {brand} 社区",
@@ -176,7 +184,12 @@
             "duration24h": "24 小时",
             "duration3d": "3 天",
             "duration7d": "7 天"
-        }
+        },
+        "reactionTriggerAria": "{reaction} ({count}) — 悬停或长按以选择表情回应",
+        "reactionTriggerHint": "悬停或长按选择表情回应",
+        "shareAction": "分享",
+        "sharesExact": "{count} 次分享",
+        "viewsExact": "{count} 次浏览"
     },
     "profile": {
         "postsTab": "帖子",
@@ -211,7 +224,34 @@
         "filteringByHashtag": "按话题标签筛选",
         "clearFilter": "清除筛选",
         "emptyTitle": "未找到匹配结果",
-        "emptyDescription": "请尝试更换关键词或缩短搜索词。"
+        "emptyDescription": "请尝试更换关键词或缩短搜索词。",
+        "clearHistory": "清除",
+        "errorLoadFailed": "暂时无法加载搜索结果，请稍后重试。",
+        "exploreCategories": "按分类浏览",
+        "exploreHeading": "探索 SyncViet",
+        "exploreMore": "发现活跃话题与社区",
+        "exploreSubtitle": "发现精彩讨论、活跃社区、热门话题与优秀创作者。",
+        "exploreTitle": "探索",
+        "featuredPosts": "精选讨论",
+        "filterTabsLabel": "搜索结果分类",
+        "latestPosts": "最新帖子",
+        "noResultsForQuery": "未找到与“{query}”相关的结果",
+        "noResultsTips": "请检查拼写、尝试精简关键词，或浏览下方活跃话题。",
+        "notableAccounts": "值得关注的成员",
+        "recentSearches": "最近搜索",
+        "recommendationsHeading": "猜您想探索",
+        "resultsTitle": "搜索：{query}",
+        "suggestedCommunities": "推荐加入的社区",
+        "suggestionsLabel": "搜索建议",
+        "tabs": {
+            "all": "全部",
+            "communities": "社区",
+            "posts": "帖子",
+            "topics": "话题",
+            "users": "用户"
+        },
+        "topicsOfInterest": "热门关注话题",
+        "viewAll": "查看全部"
     },
     "sidebar": {
         "communityTitle": "全球社区",
@@ -888,7 +928,9 @@
                 "ads": "广告引擎",
                 "seo": "SEO"
             },
-            "maintenanceWarning": "维护模式会向普通访客返回 HTTP 503，同时保持管理员正常访问。"
+            "maintenanceWarning": "维护模式会向普通访客返回 HTTP 503，同时保持管理员正常访问。",
+            "brandingAssetsHint": "直接从您的设备上传品牌标志、网站图标及默认 Open Graph 图片。",
+            "brandingAssetsTitle": "品牌与 SEO 视觉素材"
         },
         "notifications": {
             "title": "管理员通知中心",
@@ -1859,6 +1901,72 @@
             "suggestedActionStatus": "建议操作：{action} ({status})",
             "acknowledge": "已知悉",
             "dismiss": "忽略"
+        },
+        "cms": {
+            "allStatuses": "所有状态",
+            "allTypes": "所有页面类型",
+            "canonicalUrlLabel": "规范 URL（可选）",
+            "changeNoteLabel": "修订说明（可选）",
+            "changeNotePlaceholder": "简要描述此版本的更改内容...",
+            "contactInfoLabel": "联系信息行",
+            "contactInfoPlaceholder": "例如：全球支持 · 周一至周五",
+            "copyrightLabel": "自定义版权声明（可选）",
+            "createPage": "创建页面",
+            "createPageHint": "新建 CMS 页面默认为草稿状态，在您发布前不会对外显示。",
+            "deleteLinkConfirmDesc": "确定从页脚中移除“{label}”吗？此操作无法撤销。",
+            "effectiveAtLabel": "生效日期",
+            "footerBrandingHeading": "支持联系方式与页脚品牌设置",
+            "footerBrandingHint": "仅公开显示真实有效的支持邮箱地址（不允许示例占位域名）。留空则隐藏。",
+            "indexEligibleLabel": "允许搜索引擎索引此已发布页面",
+            "inlineImageInserted": "图片已上传并插入到内容中。",
+            "insertImage": "插入图片",
+            "insertImageHint": "请从您的设备上传图片。出于安全考虑，已禁用外部图片直链。",
+            "languageSelectorLabel": "当前编辑语言（绿点表示已发布版本）",
+            "liveFooterPreview": "精简页脚实时预览",
+            "localesCount": "{count} 种语言",
+            "metaDescriptionLabel": "SEO 元描述",
+            "noRevisions": "暂无修订历史记录。保存更改以创建首个快照。",
+            "ogImageHint": "建议从设备上传 1200×630 像素的 JPG、PNG 或 WebP 图片。",
+            "ogImageLabel": "社交分享图片（Open Graph）",
+            "pageTypeLabel": "页面类型",
+            "pageTypes": {
+                "business": "商务",
+                "company": "公司",
+                "general": "常规",
+                "legal": "法律条款",
+                "support": "支持"
+            },
+            "placementLabel": "页脚显示位置",
+            "placementMain": "主栏",
+            "placementMore": "“更多”菜单",
+            "previewToggle": "预览",
+            "removeOgImage": "保存时移除当前 Open Graph 图片",
+            "restoreConfirmDesc": "确定恢复版本 v{version} 的内容吗？当前内容仍将安全保存在历史记录中。",
+            "restoreConfirmTitle": "恢复先前版本",
+            "restoreVersion": "恢复",
+            "saveFooterBranding": "保存页脚品牌设置",
+            "saveSeoSettings": "保存 SEO 设置",
+            "saveTranslation": "保存翻译",
+            "searchPagesPlaceholder": "按标题或路径别名筛选页面...",
+            "seoTitleLabel": "自定义 SEO 标题",
+            "serpPreviewTitle": "搜索结果预览",
+            "slugLabel": "URL 路径别名",
+            "statusArchived": "已归档",
+            "subTabs": {
+                "content": "内容与语言",
+                "revisions": "历史记录 ({count})",
+                "seo": "SEO 与社交"
+            },
+            "supportEmailLabel": "公开支持邮箱",
+            "tabs": {
+                "footer": "页脚与联系信息 ({count})",
+                "pages": "CMS 页面 ({count})"
+            },
+            "translationContentLabel": "翻译后的 HTML 内容",
+            "translationHint": "发布此 {locale} 翻译后，将启用 {path} 并配置双向 hreflang 标签。",
+            "translationSummaryLabel": "翻译后的摘要",
+            "translationTitleLabel": "翻译后的标题",
+            "uploadAndInsert": "上传并插入"
         }
     },
     "common": {
@@ -1879,7 +1987,9 @@
         "disable": "停用",
         "extra": {
             "userFallback": "用户"
-        }
+        },
+        "next": "下一个",
+        "previous": "上一个"
     },
     "pwa": {
         "installApp": "安装 SyncViet 应用"
@@ -2417,5 +2527,67 @@
                 "viewCodes": "查看恢复代码"
             }
         }
+    },
+    "composer": {
+        "comingSoon": "即将推出",
+        "modal": {
+            "attachmentsLabel": "添加到帖子",
+            "continueEditing": "继续编辑",
+            "insertEmoji": "插入表情",
+            "insertHashtag": "添加话题标签",
+            "personalizedPlaceholder": "{name}，此刻你在想什么？",
+            "resumeDraftPrompt": "您有一份未保存的草稿，点击可继续编辑。",
+            "title": "创建帖子"
+        },
+        "videoComingSoonTooltip": "视频发布功能即将推出"
+    },
+    "upload": {
+        "addCover": "添加封面图片",
+        "admin": {
+            "healthLabel": "图片上传策略与 PHP 运行环境",
+            "mismatchBadge": "实际限制为 {effective} MB",
+            "readyBadge": "已就绪（< {max} MB）",
+            "runtimeMismatch": "应用上传策略允许最大 {policy} MB，但服务器 PHP 配置当前将上传上限限制为 {effective} MB。",
+            "runtimeReady": "服务器 PHP 限制完全支持当前图片上传策略（< {max} MB）。"
+        },
+        "altTextLabel": "替代文本（无障碍辅助）",
+        "altTextPlaceholder": "简要描述这张图片（可选）",
+        "applyCrop": "应用裁剪",
+        "avatarHint": "从设备上传 JPG、PNG 或 WebP · 小于 {max} MB · 1:1 裁剪",
+        "cancelUpload": "取消",
+        "changeAvatar": "更换头像",
+        "changeCover": "更换封面",
+        "chooseImage": "从设备选择图片",
+        "cropAvatarTitle": "裁剪头像",
+        "cropCoverTitle": "调整封面位置",
+        "currentImage": "当前图片",
+        "currentImageAlt": "当前已上传的图片",
+        "dragToReposition": "拖动图片以调整构图位置",
+        "dropOrBrowse": "将图片拖放到此处，或从设备选择",
+        "errors": {
+            "failed": "无法上传图片，请重试。",
+            "fileTooLargeWithSize": "所选文件大小为 {size} MB。请选择小于 {max} MB 的图片。",
+            "maxSize": "图片文件大小必须小于 {max} MB。",
+            "tooManyFiles": "最多只能附加 {max} 张图片。",
+            "totalSizeExceeded": "所选图片总大小超过了单次请求的 {max} MB 限制。",
+            "unsupportedFormat": "不支持的格式。请选择 JPG、PNG 或 WebP 图片。",
+            "uploadFailed": "上传失败，请检查网络连接后重试。",
+            "videoComingSoon": "视频上传功能即将推出。请选择 JPG、PNG 或 WebP 图片。"
+        },
+        "fileCountProgress": "{current}/{max} 张图片",
+        "formatsAndLimit": "JPG、PNG、WebP · 小于 {max} MB",
+        "moveNext": "向右移动",
+        "movePrev": "向左移动",
+        "ownershipPolicyNotice": "请仅上传您拥有版权或已获分享许可的图片。",
+        "previewAlt": "所选图片预览",
+        "removeCover": "移除封面",
+        "removeImage": "移除图片",
+        "replaceImage": "更换图片",
+        "resetCrop": "重置",
+        "retry": "重试",
+        "title": "上传图片",
+        "uploadCancelled": "已取消上传。",
+        "uploading": "正在上传...",
+        "zoomLabel": "缩放"
     }
 }

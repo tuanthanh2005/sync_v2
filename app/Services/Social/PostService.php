@@ -56,6 +56,7 @@ class PostService
      *     category?: string|null,
      *     visibility?: string|null,
      *     link_url?: string|null,
+     *     image_alts?: list<string|null>|null,
      *     poll_question?: string|null,
      *     poll_options?: list<string>|null,
      *     poll_duration_hours?: int|null
@@ -143,14 +144,15 @@ class PostService
         }
 
         $maxImages = max(1, min(10, (int) $this->settings->get('content_post_max_images', 4)));
+        $imageAlts = $data['image_alts'] ?? [];
         $storedImages = [];
 
         try {
             foreach (array_slice($images, 0, $maxImages) as $image) {
-                $storedImages[] = $this->imageUploadService->storeImage($image, 'posts');
+                $storedImages[] = $this->imageUploadService->storeImage($image, 'posts', 'post', 'images', true);
             }
 
-            $post = DB::transaction(function () use ($author, $data, $community, $linkUrl, $linkMeta, $storedImages, $filteredContent, $filteredTitle, $filterCheck): Post {
+            $post = DB::transaction(function () use ($author, $data, $community, $linkUrl, $linkMeta, $storedImages, $imageAlts, $filteredContent, $filteredTitle, $filterCheck): Post {
                 $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? PostCategory::General;
                 $visibility = $community !== null
                     ? ($community->visibility === 'private' ? PostVisibility::Community : PostVisibility::Public)
@@ -171,6 +173,7 @@ class PostService
                 $post->save();
 
                 foreach ($storedImages as $index => $mediaInfo) {
+                    $rawAlt = isset($imageAlts[$index]) ? trim($imageAlts[$index]) : '';
                     $media = new PostMedia([
                         'disk' => $mediaInfo['disk'],
                         'path' => $mediaInfo['path'],
@@ -178,6 +181,7 @@ class PostService
                         'width' => $mediaInfo['width'],
                         'height' => $mediaInfo['height'],
                         'size_bytes' => $mediaInfo['size_bytes'],
+                        'alt_text' => $rawAlt !== '' ? mb_substr($rawAlt, 0, 250) : null,
                         'sort_order' => $index,
                     ]);
                     $media->post_id = $post->id;
@@ -228,6 +232,7 @@ class PostService
         } catch (\Throwable $exception) {
             foreach ($storedImages as $mediaInfo) {
                 $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['path']);
+                $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['thumbnail_path']);
             }
 
             throw $exception;

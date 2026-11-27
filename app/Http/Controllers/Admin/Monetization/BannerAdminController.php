@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BannerCampaign;
 use App\Models\BannerPlacement;
 use App\Models\User;
+use App\Rules\ValidUploadedImage;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Security\AuditLogger;
 use Database\Seeders\MonetizationSeeder;
@@ -112,11 +113,9 @@ class BannerAdminController extends Controller
             'currency' => ['required', 'string', Rule::in(['VND', 'USD'])],
             'payment_status' => ['required', 'string', Rule::in(['manual_paid', 'paid', 'promotional', 'pending'])],
             'auto_approve' => ['required', 'boolean'],
-            'desktop_image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'mobile_image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-            'logo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'desktop_image_url' => ['nullable', 'url', 'max:500'],
-            'mobile_image_url' => ['nullable', 'url', 'max:500'],
+            'desktop_image' => ['nullable', 'file', new ValidUploadedImage('banner')],
+            'mobile_image' => ['nullable', 'file', new ValidUploadedImage('banner')],
+            'logo' => ['nullable', 'file', new ValidUploadedImage('branding')],
         ]);
 
         $owner = $actor;
