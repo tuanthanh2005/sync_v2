@@ -189,7 +189,23 @@
         "reactionTriggerHint": "प्रतिक्रियाओं के लिए होवर करें या दबाए रखें",
         "shareAction": "साझा करें",
         "sharesExact": "{count} शेयर",
-        "viewsExact": "{count} बार देखा गया"
+        "viewsExact": "{count} बार देखा गया",
+        "viewsTooltip": "{count} कुल व्यूज़ (सत्यापित मानव, अतिथि और AI गतिविधि सहित)",
+        "viewAnalytics": {
+            "title": "पोस्ट व्यू एनालिटिक्स",
+            "privacyNote": "केवल समेकित आंकड़े — किसी भी दर्शक की व्यक्तिगत पहचान कभी साझा नहीं की जाती।",
+            "totalViews": "कुल व्यूज़",
+            "humanViews": "मानव व्यूज़",
+            "guestViews": "अतिथि व्यूज़",
+            "aiViews": "AI व्यूज़",
+            "aiContentAccesses": "AI सामग्री एक्सेस",
+            "uniqueHumanViewers": "अद्वितीय मानव दर्शक",
+            "organicViews": "ऑर्गेनिक व्यूज़",
+            "promotedHumanViews": "प्रमोटेड मानव व्यूज़",
+            "invalidViews": "अमान्य / फ़िल्टर किए गए व्यूज़",
+            "legacyViews": "पुराने / अवर्गीकृत",
+            "aiSeparationNotice": "पारदर्शिता के लिए कुल व्यूज़ में सत्यापित AI गतिविधि शामिल है। AI व्यूज़ को अद्वितीय मानव दर्शकों, DAU/MAU, ऑर्गेनिक मानव पहुँच और भुगतान विज्ञापन इंप्रेशन से पूरी तरह बाहर रखा गया है।"
+        }
     },
     "profile": {
         "postsTab": "पोस्ट",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "नया पासवर्ड पुनः दर्ज करें",
             "confirmPasswordPlaceholder": "पासवर्ड पुनः दर्ज करें",
             "email": "ईमेल पता",
-            "emailPlaceholder": "naam@example.com",
+            "emailPlaceholder": "naam{'@'}example.com",
             "enterNewPasswordPlaceholder": "एक मज़बूत नया पासवर्ड दर्ज करें",
             "name": "पूरा नाम",
             "namePlaceholder": "अपना पूरा नाम दर्ज करें",
@@ -726,7 +742,9 @@
             "commentsSeries": "नई टिप्पणियां",
             "revenueSeries": "जमा राशि (VND)",
             "adSpendSeries": "विज्ञापन खर्च (VND)",
-            "growthRate": "अवधि वृद्धि"
+            "growthRate": "अवधि वृद्धि",
+            "viewsSectionTitle": "पोस्ट व्यू एनालिटिक्स",
+            "viewsSectionSubtitle": "500ms / 5-मिनट डुप्लिकेट-रोधी रियल-टाइम व्यू विश्लेषण, जो मानव, अतिथि, AI और फ़िल्टर ट्रैफ़िक को अलग करता है।"
         },
         "health": {
             "title": "सिस्टम स्वास्थ्य और रनटाइम",
@@ -926,11 +944,23 @@
                 "features": "फ़ीचर फ़्लैग और रखरखाव",
                 "content": "सामग्री सीमाएं",
                 "ads": "विज्ञापन इंजन",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "व्यू ट्रैकिंग"
             },
             "maintenanceWarning": "रखरखाव मोड एडमिन पहुंच को सक्रिय रखते हुए गैर-स्टाफ़ ट्रैफ़िक को HTTP 503 से अवरुद्ध करता है।",
             "brandingAssetsHint": "अपने डिवाइस से सीधे ब्रांड लोगो, फ़ेविकॉन और डिफ़ॉल्ट Open Graph छवि अपलोड करें।",
-            "brandingAssetsTitle": "ब्रांड और SEO विज़ुअल संपत्तियां"
+            "brandingAssetsTitle": "ब्रांड और SEO विज़ुअल संपत्तियां",
+            "viewsPolicyHint": "न्यूज़ फ़ीड व्यू सीमाएं और डुप्लिकेट-रोधी नियम कॉन्फ़िगर करें। हर बदलाव के लिए एडमिन अनुमति आवश्यक है और ऑडिट लॉग में दर्ज होता है।",
+            "viewHints": {
+                "views_min_duration_ms": "व्यूपोर्ट में न्यूनतम निरंतर प्रदर्शन अवधि मिलीसेकंड में (डिफ़ॉल्ट: 500ms, सीमा: 100–10,000)।",
+                "views_min_visible_ratio": "पोस्ट या प्रतिनिधि क्षेत्र का न्यूनतम दृश्य प्रतिशत (डिफ़ॉल्ट: 50%, सीमा: 10–100)।",
+                "views_dedup_window_seconds": "प्रति दर्शक और पोस्ट सर्वर-साइड डुप्लिकेट-रोधी अवधि सेकंड में (डिफ़ॉल्ट: 300s / 5 मिनट)।",
+                "views_track_guests": "अनाम अतिथि सत्रों को वैध पोस्ट व्यू दर्ज करने की अनुमति दें।",
+                "views_track_ai": "सत्यापित AI एजेंट्स को स्पष्ट रूप से वर्गीकृत AI व्यूज़ और AI सामग्री एक्सेस दर्ज करने दें।",
+                "views_track_author_self": "लेखक द्वारा अपनी ही पोस्ट देखने पर व्यू गिनें (अनुशंसित: बंद)।",
+                "views_bot_filtering": "सर्च इंजन क्रॉलर, प्रीफ़ेच अनुरोध और अमान्य ऑटोमेटेड बॉट ट्रैफ़िक फ़िल्टर करें।",
+                "views_retention_days": "कुल काउंटर सुरक्षित रखते हुए स्वचालित सफाई से पहले कच्चे डुप्लिकेट लॉग रखने के दिन (डिफ़ॉल्ट: 30, सीमा: 7–180)।"
+            }
         },
         "notifications": {
             "title": "एडमिन सूचना केंद्र",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: 24 घंटे में एक ही IP से अत्यधिक क्लिक वृद्धि वाले {count} अभियान पाए गए।",
-            "campaignFinancialSummary": "@{username} · बजट: {budget} · खर्च: {spent} · आरक्षित: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · बजट: {budget} · खर्च: {spent} · आरक्षित: {held}",
             "campaignPerformanceSummary": "प्रदर्शन: {impressions} · क्लिक: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "इस अभियान को अस्वीकार करने पर सारा आरक्षित बजट विज्ञापनदाता के विज्ञापन शेष में स्वतः वापस कर दिया जाएगा।"
         },
@@ -1187,7 +1217,7 @@
                 "mask": "मास्क करें"
             },
             "systemActor": "सिस्टम",
-            "transferOwnerUsernameLabel": "नए स्वामी का उपयोगकर्ता नाम (@username)",
+            "transferOwnerUsernameLabel": "नए स्वामी का उपयोगकर्ता नाम ({'@'}username)",
             "unknownAuthor": "अज्ञात",
             "usernamePlaceholder": "उपयोगकर्ता नाम"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "सामान्य"
             },
             "priorityAria": "रिपोर्ट प्राथमिकता",
-            "reporterBy": "रिपोर्टर: @{username}",
-            "reviewedBy": "@{username} द्वारा समीक्षित",
+            "reporterBy": "रिपोर्टर: {'@'}{username}",
+            "reviewedBy": "{'@'}{username} द्वारा समीक्षित",
             "systemActor": "सिस्टम",
             "targetRef": "{type} #{id}",
             "unknownUser": "अज्ञात"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "सभी सक्रिय उपयोगकर्ता",
                 "staff": "केवल स्टाफ़",
-                "user": "विशिष्ट उपयोगकर्ता (@username)",
+                "user": "विशिष्ट उपयोगकर्ता ({'@'}username)",
                 "verified": "सत्यापित उपयोगकर्ता"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "प्रोफ़ाइल",
             "emailLabel": "ईमेल पता",
-            "emailPlaceholder": "naam@example.com",
+            "emailPlaceholder": "naam{'@'}example.com",
             "emailUnverified": "आपका ईमेल पता अभी तक सत्यापित नहीं है।",
             "headingDescription": "अपना सार्वजनिक प्रदर्शन नाम, उपयोगकर्ता नाम, ईमेल और समय क्षेत्र अपडेट करें।",
             "headingTitle": "प्रोफ़ाइल जानकारी",
@@ -2460,7 +2490,7 @@
             "saveChanges": "परिवर्तन सहेजें",
             "srHeading": "प्रोफ़ाइल सेटिंग्स",
             "timezoneLabel": "समय क्षेत्र",
-            "usernameLabel": "उपयोगकर्ता नाम (@username)",
+            "usernameLabel": "उपयोगकर्ता नाम ({'@'}username)",
             "usernamePlaceholder": "उपयोगकर्ता नाम",
             "verificationLinkSent": "आपके ईमेल पते पर एक नया सत्यापन लिंक भेजा गया है।"
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "अपलोड रद्द किया गया।",
         "uploading": "अपलोड हो रहा है...",
         "zoomLabel": "ज़ूम"
+    },
+    "socialList": {
+        "you": "आप",
+        "unfollow": "अनफ़ॉलो करें",
+        "followAria": "{name} को फ़ॉलो करें",
+        "unfollowAria": "{name} को अनफ़ॉलो करें",
+        "followError": "फ़ॉलो स्थिति अपडेट नहीं हो सकी। कृपया पुनः प्रयास करें।",
+        "reactionsTitle": "प्रतिक्रियाएं",
+        "allReactions": "सभी",
+        "filterReactionsAria": "प्रकार के अनुसार प्रतिक्रियाएं फ़िल्टर करें",
+        "viewReactionsAria": "{count} प्रतिक्रियाएं देखें",
+        "searchPeople": "नाम या यूज़रनेम से खोजें...",
+        "searchFollowers": "फ़ॉलोअर्स खोजें...",
+        "searchFollowing": "फ़ॉलोइंग खोजें...",
+        "loadError": "अभी सूची लोड नहीं हो सकी।",
+        "retry": "पुनः प्रयास करें",
+        "loadMore": "और लोड करें",
+        "clearSearch": "खोज साफ़ करें",
+        "noSearchResults": "कोई मिलता-जुलता व्यक्ति नहीं मिला",
+        "noSearchResultsHint": "किसी अन्य नाम या यूज़रनेम से खोजें।",
+        "noReactionsYet": "अभी कोई प्रतिक्रिया नहीं",
+        "noReactionsYetHint": "इस पोस्ट पर सबसे पहले प्रतिक्रिया दें।",
+        "followersTitle": "फ़ॉलोअर्स",
+        "followingTitle": "फ़ॉलोइंग",
+        "postsLabel": "पोस्ट",
+        "followTabsAria": "फ़ॉलोअर्स और फ़ॉलोइंग के बीच स्विच करें",
+        "noFollowersYet": "अभी कोई फ़ॉलोअर नहीं",
+        "noFollowersYetHint": "जब लोग इस खाते को फ़ॉलो करेंगे, वे यहां दिखाई देंगे।",
+        "noFollowingYet": "अभी किसी को फ़ॉलो नहीं किया है",
+        "noFollowingYetHint": "इस प्रोफ़ाइल द्वारा फ़ॉलो किए गए खाते यहां दिखाई देंगे।",
+        "exploreCommunities": "समुदाय खोजें",
+        "restrictedTitle": "सूची उपलब्ध नहीं है",
+        "restrictedHint": "आप इस खाते के कनेक्शन नहीं देख सकते।"
     }
 }

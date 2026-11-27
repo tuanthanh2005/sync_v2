@@ -189,7 +189,23 @@
         "reactionTriggerHint": "مرّر المؤشر أو اضغط مطولًا للتفاعلات",
         "shareAction": "مشاركة",
         "sharesExact": "{count} مشاركة",
-        "viewsExact": "{count} مشاهدة"
+        "viewsExact": "{count} مشاهدة",
+        "viewsTooltip": "إجمالي المشاهدات {count} (يشمل نشاط المستخدمين الحقيقيين والضيوف والذكاء الاصطناعي الموثّق)",
+        "viewAnalytics": {
+            "title": "تحليلات مشاهدات المنشور",
+            "privacyNote": "إحصاءات مجمّعة فقط — لا يتم كشف هوية أي مشاهد فردي مطلقاً.",
+            "totalViews": "إجمالي المشاهدات",
+            "humanViews": "مشاهدات حقيقية",
+            "guestViews": "مشاهدات الضيوف",
+            "aiViews": "مشاهدات الذكاء الاصطناعي",
+            "aiContentAccesses": "وصول الذكاء الاصطناعي للمحتوى",
+            "uniqueHumanViewers": "المشاهدون الحقيقيون الفريدون",
+            "organicViews": "المشاهدات العضوية",
+            "promotedHumanViews": "مشاهدات الترويج الحقيقية",
+            "invalidViews": "المشاهدات غير الصالحة / المصفّاة",
+            "legacyViews": "سجل قديم / غير مصنّف",
+            "aiSeparationNotice": "يتضمن إجمالي المشاهدات نشاط الذكاء الاصطناعي الموثّق للشفافية. وتُستبعد مشاهدات الذكاء الاصطناعي تماماً من المشاهدين الحقيقيين الفريدين ومقاييس DAU/MAU والوصول العضوي البشري ومرات ظهور الإعلانات المدفوعة."
+        }
     },
     "profile": {
         "postsTab": "المنشورات",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
             "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
             "email": "عنوان البريد الإلكتروني",
-            "emailPlaceholder": "ism@mithal.com",
+            "emailPlaceholder": "ism{'@'}mithal.com",
             "enterNewPasswordPlaceholder": "أدخل كلمة مرور جديدة قوية",
             "name": "الاسم الكامل",
             "namePlaceholder": "أدخل اسمك الكامل",
@@ -726,7 +742,9 @@
             "commentsSeries": "تعليقات جديدة",
             "revenueSeries": "الإيداعات (VND)",
             "adSpendSeries": "الإنفاق الإعلاني (VND)",
-            "growthRate": "نسبة النمو للفترة"
+            "growthRate": "نسبة النمو للفترة",
+            "viewsSectionTitle": "تحليلات مشاهدات المنشورات",
+            "viewsSectionSubtitle": "تصنيف فوري للمشاهدات وفق قاعدة 500 مللي ثانية ومنع التكرار لمدة 5 دقائق مع فصل حركة البشر والضيوف والذكاء الاصطناعي والمصفّاة."
         },
         "health": {
             "title": "سلامة النظام وبيئة التشغيل",
@@ -926,11 +944,23 @@
                 "features": "مفاتيح الميزات والصيانة",
                 "content": "حدود المحتوى",
                 "ads": "محرك الإعلانات",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "تتبّع المشاهدات"
             },
             "maintenanceWarning": "يحجب وضع الصيانة زيارات غير المشرفين برمز HTTP 503 مع إبقاء وصول الإدارة نشطًا.",
             "brandingAssetsHint": "ارفع شعارات العلامة التجارية والأيقونة المفضلة (Favicon) وصورة Open Graph الافتراضية مباشرة من جهازك.",
-            "brandingAssetsTitle": "الأصول المرئية للعلامة التجارية وSEO"
+            "brandingAssetsTitle": "الأصول المرئية للعلامة التجارية وSEO",
+            "viewsPolicyHint": "اضبط عتبات احتساب المشاهدات في الخلاصة وقواعد منع التكرار. يتطلب كل تعديل صلاحية إدارية ويُوثّق في سجل التدقيق.",
+            "viewHints": {
+                "views_min_duration_ms": "الحد الأدنى لمدة الظهور المتواصل داخل نطاق العرض بالمللي ثانية (الافتراضي: 500، النطاق: 100–10,000).",
+                "views_min_visible_ratio": "الحد الأدنى لنسبة ظهور المنشور أو منطقة القياس التمثيلية (الافتراضي: 50%، النطاق: 10–100).",
+                "views_dedup_window_seconds": "نافذة منع التكرار على الخادم لكل مشاهد ومنشور بالثواني (الافتراضي: 300 ثانية / 5 دقائق).",
+                "views_track_guests": "السماح لجلسات الضيوف المجهولين بتسجيل مشاهدات صالحة للمنشورات.",
+                "views_track_ai": "السماح لوكلاء الذكاء الاصطناعي الموثّقين بتسجيل مشاهدات الذكاء الاصطناعي ووصول المحتوى بتصنيف واضح.",
+                "views_track_author_self": "احتساب مشاهدة الكاتب لمنشوره الخاص (الموصى به: معطّل).",
+                "views_bot_filtering": "تصفية زواحف محركات البحث وطلبات الجلب المسبق وحركة الروبوتات غير الصالحة.",
+                "views_retention_days": "أيام الاحتفاظ بسجلات منع التكرار الأولية قبل التنظيف التلقائي مع إبقاء العدادات الإجمالية (الافتراضي: 30، النطاق: 7–180)."
+            }
         },
         "notifications": {
             "title": "مركز إشعارات الإدارة",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: تم رصد {count} حملة/حملات ذات ارتفاع غير معتاد في النقرات من عنوان IP واحد خلال 24 ساعة.",
-            "campaignFinancialSummary": "@{username} · الميزانية: {budget} · المنفق: {spent} · المحجوز: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · الميزانية: {budget} · المنفق: {spent} · المحجوز: {held}",
             "campaignPerformanceSummary": "مرات الظهور: {impressions} · النقرات: {clicks} · نسبة النقر (CTR): {ctr}%",
             "rejectConsequence": "سيؤدي رفض هذه الحملة إلى رد جميع الميزانية المحجوزة تلقائيًا إلى رصيد الإعلانات الخاص بالمعلن."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "إخفاء جزئي"
             },
             "systemActor": "النظام",
-            "transferOwnerUsernameLabel": "اسم مستخدم المالك الجديد (@username)",
+            "transferOwnerUsernameLabel": "اسم مستخدم المالك الجديد ({'@'}username)",
             "unknownAuthor": "غير معروف",
             "usernamePlaceholder": "اسم المستخدم"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "عادية"
             },
             "priorityAria": "أولوية البلاغ",
-            "reporterBy": "المُبلِّغ: @{username}",
-            "reviewedBy": "راجعه @{username}",
+            "reporterBy": "المُبلِّغ: {'@'}{username}",
+            "reviewedBy": "راجعه {'@'}{username}",
             "systemActor": "النظام",
             "targetRef": "{type} #{id}",
             "unknownUser": "غير معروف"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "جميع المستخدمين النشطين",
                 "staff": "فريق العمل فقط",
-                "user": "مستخدم محدد (@username)",
+                "user": "مستخدم محدد ({'@'}username)",
                 "verified": "المستخدمون الموثَّقون"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "الملف الشخصي",
             "emailLabel": "عنوان البريد الإلكتروني",
-            "emailPlaceholder": "ism@mithal.com",
+            "emailPlaceholder": "ism{'@'}mithal.com",
             "emailUnverified": "لم يتم التحقق من عنوان بريدك الإلكتروني بعد.",
             "headingDescription": "حدّث اسم العرض العام واسم المستخدم والبريد الإلكتروني والمنطقة الزمنية.",
             "headingTitle": "معلومات الملف الشخصي",
@@ -2460,7 +2490,7 @@
             "saveChanges": "حفظ التغييرات",
             "srHeading": "إعدادات الملف الشخصي",
             "timezoneLabel": "المنطقة الزمنية",
-            "usernameLabel": "اسم المستخدم (@username)",
+            "usernameLabel": "اسم المستخدم ({'@'}username)",
             "usernamePlaceholder": "اسم المستخدم",
             "verificationLinkSent": "تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "تم إلغاء الرفع.",
         "uploading": "جارٍ الرفع...",
         "zoomLabel": "التكبير"
+    },
+    "socialList": {
+        "you": "أنت",
+        "unfollow": "إلغاء المتابعة",
+        "followAria": "متابعة {name}",
+        "unfollowAria": "إلغاء متابعة {name}",
+        "followError": "تعذر تحديث حالة المتابعة. يرجى المحاولة مجدداً.",
+        "reactionsTitle": "التفاعلات",
+        "allReactions": "الكل",
+        "filterReactionsAria": "تصفية التفاعلات حسب النوع",
+        "viewReactionsAria": "عرض {count} تفاعل",
+        "searchPeople": "ابحث بالاسم أو اسم المستخدم...",
+        "searchFollowers": "ابحث في المتابعين...",
+        "searchFollowing": "ابحث في المتابَعين...",
+        "loadError": "تعذر تحميل القائمة حالياً.",
+        "retry": "إعادة المحاولة",
+        "loadMore": "تحميل المزيد",
+        "clearSearch": "مسح البحث",
+        "noSearchResults": "لا توجد نتائج مطابقة",
+        "noSearchResultsHint": "جرّب البحث باسم أو اسم مستخدم آخر.",
+        "noReactionsYet": "لا توجد تفاعلات بعد",
+        "noReactionsYetHint": "كن أول من يتفاعل مع هذا المنشور.",
+        "followersTitle": "المتابعون",
+        "followingTitle": "يتابع",
+        "postsLabel": "المنشورات",
+        "followTabsAria": "التبديل بين المتابعين والمتابَعين",
+        "noFollowersYet": "لا يوجد متابعون بعد",
+        "noFollowersYetHint": "عندما يتابع الآخرون هذا الحساب سيظهرون هنا.",
+        "noFollowingYet": "لا يتابع أحداً بعد",
+        "noFollowingYetHint": "الحسابات التي يتابعها هذا الملف ستظهر هنا.",
+        "exploreCommunities": "استكشف المجتمعات",
+        "restrictedTitle": "القائمة غير متاحة",
+        "restrictedHint": "لا يمكنك عرض قائمة اتصالات هذا الحساب."
     }
 }

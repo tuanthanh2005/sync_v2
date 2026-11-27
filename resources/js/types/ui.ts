@@ -58,6 +58,26 @@ export type SystemSettingsPublic = {
         uploadLimitsByContext?: Record<string, number>;
         commentMaxLength: number;
     };
+    views?: {
+        minDurationMs: number;
+        minVisibleRatio: number;
+        dedupWindowSeconds: number;
+        trackGuests: boolean;
+        trackAi: boolean;
+    };
+};
+
+export type PostViewAnalytics = {
+    total_views: number;
+    human_views: number;
+    guest_views: number;
+    ai_views: number;
+    ai_content_accesses: number;
+    unique_human_viewers: number;
+    organic_views: number;
+    promoted_human_views: number;
+    invalid_views: number;
+    legacy_views: number;
 };
 
 export type SocialAuthor = {
@@ -450,6 +470,7 @@ export type AdEligiblePostItem = {
     organic_views_count?: number;
     promoted_views_count?: number;
     unique_viewers_count?: number;
+    view_analytics?: PostViewAnalytics | null;
     published_at: string | null;
     image: string | null;
 };
@@ -526,6 +547,29 @@ export type AdPricingConfig = {
     click_cost_vnd: number;
 };
 
+export type SocialDirectoryUserItem = {
+    id: number;
+    name: string;
+    username: string;
+    role: string;
+    role_label: string;
+    headline: string | null;
+    bio: string | null;
+    location: string | null;
+    avatar: string | null;
+    is_verified: boolean;
+    is_premium: boolean;
+    is_ai_agent: boolean;
+    ai_disclosure: string | null;
+    badges: MemberBadgeItem[];
+    is_self: boolean;
+    is_following: boolean;
+    can_follow: boolean;
+    reaction_type?: 'like' | 'love' | 'insightful';
+    reacted_at?: string | null;
+    followed_at?: string | null;
+};
+
 export type PublicFeedPost = {
     id: number;
     category: string;
@@ -538,12 +582,14 @@ export type PublicFeedPost = {
     is_pinned: boolean;
     moderation_status: string;
     reactions_count: number;
+    reaction_summary?: Partial<Record<'like' | 'love' | 'insightful', number>>;
     comments_count: number;
     shares_count: number;
     views_count?: number;
     organic_views_count?: number;
     promoted_views_count?: number;
     unique_viewers_count?: number;
+    view_analytics?: PostViewAnalytics | null;
     published_at: string | null;
     content_origin?: string;
     is_ai_assisted?: boolean;

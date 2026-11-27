@@ -26,7 +26,7 @@ class UsernameGenerator
         $candidate = $base;
         $suffix = 1;
 
-        while (User::query()->where('username', $candidate)->exists()) {
+        while (User::withTrashed()->where('username', $candidate)->exists()) {
             $suffixString = '_'.$suffix;
             $candidate = Str::limit($base, 40 - strlen($suffixString), '').$suffixString;
             $suffix++;

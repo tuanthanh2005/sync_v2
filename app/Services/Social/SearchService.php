@@ -381,10 +381,10 @@ class SearchService
         $topics = $this->hashtagService->trending(10);
         $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
-        // Featured / engaging posts — ONLY label as Trending when real engagement exists.
+        // Featured / engaging posts — ONLY label as Trending when real human/guest engagement exists (excludes AI views).
         $engagingPosts = $this->feedService->baseVisibleQuery($viewer)
-            ->whereRaw('(reactions_count + comments_count + views_count) >= 3')
-            ->orderByRaw('(reactions_count * 3 + comments_count * 4 + views_count) DESC')
+            ->whereRaw('(reactions_count + comments_count + human_views_count + guest_views_count + legacy_views_count) >= 3')
+            ->orderByRaw('(reactions_count * 3 + comments_count * 4 + human_views_count + guest_views_count + legacy_views_count) DESC')
             ->orderByDesc('published_at')
             ->limit($compactFallback ? 3 : 4)
             ->get();

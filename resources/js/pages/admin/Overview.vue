@@ -4,6 +4,7 @@ import {
     Activity,
     BadgeCheck,
     CreditCard,
+    Eye,
     Flag,
     HardDrive,
     Megaphone,
@@ -49,6 +50,7 @@ import type {
     AdminAuditRecord,
     AdminPlatformStatus,
     AdminUserRecord,
+    PostViewAnalytics,
 } from '@/types';
 
 type DashboardMetrics = {
@@ -72,6 +74,7 @@ type DashboardMetrics = {
     pending_verifications: number;
     total_revenue_vnd: number;
     media_storage_bytes: number;
+    views_summary?: PostViewAnalytics;
 };
 
 type GrowthSeries = {
@@ -212,7 +215,7 @@ const chartDatasets = computed(() => [
         </section>
 
         <!-- Action Queues & Safety Metrics -->
-        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
             <AdminStatCard
                 :label="t('admin.dashboard.pendingReports')"
                 :value="formatNumber(metrics.pending_reports, locale)"
@@ -267,6 +270,15 @@ const chartDatasets = computed(() => [
                         ? adminVerifications.url()
                         : undefined
                 "
+            />
+            <AdminStatCard
+                v-if="metrics.views_summary"
+                :label="t('post.viewAnalytics.totalViews')"
+                :value="formatNumber(metrics.views_summary.total_views, locale)"
+                :hint="`${t('post.viewAnalytics.humanViews')}: ${formatNumber(metrics.views_summary.human_views, locale)} · ${t('post.viewAnalytics.aiViews')}: ${formatNumber(metrics.views_summary.ai_views + metrics.views_summary.ai_content_accesses, locale)}`"
+                :icon="Eye"
+                tone="primary"
+                :href="can?.viewAnalytics ? adminAnalytics.url() : undefined"
             />
         </section>
 

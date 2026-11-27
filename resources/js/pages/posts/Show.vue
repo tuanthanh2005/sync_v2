@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
-import { ArrowLeft, CornerDownRight, Trash2 } from '@lucide/vue';
+import { ArrowLeft, BarChart3, CornerDownRight, Trash2 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CommentController from '@/actions/App/Http/Controllers/Social/CommentController';
@@ -14,7 +14,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
-import { formatDateTime } from '@/lib/formatters';
+import { useLivePostViewAnalytics } from '@/composables/usePostViewTracker';
+import { formatDateTime, formatNumber } from '@/lib/formatters';
 import { appToast } from '@/lib/toast';
 import { home, login, register } from '@/routes';
 import type { CommentItem, PublicFeedPost } from '@/types';
@@ -69,6 +70,11 @@ const replyingToId = ref<number | null>(null);
 const replyContent = ref('');
 const deleteCommentId = ref<number | null>(null);
 const deletingComment = ref(false);
+
+const liveViewAnalytics = useLivePostViewAnalytics(
+    () => props.post.id,
+    () => props.post.view_analytics,
+);
 
 const commentForm = useForm({
     content: '',
@@ -155,6 +161,173 @@ function executeDeleteComment(): void {
         </div>
 
         <PostCard :post="post" :truncate="false" view-source="detail" />
+
+        <!-- Post View Analytics Breakdown (Author & Staff Only, Zero Viewer PII) -->
+        <section
+            v-if="liveViewAnalytics"
+            data-test="post-view-analytics"
+            class="space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs"
+        >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2
+                    class="flex items-center gap-2 text-sm font-semibold text-foreground"
+                >
+                    <BarChart3 class="size-4 text-primary" aria-hidden="true" />
+                    <span>{{ t('post.viewAnalytics.title') }}</span>
+                </h2>
+                <span class="text-[11px] text-muted-foreground">
+                    {{ t('post.viewAnalytics.privacyNote') }}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.totalViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-base font-bold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(liveViewAnalytics.total_views, locale)
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.humanViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-base font-bold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(liveViewAnalytics.human_views, locale)
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.guestViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-base font-bold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(liveViewAnalytics.guest_views, locale)
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.uniqueHumanViewers') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-base font-bold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(
+                                liveViewAnalytics.unique_human_viewers,
+                                locale,
+                            )
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.organicViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-sm font-semibold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(
+                                liveViewAnalytics.organic_views,
+                                locale,
+                            )
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.promotedHumanViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-sm font-semibold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(
+                                liveViewAnalytics.promoted_human_views,
+                                locale,
+                            )
+                        }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.aiViews') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-sm font-semibold text-foreground tabular-nums"
+                    >
+                        {{ formatNumber(liveViewAnalytics.ai_views, locale) }}
+                    </p>
+                </div>
+                <div
+                    class="rounded-lg border border-border/70 bg-muted/25 px-3 py-2"
+                >
+                    <p class="text-[11px] text-muted-foreground">
+                        {{ t('post.viewAnalytics.aiContentAccesses') }}
+                    </p>
+                    <p
+                        class="mt-0.5 text-sm font-semibold text-foreground tabular-nums"
+                    >
+                        {{
+                            formatNumber(
+                                liveViewAnalytics.ai_content_accesses,
+                                locale,
+                            )
+                        }}
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-wrap items-center justify-between gap-2 border-t border-border/70 pt-2.5 text-[11px] text-muted-foreground"
+            >
+                <span>{{ t('post.viewAnalytics.aiSeparationNotice') }}</span>
+                <div class="flex flex-wrap items-center gap-3 tabular-nums">
+                    <span v-if="liveViewAnalytics.invalid_views > 0">
+                        {{ t('post.viewAnalytics.invalidViews') }}:
+                        {{
+                            formatNumber(
+                                liveViewAnalytics.invalid_views,
+                                locale,
+                            )
+                        }}
+                    </span>
+                    <span v-if="liveViewAnalytics.legacy_views > 0">
+                        {{ t('post.viewAnalytics.legacyViews') }}:
+                        {{
+                            formatNumber(liveViewAnalytics.legacy_views, locale)
+                        }}
+                    </span>
+                </div>
+            </div>
+        </section>
 
         <!-- Subtle Guest Organic Conversion CTA -->
         <section

@@ -189,7 +189,23 @@
         "reactionTriggerHint": "ホバーまたは長押しでリアクションを選択",
         "shareAction": "共有",
         "sharesExact": "{count} 件の共有",
-        "viewsExact": "{count} 回表示"
+        "viewsExact": "{count} 回表示",
+        "viewsTooltip": "合計 {count} 回表示（確認済みの人間・ゲスト・AIアクティビティを含む）",
+        "viewAnalytics": {
+            "title": "投稿閲覧アナリティクス",
+            "privacyNote": "集計値のみを表示します — 個別の閲覧者情報は一切公開されません。",
+            "totalViews": "合計閲覧数",
+            "humanViews": "人間による閲覧",
+            "guestViews": "ゲストによる閲覧",
+            "aiViews": "AIによる閲覧",
+            "aiContentAccesses": "AIコンテンツアクセス",
+            "uniqueHumanViewers": "ユニーク人間閲覧者",
+            "organicViews": "オーガニック閲覧",
+            "promotedHumanViews": "プロモーション閲覧（人間）",
+            "invalidViews": "無効・フィルタ済み閲覧",
+            "legacyViews": "旧データ・未分類",
+            "aiSeparationNotice": "透明性のため合計閲覧数には確認済みのAIアクティビティが含まれます。AI閲覧数はユニーク人間閲覧者、DAU/MAU、オーガニックリーチ、有料広告インプレッションには一切含まれません。"
+        }
     },
     "profile": {
         "postsTab": "投稿",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "新しいパスワードを再入力",
             "confirmPasswordPlaceholder": "パスワードを再入力",
             "email": "メールアドレス",
-            "emailPlaceholder": "例: name@example.com",
+            "emailPlaceholder": "例: name{'@'}example.com",
             "enterNewPasswordPlaceholder": "強力な新しいパスワードを入力",
             "name": "氏名",
             "namePlaceholder": "氏名を入力",
@@ -726,7 +742,9 @@
             "commentsSeries": "新規コメント",
             "revenueSeries": "入金額 (VND)",
             "adSpendSeries": "広告消化額 (VND)",
-            "growthRate": "期間成長率"
+            "growthRate": "期間成長率",
+            "viewsSectionTitle": "投稿閲覧アナリティクス",
+            "viewsSectionSubtitle": "500ms表示・5分間重複除外基準で人間・ゲスト・AI・除外トラフィックをリアルタイム分類します。"
         },
         "health": {
             "title": "システム稼働状況・ランタイム",
@@ -926,11 +944,23 @@
                 "features": "機能フラグ・メンテナンス",
                 "content": "コンテンツ制限",
                 "ads": "広告エンジン",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "閲覧計測設定"
             },
             "maintenanceWarning": "メンテナンスモードを有効にすると、管理者のアクセスを維持したまま一般トラフィックにHTTP 503を返します。",
             "brandingAssetsHint": "ブランドロゴ、ファビコン、デフォルトの Open Graph 画像を端末から直接アップロードします。",
-            "brandingAssetsTitle": "ブランド・SEO ビジュアルアセット"
+            "brandingAssetsTitle": "ブランド・SEO ビジュアルアセット",
+            "viewsPolicyHint": "ニュースフィードの表示閾値と重複除外ルールを設定します。すべての変更には管理者権限が必要で、監査ログに記録されます。",
+            "viewHints": {
+                "views_min_duration_ms": "ビューポート内の最小連続表示時間（ミリ秒、デフォルト: 500ms、範囲: 100〜10,000）。",
+                "views_min_visible_ratio": "投稿または代表計測エリアの最小表示割合（デフォルト: 50%、範囲: 10〜100）。",
+                "views_dedup_window_seconds": "閲覧者・投稿ごとのサーバー側重複除外時間（秒、デフォルト: 300秒 / 5分）。",
+                "views_track_guests": "未ログインゲストセッションによる有効な閲覧の記録を許可します。",
+                "views_track_ai": "認証済みAIエージェントによる明確に分類されたAI閲覧・コンテンツアクセスの記録を許可します。",
+                "views_track_author_self": "投稿者自身による閲覧をカウントします（推奨: 無効）。",
+                "views_bot_filtering": "検索エンジンクローラー、プリフェッチ、無効なボットトラフィックを除外します。",
+                "views_retention_days": "合計カウンターを保持したまま生の重複除外イベントを自動削除するまでの保持日数（デフォルト: 30、範囲: 7〜180）。"
+            }
         },
         "notifications": {
             "title": "管理者通知センター",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: 24時間以内に同一IPからの高頻度クリックが {count} 件のキャンペーンで検出されました。",
-            "campaignFinancialSummary": "@{username} · 予算: {budget} · 消化額: {spent} · 保留額: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · 予算: {budget} · 消化額: {spent} · 保留額: {held}",
             "campaignPerformanceSummary": "表示回数: {impressions} · クリック数: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "このキャンペーンを却下すると、保留中の予算はすべて広告主の広告残高へ自動的に返金されます。"
         },
@@ -1187,7 +1217,7 @@
                 "mask": "マスク"
             },
             "systemActor": "システム",
-            "transferOwnerUsernameLabel": "新しいオーナーのユーザー名 (@username)",
+            "transferOwnerUsernameLabel": "新しいオーナーのユーザー名 ({'@'}username)",
             "unknownAuthor": "不明",
             "usernamePlaceholder": "ユーザー名"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "通常"
             },
             "priorityAria": "通報の優先度",
-            "reporterBy": "通報者: @{username}",
-            "reviewedBy": "審査担当: @{username}",
+            "reporterBy": "通報者: {'@'}{username}",
+            "reviewedBy": "審査担当: {'@'}{username}",
             "systemActor": "システム",
             "targetRef": "{type} #{id}",
             "unknownUser": "不明なユーザー"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "すべての有効ユーザー",
                 "staff": "スタッフのみ",
-                "user": "特定ユーザー (@username)",
+                "user": "特定ユーザー ({'@'}username)",
                 "verified": "認証済みユーザー"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "プロフィール",
             "emailLabel": "メールアドレス",
-            "emailPlaceholder": "例: name@example.com",
+            "emailPlaceholder": "例: name{'@'}example.com",
             "emailUnverified": "メールアドレスはまだ認証されていません。",
             "headingDescription": "公開表示名、ユーザー名、メールアドレス、タイムゾーンを更新します。",
             "headingTitle": "プロフィール情報",
@@ -2460,7 +2490,7 @@
             "saveChanges": "変更を保存",
             "srHeading": "プロフィール設定",
             "timezoneLabel": "タイムゾーン",
-            "usernameLabel": "ユーザー名 (@username)",
+            "usernameLabel": "ユーザー名 ({'@'}username)",
             "usernamePlaceholder": "ユーザー名",
             "verificationLinkSent": "新しい認証リンクをメールアドレス宛てに送信しました。"
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "アップロードをキャンセルしました。",
         "uploading": "アップロード中...",
         "zoomLabel": "ズーム"
+    },
+    "socialList": {
+        "you": "あなた",
+        "unfollow": "フォロー解除",
+        "followAria": "{name} をフォロー",
+        "unfollowAria": "{name} のフォローを解除",
+        "followError": "フォロー状態を更新できませんでした。もう一度お試しください。",
+        "reactionsTitle": "リアクション",
+        "allReactions": "すべて",
+        "filterReactionsAria": "リアクションの種類で絞り込む",
+        "viewReactionsAria": "{count} 件のリアクションを見る",
+        "searchPeople": "名前またはユーザー名で検索...",
+        "searchFollowers": "フォロワーを検索...",
+        "searchFollowing": "フォロー中を検索...",
+        "loadError": "現在リストを読み込めません。",
+        "retry": "再試行",
+        "loadMore": "さらに読み込む",
+        "clearSearch": "検索をクリア",
+        "noSearchResults": "一致するユーザーがいません",
+        "noSearchResultsHint": "別の名前またはユーザー名で検索してみてください。",
+        "noReactionsYet": "まだリアクションはありません",
+        "noReactionsYetHint": "この投稿に最初のリアクションを送ってみましょう。",
+        "followersTitle": "フォロワー",
+        "followingTitle": "フォロー中",
+        "postsLabel": "投稿",
+        "followTabsAria": "フォロワーとフォロー中を切り替え",
+        "noFollowersYet": "まだフォロワーがいません",
+        "noFollowersYetHint": "このアカウントをフォローしたユーザーがここに表示されます。",
+        "noFollowingYet": "まだ誰もフォローしていません",
+        "noFollowingYetHint": "このプロフィールがフォローしているアカウントがここに表示されます。",
+        "exploreCommunities": "コミュニティを探す",
+        "restrictedTitle": "リストを表示できません",
+        "restrictedHint": "このアカウントのつながりは表示できません。"
     }
 }

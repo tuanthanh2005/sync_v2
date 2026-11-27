@@ -7,6 +7,8 @@ use App\Http\Requests\Social\ProfileDetailsUpdateRequest;
 use App\Models\User;
 use App\Services\Seo\SeoMetadataService;
 use App\Services\Social\ProfileService;
+use App\Services\Social\SocialDirectoryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,6 +19,7 @@ class ProfileViewController extends Controller
 {
     public function __construct(
         private readonly ProfileService $profileService,
+        private readonly SocialDirectoryService $directoryService,
         private readonly SeoMetadataService $seoMetadata,
     ) {}
 
@@ -80,21 +83,69 @@ class ProfileViewController extends Controller
         return back();
     }
 
-    public function toggleFollow(Request $request, User $user): RedirectResponse
+    public function followers(Request $request, User $user): JsonResponse
+    {
+        return $this->renderFollowList($request, $user, 'followers');
+    }
+
+    public function following(Request $request, User $user): JsonResponse
+    {
+        return $this->renderFollowList($request, $user, 'following');
+    }
+
+    public function toggleFollow(Request $request, User $user): RedirectResponse|JsonResponse
     {
         $viewer = $request->user();
         abort_if($viewer === null, 403);
 
         $result = $this->profileService->toggleFollow($viewer, $user);
 
+        $message = $result['following']
+            ? __('You are now following @:username.', ['username' => $user->username])
+            : __('Unfollowed @:username.', ['username' => $user->username]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'following' => $result['following'],
+                'followers_count' => $result['followers_count'],
+                'viewer_following_count' => $result['viewer_following_count'],
+                'target_user_id' => $user->id,
+                'message' => $message,
+            ]);
+        }
+
         Inertia::flash('toast', [
             'type' => 'success',
-            'message' => $result['following']
-                ? __('You are now following @:username.', ['username' => $user->username])
-                : __('Unfollowed @:username.', ['username' => $user->username]),
+            'message' => $message,
         ]);
 
         return back();
+    }
+
+    private function renderFollowList(Request $request, User $user, string $tab): JsonResponse
+    {
+        $viewer = $request->user();
+
+        if (! $user->isActive() && ! ($viewer !== null && $viewer->isStaff())) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:80'],
+            'page' => ['nullable', 'integer', 'min:1', 'max:500'],
+            'per_page' => ['nullable', 'integer', 'min:5', 'max:30'],
+        ]);
+
+        $payload = $this->directoryService->followList(
+            targetUser: $user,
+            tab: $tab,
+            viewer: $viewer,
+            search: isset($validated['search']) ? (string) $validated['search'] : null,
+            page: (int) ($validated['page'] ?? 1),
+            perPage: (int) ($validated['per_page'] ?? SocialDirectoryService::DEFAULT_PER_PAGE),
+        );
+
+        return response()->json($payload);
     }
 
     public function toggleBlock(Request $request, User $user): RedirectResponse

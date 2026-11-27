@@ -189,7 +189,23 @@
         "reactionTriggerHint": "悬停或长按选择表情回应",
         "shareAction": "分享",
         "sharesExact": "{count} 次分享",
-        "viewsExact": "{count} 次浏览"
+        "viewsExact": "{count} 次浏览",
+        "viewsTooltip": "总浏览量 {count} 次（包含经验证的真实用户、访客和 AI 活动）",
+        "viewAnalytics": {
+            "title": "帖子浏览数据分析",
+            "privacyNote": "仅显示汇总指标 — 绝不公开单个浏览者身份。",
+            "totalViews": "总浏览量",
+            "humanViews": "真实用户浏览",
+            "guestViews": "访客浏览",
+            "aiViews": "AI 浏览",
+            "aiContentAccesses": "AI 内容访问",
+            "uniqueHumanViewers": "独立真实浏览者",
+            "organicViews": "自然浏览",
+            "promotedHumanViews": "推广真实用户浏览",
+            "invalidViews": "无效 / 已过滤浏览",
+            "legacyViews": "历史数据 / 未分类",
+            "aiSeparationNotice": "为保证透明，总浏览量包含合规的 AI 活动。AI 浏览严格不计入独立真实浏览者、DAU/MAU、真实自然触达或付费广告展示次数。"
+        }
     },
     "profile": {
         "postsTab": "帖子",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "请再次输入新密码",
             "confirmPasswordPlaceholder": "请再次输入密码",
             "email": "电子邮箱",
-            "emailPlaceholder": "例如：name@example.com",
+            "emailPlaceholder": "例如：name{'@'}example.com",
             "enterNewPasswordPlaceholder": "输入高强度新密码",
             "name": "姓名",
             "namePlaceholder": "请输入您的姓名",
@@ -726,7 +742,9 @@
             "commentsSeries": "新增评论",
             "revenueSeries": "充值金额 (VND)",
             "adSpendSeries": "广告消耗 (VND)",
-            "growthRate": "周期增长率"
+            "growthRate": "周期增长率",
+            "viewsSectionTitle": "帖子浏览数据分析",
+            "viewsSectionSubtitle": "基于 500ms 连续曝光与 5 分钟去重规则的实时浏览分类，清晰区分真实用户、访客、AI 及已过滤流量。"
         },
         "health": {
             "title": "系统健康与运行状态",
@@ -926,11 +944,23 @@
                 "features": "功能开关与维护",
                 "content": "内容限制",
                 "ads": "广告引擎",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "浏览量统计"
             },
             "maintenanceWarning": "维护模式会向普通访客返回 HTTP 503，同时保持管理员正常访问。",
             "brandingAssetsHint": "直接从您的设备上传品牌标志、网站图标及默认 Open Graph 图片。",
-            "brandingAssetsTitle": "品牌与 SEO 视觉素材"
+            "brandingAssetsTitle": "品牌与 SEO 视觉素材",
+            "viewsPolicyHint": "配置信息流浏览判定阈值与去重规则。所有修改均需管理员权限并记录至审计日志。",
+            "viewHints": {
+                "views_min_duration_ms": "视口内连续可见的最短毫秒数（默认：500ms，范围：100–10,000）。",
+                "views_min_visible_ratio": "帖子或代表性检测区域的最低可见百分比（默认：50%，范围：10–100）。",
+                "views_dedup_window_seconds": "按浏览者和帖子计算的服务器端去重窗口（秒，默认：300秒 / 5分钟）。",
+                "views_track_guests": "允许未登录访客会话记录有效的帖子浏览。",
+                "views_track_ai": "允许合规的 AI 智能体记录明确分类的 AI 浏览与 AI 内容访问。",
+                "views_track_author_self": "统计作者浏览自己帖子的次数（建议：关闭）。",
+                "views_bot_filtering": "过滤搜索引擎爬虫、预抓取请求和无效自动化机器人流量。",
+                "views_retention_days": "在保留总计数的前提下自动清理原始去重日志前的保留天数（默认：30，范围：7–180）。"
+            }
         },
         "notifications": {
             "title": "管理员通知中心",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}：检测到 {count} 个广告活动在 24 小时内存在单一 IP 高频点击异常。",
-            "campaignFinancialSummary": "@{username} · 预算：{budget} · 已消耗：{spent} · 已预留：{held}",
+            "campaignFinancialSummary": "{'@'}{username} · 预算：{budget} · 已消耗：{spent} · 已预留：{held}",
             "campaignPerformanceSummary": "展示量：{impressions} · 点击量：{clicks} · CTR：{ctr}%",
             "rejectConsequence": "驳回此广告活动后，所有预留预算将自动退回至广告主的广告余额。"
         },
@@ -1187,7 +1217,7 @@
                 "mask": "掩码替换"
             },
             "systemActor": "系统",
-            "transferOwnerUsernameLabel": "新创建者用户名 (@username)",
+            "transferOwnerUsernameLabel": "新创建者用户名 ({'@'}username)",
             "unknownAuthor": "未知",
             "usernamePlaceholder": "用户名"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "普通"
             },
             "priorityAria": "举报优先级",
-            "reporterBy": "举报人：@{username}",
-            "reviewedBy": "审核人：@{username}",
+            "reporterBy": "举报人：{'@'}{username}",
+            "reviewedBy": "审核人：{'@'}{username}",
             "systemActor": "系统",
             "targetRef": "{type} #{id}",
             "unknownUser": "未知用户"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "所有活跃用户",
                 "staff": "仅限工作人员",
-                "user": "指定用户 (@username)",
+                "user": "指定用户 ({'@'}username)",
                 "verified": "已验证用户"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "个人资料",
             "emailLabel": "电子邮箱",
-            "emailPlaceholder": "例如：name@example.com",
+            "emailPlaceholder": "例如：name{'@'}example.com",
             "emailUnverified": "您的电子邮箱尚未完成验证。",
             "headingDescription": "更新您的公开显示名称、用户名、电子邮箱与时区。",
             "headingTitle": "个人资料信息",
@@ -2460,7 +2490,7 @@
             "saveChanges": "保存修改",
             "srHeading": "个人资料设置",
             "timezoneLabel": "时区",
-            "usernameLabel": "用户名 (@username)",
+            "usernameLabel": "用户名 ({'@'}username)",
             "usernamePlaceholder": "用户名",
             "verificationLinkSent": "新的验证链接已发送至您的电子邮箱。"
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "已取消上传。",
         "uploading": "正在上传...",
         "zoomLabel": "缩放"
+    },
+    "socialList": {
+        "you": "你",
+        "unfollow": "取消关注",
+        "followAria": "关注 {name}",
+        "unfollowAria": "取消关注 {name}",
+        "followError": "无法更新关注状态，请稍后重试。",
+        "reactionsTitle": "互动表情",
+        "allReactions": "全部",
+        "filterReactionsAria": "按类型筛选互动",
+        "viewReactionsAria": "查看 {count} 个互动",
+        "searchPeople": "按姓名或用户名搜索...",
+        "searchFollowers": "搜索关注者...",
+        "searchFollowing": "搜索正在关注...",
+        "loadError": "暂时无法加载列表。",
+        "retry": "重试",
+        "loadMore": "加载更多",
+        "clearSearch": "清除搜索",
+        "noSearchResults": "未找到匹配的用户",
+        "noSearchResultsHint": "请尝试其他姓名或用户名。",
+        "noReactionsYet": "暂无互动",
+        "noReactionsYetHint": "成为第一个对此帖子表态的人吧。",
+        "followersTitle": "关注者",
+        "followingTitle": "正在关注",
+        "postsLabel": "帖子",
+        "followTabsAria": "在关注者和正在关注之间切换",
+        "noFollowersYet": "暂无关注者",
+        "noFollowersYetHint": "当有人关注此账号时，他们会显示在这里。",
+        "noFollowingYet": "暂未关注任何人",
+        "noFollowingYetHint": "此主页关注的账号将显示在这里。",
+        "exploreCommunities": "探索社区",
+        "restrictedTitle": "无法查看列表",
+        "restrictedHint": "你无法查看此账号的关系列表。"
     }
 }

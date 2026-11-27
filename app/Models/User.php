@@ -103,6 +103,9 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
      * @var array<string, mixed>
      */
     protected $attributes = [
+        'role' => UserRole::User->value,
+        'account_type' => AccountType::Human->value,
+        'status' => UserStatus::Active->value,
         'has_password' => true,
         'can_post' => true,
         'can_comment' => true,
@@ -237,6 +240,10 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function isActive(): bool
     {
         if ($this->deleted_at !== null || $this->deactivated_at !== null) {
+            return false;
+        }
+
+        if (! array_key_exists('status', $this->attributes) || $this->attributes['status'] === null) {
             return false;
         }
 

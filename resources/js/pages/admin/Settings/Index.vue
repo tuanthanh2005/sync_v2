@@ -41,9 +41,52 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
-const activeTab = ref<'general' | 'features' | 'content' | 'ads' | 'seo'>(
+const SETTINGS_TABS = [
     'general',
-);
+    'features',
+    'content',
+    'views',
+    'ads',
+    'seo',
+] as const;
+type SettingsTab = (typeof SETTINGS_TABS)[number];
+
+function initialTabFromUrl(): SettingsTab {
+    if (typeof window === 'undefined') {
+        return 'general';
+    }
+    const queryTab = new URLSearchParams(window.location.search).get('tab');
+    if (queryTab && (SETTINGS_TABS as readonly string[]).includes(queryTab)) {
+        return queryTab as SettingsTab;
+    }
+
+    return 'general';
+}
+
+const activeTab = ref<SettingsTab>(initialTabFromUrl());
+
+const VIEW_SETTING_BOUNDS: Record<string, { min: number; max: number }> = {
+    views_min_duration_ms: { min: 100, max: 10000 },
+    views_min_visible_ratio: { min: 10, max: 100 },
+    views_dedup_window_seconds: { min: 30, max: 86400 },
+    views_retention_days: { min: 7, max: 180 },
+};
+
+function minForIntegerKey(key: string): number {
+    if (key.includes('upload_max_mb')) {
+        return 1;
+    }
+
+    return VIEW_SETTING_BOUNDS[key]?.min ?? 0;
+}
+
+function maxForIntegerKey(key: string): number | undefined {
+    if (key.includes('upload_max_mb')) {
+        return 40;
+    }
+
+    return VIEW_SETTING_BOUNDS[key]?.max;
+}
 const runtimeSpecsLine = computed(() => {
     const info = props.uploadRuntime;
     if (!info) {
@@ -151,6 +194,7 @@ function removeBrandingAsset(assetKey: string): void {
                     'general',
                     'features',
                     'content',
+                    'views',
                     'ads',
                     'seo',
                 ] as const"
@@ -258,6 +302,14 @@ function removeBrandingAsset(assetKey: string): void {
                 <span>{{ t('admin.settings.maintenanceWarning') }}</span>
             </div>
 
+            <div
+                v-if="activeTab === 'views'"
+                class="flex items-start gap-2.5 rounded-xl border border-primary/25 bg-primary-soft/50 p-3 text-xs text-foreground"
+            >
+                <CheckCircle2 class="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>{{ t('admin.settings.viewsPolicyHint') }}</span>
+            </div>
+
             <div class="grid gap-4 sm:grid-cols-2">
                 <div
                     v-for="key in keysForGroup(
@@ -274,6 +326,12 @@ function removeBrandingAsset(assetKey: string): void {
                     >
                         {{ key }}
                     </Label>
+                    <p
+                        v-if="activeTab === 'views'"
+                        class="text-[11px] text-muted-foreground"
+                    >
+                        {{ t(`admin.settings.viewHints.${key}`) }}
+                    </p>
 
                     <label
                         v-if="schema[key].type === 'boolean'"
@@ -297,8 +355,8 @@ function removeBrandingAsset(assetKey: string): void {
                         :id="`setting-${key}`"
                         :model-value="Number(form.settings[key] ?? 0)"
                         type="number"
-                        :min="key.includes('upload_max_mb') ? 1 : 0"
-                        :max="key.includes('upload_max_mb') ? 40 : undefined"
+                        :min="minForIntegerKey(key)"
+                        :max="maxForIntegerKey(key)"
                         class="h-9 text-xs"
                         @update:model-value="
                             (v) => (form.settings[key] = Number(v))

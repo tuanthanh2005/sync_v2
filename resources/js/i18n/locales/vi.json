@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Rê chuột hoặc nhấn giữ để chọn cảm xúc",
         "shareAction": "Chia sẻ",
         "sharesExact": "{count} lượt chia sẻ",
-        "viewsExact": "{count} lượt xem"
+        "viewsExact": "{count} lượt xem",
+        "viewsTooltip": "{count} tổng lượt xem (bao gồm người thật, khách và hoạt động AI hợp lệ)",
+        "viewAnalytics": {
+            "title": "Thống kê lượt xem bài viết",
+            "privacyNote": "Chỉ hiển thị số liệu tổng hợp — không công khai danh tính từng người xem.",
+            "totalViews": "Tổng lượt xem",
+            "humanViews": "Lượt xem người thật",
+            "guestViews": "Lượt xem khách",
+            "aiViews": "Lượt xem AI",
+            "aiContentAccesses": "AI truy cập nội dung",
+            "uniqueHumanViewers": "Người xem thật duy nhất",
+            "organicViews": "Lượt xem tự nhiên",
+            "promotedHumanViews": "Lượt xem quảng cáo (người thật)",
+            "invalidViews": "Lượt xem không hợp lệ / bị lọc",
+            "legacyViews": "Lịch sử cũ / chưa phân loại",
+            "aiSeparationNotice": "Tổng lượt xem bao gồm hoạt động AI hợp lệ để minh bạch. Lượt xem AI hoàn toàn không tính vào người xem thật duy nhất, DAU/MAU, tiếp cận tự nhiên hay hiển thị quảng cáo trả phí."
+        }
     },
     "profile": {
         "postsTab": "Bài viết",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Nhập lại mật khẩu mới",
             "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
             "email": "Địa chỉ email",
-            "emailPlaceholder": "ten@example.com",
+            "emailPlaceholder": "ten{'@'}example.com",
             "enterNewPasswordPlaceholder": "Nhập mật khẩu mới mạnh",
             "name": "Họ và tên",
             "namePlaceholder": "Nhập họ và tên của bạn",
@@ -726,7 +742,9 @@
             "commentsSeries": "Bình luận mới",
             "revenueSeries": "Tiền nạp (VNĐ)",
             "adSpendSeries": "Chi tiêu QC (VNĐ)",
-            "growthRate": "Tăng trưởng kỳ"
+            "growthRate": "Tăng trưởng kỳ",
+            "viewsSectionTitle": "Thống kê lượt xem bài viết",
+            "viewsSectionSubtitle": "Phân tích lượt xem theo chuẩn 500ms / chống trùng 5 phút, tách biệt rõ người thật, khách, AI và lưu lượng bị lọc."
         },
         "health": {
             "title": "Sức khỏe & Hạ tầng Hệ thống",
@@ -926,11 +944,23 @@
                 "features": "Tính năng & Bảo trì",
                 "content": "Giới hạn nội dung",
                 "ads": "Động cơ quảng cáo",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "Lượt xem bài viết"
             },
             "maintenanceWarning": "Chế độ bảo trì sẽ trả về HTTP 503 cho người dùng thường nhưng vẫn giữ quyền truy cập Admin.",
             "brandingAssetsHint": "Tải logo sáng/tối, favicon và ảnh Open Graph mặc định trực tiếp từ thiết bị.",
-            "brandingAssetsTitle": "Tài nguyên hình ảnh thương hiệu & SEO"
+            "brandingAssetsTitle": "Tài nguyên hình ảnh thương hiệu & SEO",
+            "viewsPolicyHint": "Cấu hình ngưỡng ghi nhận lượt xem và quy tắc chống trùng trên News Feed. Mọi thay đổi đều yêu cầu quyền quản trị và được ghi Audit Log.",
+            "viewHints": {
+                "views_min_duration_ms": "Thời gian hiển thị liên tục tối thiểu tính bằng mili-giây (mặc định: 500ms, giới hạn: 100–10.000).",
+                "views_min_visible_ratio": "Tỷ lệ phần trăm vùng đo đại diện tối thiểu trong viewport (mặc định: 50%, giới hạn: 10–100).",
+                "views_dedup_window_seconds": "Cửa sổ chống trùng lượt xem phía server theo người xem và bài viết tính bằng giây (mặc định: 300s / 5 phút).",
+                "views_track_guests": "Cho phép khách chưa đăng nhập ghi nhận lượt xem bài viết hợp lệ.",
+                "views_track_ai": "Cho phép AI Agent hợp lệ ghi nhận lượt xem AI và AI truy cập nội dung có phân loại riêng.",
+                "views_track_author_self": "Tính lượt xem khi tác giả tự xem bài viết của chính mình (khuyến nghị: Tắt).",
+                "views_bot_filtering": "Lọc Googlebot, trình thu thập dữ liệu tìm kiếm, prefetch và lưu lượng bot không hợp lệ.",
+                "views_retention_days": "Số ngày lưu trữ log chống trùng thô trước khi tự động dọn dẹp mà vẫn giữ nguyên tổng lượt xem (mặc định: 30, giới hạn: 7–180)."
+            }
         },
         "notifications": {
             "title": "Trung tâm Thông báo Quản trị",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: phát hiện {count} chiến dịch có lượt nhấp bất thường từ một IP trong 24 giờ.",
-            "campaignFinancialSummary": "@{username} · Ngân sách: {budget} · Đã chi: {spent} · Tạm giữ: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Ngân sách: {budget} · Đã chi: {spent} · Tạm giữ: {held}",
             "campaignPerformanceSummary": "Hiển thị: {impressions} · Nhấp chuột: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "Từ chối chiến dịch này sẽ tự động hoàn lại toàn bộ ngân sách tạm giữ về Số dư quảng cáo của nhà quảng cáo."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Che ẩn"
             },
             "systemActor": "hệ thống",
-            "transferOwnerUsernameLabel": "Tên người dùng chủ sở hữu mới (@username)",
+            "transferOwnerUsernameLabel": "Tên người dùng chủ sở hữu mới ({'@'}username)",
             "unknownAuthor": "không xác định",
             "usernamePlaceholder": "tên người dùng"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Bình thường"
             },
             "priorityAria": "Mức độ ưu tiên báo cáo",
-            "reporterBy": "Người báo cáo: @{username}",
-            "reviewedBy": "Kiểm duyệt bởi @{username}",
+            "reporterBy": "Người báo cáo: {'@'}{username}",
+            "reviewedBy": "Kiểm duyệt bởi {'@'}{username}",
             "systemActor": "hệ thống",
             "targetRef": "{type} #{id}",
             "unknownUser": "không xác định"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "Tất cả người dùng hoạt động",
                 "staff": "Chỉ nhân sự quản trị",
-                "user": "Người dùng cụ thể (@username)",
+                "user": "Người dùng cụ thể ({'@'}username)",
                 "verified": "Người dùng đã xác minh"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Hồ sơ",
             "emailLabel": "Địa chỉ email",
-            "emailPlaceholder": "ten@example.com",
+            "emailPlaceholder": "ten{'@'}example.com",
             "emailUnverified": "Địa chỉ email của bạn chưa được xác minh.",
             "headingDescription": "Cập nhật tên hiển thị công khai, tên người dùng, email và múi giờ.",
             "headingTitle": "Thông tin hồ sơ",
@@ -2460,7 +2490,7 @@
             "saveChanges": "Lưu thay đổi",
             "srHeading": "Cài đặt hồ sơ cá nhân",
             "timezoneLabel": "Múi giờ",
-            "usernameLabel": "Tên người dùng (@username)",
+            "usernameLabel": "Tên người dùng ({'@'}username)",
             "usernamePlaceholder": "ten_nguoi_dung",
             "verificationLinkSent": "Liên kết xác minh mới đã được gửi đến địa chỉ email của bạn."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Đã hủy tải ảnh.",
         "uploading": "Đang tải lên...",
         "zoomLabel": "Thu phóng"
+    },
+    "socialList": {
+        "you": "Bạn",
+        "unfollow": "Bỏ theo dõi",
+        "followAria": "Theo dõi {name}",
+        "unfollowAria": "Bỏ theo dõi {name}",
+        "followError": "Không thể cập nhật trạng thái theo dõi. Vui lòng thử lại.",
+        "reactionsTitle": "Cảm xúc",
+        "allReactions": "Tất cả",
+        "filterReactionsAria": "Lọc theo loại cảm xúc",
+        "viewReactionsAria": "Xem {count} lượt bày tỏ cảm xúc",
+        "searchPeople": "Tìm theo tên hoặc {'@'}username...",
+        "searchFollowers": "Tìm người theo dõi...",
+        "searchFollowing": "Tìm người đang theo dõi...",
+        "loadError": "Không thể tải danh sách lúc này.",
+        "retry": "Thử lại",
+        "loadMore": "Tải thêm",
+        "clearSearch": "Xóa tìm kiếm",
+        "noSearchResults": "Không tìm thấy người dùng phù hợp",
+        "noSearchResultsHint": "Thử tìm kiếm với tên hoặc username khác.",
+        "noReactionsYet": "Chưa có cảm xúc nào",
+        "noReactionsYetHint": "Hãy là người đầu tiên bày tỏ cảm xúc cho bài viết này.",
+        "followersTitle": "Người theo dõi",
+        "followingTitle": "Đang theo dõi",
+        "postsLabel": "Bài viết",
+        "followTabsAria": "Chuyển giữa danh sách người theo dõi và đang theo dõi",
+        "noFollowersYet": "Chưa có người theo dõi nào",
+        "noFollowersYetHint": "Khi có thành viên theo dõi tài khoản này, họ sẽ xuất hiện tại đây.",
+        "noFollowingYet": "Chưa theo dõi ai",
+        "noFollowingYetHint": "Các tài khoản được hồ sơ này theo dõi sẽ hiển thị tại đây.",
+        "exploreCommunities": "Khám phá cộng đồng",
+        "restrictedTitle": "Danh sách không khả dụng",
+        "restrictedHint": "Bạn không thể xem danh sách kết nối của tài khoản này."
     }
 }

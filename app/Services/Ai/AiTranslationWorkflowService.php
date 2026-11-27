@@ -4,11 +4,13 @@ namespace App\Services\Ai;
 
 use App\Enums\AiModelGroup;
 use App\Enums\AiPromptType;
+use App\Models\AiAgent;
 use App\Models\AiPromptTemplate;
 use App\Models\Post;
 use App\Models\SeoContentTranslation;
 use App\Models\User;
 use App\Services\Seo\ContentTranslationService;
+use App\Services\Social\PostViewTrackingService;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -19,13 +21,14 @@ class AiTranslationWorkflowService
         private readonly AiProviderManager $providerManager,
         private readonly AiPromptService $promptService,
         private readonly ContentTranslationService $seoTranslations,
+        private readonly PostViewTrackingService $viewTrackingService,
     ) {}
 
     /**
      * Translate an approved public Post into a target locale via Gemini Structured Output
      * and store it inside SEO V2.0's `seo_content_translations` as Draft/InReview (never bypassing editorial review).
      */
-    public function translatePostToLocale(Post $post, string $targetLocale, User $actor, bool $manual = true): SeoContentTranslation
+    public function translatePostToLocale(Post $post, string $targetLocale, User $actor, bool $manual = true, ?AiAgent $agent = null): SeoContentTranslation
     {
         $this->control->assertNotStopped($manual ? null : 'ai_translation_enabled');
 
@@ -88,6 +91,10 @@ class AiTranslationWorkflowService
             throw ValidationException::withMessages([
                 'target_locale' => [__('AI translation failed: :error', ['error' => $res->errorMessage ?? 'Provider error'])],
             ]);
+        }
+
+        if ($agent !== null) {
+            $this->viewTrackingService->recordAiContentAccess($post, $agent, 'ai_translation');
         }
 
         $data = is_array($res->structuredData) ? $res->structuredData : [];

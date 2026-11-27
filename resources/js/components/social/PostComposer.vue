@@ -2,17 +2,26 @@
 import { router, useForm, useHttp, usePage } from '@inertiajs/vue3';
 import {
     BarChart2,
+    BriefcaseBusiness,
+    ChevronDown,
+    Cpu,
     Globe,
     Hash,
     Image as ImageIcon,
+    LayoutGrid,
     Link2,
     Lock,
+    MessageCircleQuestion,
     Plus,
+    ShoppingBag,
     Smile,
     Trash2,
     UserRound,
     Video,
+    Wallet,
+    X,
 } from '@lucide/vue';
+import type { Component } from 'vue';
 import {
     computed,
     nextTick,
@@ -30,11 +39,12 @@ import InputError from '@/components/InputError.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import ImageUploader from '@/components/upload/ImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
+    DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -80,6 +90,21 @@ const QUICK_EMOJIS = [
     '⭐',
     '📌',
 ];
+
+const CATEGORY_ICON_MAP: Record<string, Component> = {
+    wallet: Wallet,
+    cpu: Cpu,
+    'briefcase-business': BriefcaseBusiness,
+    'message-circle-question': MessageCircleQuestion,
+    'shopping-bag': ShoppingBag,
+    'layout-grid': LayoutGrid,
+    finance: Wallet,
+    technology: Cpu,
+    business: BriefcaseBusiness,
+    qa: MessageCircleQuestion,
+    deals: ShoppingBag,
+    general: LayoutGrid,
+};
 
 const { t } = useI18n();
 const page = usePage();
@@ -138,6 +163,15 @@ const previewHttp = useHttp<{ url: string }, { preview: FeedLinkMeta | null }>({
     url: '',
 });
 
+const activeCategoryIcon = computed<Component>(() => {
+    const selected = props.categories.find(
+        (cat) => cat.value === form.category,
+    );
+    const key = selected?.icon || form.category;
+
+    return CATEGORY_ICON_MAP[key] ?? LayoutGrid;
+});
+
 const hasUnsavedDraft = computed<boolean>(
     () =>
         form.title.trim().length > 0 ||
@@ -162,12 +196,31 @@ const personalizedPlaceholder = computed<string>(() => {
     return t('home.composer.placeholder');
 });
 
+const isOverCharLimit = computed<boolean>(
+    () => form.content.length > maxPostLength.value,
+);
+const isNearCharLimit = computed<boolean>(
+    () =>
+        !isOverCharLimit.value &&
+        form.content.length >= Math.floor(maxPostLength.value * 0.9),
+);
+
 const canSubmit = computed<boolean>(
     () =>
         !form.processing &&
         form.content.trim().length > 0 &&
-        form.content.trim().length <= maxPostLength.value,
+        !isOverCharLimit.value,
 );
+
+function adjustTextareaHeight(): void {
+    const el = contentTextareaRef.value;
+    if (!el) {
+        return;
+    }
+
+    el.style.height = 'auto';
+    el.style.height = `${Math.max(152, el.scrollHeight)}px`;
+}
 
 function persistDraft(): void {
     if (typeof window === 'undefined') {
@@ -229,15 +282,23 @@ function openComposer(initialAction?: 'image' | 'poll' | 'link'): boolean {
     if (initialAction === 'image') {
         showImages.value = true;
         void nextTick(() => {
+            adjustTextareaHeight();
             imageUploaderRef.value?.openPicker();
         });
     } else if (initialAction === 'poll') {
         showPoll.value = true;
+        void nextTick(() => {
+            adjustTextareaHeight();
+        });
     } else if (initialAction === 'link') {
         showLink.value = true;
+        void nextTick(() => {
+            adjustTextareaHeight();
+        });
     } else {
         void nextTick(() => {
-            contentTextareaRef.value?.focus();
+            adjustTextareaHeight();
+            contentTextareaRef.value?.focus({ preventScroll: true });
         });
     }
 
@@ -247,6 +308,7 @@ function openComposer(initialAction?: 'image' | 'poll' | 'link'): boolean {
 function handleModalOpenChange(nextOpen: boolean): void {
     if (nextOpen) {
         modalOpen.value = true;
+        void nextTick(() => adjustTextareaHeight());
         return;
     }
 
@@ -279,7 +341,8 @@ function insertEmoji(emoji: string): void {
     form.content = `${form.content}${emoji}`;
     showEmojiPicker.value = false;
     void nextTick(() => {
-        contentTextareaRef.value?.focus();
+        adjustTextareaHeight();
+        contentTextareaRef.value?.focus({ preventScroll: true });
     });
 }
 
@@ -287,7 +350,8 @@ function insertHashtagPrefix(): void {
     const needsSpace = form.content.length > 0 && !/\s$/.test(form.content);
     form.content = `${form.content}${needsSpace ? ' ' : ''}#`;
     void nextTick(() => {
-        contentTextareaRef.value?.focus();
+        adjustTextareaHeight();
+        contentTextareaRef.value?.focus({ preventScroll: true });
     });
 }
 
@@ -423,6 +487,13 @@ watch(
         if (isOpen) {
             openComposer();
         }
+    },
+);
+
+watch(
+    () => form.content,
+    () => {
+        void nextTick(() => adjustTextareaHeight());
     },
 );
 
@@ -586,23 +657,45 @@ onBeforeUnmount(() => {
             </Button>
         </div>
 
-        <!-- Create Post Modal (Desktop centered 640px, Mobile full-screen safe-area) -->
+        <!-- Create Post Modal (Desktop centered 640px, Mobile full-screen composer) -->
         <Dialog :open="modalOpen" @update:open="handleModalOpenChange">
             <DialogContent
                 structured
-                class="h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none border-0 sm:h-auto sm:max-h-[88dvh] sm:max-w-[640px] sm:rounded-2xl sm:border sm:border-border"
+                :show-close-button="false"
+                class="h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none border-0 bg-card shadow-xl sm:h-auto sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:max-w-[640px] sm:rounded-2xl sm:border sm:border-border"
             >
-                <DialogHeader
-                    class="safe-pt shrink-0 border-b border-border px-5 py-3.5"
+                <!-- Modal Header: Flexbox single row, title & close button vertically aligned -->
+                <div
+                    class="flex min-h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-4 pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-4 sm:px-6 sm:py-4"
                 >
-                    <DialogTitle class="text-base font-bold text-foreground">
-                        {{ t('composer.modal.title') }}
-                    </DialogTitle>
-                </DialogHeader>
+                    <DialogHeader class="min-w-0 flex-1 gap-0 text-start">
+                        <DialogTitle
+                            class="truncate text-[20px] leading-7 font-semibold tracking-tight text-foreground"
+                        >
+                            {{ t('composer.modal.title') }}
+                        </DialogTitle>
+                        <DialogDescription class="sr-only">
+                            {{ personalizedPlaceholder }}
+                        </DialogDescription>
+                    </DialogHeader>
 
+                    <DialogClose as-child>
+                        <button
+                            type="button"
+                            data-test="composer-close"
+                            :disabled="form.processing"
+                            :aria-label="t('common.close')"
+                            class="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                        >
+                            <X class="size-5" aria-hidden="true" />
+                        </button>
+                    </DialogClose>
+                </div>
+
+                <!-- Form wraps Body + Footer inside flex-col container -->
                 <form
                     id="create-post-modal-form"
-                    class="flex min-h-0 flex-1 flex-col"
+                    class="flex min-h-0 flex-1 flex-col bg-card"
                     @submit.prevent="submitPost"
                 >
                     <!-- Upload Progress Bar -->
@@ -610,7 +703,7 @@ onBeforeUnmount(() => {
                         v-if="form.processing && form.progress"
                         class="h-1 w-full shrink-0 overflow-hidden bg-muted"
                         role="progressbar"
-                        :aria-valuenow="form.progress.percentage"
+                        :aria-valuenow="form.progress.percentage ?? 0"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     >
@@ -620,167 +713,187 @@ onBeforeUnmount(() => {
                         />
                     </div>
 
-                    <AutoHideScrollArea class="min-h-0 flex-1 px-5 py-4">
+                    <!-- Scrollable Modal Body (only this region scrolls, 4px auto-hide scrollbar) -->
+                    <AutoHideScrollArea
+                        class="min-h-0 flex-1 bg-card px-4 py-5 sm:px-6"
+                    >
                         <div class="space-y-4">
-                            <!-- Author Header + Visibility + Category -->
-                            <div
-                                v-if="user"
-                                class="flex flex-wrap items-center justify-between gap-3"
-                            >
-                                <div class="flex min-w-0 items-center gap-2.5">
-                                    <Avatar
-                                        class="size-10 shrink-0 rounded-full"
+                            <!-- Author Info + Compact Visibility & Category Chips -->
+                            <div v-if="user" class="flex items-start gap-3">
+                                <Avatar
+                                    class="size-11 shrink-0 rounded-full ring-1 ring-border/70"
+                                >
+                                    <AvatarImage
+                                        v-if="user.avatar"
+                                        :src="user.avatar"
+                                        :alt="user.name"
+                                    />
+                                    <AvatarFallback
+                                        class="bg-primary-soft text-sm font-semibold text-accent-foreground"
                                     >
-                                        <AvatarImage
-                                            v-if="user.avatar"
-                                            :src="user.avatar"
-                                            :alt="user.name"
+                                        {{ getInitials(user.name) }}
+                                    </AvatarFallback>
+                                </Avatar>
+
+                                <div class="min-w-0 flex-1">
+                                    <div
+                                        class="flex flex-wrap items-center gap-1.5 text-[15px] leading-snug font-semibold text-foreground"
+                                    >
+                                        <span class="truncate">{{
+                                            user.name
+                                        }}</span>
+                                        <PremiumBadge
+                                            v-if="
+                                                user.is_premium &&
+                                                !user.is_ai_agent
+                                            "
+                                            size="sm"
                                         />
-                                        <AvatarFallback
-                                            class="bg-primary-soft text-xs font-semibold text-accent-foreground"
+                                        <AiBadge
+                                            v-if="user.is_ai_agent"
+                                            size="sm"
+                                        />
+                                    </div>
+
+                                    <!-- Compact Chips below Author Name -->
+                                    <div
+                                        class="mt-1.5 flex flex-wrap items-center gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="inline-flex h-7 items-center gap-1.5 rounded-full border border-border/80 bg-muted/55 px-2.5 text-xs font-medium text-foreground transition-colors hover:border-border hover:bg-surface-hover focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:outline-none"
+                                            @click="
+                                                form.visibility =
+                                                    form.visibility === 'public'
+                                                        ? 'private'
+                                                        : 'public'
+                                            "
                                         >
-                                            {{ getInitials(user.name) }}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div class="min-w-0">
-                                        <div
-                                            class="flex items-center gap-1.5 text-sm font-semibold text-foreground"
-                                        >
-                                            <span class="truncate">{{
-                                                user.name
-                                            }}</span>
-                                            <PremiumBadge
+                                            <Globe
                                                 v-if="
-                                                    user.is_premium &&
-                                                    !user.is_ai_agent
+                                                    form.visibility === 'public'
                                                 "
-                                                size="sm"
+                                                class="size-3.5 shrink-0 text-primary"
+                                                aria-hidden="true"
                                             />
-                                            <AiBadge
-                                                v-if="user.is_ai_agent"
-                                                size="sm"
+                                            <Lock
+                                                v-else
+                                                class="size-3.5 shrink-0 text-warning"
+                                                aria-hidden="true"
+                                            />
+                                            <span>
+                                                {{
+                                                    form.visibility === 'public'
+                                                        ? t(
+                                                              'home.composer.visibilityPublic',
+                                                          )
+                                                        : t(
+                                                              'home.composer.visibilityPrivate',
+                                                          )
+                                                }}
+                                            </span>
+                                        </button>
+
+                                        <div
+                                            v-if="categories.length > 0"
+                                            class="relative inline-flex h-7 items-center rounded-full border border-border/80 bg-muted/55 text-xs font-medium text-foreground transition-colors focus-within:ring-2 focus-within:ring-primary/35 hover:border-border hover:bg-surface-hover"
+                                        >
+                                            <component
+                                                :is="activeCategoryIcon"
+                                                class="pointer-events-none ms-2.5 size-3.5 shrink-0 text-muted-foreground"
+                                                aria-hidden="true"
+                                            />
+                                            <select
+                                                v-model="form.category"
+                                                :aria-label="
+                                                    t(
+                                                        'home.composer.categoryLabel',
+                                                    )
+                                                "
+                                                class="h-full cursor-pointer appearance-none bg-transparent ps-1.5 pe-7 text-xs font-medium text-foreground outline-none dark:bg-card"
+                                            >
+                                                <option
+                                                    v-for="cat in categories"
+                                                    :key="cat.value"
+                                                    :value="cat.value"
+                                                >
+                                                    {{ cat.label }}
+                                                </option>
+                                            </select>
+                                            <ChevronDown
+                                                class="pointer-events-none absolute end-2 size-3.5 text-muted-foreground"
+                                                aria-hidden="true"
                                             />
                                         </div>
-                                        <p
-                                            class="truncate text-[11px] text-muted-foreground"
-                                        >
-                                            @{{ user.username }}
-                                        </p>
                                     </div>
-                                </div>
-
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <select
-                                        v-if="categories.length > 0"
-                                        v-model="form.category"
-                                        :aria-label="
-                                            t('home.composer.categoryLabel')
-                                        "
-                                        class="h-8 rounded-lg border border-input bg-card px-2.5 text-xs text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                    >
-                                        <option
-                                            v-for="cat in categories"
-                                            :key="cat.value"
-                                            :value="cat.value"
-                                        >
-                                            {{ cat.label }}
-                                        </option>
-                                    </select>
-
-                                    <button
-                                        type="button"
-                                        class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-input bg-card px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                                        @click="
-                                            form.visibility =
-                                                form.visibility === 'public'
-                                                    ? 'private'
-                                                    : 'public'
-                                        "
-                                    >
-                                        <Globe
-                                            v-if="form.visibility === 'public'"
-                                            class="size-3.5 text-primary"
-                                            aria-hidden="true"
-                                        />
-                                        <Lock
-                                            v-else
-                                            class="size-3.5 text-warning"
-                                            aria-hidden="true"
-                                        />
-                                        <span>
-                                            {{
-                                                form.visibility === 'public'
-                                                    ? t(
-                                                          'home.composer.visibilityPublic',
-                                                      )
-                                                    : t(
-                                                          'home.composer.visibilityPrivate',
-                                                      )
-                                            }}
-                                        </span>
-                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Optional Title -->
+                            <!-- Optional Post Title Input (44px height, 10px radius, subtle focus) -->
                             <div class="space-y-1">
-                                <Input
+                                <input
                                     v-model="form.title"
                                     type="text"
                                     maxlength="180"
                                     :placeholder="
                                         t('home.composer.titlePlaceholder')
                                     "
-                                    class="rounded-xl bg-muted/25 text-sm font-medium"
+                                    class="h-11 w-full min-w-0 rounded-[10px] border border-border bg-card px-3.5 text-[15px] font-medium text-foreground transition-colors placeholder:font-normal placeholder:text-muted-foreground/80 hover:border-input focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15 focus-visible:outline-none"
                                 />
                                 <InputError :message="form.errors.title" />
                             </div>
 
-                            <!-- Content Textarea + Character Counter -->
-                            <div class="space-y-1">
-                                <textarea
-                                    ref="contentTextareaRef"
-                                    v-model="form.content"
-                                    rows="5"
-                                    required
-                                    :maxlength="maxPostLength"
-                                    data-test="composer-content"
-                                    :placeholder="
-                                        t('home.composer.contentPlaceholder')
-                                    "
-                                    class="w-full resize-y rounded-xl border border-input bg-muted/25 px-3.5 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
-                                />
+                            <!-- Clean Social Content Editor (auto-resizing, unified surface, subtle focus) -->
+                            <div class="space-y-1.5">
                                 <div
-                                    class="flex items-center justify-between gap-2 text-[11px] text-muted-foreground"
+                                    class="rounded-xl border border-border/65 bg-card transition-colors focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/12"
                                 >
-                                    <InputError
-                                        :message="form.errors.content"
-                                    />
-                                    <span
-                                        class="ms-auto tabular-nums"
-                                        :class="
-                                            form.content.length >
-                                            maxPostLength * 0.9
-                                                ? 'font-medium text-warning'
-                                                : ''
+                                    <textarea
+                                        ref="contentTextareaRef"
+                                        v-model="form.content"
+                                        rows="5"
+                                        required
+                                        :maxlength="maxPostLength"
+                                        data-test="composer-content"
+                                        :placeholder="
+                                            t(
+                                                'home.composer.contentPlaceholder',
+                                            )
                                         "
+                                        class="block min-h-[152px] w-full resize-none overflow-hidden bg-transparent px-3.5 pt-3 pb-2 text-base leading-[1.6] text-foreground placeholder:text-muted-foreground/75 focus:outline-none"
+                                        @input="adjustTextareaHeight"
+                                    />
+                                    <div
+                                        class="flex items-center justify-end px-3.5 pb-2.5"
                                     >
-                                        {{ form.content.length }} /
-                                        {{ maxPostLength }}
-                                    </span>
+                                        <span
+                                            class="text-xs leading-none tabular-nums transition-colors"
+                                            :class="
+                                                isOverCharLimit
+                                                    ? 'font-semibold text-destructive'
+                                                    : isNearCharLimit
+                                                      ? 'font-medium text-warning'
+                                                      : 'text-muted-foreground'
+                                            "
+                                        >
+                                            {{ form.content.length }} /
+                                            {{ maxPostLength }}
+                                        </span>
+                                    </div>
                                 </div>
+                                <InputError :message="form.errors.content" />
                             </div>
 
                             <!-- Emoji Picker Strip -->
                             <div
                                 v-if="showEmojiPicker"
-                                class="flex flex-wrap items-center gap-1 rounded-xl border border-border bg-muted/30 p-2"
+                                class="flex flex-wrap items-center gap-1 rounded-xl border border-border/80 bg-muted/35 p-2"
                             >
                                 <button
                                     v-for="emoji in QUICK_EMOJIS"
                                     :key="emoji"
                                     type="button"
-                                    class="flex size-8 items-center justify-center rounded-lg text-base transition-transform hover:scale-110 hover:bg-card focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                                    class="flex size-8 items-center justify-center rounded-lg text-base transition-transform hover:scale-110 hover:bg-card focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
                                     @click="insertEmoji(emoji)"
                                 >
                                     {{ emoji }}
@@ -826,7 +939,7 @@ onBeforeUnmount(() => {
                             <!-- Share Link Box (Normal Web Link Sharing — kept intact) -->
                             <div
                                 v-if="showLink"
-                                class="space-y-2.5 rounded-xl border border-border bg-muted/25 p-3"
+                                class="space-y-2.5 rounded-xl border border-border/80 bg-muted/25 p-3.5"
                             >
                                 <div class="flex flex-wrap gap-2">
                                     <Input
@@ -837,13 +950,13 @@ onBeforeUnmount(() => {
                                                 'home.composer.linkUrlPlaceholder',
                                             )
                                         "
-                                        class="min-w-0 flex-1 bg-card"
+                                        class="h-10 min-w-0 flex-1 rounded-lg bg-card"
                                     />
                                     <Button
                                         type="button"
                                         variant="secondary"
                                         size="sm"
-                                        class="rounded-lg text-xs"
+                                        class="h-10 rounded-lg px-3.5 text-xs"
                                         :disabled="
                                             previewHttp.processing ||
                                             !form.link_url.trim()
@@ -894,7 +1007,7 @@ onBeforeUnmount(() => {
                             <!-- Poll Builder -->
                             <div
                                 v-if="showPoll"
-                                class="space-y-2.5 rounded-xl border border-border bg-muted/25 p-3"
+                                class="space-y-2.5 rounded-xl border border-border/80 bg-muted/25 p-3.5"
                             >
                                 <Input
                                     v-model="form.poll_question"
@@ -905,7 +1018,7 @@ onBeforeUnmount(() => {
                                             'home.composer.pollQuestionPlaceholder',
                                         )
                                     "
-                                    class="bg-card"
+                                    class="h-10 rounded-lg bg-card"
                                 />
                                 <InputError
                                     :message="form.errors.poll_question"
@@ -927,14 +1040,14 @@ onBeforeUnmount(() => {
                                                     { index: index + 1 },
                                                 )
                                             "
-                                            class="bg-card"
+                                            class="h-10 rounded-lg bg-card"
                                         />
                                         <Button
                                             v-if="form.poll_options.length > 2"
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            class="size-8 shrink-0 text-muted-foreground hover:text-destructive"
+                                            class="size-9 shrink-0 rounded-lg text-muted-foreground hover:text-destructive"
                                             :aria-label="
                                                 t('upload.removeImage')
                                             "
@@ -984,9 +1097,9 @@ onBeforeUnmount(() => {
                                 </div>
                             </div>
 
-                            <!-- Attachment Toolbar (Includes Video — Coming Soon) -->
+                            <!-- Balanced Attachment Toolbar (Consistent 18-20px icons, zero nested border clutter) -->
                             <div
-                                class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-muted/20 px-3 py-2"
+                                class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/80 bg-card px-3.5 py-2.5"
                             >
                                 <span
                                     class="text-xs font-medium text-muted-foreground"
@@ -995,108 +1108,113 @@ onBeforeUnmount(() => {
                                 </span>
 
                                 <div class="flex flex-wrap items-center gap-1">
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        :class="[
-                                            'h-8 gap-1.5 rounded-lg px-2.5 text-xs',
+                                        :title="t('home.composer.addImage')"
+                                        :aria-label="
+                                            t('home.composer.addImage')
+                                        "
+                                        :aria-pressed="
                                             showImages || form.images.length > 0
-                                                ? 'bg-primary-soft text-accent-foreground'
-                                                : 'text-muted-foreground hover:text-foreground',
+                                        "
+                                        :class="[
+                                            'inline-flex size-9 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none',
+                                            showImages || form.images.length > 0
+                                                ? 'bg-primary-soft text-primary'
+                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-primary',
                                         ]"
                                         @click="toggleImages"
                                     >
                                         <ImageIcon
-                                            class="size-4 text-primary"
+                                            class="size-[19px]"
                                             aria-hidden="true"
                                         />
-                                        <span class="hidden sm:inline">{{
-                                            t('home.composer.addImage')
-                                        }}</span>
-                                    </Button>
+                                    </button>
 
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="ghost"
-                                        size="sm"
+                                        :title="t('home.composer.addPoll')"
+                                        :aria-label="t('home.composer.addPoll')"
+                                        :aria-pressed="showPoll"
                                         :class="[
-                                            'h-8 gap-1.5 rounded-lg px-2.5 text-xs',
+                                            'inline-flex size-9 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none',
                                             showPoll
-                                                ? 'bg-primary-soft text-accent-foreground'
-                                                : 'text-muted-foreground hover:text-foreground',
+                                                ? 'bg-primary-soft text-primary'
+                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-primary',
                                         ]"
                                         @click="togglePoll"
                                     >
                                         <BarChart2
-                                            class="size-4 text-primary"
+                                            class="size-[19px]"
                                             aria-hidden="true"
                                         />
-                                        <span class="hidden sm:inline">{{
-                                            t('home.composer.addPoll')
-                                        }}</span>
-                                    </Button>
+                                    </button>
 
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="ghost"
-                                        size="sm"
+                                        :title="t('home.composer.addLink')"
+                                        :aria-label="t('home.composer.addLink')"
+                                        :aria-pressed="showLink"
                                         :class="[
-                                            'h-8 gap-1.5 rounded-lg px-2.5 text-xs',
+                                            'inline-flex size-9 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none',
                                             showLink
-                                                ? 'bg-primary-soft text-accent-foreground'
-                                                : 'text-muted-foreground hover:text-foreground',
+                                                ? 'bg-primary-soft text-primary'
+                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-primary',
                                         ]"
                                         @click="toggleLink"
                                     >
                                         <Link2
-                                            class="size-4 text-primary"
+                                            class="size-[19px]"
                                             aria-hidden="true"
                                         />
-                                        <span class="hidden sm:inline">{{
-                                            t('home.composer.addLink')
-                                        }}</span>
-                                    </Button>
+                                    </button>
 
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8 rounded-lg text-muted-foreground hover:text-foreground"
+                                        :title="t('composer.modal.insertEmoji')"
                                         :aria-label="
                                             t('composer.modal.insertEmoji')
                                         "
-                                        :title="t('composer.modal.insertEmoji')"
+                                        :aria-pressed="showEmojiPicker"
+                                        :class="[
+                                            'inline-flex size-9 items-center justify-center rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none',
+                                            showEmojiPicker
+                                                ? 'bg-primary-soft text-primary'
+                                                : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                        ]"
                                         @click="
                                             showEmojiPicker = !showEmojiPicker
                                         "
                                     >
                                         <Smile
-                                            class="size-4"
+                                            class="size-[19px]"
                                             aria-hidden="true"
                                         />
-                                    </Button>
+                                    </button>
 
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8 rounded-lg text-muted-foreground hover:text-foreground"
-                                        :aria-label="
-                                            t('composer.modal.insertHashtag')
-                                        "
                                         :title="
                                             t('composer.modal.insertHashtag')
                                         "
+                                        :aria-label="
+                                            t('composer.modal.insertHashtag')
+                                        "
+                                        class="inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
                                         @click="insertHashtagPrefix"
                                     >
                                         <Hash
-                                            class="size-4"
+                                            class="size-[19px]"
                                             aria-hidden="true"
                                         />
-                                    </Button>
+                                    </button>
 
-                                    <!-- Video Coming Soon (Strictly UI indicator only — never opens video picker) -->
+                                    <span
+                                        class="mx-0.5 h-4 w-px bg-border"
+                                        aria-hidden="true"
+                                    />
+
+                                    <!-- Video Coming Soon (Compact UI indicator only — never opens video picker) -->
                                     <button
                                         type="button"
                                         aria-disabled="true"
@@ -1107,30 +1225,31 @@ onBeforeUnmount(() => {
                                         :aria-label="
                                             t('composer.videoComingSoonTooltip')
                                         "
-                                        class="inline-flex h-8 cursor-not-allowed items-center gap-1.5 rounded-lg border border-dashed border-border/80 bg-muted/40 px-2.5 text-xs text-muted-foreground/80 transition-colors hover:border-border"
+                                        class="inline-flex h-9 cursor-not-allowed items-center gap-1.5 rounded-lg px-2 text-xs text-muted-foreground/75 transition-colors hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:outline-none"
                                         @click="notifyVideoComingSoon"
                                     >
                                         <Video
-                                            class="size-3.5 shrink-0"
+                                            class="size-[19px] shrink-0 opacity-75"
                                             aria-hidden="true"
                                         />
-                                        <Badge
-                                            variant="secondary"
-                                            class="h-4 px-1.5 text-[10px] font-medium"
+                                        <span
+                                            class="hidden rounded-md bg-muted px-1.5 py-0.5 text-[10px] leading-none font-medium text-muted-foreground min-[380px]:inline"
                                         >
                                             {{ t('composer.comingSoon') }}
-                                        </Badge>
+                                        </span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </AutoHideScrollArea>
 
-                    <!-- Stable Modal Footer -->
+                    <!-- Stable Modal Footer (never shrinks, generous padding + safe area) -->
                     <DialogFooter
-                        class="safe-pb shrink-0 flex-row items-center justify-between gap-2 border-t border-border bg-card px-5 py-3.5"
+                        class="shrink-0 flex-col-reverse gap-2.5 border-t border-border bg-card px-4 pt-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom,0px))] sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-6 sm:py-4"
                     >
-                        <div class="min-w-0 text-xs text-muted-foreground">
+                        <div
+                            class="hidden min-w-0 text-xs text-muted-foreground sm:block"
+                        >
                             <span v-if="form.processing && form.progress">
                                 {{ t('upload.uploading') }}
                                 {{ form.progress.percentage }}%
@@ -1145,12 +1264,13 @@ onBeforeUnmount(() => {
                             </span>
                         </div>
 
-                        <div class="flex shrink-0 items-center gap-2">
+                        <div
+                            class="flex w-full items-center gap-3 sm:w-auto sm:justify-end"
+                        >
                             <Button
                                 type="button"
-                                variant="ghost"
-                                size="sm"
-                                class="rounded-lg"
+                                variant="outline"
+                                class="h-11 shrink-0 rounded-xl px-5 text-sm font-medium sm:min-w-[88px]"
                                 :disabled="form.processing"
                                 @click="handleModalOpenChange(false)"
                             >
@@ -1158,12 +1278,14 @@ onBeforeUnmount(() => {
                             </Button>
                             <Button
                                 type="submit"
-                                size="sm"
                                 data-test="composer-submit"
-                                class="min-w-24 rounded-lg font-semibold"
+                                class="h-11 min-w-[128px] flex-1 rounded-xl px-6 text-sm font-semibold sm:flex-none"
                                 :disabled="!canSubmit"
                             >
-                                <Spinner v-if="form.processing" />
+                                <Spinner
+                                    v-if="form.processing"
+                                    class="size-4"
+                                />
                                 <span>{{
                                     form.processing
                                         ? t('home.composer.publishing')

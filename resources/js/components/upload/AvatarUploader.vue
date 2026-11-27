@@ -337,7 +337,7 @@ onBeforeUnmount(() => {
 
         <!-- Interactive 1:1 Avatar Cropper Modal -->
         <Dialog v-model:open="cropDialogOpen">
-            <DialogContent class="max-w-md">
+            <DialogContent class="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{{ t('upload.cropAvatarTitle') }}</DialogTitle>
                 </DialogHeader>

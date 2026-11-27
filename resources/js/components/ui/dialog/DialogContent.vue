@@ -9,8 +9,8 @@ import {
     DialogPortal,
     useForwardPropsEmits,
 } from 'reka-ui';
-import { cn } from '@/lib/utils';
 import { useI18n } from 'vue-i18n';
+import { cn } from '@/lib/utils';
 import DialogOverlay from './DialogOverlay.vue';
 
 defineOptions({
@@ -37,7 +37,12 @@ const props = withDefaults(
 );
 const emits = defineEmits<DialogContentEmits>();
 
-const delegatedProps = reactiveOmit(props, 'class', 'showCloseButton', 'structured');
+const delegatedProps = reactiveOmit(
+    props,
+    'class',
+    'showCloseButton',
+    'structured',
+);
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
 const { t } = useI18n();
@@ -51,7 +56,7 @@ const { t } = useI18n();
             v-bind="{ ...$attrs, ...forwarded }"
             :class="
                 cn(
-                    'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] w-full rounded-t-2xl border shadow-lg duration-200 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom sm:inset-auto sm:top-[50%] sm:left-[50%] sm:max-h-[88dvh] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-2xl sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0',
+                    'bg-card text-card-foreground border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] w-full rounded-t-2xl border shadow-xl duration-200 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom sm:inset-auto sm:top-[50%] sm:left-[50%] sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-2xl sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0',
                     props.structured
                         ? 'flex flex-col overflow-hidden p-0'
                         : 'sv-scrollbar grid gap-4 overflow-y-auto overscroll-contain p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:p-6',
@@ -69,7 +74,7 @@ const { t } = useI18n();
             <DialogClose
                 v-if="showCloseButton"
                 data-slot="dialog-close"
-                class="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute end-3 top-3 z-10 flex size-9 items-center justify-center rounded-full opacity-80 transition-opacity hover:bg-surface-hover hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+                class="ring-offset-background focus-visible:ring-ring/50 absolute end-4 top-3.5 z-10 flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4.5"
             >
                 <X />
                 <span class="sr-only">{{ t('common.close') }}</span>

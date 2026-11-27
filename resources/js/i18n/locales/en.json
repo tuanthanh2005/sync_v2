@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Hover or hold for reactions",
         "shareAction": "Share",
         "sharesExact": "{count} shares",
-        "viewsExact": "{count} views"
+        "viewsExact": "{count} views",
+        "viewsTooltip": "{count} total views (includes verified human, guest, and AI activity)",
+        "viewAnalytics": {
+            "title": "Post View Analytics",
+            "privacyNote": "Aggregated metrics only — individual viewer identities are never exposed.",
+            "totalViews": "Total Views",
+            "humanViews": "Human Views",
+            "guestViews": "Guest Views",
+            "aiViews": "AI Views",
+            "aiContentAccesses": "AI Content Accesses",
+            "uniqueHumanViewers": "Unique Human Viewers",
+            "organicViews": "Organic Views",
+            "promotedHumanViews": "Promoted Human Views",
+            "invalidViews": "Invalid / Filtered Views",
+            "legacyViews": "Legacy / Uncategorized",
+            "aiSeparationNotice": "Total views include verified AI activity for transparency. AI views are strictly excluded from unique human viewers, DAU/MAU, organic human reach, and paid ad impressions."
+        }
     },
     "profile": {
         "postsTab": "Posts",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Re-enter new password",
             "confirmPasswordPlaceholder": "Re-enter password",
             "email": "Email address",
-            "emailPlaceholder": "name@example.com",
+            "emailPlaceholder": "name{'@'}example.com",
             "enterNewPasswordPlaceholder": "Enter a strong new password",
             "name": "Full name",
             "namePlaceholder": "Enter your full name",
@@ -726,7 +742,9 @@
             "commentsSeries": "New Comments",
             "revenueSeries": "Deposits (VND)",
             "adSpendSeries": "Ad Spend (VND)",
-            "growthRate": "Period Growth"
+            "growthRate": "Period Growth",
+            "viewsSectionTitle": "Post View Analytics",
+            "viewsSectionSubtitle": "Real-time 500ms / 5-minute deduplicated view breakdown separating human, guest, AI, and filtered traffic."
         },
         "health": {
             "title": "System Health & Runtime",
@@ -926,11 +944,23 @@
                 "features": "Feature Flags & Maintenance",
                 "content": "Content Limits",
                 "ads": "Advertising Engine",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "View Tracking"
             },
             "maintenanceWarning": "Maintenance Mode blocks non-staff traffic with HTTP 503 while keeping Admin access active.",
             "brandingAssetsHint": "Upload brand logos, favicon, and default Open Graph image directly from your device.",
-            "brandingAssetsTitle": "Brand & SEO visual assets"
+            "brandingAssetsTitle": "Brand & SEO visual assets",
+            "viewsPolicyHint": "Configure News Feed view thresholds and deduplication rules. Every change requires admin permission and is recorded in the Audit Log.",
+            "viewHints": {
+                "views_min_duration_ms": "Minimum continuous viewport display duration in milliseconds (default: 500ms, range: 100–10,000).",
+                "views_min_visible_ratio": "Minimum visible percentage of the post or representative viewport area (default: 50%, range: 10–100).",
+                "views_dedup_window_seconds": "Server-side deduplication window per viewer and post in seconds (default: 300s / 5 minutes).",
+                "views_track_guests": "Allow anonymous guest sessions to record valid post views.",
+                "views_track_ai": "Allow verified AI Agents to record clearly classified AI Views and AI Content Accesses.",
+                "views_track_author_self": "Count when an author views their own post (recommended: Disabled).",
+                "views_bot_filtering": "Filter search engine crawlers, prefetch requests, and invalid automated bot traffic.",
+                "views_retention_days": "Days to retain raw deduplication events before automatic pruning while keeping total counters (default: 30, range: 7–180)."
+            }
         },
         "notifications": {
             "title": "Admin Notification Center",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: {count} campaign(s) detected with high single-IP click bursts in 24h.",
-            "campaignFinancialSummary": "@{username} · Budget: {budget} · Spent: {spent} · Held: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Budget: {budget} · Spent: {spent} · Held: {held}",
             "campaignPerformanceSummary": "Impressions: {impressions} · Clicks: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "Rejecting this campaign will automatically refund all held budget back to the advertiser's Advertising Balance."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Mask"
             },
             "systemActor": "system",
-            "transferOwnerUsernameLabel": "New owner username (@username)",
+            "transferOwnerUsernameLabel": "New owner username ({'@'}username)",
             "unknownAuthor": "unknown",
             "usernamePlaceholder": "username"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Normal"
             },
             "priorityAria": "Report priority",
-            "reporterBy": "Reporter: @{username}",
-            "reviewedBy": "Reviewed by @{username}",
+            "reporterBy": "Reporter: {'@'}{username}",
+            "reviewedBy": "Reviewed by {'@'}{username}",
             "systemActor": "system",
             "targetRef": "{type} #{id}",
             "unknownUser": "unknown"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "All Active Users",
                 "staff": "Staff Only",
-                "user": "Specific User (@username)",
+                "user": "Specific User ({'@'}username)",
                 "verified": "Verified Users"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Profile",
             "emailLabel": "Email address",
-            "emailPlaceholder": "name@example.com",
+            "emailPlaceholder": "name{'@'}example.com",
             "emailUnverified": "Your email address is not verified yet.",
             "headingDescription": "Update your public display name, username, email, and timezone.",
             "headingTitle": "Profile Information",
@@ -2460,7 +2490,7 @@
             "saveChanges": "Save changes",
             "srHeading": "Profile Settings",
             "timezoneLabel": "Timezone",
-            "usernameLabel": "Username (@username)",
+            "usernameLabel": "Username ({'@'}username)",
             "usernamePlaceholder": "username",
             "verificationLinkSent": "A new verification link has been sent to your email address."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Upload cancelled.",
         "uploading": "Uploading...",
         "zoomLabel": "Zoom"
+    },
+    "socialList": {
+        "you": "You",
+        "unfollow": "Unfollow",
+        "followAria": "Follow {name}",
+        "unfollowAria": "Unfollow {name}",
+        "followError": "Could not update follow status. Please try again.",
+        "reactionsTitle": "Reactions",
+        "allReactions": "All",
+        "filterReactionsAria": "Filter reactions by type",
+        "viewReactionsAria": "View {count} reactions",
+        "searchPeople": "Search by name or username...",
+        "searchFollowers": "Search followers...",
+        "searchFollowing": "Search following...",
+        "loadError": "Unable to load list right now.",
+        "retry": "Try again",
+        "loadMore": "Load more",
+        "clearSearch": "Clear search",
+        "noSearchResults": "No matching people",
+        "noSearchResultsHint": "Try searching with a different name or username.",
+        "noReactionsYet": "No reactions yet",
+        "noReactionsYetHint": "Be the first to react to this post.",
+        "followersTitle": "Followers",
+        "followingTitle": "Following",
+        "postsLabel": "Posts",
+        "followTabsAria": "Switch between followers and following",
+        "noFollowersYet": "No followers yet",
+        "noFollowersYetHint": "When people follow this account, they will appear here.",
+        "noFollowingYet": "Not following anyone yet",
+        "noFollowingYetHint": "Accounts followed by this profile will appear here.",
+        "exploreCommunities": "Explore communities",
+        "restrictedTitle": "List unavailable",
+        "restrictedHint": "You cannot view this account's connections."
     }
 }

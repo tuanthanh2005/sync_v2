@@ -49,15 +49,18 @@ const props = withDefaults(
         postId: number;
         activeReaction: SyncVietReactionType | null;
         count: number;
+        reactionSummary?: Partial<Record<SyncVietReactionType, number>>;
         disabled?: boolean;
     }>(),
     {
+        reactionSummary: () => ({}),
         disabled: false,
     },
 );
 
 const emit = defineEmits<{
     select: [type: SyncVietReactionType];
+    openList: [];
 }>();
 
 const { t, locale } = useI18n();
@@ -94,6 +97,19 @@ const buttonAriaLabel = computed<string>(() => {
         reaction: label,
         count: formatNumber(props.count, locale.value),
     });
+});
+
+const summaryIcons = computed<ReactionDefinition[]>(() => {
+    const summary = props.reactionSummary ?? {};
+    const ranked = REACTIONS.filter((r) => (summary[r.type] ?? 0) > 0).sort(
+        (a, b) => (summary[b.type] ?? 0) - (summary[a.type] ?? 0),
+    );
+
+    if (ranked.length > 0) {
+        return ranked.slice(0, 3);
+    }
+
+    return [activeDef.value];
 });
 
 function clearTimers(): void {
@@ -365,7 +381,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div ref="triggerRef" class="inline-flex items-center">
+    <div ref="triggerRef" class="inline-flex items-center gap-0.5">
         <Button
             type="button"
             variant="ghost"
@@ -401,10 +417,47 @@ onBeforeUnmount(() => {
                 ]"
                 aria-hidden="true"
             />
+            <span v-if="count === 0" class="tabular-nums">{{
+                formatCompactNumber(0, locale)
+            }}</span>
+        </Button>
+
+        <button
+            v-if="count > 0"
+            type="button"
+            data-test="reaction-users-trigger"
+            :title="
+                t('socialList.viewReactionsAria', {
+                    count: formatNumber(count, locale),
+                })
+            "
+            :aria-label="
+                t('socialList.viewReactionsAria', {
+                    count: formatNumber(count, locale),
+                })
+            "
+            class="inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-lg px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:min-h-9"
+            @click="emit('openList')"
+        >
+            <span
+                class="inline-flex items-center -space-x-1 rtl:space-x-reverse"
+                aria-hidden="true"
+            >
+                <span
+                    v-for="item in summaryIcons"
+                    :key="item.type"
+                    :class="[
+                        'flex size-4.5 items-center justify-center rounded-full ring-2 ring-card',
+                        item.iconBgClass,
+                    ]"
+                >
+                    <component :is="item.icon" class="size-2.5" />
+                </span>
+            </span>
             <span class="tabular-nums">{{
                 formatCompactNumber(count, locale)
             }}</span>
-        </Button>
+        </button>
 
         <Teleport to="body">
             <Transition

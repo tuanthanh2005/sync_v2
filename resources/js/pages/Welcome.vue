@@ -4,6 +4,8 @@ import {
     ArrowRight,
     ArrowUp,
     BriefcaseBusiness,
+    ChevronLeft,
+    ChevronRight,
     Clock,
     Cpu,
     LayoutGrid,
@@ -131,7 +133,55 @@ const tabs = computed<Array<{ key: string; label: string; icon: Component }>>(
     ],
 );
 
+const tabListRef = ref<HTMLElement | null>(null);
 const tabButtonRefs = ref<Record<string, HTMLButtonElement | null>>({});
+const canScrollTabsLeft = ref(false);
+const canScrollTabsRight = ref(false);
+
+function updateTabScrollState(): void {
+    const el = tabListRef.value;
+    if (!el) {
+        canScrollTabsLeft.value = false;
+        canScrollTabsRight.value = false;
+        return;
+    }
+
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 2) {
+        canScrollTabsLeft.value = false;
+        canScrollTabsRight.value = false;
+        return;
+    }
+
+    const absLeft = Math.abs(el.scrollLeft);
+    canScrollTabsLeft.value = absLeft > 4;
+    canScrollTabsRight.value = absLeft < maxScroll - 4;
+}
+
+function scrollTabsBy(direction: -1 | 1): void {
+    const el = tabListRef.value;
+    if (!el) {
+        return;
+    }
+
+    el.scrollBy({
+        left: direction * Math.max(180, Math.round(el.clientWidth * 0.55)),
+        behavior: 'smooth',
+    });
+}
+
+function handleTabWheel(event: WheelEvent): void {
+    const el = tabListRef.value;
+    if (!el || el.scrollWidth <= el.clientWidth) {
+        return;
+    }
+
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+        event.preventDefault();
+        el.scrollLeft += event.deltaY;
+        updateTabScrollState();
+    }
+}
 
 function scrollActiveTabIntoView(tabKey: string): void {
     void nextTick(() => {
@@ -143,6 +193,7 @@ function scrollActiveTabIntoView(tabKey: string): void {
                 behavior: 'smooth',
             });
         }
+        updateTabScrollState();
     });
 }
 
@@ -295,6 +346,9 @@ onMounted(() => {
     freshnessTimer = setInterval(() => {
         void checkForNewerPosts();
     }, 90_000);
+
+    void nextTick(() => updateTabScrollState());
+    window.addEventListener('resize', updateTabScrollState, { passive: true });
 });
 
 onBeforeUnmount(() => {
@@ -302,6 +356,9 @@ onBeforeUnmount(() => {
     loadAbortController?.abort();
     if (freshnessTimer !== null) {
         clearInterval(freshnessTimer);
+    }
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', updateTabScrollState);
     }
 });
 </script>
@@ -368,41 +425,76 @@ onBeforeUnmount(() => {
             </Button>
         </div>
 
-        <!-- News Feed Category Tabs with Lucide Icons (Horizontal Scroll on Mobile) -->
-        <div
-            role="tablist"
-            :aria-label="t('home.feed.categoriesLabel')"
-            class="sv-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 select-none sm:flex-wrap sm:overflow-visible"
-        >
-            <button
-                v-for="tab in tabs"
-                :key="tab.key"
-                :ref="
-                    (el) => {
-                        tabButtonRefs[tab.key] = el as HTMLButtonElement | null;
-                    }
-                "
-                type="button"
-                role="tab"
-                :aria-selected="activeTab === tab.key"
-                :class="[
-                    'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-                    activeTab === tab.key
-                        ? 'border-primary/25 bg-primary-soft font-semibold text-accent-foreground'
-                        : 'border-border bg-card text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                ]"
-                @click="switchTab(tab.key)"
+        <!-- News Feed Category Tabs (Single-row horizontal scroll with hidden scrollbar) -->
+        <div class="relative min-w-0">
+            <div
+                ref="tabListRef"
+                role="tablist"
+                :aria-label="t('home.feed.categoriesLabel')"
+                class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 select-none"
+                @scroll.passive="updateTabScrollState"
+                @wheel="handleTabWheel"
             >
-                <component
-                    :is="tab.icon || LayoutGrid"
+                <button
+                    v-for="tab in tabs"
+                    :key="tab.key"
+                    :ref="
+                        (el) => {
+                            tabButtonRefs[tab.key] =
+                                el as HTMLButtonElement | null;
+                        }
+                    "
+                    type="button"
+                    role="tab"
+                    :aria-selected="activeTab === tab.key"
                     :class="[
-                        'size-4 shrink-0',
-                        activeTab === tab.key ? 'text-primary' : '',
+                        'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                        activeTab === tab.key
+                            ? 'border-primary/25 bg-primary-soft font-semibold text-accent-foreground'
+                            : 'border-border bg-card text-muted-foreground hover:bg-surface-hover hover:text-foreground',
                     ]"
-                    aria-hidden="true"
-                />
-                <span>{{ tab.label }}</span>
-            </button>
+                    @click="switchTab(tab.key)"
+                >
+                    <component
+                        :is="tab.icon || LayoutGrid"
+                        :class="[
+                            'size-4 shrink-0',
+                            activeTab === tab.key ? 'text-primary' : '',
+                        ]"
+                        aria-hidden="true"
+                    />
+                    <span>{{ tab.label }}</span>
+                </button>
+            </div>
+
+            <!-- Subtle Start/End scroll arrows when overflowing (Desktop-friendly) -->
+            <div
+                v-if="canScrollTabsLeft"
+                class="pointer-events-none absolute inset-y-0 start-0 hidden items-center bg-gradient-to-r from-background via-background/85 to-transparent pe-4 sm:flex"
+            >
+                <button
+                    type="button"
+                    :aria-label="t('common.previous')"
+                    class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    @click="scrollTabsBy(-1)"
+                >
+                    <ChevronLeft class="size-4" aria-hidden="true" />
+                </button>
+            </div>
+
+            <div
+                v-if="canScrollTabsRight"
+                class="pointer-events-none absolute inset-y-0 end-0 hidden items-center bg-gradient-to-l from-background via-background/85 to-transparent ps-4 sm:flex"
+            >
+                <button
+                    type="button"
+                    :aria-label="t('common.next')"
+                    class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    @click="scrollTabsBy(1)"
+                >
+                    <ChevronRight class="size-4" aria-hidden="true" />
+                </button>
+            </div>
         </div>
 
         <!-- Desktop Feed Top Banner (auto-collapses if vacant) -->

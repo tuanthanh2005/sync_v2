@@ -277,9 +277,9 @@ test('post reactions toggle, switch, and remove cleanly without duplicate rows',
         ->and(PostReaction::query()->where('post_id', $post->id)->where('user_id', $viewer->id)->count())->toBe(0);
 });
 
-// ─── PHASE 3: ACCURATE POST VIEW TRACKING ────────────────────────────────────
+// ─── PHASE 3: ACCURATE POST VIEW TRACKING V2.0 ───────────────────────────────
 
-test('post views are never blindly incremented on GET, deduplicate per bucket, reject bots/AI agents, and survive pruning', function (): void {
+test('post views are never blindly incremented on GET, deduplicate per 5-minute window, classify AI separately, reject bots, and survive pruning', function (): void {
     $author = User::factory()->create();
     $human = User::factory()->create();
     $aiAgent = User::factory()->create(['account_type' => 'ai_agent']);
@@ -303,7 +303,7 @@ test('post views are never blindly incremented on GET, deduplicate per bucket, r
     // Bot user-agent rejected
     $this->withHeader('User-Agent', 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')
         ->postJson(route('posts.views.batch'), [
-            'views' => [['post_id' => $post->id, 'source' => 'feed']],
+            'views' => [['post_id' => $post->id, 'source' => 'feed', 'visible_ms' => 500, 'visible_ratio' => 60]],
         ])
         ->assertOk()
         ->assertJson(['recorded' => 0, 'invalid_traffic' => true]);
@@ -314,48 +314,63 @@ test('post views are never blindly incremented on GET, deduplicate per bucket, r
         'User-Agent' => 'Mozilla/5.0 Chrome/130.0',
         'Purpose' => 'prefetch',
     ])->postJson(route('posts.views.batch'), [
-        'views' => [['post_id' => $post->id, 'source' => 'feed']],
+        'views' => [['post_id' => $post->id, 'source' => 'feed', 'visible_ms' => 500, 'visible_ratio' => 60]],
     ])
         ->assertOk()
         ->assertJson(['recorded' => 0, 'invalid_traffic' => true]);
 
-    // AI Agent excluded from human views
+    expect($post->fresh()->views_count)->toBe(0)
+        ->and($post->fresh()->invalid_views_count)->toBe(2);
+
+    // AI Agent web view classified as ai_view and strictly excluded from human unique viewers & organic human reach
     $this->flushHeaders();
     $this->actingAs($aiAgent)
         ->withHeader('User-Agent', 'Mozilla/5.0 Chrome/130.0')
         ->postJson(route('posts.views.batch'), [
-            'views' => [['post_id' => $post->id, 'source' => 'feed']],
-        ])
-        ->assertOk()
-        ->assertJson(['recorded' => 0, 'invalid_traffic' => true]);
-
-    expect($post->fresh()->views_count)->toBe(0);
-
-    // Genuine human view recorded once
-    $this->flushHeaders();
-    $this->actingAs($human)
-        ->withHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0')
-        ->postJson(route('posts.views.batch'), [
-            'views' => [['post_id' => $post->id, 'source' => 'feed']],
+            'views' => [['post_id' => $post->id, 'source' => 'feed', 'visible_ms' => 600, 'visible_ratio' => 70]],
         ])
         ->assertOk()
         ->assertJson(['recorded' => 1, 'invalid_traffic' => false]);
 
     $post->refresh();
     expect($post->views_count)->toBe(1)
-        ->and($post->organic_views_count)->toBe(1)
-        ->and($post->unique_viewers_count)->toBe(1);
+        ->and($post->ai_views_count)->toBe(1)
+        ->and($post->human_views_count)->toBe(0)
+        ->and($post->unique_human_viewers_count)->toBe(0)
+        ->and($post->organic_views_count)->toBe(0);
 
-    // Repeat batch in same 6-hour bucket does NOT inflate
+    // Genuine human view recorded once and returned in real-time counts map
+    $this->flushHeaders();
     $this->actingAs($human)
         ->withHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0')
         ->postJson(route('posts.views.batch'), [
-            'views' => [['post_id' => $post->id, 'source' => 'detail']],
+            'views' => [['post_id' => $post->id, 'source' => 'feed', 'visible_ms' => 550, 'visible_ratio' => 65]],
+        ])
+        ->assertOk()
+        ->assertJson([
+            'recorded' => 1,
+            'invalid_traffic' => false,
+            'counts' => [
+                $post->id => ['views_count' => 2],
+            ],
+        ]);
+
+    $post->refresh();
+    expect($post->views_count)->toBe(2)
+        ->and($post->human_views_count)->toBe(1)
+        ->and($post->organic_views_count)->toBe(1)
+        ->and($post->unique_human_viewers_count)->toBe(1);
+
+    // Repeat batch within 5-minute deduplication window does NOT inflate
+    $this->actingAs($human)
+        ->withHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0')
+        ->postJson(route('posts.views.batch'), [
+            'views' => [['post_id' => $post->id, 'source' => 'detail', 'visible_ms' => 800, 'visible_ratio' => 80]],
         ])
         ->assertOk()
         ->assertJson(['recorded' => 0, 'skipped' => 1]);
 
-    expect($post->fresh()->views_count)->toBe(1);
+    expect($post->fresh()->views_count)->toBe(2);
 
     // Old raw events are pruned cleanly while post counter cache stays intact
     DB::table('post_view_events')
@@ -365,7 +380,7 @@ test('post views are never blindly incremented on GET, deduplicate per bucket, r
     $this->artisan('app:views:prune')->assertSuccessful();
 
     expect(DB::table('post_view_events')->where('post_id', $post->id)->count())->toBe(0)
-        ->and($post->fresh()->views_count)->toBe(1);
+        ->and($post->fresh()->views_count)->toBe(2);
 });
 
 // ─── PHASE 4: INTELLIGENT SEARCH & EXPLORE ───────────────────────────────────

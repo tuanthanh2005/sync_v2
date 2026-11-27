@@ -60,7 +60,7 @@ function submitReport(): void {
 
 <template>
     <Dialog v-model:open="open">
-        <DialogContent structured class="max-w-md rounded-2xl">
+        <DialogContent structured class="rounded-2xl sm:max-w-md">
             <div
                 class="shrink-0 border-b border-border/70 px-5 pe-12 pt-4 pb-3.5 sm:px-6 sm:pt-5 sm:pb-4"
             >

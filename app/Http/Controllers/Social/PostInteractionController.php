@@ -9,6 +9,7 @@ use App\Http\Requests\Social\PostReactionRequest;
 use App\Models\Post;
 use App\Services\Social\PostService;
 use App\Services\Social\PostViewTrackingService;
+use App\Services\Social\SocialDirectoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,34 @@ class PostInteractionController extends Controller
     public function __construct(
         private readonly PostService $postService,
         private readonly PostViewTrackingService $viewTrackingService,
+        private readonly SocialDirectoryService $directoryService,
     ) {}
+
+    public function reactions(Request $request, Post $post): JsonResponse
+    {
+        Gate::authorize('view', $post);
+
+        $validated = $request->validate([
+            'type' => ['nullable', 'string', 'in:all,like,love,insightful'],
+            'search' => ['nullable', 'string', 'max:80'],
+            'page' => ['nullable', 'integer', 'min:1', 'max:500'],
+            'per_page' => ['nullable', 'integer', 'min:5', 'max:30'],
+        ]);
+
+        $rawType = isset($validated['type']) ? (string) $validated['type'] : null;
+        $filterType = ($rawType !== null && $rawType !== 'all') ? $rawType : null;
+
+        $payload = $this->directoryService->reactionUsers(
+            post: $post,
+            viewer: $request->user(),
+            type: $filterType,
+            search: isset($validated['search']) ? (string) $validated['search'] : null,
+            page: (int) ($validated['page'] ?? 1),
+            perPage: (int) ($validated['per_page'] ?? SocialDirectoryService::DEFAULT_PER_PAGE),
+        );
+
+        return response()->json($payload);
+    }
 
     public function react(PostReactionRequest $request, Post $post): RedirectResponse
     {
@@ -90,9 +118,13 @@ class PostInteractionController extends Controller
             'views.*.post_id' => ['required', 'integer', 'min:1'],
             'views.*.source' => ['nullable', 'string', 'in:feed,detail,profile,community,search,topic'],
             'views.*.is_promoted' => ['nullable', 'boolean'],
+            'views.*.visible_ms' => ['nullable', 'integer', 'min:0', 'max:3600000'],
+            'views.*.visible_ratio' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'views.*.is_tall_post_probe' => ['nullable', 'boolean'],
+            'views.*.is_tab_visible' => ['nullable', 'boolean'],
         ]);
 
-        /** @var list<array{post_id: int, source?: string, is_promoted?: bool}> $views */
+        /** @var list<array{post_id: int, source?: string, is_promoted?: bool, visible_ms?: int|null, visible_ratio?: int|null, is_tall_post_probe?: bool|null, is_tab_visible?: bool|null}> $views */
         $views = array_values($validated['views']);
 
         $result = $this->viewTrackingService->recordBatch(

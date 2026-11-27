@@ -19,7 +19,7 @@
 
 - **ReactionPicker (`ReactionPicker.vue`)**: Bỏ hoàn toàn nút mũi tên rời (`▾`) cạnh nút cảm xúc; popover teleported tự căn biên viewport (Desktop hover 350ms + hover bridge + click bật/tắt nhanh; Mobile nhấn giữ 450ms tự hủy khi cuộn; đầy đủ bàn phím/ARIA) với biểu tượng mang bản sắc SyncViet.
 - **Action Bar thống nhất (`PostCard.vue`)**: `Reaction · Comment · Share · Views (Eye + formatCompactNumber + tooltip chính xác) ... Bookmark`.
-- **Post View Tracking (`PostViewTrackingService.php`, `usePostViewTracker.ts`)**: Migration `2026_12_01_960001_add_post_views_and_view_events_tables.php` thêm counter cache trên `posts` + bảng `post_view_events` chống trùng theo khung 6 giờ (`viewer_hash` HMAC không lưu PII). Chỉ ghi nhận khi bài viết hiển thị `>= 50%` viewport trong 2 giây ở tab đang mở, gộp batch qua `POST /posts/views/batch`, lọc bot/prefetch/AI Agent/System/Test, và tự động dọn dẹp dữ liệu thô quá 30 ngày (`app:views:prune`) mà không mất tổng lượt xem.
+- **Post View Tracking (`PostViewTrackingService.php`, `usePostViewTracker.ts`)**: Đã được nâng cấp lên **Advanced Post View Tracking V2.0** (xem `docs/POST_VIEW_TRACKING_V2.md`) với chuẩn News Feed **500ms / 50% viewport / chống trùng 5 phút (300 giây)**, cập nhật real-time không reload từ phản hồi backend, phân tách rõ `human_view`, `guest_view`, `ai_view`, `ai_content_access`, `organic_view`, `promoted_human_view`, `invalid_view`, `legacy_views`, loại trừ tác giả tự xem theo mặc định, bảo toàn số liệu lịch sử và cho phép cấu hình đầy đủ tại `/admin/settings?tab=views` có Audit Log.
 
 ### Giai đoạn 4 — Biểu tượng điều hướng Feed & Tìm kiếm / Khám phá thông minh
 

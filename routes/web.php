@@ -70,10 +70,19 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])
     ->middleware('throttle:90,1')
     ->name('search.suggestions');
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post}/reactions', [PostInteractionController::class, 'reactions'])
+    ->middleware('throttle:90,1')
+    ->name('posts.reactions.index');
 Route::post('/posts/views/batch', [PostInteractionController::class, 'trackViews'])
     ->middleware('throttle:60,1')
     ->name('posts.views.batch');
 Route::get('/u/{user:username}', [ProfileViewController::class, 'show'])->name('users.show');
+Route::get('/u/{user:username}/followers', [ProfileViewController::class, 'followers'])
+    ->middleware('throttle:90,1')
+    ->name('users.followers');
+Route::get('/u/{user:username}/following', [ProfileViewController::class, 'following'])
+    ->middleware('throttle:90,1')
+    ->name('users.following');
 Route::get('/communities', [CommunityController::class, 'index'])->name('communities.index');
 Route::get('/communities/{community:slug}', [CommunityController::class, 'show'])->name('communities.show');
 Route::get('/ads/{adCampaign}/click', [AdCampaignController::class, 'click'])

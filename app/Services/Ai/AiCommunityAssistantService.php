@@ -14,6 +14,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Services\Social\CommentService;
+use App\Services\Social\PostViewTrackingService;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -24,6 +25,7 @@ class AiCommunityAssistantService
         private readonly AiProviderManager $providerManager,
         private readonly AiPromptService $promptService,
         private readonly CommentService $commentService,
+        private readonly PostViewTrackingService $viewTrackingService,
     ) {}
 
     /**
@@ -125,6 +127,10 @@ class AiCommunityAssistantService
         );
 
         $res = $exec['result'];
+
+        if ($res->ok) {
+            $this->viewTrackingService->recordAiContentAccess($post, $agent, 'ai_reply_draft');
+        }
 
         $task = AiReplyTask::query()->create([
             'post_id' => $post->id,

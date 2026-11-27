@@ -32,6 +32,7 @@ use App\Models\VerificationRequest;
 use App\Services\Ai\AiAutomationControlService;
 use App\Services\Media\SafeImageUploadService;
 use App\Services\Seo\SeoConfigService;
+use App\Services\Social\PostViewTrackingService;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,10 @@ use Illuminate\Support\Facades\Schema;
 
 class AdminAnalyticsService
 {
+    public function __construct(
+        private readonly PostViewTrackingService $viewTrackingService,
+    ) {}
+
     /**
      * Comprehensive KPI dashboard powered by real indexed aggregates.
      *
@@ -76,6 +81,7 @@ class AdminAnalyticsService
             'pending_verifications' => Schema::hasTable('verification_requests') ? VerificationRequest::query()->where('status', 'pending')->count() : 0,
             'total_revenue_vnd' => (int) Payment::query()->where('status', PaymentStatus::Paid->value)->sum('amount'),
             'media_storage_bytes' => (int) PostMedia::query()->sum('size_bytes'),
+            'views_summary' => $this->viewTrackingService->summaryForAdmin(),
         ];
 
         $series = $this->buildDailySeries(14);
@@ -165,6 +171,7 @@ class AdminAnalyticsService
                 'users_pct' => $prevUsers > 0 ? round((($curUsers - $prevUsers) / $prevUsers) * 100, 1) : ($curUsers > 0 ? 100.0 : 0.0),
                 'posts_pct' => $prevPosts > 0 ? round((($curPosts - $prevPosts) / $prevPosts) * 100, 1) : ($curPosts > 0 ? 100.0 : 0.0),
             ],
+            'views' => $this->viewTrackingService->summaryForAdmin(),
             'series' => $series,
         ];
     }

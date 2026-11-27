@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Tepkiler için üzerine gelin veya basılı tutun",
         "shareAction": "Paylaş",
         "sharesExact": "{count} paylaşım",
-        "viewsExact": "{count} görüntülenme"
+        "viewsExact": "{count} görüntülenme",
+        "viewsTooltip": "Toplam {count} görüntülenme (doğrulanmış insan, misafir ve yapay zeka etkinliğini içerir)",
+        "viewAnalytics": {
+            "title": "Gönderi Görüntülenme Analitiği",
+            "privacyNote": "Yalnızca toplu veriler gösterilir — bireysel izleyici kimlikleri asla paylaşılmaz.",
+            "totalViews": "Toplam Görüntülenme",
+            "humanViews": "İnsan Görüntülenmeleri",
+            "guestViews": "Misafir Görüntülenmeleri",
+            "aiViews": "Yapay Zeka Görüntülenmeleri",
+            "aiContentAccesses": "Yapay Zeka İçerik Erişimleri",
+            "uniqueHumanViewers": "Tekil Gerçek İzleyiciler",
+            "organicViews": "Organik Görüntülenmeler",
+            "promotedHumanViews": "Tanıtılan İnsan Görüntülenmeleri",
+            "invalidViews": "Geçersiz / Filtrelenen Görüntülenmeler",
+            "legacyViews": "Eski / Sınıflandırılmamış",
+            "aiSeparationNotice": "Şeffaflık için toplam görüntülenmelere doğrulanmış yapay zeka etkinliği dahildir. Yapay zeka görüntülenmeleri tekil gerçek izleyiciler, DAU/MAU, organik insan erişimi ve ücretli reklam gösterimlerinden kesinlikle hariç tutulur."
+        }
     },
     "profile": {
         "postsTab": "Gönderiler",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Yeni şifreyi tekrar girin",
             "confirmPasswordPlaceholder": "Şifreyi tekrar girin",
             "email": "E-posta adresi",
-            "emailPlaceholder": "ad@ornek.com",
+            "emailPlaceholder": "ad{'@'}ornek.com",
             "enterNewPasswordPlaceholder": "Güçlü bir yeni şifre girin",
             "name": "Ad soyad",
             "namePlaceholder": "Adınızı ve soyadınızı girin",
@@ -726,7 +742,9 @@
             "commentsSeries": "Yeni Yorumlar",
             "revenueSeries": "Yüklemeler (VND)",
             "adSpendSeries": "Reklam Harcaması (VND)",
-            "growthRate": "Dönem Büyümesi"
+            "growthRate": "Dönem Büyümesi",
+            "viewsSectionTitle": "Gönderi Görüntülenme Analitiği",
+            "viewsSectionSubtitle": "İnsan, misafir, yapay zeka ve filtrelenmiş trafiği ayıran 500ms / 5 dakikalık tekilleştirilmiş gerçek zamanlı görüntülenme dağılımı."
         },
         "health": {
             "title": "Sistem Sağlığı ve Çalışma Zamanı",
@@ -926,11 +944,23 @@
                 "features": "Özellik Bayrakları ve Bakım",
                 "content": "İçerik Limitleri",
                 "ads": "Reklam Motoru",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "Görüntülenme Takibi"
             },
             "maintenanceWarning": "Bakım Modu, yönetici erişimini açık tutarken personel dışındaki trafiği HTTP 503 ile engeller.",
             "brandingAssetsHint": "Marka logolarını, site simgesini (favicon) ve varsayılan Open Graph görselini doğrudan cihazınızdan yükleyin.",
-            "brandingAssetsTitle": "Marka ve SEO görsel varlıkları"
+            "brandingAssetsTitle": "Marka ve SEO görsel varlıkları",
+            "viewsPolicyHint": "Akış görüntülenme eşiklerini ve tekilleştirme kurallarını yapılandırın. Her değişiklik yönetici izni gerektirir ve Denetim Günlüğüne kaydedilir.",
+            "viewHints": {
+                "views_min_duration_ms": "Görüntü alanında kesintisiz minimum görünürlük süresi (milisaniye; varsayılan: 500ms, aralık: 100–10.000).",
+                "views_min_visible_ratio": "Gönderinin veya temsili ölçüm alanının minimum görünür yüzdesi (varsayılan: %50, aralık: 10–100).",
+                "views_dedup_window_seconds": "İzleyici ve gönderi başına sunucu tarafı tekilleştirme penceresi (saniye; varsayılan: 300 sn / 5 dakika).",
+                "views_track_guests": "Anonim misafir oturumlarının geçerli gönderi görüntülenmesi kaydetmesine izin ver.",
+                "views_track_ai": "Doğrulanmış Yapay Zeka Ajanlarının açıkça sınıflandırılmış YZ Görüntülenmeleri ve İçerik Erişimleri kaydetmesine izin ver.",
+                "views_track_author_self": "Yazarın kendi gönderisini görüntülemesini say (önerilen: Kapalı).",
+                "views_bot_filtering": "Arama motoru tarayıcılarını, ön yükleme isteklerini ve geçersiz bot trafiğini filtrele.",
+                "views_retention_days": "Toplam sayaçları koruyarak otomatik temizlemeden önce ham tekilleştirme kayıtlarını saklama günü (varsayılan: 30, aralık: 7–180)."
+            }
         },
         "notifications": {
             "title": "Yönetici Bildirim Merkezi",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: Son 24 saatte tek bir IP adresinden yüksek tıklama artışı gösteren {count} kampanya tespit edildi.",
-            "campaignFinancialSummary": "@{username} · Bütçe: {budget} · Harcanan: {spent} · Bloke: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Bütçe: {budget} · Harcanan: {spent} · Bloke: {held}",
             "campaignPerformanceSummary": "Gösterim: {impressions} · Tıklama: {clicks} · CTR: %{ctr}",
             "rejectConsequence": "Bu kampanyayı reddetmek, bloke edilen tüm bütçeyi otomatik olarak reklamverenin Reklam Bakiyesine iade edecektir."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Maskele"
             },
             "systemActor": "sistem",
-            "transferOwnerUsernameLabel": "Yeni sahip kullanıcı adı (@username)",
+            "transferOwnerUsernameLabel": "Yeni sahip kullanıcı adı ({'@'}username)",
             "unknownAuthor": "bilinmiyor",
             "usernamePlaceholder": "kullanici_adi"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Normal"
             },
             "priorityAria": "Bildirim önceliği",
-            "reporterBy": "Bildiren: @{username}",
-            "reviewedBy": "İnceleyen: @{username}",
+            "reporterBy": "Bildiren: {'@'}{username}",
+            "reviewedBy": "İnceleyen: {'@'}{username}",
             "systemActor": "sistem",
             "targetRef": "{type} #{id}",
             "unknownUser": "bilinmiyor"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "Tüm Aktif Kullanıcılar",
                 "staff": "Yalnızca Ekip",
-                "user": "Belirli Kullanıcı (@username)",
+                "user": "Belirli Kullanıcı ({'@'}username)",
                 "verified": "Doğrulanmış Kullanıcılar"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Profil",
             "emailLabel": "E-posta adresi",
-            "emailPlaceholder": "ad@ornek.com",
+            "emailPlaceholder": "ad{'@'}ornek.com",
             "emailUnverified": "E-posta adresiniz henüz doğrulanmadı.",
             "headingDescription": "Herkese açık görünen adınızı, kullanıcı adınızı, e-postanızı ve saat diliminizi güncelleyin.",
             "headingTitle": "Profil Bilgileri",
@@ -2460,7 +2490,7 @@
             "saveChanges": "Değişiklikleri kaydet",
             "srHeading": "Profil Ayarları",
             "timezoneLabel": "Saat dilimi",
-            "usernameLabel": "Kullanıcı adı (@username)",
+            "usernameLabel": "Kullanıcı adı ({'@'}username)",
             "usernamePlaceholder": "kullanici_adi",
             "verificationLinkSent": "E-posta adresinize yeni bir doğrulama bağlantısı gönderildi."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Yükleme iptal edildi.",
         "uploading": "Yükleniyor...",
         "zoomLabel": "Yakınlaştır"
+    },
+    "socialList": {
+        "you": "Sen",
+        "unfollow": "Takibi bırak",
+        "followAria": "{name} kullanıcısını takip et",
+        "unfollowAria": "{name} kullanıcısını takipten çık",
+        "followError": "Takip durumu güncellenemedi. Lütfen tekrar deneyin.",
+        "reactionsTitle": "Tepkiler",
+        "allReactions": "Tümü",
+        "filterReactionsAria": "Tepkileri türe göre filtrele",
+        "viewReactionsAria": "{count} tepkiyi görüntüle",
+        "searchPeople": "İsim veya kullanıcı adıyla ara...",
+        "searchFollowers": "Takipçilerde ara...",
+        "searchFollowing": "Takip edilenlerde ara...",
+        "loadError": "Liste şu anda yüklenemiyor.",
+        "retry": "Tekrar dene",
+        "loadMore": "Daha fazla yükle",
+        "clearSearch": "Aramayı temizle",
+        "noSearchResults": "Eşleşen kişi bulunamadı",
+        "noSearchResultsHint": "Farklı bir isim veya kullanıcı adı deneyin.",
+        "noReactionsYet": "Henüz tepki yok",
+        "noReactionsYetHint": "Bu gönderiye ilk tepki veren siz olun.",
+        "followersTitle": "Takipçiler",
+        "followingTitle": "Takip edilenler",
+        "postsLabel": "Gönderiler",
+        "followTabsAria": "Takipçiler ve takip edilenler arasında geçiş yap",
+        "noFollowersYet": "Henüz takipçi yok",
+        "noFollowersYetHint": "Bu hesabı takip eden kişiler burada görünecek.",
+        "noFollowingYet": "Henüz kimseyi takip etmiyor",
+        "noFollowingYetHint": "Bu profilin takip ettiği hesaplar burada görünecek.",
+        "exploreCommunities": "Toplulukları keşfet",
+        "restrictedTitle": "Liste kullanılamıyor",
+        "restrictedHint": "Bu hesabın bağlantılarını görüntüleyemezsiniz."
     }
 }

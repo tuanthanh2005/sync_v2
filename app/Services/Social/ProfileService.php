@@ -142,8 +142,8 @@ class ProfileService
                 'is_ai_agent' => $targetUser->isAiAgent(),
                 'ai_disclosure' => $targetUser->ai_disclosure,
                 'badges' => app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers([$targetUser->id])[$targetUser->id] ?? [],
-                'followers_count' => $profile->followers_count,
-                'following_count' => $profile->following_count,
+                'followers_count' => (int) ($profile->followers_count ?? 0),
+                'following_count' => (int) ($profile->following_count ?? 0),
                 'posts_count' => Post::query()->where('user_id', $targetUser->id)->publicVisible()->count(),
                 'joined_at' => $targetUser->created_at?->toIso8601String(),
                 'is_owner' => $isOwner,
@@ -261,13 +261,19 @@ class ProfileService
     }
 
     /**
-     * @return array{following: bool, followers_count: int}
+     * @return array{following: bool, followers_count: int, viewer_following_count: int}
      */
     public function toggleFollow(User $follower, User $target): array
     {
         if ($follower->id === $target->id) {
             throw ValidationException::withMessages([
                 'user' => [__('You cannot follow your own account.')],
+            ]);
+        }
+
+        if (! $target->isActive()) {
+            throw ValidationException::withMessages([
+                'user' => [__('Unable to follow this user.')],
             ]);
         }
 
@@ -318,6 +324,7 @@ class ProfileService
             return [
                 'following' => $following,
                 'followers_count' => $followersCount,
+                'viewer_following_count' => $followingCount,
             ];
         });
 

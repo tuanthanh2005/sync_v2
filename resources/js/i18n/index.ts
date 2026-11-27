@@ -56,6 +56,7 @@ export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
     fallbackLocale: 'en',
     missingWarn: false,
     fallbackWarn: false,
+    warnHtmlMessage: false,
     missing: (locale, key) => {
         const signature = `${locale}:${key}`;
         if (!missingKeysReported.has(signature)) {
@@ -71,6 +72,16 @@ export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
         en,
     } as Record<SupportedLocale, MessageSchema>,
 });
+
+function escapeVueI18nLiterals(value: string): string {
+    if (!value.includes('@')) {
+        return value;
+    }
+
+    return value.replace(/\{'@'\}\s*|\{"@"\}\s*|@/g, (match) =>
+        match === '@' ? "{'@'}" : match,
+    );
+}
 
 function setNestedKey(
     target: Record<string, unknown>,
@@ -91,7 +102,7 @@ function setNestedKey(
         cursor = cursor[part] as Record<string, unknown>;
     }
 
-    cursor[segments[segments.length - 1]] = value;
+    cursor[segments[segments.length - 1]] = escapeVueI18nLiterals(value);
 }
 
 export function isSupportedLocale(

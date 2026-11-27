@@ -139,4 +139,20 @@ return [
         'default_daily_translation_limit' => (int) env('AI_DAILY_TRANSLATION_LIMIT', 10),
         'default_daily_reply_limit' => (int) env('AI_DAILY_REPLY_LIMIT', 5),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Advanced Post View Tracking V2.0 (Social News Feed Standard)
+    |--------------------------------------------------------------------------
+    */
+    'views' => [
+        'min_duration_ms' => (int) env('SYNCVIET_VIEWS_MIN_DURATION_MS', 500),
+        'min_visible_ratio' => (int) env('SYNCVIET_VIEWS_MIN_VISIBLE_RATIO', 50),
+        'dedup_window_seconds' => (int) env('SYNCVIET_VIEWS_DEDUP_WINDOW_SECONDS', 300),
+        'track_guests' => (bool) env('SYNCVIET_VIEWS_TRACK_GUESTS', true),
+        'track_ai' => (bool) env('SYNCVIET_VIEWS_TRACK_AI', true),
+        'track_author_self' => (bool) env('SYNCVIET_VIEWS_TRACK_AUTHOR_SELF', false),
+        'bot_filtering' => (bool) env('SYNCVIET_VIEWS_BOT_FILTERING', true),
+        'retention_days' => (int) env('SYNCVIET_VIEWS_RETENTION_DAYS', 30),
+    ],
 ];

@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Mauszeiger darüber bewegen oder gedrückt halten für Reaktionen",
         "shareAction": "Teilen",
         "sharesExact": "{count} Mal geteilt",
-        "viewsExact": "{count} Aufrufe"
+        "viewsExact": "{count} Aufrufe",
+        "viewsTooltip": "{count} Aufrufe insgesamt (einschließlich verifizierter menschlicher, Gast- und KI-Aktivität)",
+        "viewAnalytics": {
+            "title": "Beitragsaufruf-Analyse",
+            "privacyNote": "Nur aggregierte Kennzahlen — einzelne Betrachteridentitäten werden niemals offengelegt.",
+            "totalViews": "Gesamtaufrufe",
+            "humanViews": "Menschliche Aufrufe",
+            "guestViews": "Gast-Aufrufe",
+            "aiViews": "KI-Aufrufe",
+            "aiContentAccesses": "KI-Inhaltszugriffe",
+            "uniqueHumanViewers": "Eindeutige menschliche Betrachter",
+            "organicViews": "Organische Aufrufe",
+            "promotedHumanViews": "Beworbene menschliche Aufrufe",
+            "invalidViews": "Ungültige / gefilterte Aufrufe",
+            "legacyViews": "Altbestand / Nicht kategorisiert",
+            "aiSeparationNotice": "Die Gesamtaufrufe enthalten aus Transparenzgründen verifizierte KI-Aktivität. KI-Aufrufe sind strikt von eindeutigen menschlichen Betrachtern, DAU/MAU, organischer Reichweite und bezahlten Werbeimpressionen ausgeschlossen."
+        }
     },
     "profile": {
         "postsTab": "Beiträge",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Neues Passwort erneut eingeben",
             "confirmPasswordPlaceholder": "Passwort erneut eingeben",
             "email": "E-Mail-Adresse",
-            "emailPlaceholder": "name@beispiel.de",
+            "emailPlaceholder": "name{'@'}beispiel.de",
             "enterNewPasswordPlaceholder": "Starkes neues Passwort eingeben",
             "name": "Vollständiger Name",
             "namePlaceholder": "Ihren vollständigen Namen eingeben",
@@ -726,7 +742,9 @@
             "commentsSeries": "Neue Kommentare",
             "revenueSeries": "Einzahlungen (VND)",
             "adSpendSeries": "Werbeausgaben (VND)",
-            "growthRate": "Wachstum im Zeitraum"
+            "growthRate": "Wachstum im Zeitraum",
+            "viewsSectionTitle": "Beitragsaufruf-Analyse",
+            "viewsSectionSubtitle": "Echtzeit-Aufschlüsselung mit 500ms-/5-Minuten-Deduplizierung für menschlichen, Gast-, KI- und gefilterten Traffic."
         },
         "health": {
             "title": "Systemzustand & Laufzeit",
@@ -926,11 +944,23 @@
                 "features": "Feature-Flags & Wartung",
                 "content": "Inhaltslimits",
                 "ads": "Werbesystem",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "Aufruf-Tracking"
             },
             "maintenanceWarning": "Der Wartungsmodus blockiert Zugriffe außerhalb des Teams mit HTTP 503, während der Admin-Zugang aktiv bleibt.",
             "brandingAssetsHint": "Laden Sie Markenlogos, Favicon und das Standard-Open-Graph-Bild direkt von Ihrem Gerät hoch.",
-            "brandingAssetsTitle": "Visuelle Marken- & SEO-Assets"
+            "brandingAssetsTitle": "Visuelle Marken- & SEO-Assets",
+            "viewsPolicyHint": "Konfiguriere Sichtbarkeitsschwellen und Deduplizierungsregeln für den Feed. Jede Änderung erfordert Admin-Rechte und wird im Audit-Log protokolliert.",
+            "viewHints": {
+                "views_min_duration_ms": "Minimale ununterbrochene Anzeigedauer im Viewport in Millisekunden (Standard: 500 ms, Bereich: 100–10.000).",
+                "views_min_visible_ratio": "Mindestens sichtbarer Prozentsatz des Beitrags oder repräsentativen Bereichs (Standard: 50 %, Bereich: 10–100).",
+                "views_dedup_window_seconds": "Serverseitiges Deduplizierungsfenster pro Betrachter und Beitrag in Sekunden (Standard: 300 s / 5 Minuten).",
+                "views_track_guests": "Anonyme Gastsitzungen für gültige Beitragsaufrufe zulassen.",
+                "views_track_ai": "Verifizierten KI-Agenten erlauben, klar klassifizierte KI-Aufrufe und KI-Inhaltszugriffe zu erfassen.",
+                "views_track_author_self": "Aufrufe zählen, wenn Autoren ihren eigenen Beitrag ansehen (empfohlen: Deaktiviert).",
+                "views_bot_filtering": "Suchmaschinen-Crawler, Prefetch-Anfragen und ungültigen Bot-Traffic herausfiltern.",
+                "views_retention_days": "Aufbewahrungstage für Roh-Deduplizierungsereignisse vor automatischer Bereinigung bei Erhalt der Gesamtzähler (Standard: 30, Bereich: 7–180)."
+            }
         },
         "notifications": {
             "title": "Admin-Benachrichtigungszentrum",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: {count} Kampagne(n) mit auffällig vielen Klicks von einer einzelnen IP innerhalb von 24 Std. erkannt.",
-            "campaignFinancialSummary": "@{username} · Budget: {budget} · Ausgegeben: {spent} · Reserviert: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Budget: {budget} · Ausgegeben: {spent} · Reserviert: {held}",
             "campaignPerformanceSummary": "Impressionen: {impressions} · Klicks: {clicks} · CTR: {ctr} %",
             "rejectConsequence": "Durch das Ablehnen dieser Kampagne wird das gesamte reservierte Budget automatisch auf das Werbeguthaben des Werbetreibenden erstattet."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Unkenntlich machen"
             },
             "systemActor": "System",
-            "transferOwnerUsernameLabel": "Benutzername des neuen Eigentümers (@username)",
+            "transferOwnerUsernameLabel": "Benutzername des neuen Eigentümers ({'@'}username)",
             "unknownAuthor": "unbekannt",
             "usernamePlaceholder": "benutzername"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Normal"
             },
             "priorityAria": "Meldungspriorität",
-            "reporterBy": "Gemeldet von: @{username}",
-            "reviewedBy": "Geprüft von @{username}",
+            "reporterBy": "Gemeldet von: {'@'}{username}",
+            "reviewedBy": "Geprüft von {'@'}{username}",
             "systemActor": "System",
             "targetRef": "{type} #{id}",
             "unknownUser": "unbekannt"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "Alle aktiven Benutzer",
                 "staff": "Nur Personal",
-                "user": "Bestimmter Benutzer (@username)",
+                "user": "Bestimmter Benutzer ({'@'}username)",
                 "verified": "Verifizierte Benutzer"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Profil",
             "emailLabel": "E-Mail-Adresse",
-            "emailPlaceholder": "name@beispiel.de",
+            "emailPlaceholder": "name{'@'}beispiel.de",
             "emailUnverified": "Ihre E-Mail-Adresse ist noch nicht bestätigt.",
             "headingDescription": "Aktualisieren Sie Ihren öffentlichen Anzeigenamen, Benutzernamen, Ihre E-Mail-Adresse und Zeitzone.",
             "headingTitle": "Profilinformationen",
@@ -2460,7 +2490,7 @@
             "saveChanges": "Änderungen speichern",
             "srHeading": "Profileinstellungen",
             "timezoneLabel": "Zeitzone",
-            "usernameLabel": "Benutzername (@username)",
+            "usernameLabel": "Benutzername ({'@'}username)",
             "usernamePlaceholder": "benutzername",
             "verificationLinkSent": "Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Upload abgebrochen.",
         "uploading": "Wird hochgeladen...",
         "zoomLabel": "Zoom"
+    },
+    "socialList": {
+        "you": "Du",
+        "unfollow": "Entfolgen",
+        "followAria": "{name} folgen",
+        "unfollowAria": "{name} entfolgen",
+        "followError": "Folge-Status konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+        "reactionsTitle": "Reaktionen",
+        "allReactions": "Alle",
+        "filterReactionsAria": "Reaktionen nach Typ filtern",
+        "viewReactionsAria": "{count} Reaktionen anzeigen",
+        "searchPeople": "Nach Name oder Benutzername suchen...",
+        "searchFollowers": "Follower durchsuchen...",
+        "searchFollowing": "Gefolgte Konten durchsuchen...",
+        "loadError": "Liste konnte gerade nicht geladen werden.",
+        "retry": "Erneut versuchen",
+        "loadMore": "Mehr laden",
+        "clearSearch": "Suche leeren",
+        "noSearchResults": "Keine passenden Personen",
+        "noSearchResultsHint": "Versuche einen anderen Namen oder Benutzernamen.",
+        "noReactionsYet": "Noch keine Reaktionen",
+        "noReactionsYetHint": "Reagiere als Erster auf diesen Beitrag.",
+        "followersTitle": "Follower",
+        "followingTitle": "Folgt",
+        "postsLabel": "Beiträge",
+        "followTabsAria": "Zwischen Followern und gefolgten Konten wechseln",
+        "noFollowersYet": "Noch keine Follower",
+        "noFollowersYetHint": "Sobald jemand diesem Konto folgt, erscheint er hier.",
+        "noFollowingYet": "Folgt noch niemandem",
+        "noFollowingYetHint": "Konten, denen dieses Profil folgt, erscheinen hier.",
+        "exploreCommunities": "Communities entdecken",
+        "restrictedTitle": "Liste nicht verfügbar",
+        "restrictedHint": "Du kannst die Verbindungen dieses Kontos nicht einsehen."
     }
 }

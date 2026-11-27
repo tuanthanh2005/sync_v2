@@ -35,7 +35,9 @@ import AiBadge from '@/components/ai/AiBadge.vue';
 import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
 import ReactionPicker from '@/components/social/ReactionPicker.vue';
+import ReactionUsersModal from '@/components/social/ReactionUsersModal.vue';
 import {
+    useLivePostViewCount,
     usePostViewTracker,
     type PostViewSource,
 } from '@/composables/usePostViewTracker';
@@ -98,6 +100,13 @@ const reportOpen = ref(false);
 const boostModalOpen = ref(false);
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
+const reactionModalOpen = ref(false);
+const hasOpenedReactionModal = ref(false);
+
+function openReactionUsersModal(): void {
+    hasOpenedReactionModal.value = true;
+    reactionModalOpen.value = true;
+}
 
 usePostViewTracker(articleRef, {
     postId: props.post.id,
@@ -105,9 +114,17 @@ usePostViewTracker(articleRef, {
     isPromoted: Boolean(props.post.is_sponsored),
 });
 
+const liveViewsCount = useLivePostViewCount(
+    () => props.post.id,
+    () => props.post.views_count ?? 0,
+);
+
 // Optimistic local interaction state with rollback on network/server failure
 const optimisticReaction = ref(props.post.viewer_reaction);
 const optimisticReactionsCount = ref(props.post.reactions_count);
+const optimisticReactionSummary = ref<
+    Partial<Record<'like' | 'love' | 'insightful', number>>
+>({ ...props.post.reaction_summary });
 const optimisticBookmarked = ref(props.post.is_bookmarked);
 const reacting = ref(false);
 const bookmarking = ref(false);
@@ -116,11 +133,17 @@ watch(
     () => [
         props.post.viewer_reaction,
         props.post.reactions_count,
+        props.post.reaction_summary,
         props.post.is_bookmarked,
     ],
-    ([reaction, count, bookmarked]) => {
+    ([reaction, count, summary, bookmarked]) => {
         optimisticReaction.value = reaction as typeof optimisticReaction.value;
         optimisticReactionsCount.value = count as number;
+        optimisticReactionSummary.value = {
+            ...(summary as
+                | Partial<Record<'like' | 'love' | 'insightful', number>>
+                | undefined),
+        };
         optimisticBookmarked.value = Boolean(bookmarked);
     },
 );
@@ -193,17 +216,27 @@ function submitReaction(type: 'like' | 'love' | 'insightful'): void {
 
     const previousReaction = optimisticReaction.value;
     const previousCount = optimisticReactionsCount.value;
+    const previousSummary = { ...optimisticReactionSummary.value };
+    const nextSummary = { ...previousSummary };
 
     if (previousReaction === type) {
         optimisticReaction.value = null;
         optimisticReactionsCount.value = Math.max(0, previousCount - 1);
+        nextSummary[type] = Math.max(0, (nextSummary[type] ?? 1) - 1);
     } else if (previousReaction === null) {
         optimisticReaction.value = type;
         optimisticReactionsCount.value = previousCount + 1;
+        nextSummary[type] = (nextSummary[type] ?? 0) + 1;
     } else {
         optimisticReaction.value = type;
+        nextSummary[previousReaction] = Math.max(
+            0,
+            (nextSummary[previousReaction] ?? 1) - 1,
+        );
+        nextSummary[type] = (nextSummary[type] ?? 0) + 1;
     }
 
+    optimisticReactionSummary.value = nextSummary;
     reacting.value = true;
 
     router.post(
@@ -214,6 +247,7 @@ function submitReaction(type: 'like' | 'love' | 'insightful'): void {
             onError: () => {
                 optimisticReaction.value = previousReaction;
                 optimisticReactionsCount.value = previousCount;
+                optimisticReactionSummary.value = previousSummary;
             },
             onFinish: () => {
                 reacting.value = false;
@@ -826,8 +860,10 @@ function submitReport(): void {
                     :post-id="post.id"
                     :active-reaction="optimisticReaction"
                     :count="optimisticReactionsCount"
+                    :reaction-summary="optimisticReactionSummary"
                     :disabled="reacting"
                     @select="submitReaction"
+                    @open-list="openReactionUsersModal"
                 />
 
                 <Button
@@ -875,20 +911,20 @@ function submitReport(): void {
                 <span
                     data-test="post-views-count"
                     :title="
-                        t('post.viewsExact', {
-                            count: formatNumber(post.views_count ?? 0, locale),
+                        t('post.viewsTooltip', {
+                            count: formatNumber(liveViewsCount, locale),
                         })
                     "
                     :aria-label="
-                        t('post.viewsExact', {
-                            count: formatNumber(post.views_count ?? 0, locale),
+                        t('post.viewsTooltip', {
+                            count: formatNumber(liveViewsCount, locale),
                         })
                     "
-                    class="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground sm:min-h-9"
+                    class="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-xs text-muted-foreground sm:min-h-9"
                 >
                     <Eye class="size-4 shrink-0" aria-hidden="true" />
-                    <span class="tabular-nums">{{
-                        formatCompactNumber(post.views_count ?? 0, locale)
+                    <span class="min-w-[1.25ch] tabular-nums">{{
+                        formatCompactNumber(liveViewsCount, locale)
                     }}</span>
                 </span>
             </div>
@@ -936,7 +972,7 @@ function submitReport(): void {
         />
 
         <Dialog v-model:open="reportOpen">
-            <DialogContent class="max-w-md">
+            <DialogContent class="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{{ t('report.title') }}</DialogTitle>
                 </DialogHeader>
@@ -1010,6 +1046,13 @@ function submitReport(): void {
             v-model:open="boostModalOpen"
             :post-id="post.id"
             :post-excerpt="post.title || post.content.slice(0, 140)"
+        />
+
+        <ReactionUsersModal
+            v-if="hasOpenedReactionModal"
+            v-model:open="reactionModalOpen"
+            :post-id="post.id"
+            :initial-total="optimisticReactionsCount"
         />
     </article>
 </template>

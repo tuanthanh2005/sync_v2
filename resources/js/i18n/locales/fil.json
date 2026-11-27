@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Itapat o pindutin nang matagal para sa mga reaksyon",
         "shareAction": "Ibahagi",
         "sharesExact": "{count} beses na ibinahagi",
-        "viewsExact": "{count} panonood"
+        "viewsExact": "{count} panonood",
+        "viewsTooltip": "{count} kabuuang view (kasama ang na-verify na aktibidad ng tao, bisita, at AI)",
+        "viewAnalytics": {
+            "title": "Analytics ng View ng Post",
+            "privacyNote": "Pinagsama-samang sukatan lamang — hindi kailanman ibinabahagi ang pagkakakilanlan ng mga tumingin.",
+            "totalViews": "Kabuuang View",
+            "humanViews": "Mga View ng Tao",
+            "guestViews": "Mga View ng Bisita",
+            "aiViews": "Mga View ng AI",
+            "aiContentAccesses": "Pag-access ng AI sa Nilalaman",
+            "uniqueHumanViewers": "Natatanging Taong Manonood",
+            "organicViews": "Mga Organic na View",
+            "promotedHumanViews": "Mga Promoted na View ng Tao",
+            "invalidViews": "Di-wasto / Na-filter na View",
+            "legacyViews": "Luma / Walang Kategorya",
+            "aiSeparationNotice": "Kasama sa kabuuang view ang na-verify na aktibidad ng AI para sa transparency. Mahigpit na hindi isinasama ang mga AI view sa natatanging taong manonood, DAU/MAU, organic reach ng tao, at bayad na ad impression."
+        }
     },
     "profile": {
         "postsTab": "Mga Paskil",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Ilagay muli ang bagong password",
             "confirmPasswordPlaceholder": "Ilagay muli ang password",
             "email": "Tirahan ng email",
-            "emailPlaceholder": "pangalan@example.com",
+            "emailPlaceholder": "pangalan{'@'}example.com",
             "enterNewPasswordPlaceholder": "Maglagay ng malakas na bagong password",
             "name": "Buong pangalan",
             "namePlaceholder": "Ilagay ang iyong buong pangalan",
@@ -726,7 +742,9 @@
             "commentsSeries": "Mga Bagong Komento",
             "revenueSeries": "Mga Deposito (VND)",
             "adSpendSeries": "Gastos sa Anunsyo (VND)",
-            "growthRate": "Paglago sa Panahon"
+            "growthRate": "Paglago sa Panahon",
+            "viewsSectionTitle": "Analytics ng View ng Post",
+            "viewsSectionSubtitle": "Real-time 500ms / 5-minutong deduplicated view breakdown na naghihiwalay sa tao, bisita, AI, at na-filter na trapiko."
         },
         "health": {
             "title": "Kalusugan ng Sistema at Runtime",
@@ -926,11 +944,23 @@
                 "features": "Mga Feature Flag at Pagpapanatili",
                 "content": "Mga Limitasyon ng Nilalaman",
                 "ads": "Makina ng Pag-aanunsyo",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "Pagsubaybay sa View"
             },
             "maintenanceWarning": "Hinaharang ng Mode ng Pagpapanatili ang trapiko ng hindi kawani gamit ang HTTP 503 habang nananatiling aktibo ang access ng Admin.",
             "brandingAssetsHint": "Mag-upload ng mga logo ng brand, favicon, at default na Open Graph na larawan nang direkta mula sa iyong device.",
-            "brandingAssetsTitle": "Mga visual asset ng brand at SEO"
+            "brandingAssetsTitle": "Mga visual asset ng brand at SEO",
+            "viewsPolicyHint": "I-configure ang mga threshold ng view sa News Feed at mga panuntunan sa deduplication. Ang bawat pagbabago ay nangangailangan ng pahintulot ng admin at itinatala sa Audit Log.",
+            "viewHints": {
+                "views_min_duration_ms": "Pinakamababang tuloy-tuloy na tagal sa viewport sa millisecond (default: 500ms, saklaw: 100–10,000).",
+                "views_min_visible_ratio": "Pinakamababang nakikitang porsyento ng post o kinatawang bahagi (default: 50%, saklaw: 10–100).",
+                "views_dedup_window_seconds": "Server-side deduplication window bawat viewer at post sa segundo (default: 300s / 5 minuto).",
+                "views_track_guests": "Payagan ang mga anonymous na sesyon ng bisita na magtala ng wastong view ng post.",
+                "views_track_ai": "Payagan ang mga na-verify na AI Agent na magtala ng malinaw na nakategoryang AI View at AI Content Access.",
+                "views_track_author_self": "Bilangin kapag tiningnan ng may-akda ang sarili niyang post (inirerekomenda: Naka-off).",
+                "views_bot_filtering": "I-filter ang mga search crawler, prefetch request, at di-wastong automated bot traffic.",
+                "views_retention_days": "Mga araw upang panatilihin ang raw deduplication log bago awtomatikong linisin habang pinapanatili ang kabuuang bilang (default: 30, saklaw: 7–180)."
+            }
         },
         "notifications": {
             "title": "Sentro ng Abiso ng Admin",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: {count} kampanya ang natuklasang may mataas na bugso ng pag-click mula sa iisang IP sa loob ng 24 oras.",
-            "campaignFinancialSummary": "@{username} · Badyet: {budget} · Nagastos: {spent} · Nakalaan: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Badyet: {budget} · Nagastos: {spent} · Nakalaan: {held}",
             "campaignPerformanceSummary": "Mga Impresyon: {impressions} · Mga Klik: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "Ang pagtanggi sa kampanyang ito ay awtomatikong magbabalik ng lahat ng nakalaang badyet sa Balanse sa Pag-aanunsyo ng nag-aanunsyo."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Takpan"
             },
             "systemActor": "sistema",
-            "transferOwnerUsernameLabel": "Username ng bagong may-ari (@username)",
+            "transferOwnerUsernameLabel": "Username ng bagong may-ari ({'@'}username)",
             "unknownAuthor": "hindi kilala",
             "usernamePlaceholder": "username"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Karaniwan"
             },
             "priorityAria": "Priyoridad ng ulat",
-            "reporterBy": "Nag-ulat: @{username}",
-            "reviewedBy": "Sinuri ni @{username}",
+            "reporterBy": "Nag-ulat: {'@'}{username}",
+            "reviewedBy": "Sinuri ni {'@'}{username}",
             "systemActor": "sistema",
             "targetRef": "{type} #{id}",
             "unknownUser": "hindi kilala"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "Lahat ng Aktibong User",
                 "staff": "Mga Kawani Lamang",
-                "user": "Partikular na User (@username)",
+                "user": "Partikular na User ({'@'}username)",
                 "verified": "Mga Beripikadong User"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Propayl",
             "emailLabel": "Email address",
-            "emailPlaceholder": "pangalan@example.com",
+            "emailPlaceholder": "pangalan{'@'}example.com",
             "emailUnverified": "Hindi pa beripikado ang iyong email address.",
             "headingDescription": "I-update ang iyong pampublikong pangalan, username, email, at timezone.",
             "headingTitle": "Impormasyon ng Propayl",
@@ -2460,7 +2490,7 @@
             "saveChanges": "I-save ang mga pagbabago",
             "srHeading": "Mga Setting ng Propayl",
             "timezoneLabel": "Timezone",
-            "usernameLabel": "Username (@username)",
+            "usernameLabel": "Username ({'@'}username)",
             "usernamePlaceholder": "username",
             "verificationLinkSent": "May bagong link ng beripikasyon na ipinadala sa iyong email address."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Kinansela ang pag-upload.",
         "uploading": "Nag-a-upload...",
         "zoomLabel": "I-zoom"
+    },
+    "socialList": {
+        "you": "Ikaw",
+        "unfollow": "I-unfollow",
+        "followAria": "I-follow si {name}",
+        "unfollowAria": "I-unfollow si {name}",
+        "followError": "Hindi ma-update ang status ng pag-follow. Pakisubukan muli.",
+        "reactionsTitle": "Mga Reaksyon",
+        "allReactions": "Lahat",
+        "filterReactionsAria": "I-filter ang mga reaksyon ayon sa uri",
+        "viewReactionsAria": "Tingnan ang {count} reaksyon",
+        "searchPeople": "Maghanap ayon sa pangalan o username...",
+        "searchFollowers": "Maghanap ng mga follower...",
+        "searchFollowing": "Maghanap ng sinusundan...",
+        "loadError": "Hindi ma-load ang listahan sa ngayon.",
+        "retry": "Subukan muli",
+        "loadMore": "Mag-load pa",
+        "clearSearch": "I-clear ang paghahanap",
+        "noSearchResults": "Walang tumutugmang tao",
+        "noSearchResultsHint": "Subukang maghanap gamit ang ibang pangalan o username.",
+        "noReactionsYet": "Wala pang reaksyon",
+        "noReactionsYetHint": "Maging una na mag-react sa post na ito.",
+        "followersTitle": "Mga Follower",
+        "followingTitle": "Sinusundan",
+        "postsLabel": "Mga Post",
+        "followTabsAria": "Lumipat sa pagitan ng mga follower at sinusundan",
+        "noFollowersYet": "Wala pang follower",
+        "noFollowersYetHint": "Kapag may nag-follow sa account na ito, lalabas sila rito.",
+        "noFollowingYet": "Wala pang sinusundan",
+        "noFollowingYetHint": "Ang mga account na sinusundan ng profile na ito ay lalabas dito.",
+        "exploreCommunities": "Tuklasin ang mga komunidad",
+        "restrictedTitle": "Hindi available ang listahan",
+        "restrictedHint": "Hindi mo maaaring tingnan ang mga koneksyon ng account na ito."
     }
 }

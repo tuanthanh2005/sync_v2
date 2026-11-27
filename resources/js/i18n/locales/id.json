@@ -189,7 +189,23 @@
         "reactionTriggerHint": "Arahkan kursor atau tekan lama untuk reaksi",
         "shareAction": "Bagikan",
         "sharesExact": "{count} kali dibagikan",
-        "viewsExact": "{count} tayangan"
+        "viewsExact": "{count} tayangan",
+        "viewsTooltip": "{count} total tayangan (termasuk aktivitas manusia, tamu, dan AI terverifikasi)",
+        "viewAnalytics": {
+            "title": "Analitik Tayangan Postingan",
+            "privacyNote": "Hanya metrik agregat — identitas penonton tidak pernah ditampilkan.",
+            "totalViews": "Total Tayangan",
+            "humanViews": "Tayangan Manusia",
+            "guestViews": "Tayangan Tamu",
+            "aiViews": "Tayangan AI",
+            "aiContentAccesses": "Akses Konten AI",
+            "uniqueHumanViewers": "Penonton Manusia Unik",
+            "organicViews": "Tayangan Organik",
+            "promotedHumanViews": "Tayangan Promosi Manusia",
+            "invalidViews": "Tayangan Tidak Valid / Difilter",
+            "legacyViews": "Lama / Belum Diklasifikasi",
+            "aiSeparationNotice": "Total tayangan mencakup aktivitas AI terverifikasi demi transparansi. Tayangan AI dikecualikan sepenuhnya dari penonton manusia unik, DAU/MAU, jangkauan organik manusia, dan tayangan iklan berbayar."
+        }
     },
     "profile": {
         "postsTab": "Postingan",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "Masukkan ulang kata sandi baru",
             "confirmPasswordPlaceholder": "Masukkan ulang kata sandi",
             "email": "Alamat email",
-            "emailPlaceholder": "nama@example.com",
+            "emailPlaceholder": "nama{'@'}example.com",
             "enterNewPasswordPlaceholder": "Masukkan kata sandi baru yang kuat",
             "name": "Nama lengkap",
             "namePlaceholder": "Masukkan nama lengkap Anda",
@@ -726,7 +742,9 @@
             "commentsSeries": "Komentar Baru",
             "revenueSeries": "Setoran (VND)",
             "adSpendSeries": "Belanja Iklan (VND)",
-            "growthRate": "Pertumbuhan Periode"
+            "growthRate": "Pertumbuhan Periode",
+            "viewsSectionTitle": "Analitik Tayangan Postingan",
+            "viewsSectionSubtitle": "Rincian tayangan real-time terdeduplikasi (500ms / 5 menit) yang memisahkan trafik manusia, tamu, AI, dan terfilter."
         },
         "health": {
             "title": "Kesehatan Sistem & Runtime",
@@ -926,11 +944,23 @@
                 "features": "Bendera Fitur & Pemeliharaan",
                 "content": "Batas Konten",
                 "ads": "Mesin Periklanan",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "Pelacakan Tayangan"
             },
             "maintenanceWarning": "Mode Pemeliharaan memblokir lalu lintas non-staf dengan HTTP 503 sambil menjaga akses Admin tetap aktif.",
             "brandingAssetsHint": "Unggah logo merek, favicon, dan gambar Open Graph default langsung dari perangkat Anda.",
-            "brandingAssetsTitle": "Aset visual merek & SEO"
+            "brandingAssetsTitle": "Aset visual merek & SEO",
+            "viewsPolicyHint": "Atur ambang tayangan News Feed dan aturan deduplikasi. Setiap perubahan memerlukan izin admin dan dicatat dalam Audit Log.",
+            "viewHints": {
+                "views_min_duration_ms": "Durasi tampil kontinu minimum di viewport dalam milidetik (bawaan: 500ms, rentang: 100–10.000).",
+                "views_min_visible_ratio": "Persentase visibilitas minimum postingan atau area representatif (bawaan: 50%, rentang: 10–100).",
+                "views_dedup_window_seconds": "Jendela deduplikasi sisi server per penonton dan postingan dalam detik (bawaan: 300 dtk / 5 menit).",
+                "views_track_guests": "Izinkan sesi tamu anonim mencatat tayangan postingan yang valid.",
+                "views_track_ai": "Izinkan Agen AI terverifikasi mencatat Tayangan AI dan Akses Konten AI yang diklasifikasikan jelas.",
+                "views_track_author_self": "Hitung saat penulis melihat postingannya sendiri (disarankan: Nonaktif).",
+                "views_bot_filtering": "Filter perayap mesin pencari, permintaan prefetch, dan trafik bot otomatis yang tidak valid.",
+                "views_retention_days": "Jumlah hari penyimpanan event deduplikasi mentah sebelum pembersihan otomatis tanpa mengurangi total (bawaan: 30, rentang: 7–180)."
+            }
         },
         "notifications": {
             "title": "Pusat Notifikasi Admin",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: {count} kampanye terdeteksi memiliki lonjakan klik tinggi dari satu IP dalam 24 jam.",
-            "campaignFinancialSummary": "@{username} · Anggaran: {budget} · Terpakai: {spent} · Ditahan: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · Anggaran: {budget} · Terpakai: {spent} · Ditahan: {held}",
             "campaignPerformanceSummary": "Tayangan: {impressions} · Klik: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "Menolak kampanye ini akan secara otomatis mengembalikan seluruh anggaran yang ditahan ke Saldo Iklan pengiklan."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "Samarkan"
             },
             "systemActor": "sistem",
-            "transferOwnerUsernameLabel": "Nama pengguna pemilik baru (@username)",
+            "transferOwnerUsernameLabel": "Nama pengguna pemilik baru ({'@'}username)",
             "unknownAuthor": "tidak diketahui",
             "usernamePlaceholder": "nama_pengguna"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "Normal"
             },
             "priorityAria": "Prioritas laporan",
-            "reporterBy": "Pelapor: @{username}",
-            "reviewedBy": "Ditinjau oleh @{username}",
+            "reporterBy": "Pelapor: {'@'}{username}",
+            "reviewedBy": "Ditinjau oleh {'@'}{username}",
             "systemActor": "sistem",
             "targetRef": "{type} #{id}",
             "unknownUser": "tidak diketahui"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "Semua Pengguna Aktif",
                 "staff": "Hanya Staf",
-                "user": "Pengguna Tertentu (@username)",
+                "user": "Pengguna Tertentu ({'@'}username)",
                 "verified": "Pengguna Terverifikasi"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "Profil",
             "emailLabel": "Alamat email",
-            "emailPlaceholder": "nama@example.com",
+            "emailPlaceholder": "nama{'@'}example.com",
             "emailUnverified": "Alamat email Anda belum terverifikasi.",
             "headingDescription": "Perbarui nama tampilan publik, nama pengguna, email, dan zona waktu Anda.",
             "headingTitle": "Informasi Profil",
@@ -2460,7 +2490,7 @@
             "saveChanges": "Simpan perubahan",
             "srHeading": "Pengaturan Profil",
             "timezoneLabel": "Zona waktu",
-            "usernameLabel": "Nama pengguna (@username)",
+            "usernameLabel": "Nama pengguna ({'@'}username)",
             "usernamePlaceholder": "nama_pengguna",
             "verificationLinkSent": "Tautan verifikasi baru telah dikirim ke alamat email Anda."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "Unggahan dibatalkan.",
         "uploading": "Mengunggah...",
         "zoomLabel": "Perbesar"
+    },
+    "socialList": {
+        "you": "Anda",
+        "unfollow": "Berhenti ikuti",
+        "followAria": "Ikuti {name}",
+        "unfollowAria": "Berhenti mengikuti {name}",
+        "followError": "Gagal memperbarui status ikuti. Silakan coba lagi.",
+        "reactionsTitle": "Reaksi",
+        "allReactions": "Semua",
+        "filterReactionsAria": "Filter reaksi berdasarkan jenis",
+        "viewReactionsAria": "Lihat {count} reaksi",
+        "searchPeople": "Cari nama atau username...",
+        "searchFollowers": "Cari pengikut...",
+        "searchFollowing": "Cari yang diikuti...",
+        "loadError": "Tidak dapat memuat daftar saat ini.",
+        "retry": "Coba lagi",
+        "loadMore": "Muat lebih banyak",
+        "clearSearch": "Hapus pencarian",
+        "noSearchResults": "Tidak ada pengguna yang cocok",
+        "noSearchResultsHint": "Coba cari dengan nama atau username lain.",
+        "noReactionsYet": "Belum ada reaksi",
+        "noReactionsYetHint": "Jadilah yang pertama bereaksi pada postingan ini.",
+        "followersTitle": "Pengikut",
+        "followingTitle": "Mengikuti",
+        "postsLabel": "Postingan",
+        "followTabsAria": "Beralih antara pengikut dan mengikuti",
+        "noFollowersYet": "Belum ada pengikut",
+        "noFollowersYetHint": "Saat seseorang mengikuti akun ini, mereka akan muncul di sini.",
+        "noFollowingYet": "Belum mengikuti siapa pun",
+        "noFollowingYetHint": "Akun yang diikuti profil ini akan muncul di sini.",
+        "exploreCommunities": "Jelajahi komunitas",
+        "restrictedTitle": "Daftar tidak tersedia",
+        "restrictedHint": "Anda tidak dapat melihat koneksi akun ini."
     }
 }

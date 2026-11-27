@@ -189,7 +189,23 @@
         "reactionTriggerHint": "วางเมาส์หรือกดค้างเพื่อเลือกความรู้สึก",
         "shareAction": "แชร์",
         "sharesExact": "แชร์ {count} ครั้ง",
-        "viewsExact": "ดู {count} ครั้ง"
+        "viewsExact": "ดู {count} ครั้ง",
+        "viewsTooltip": "ยอดเข้าชมทั้งหมด {count} ครั้ง (รวมผู้ใช้งานจริง ผู้เยี่ยมชม และกิจกรรม AI ที่ผ่านการตรวจสอบ)",
+        "viewAnalytics": {
+            "title": "สถิติการเข้าชมโพสต์",
+            "privacyNote": "แสดงเฉพาะข้อมูลรวม — ไม่เปิดเผยตัวตนของผู้เข้าชมรายบุคคล",
+            "totalViews": "ยอดเข้าชมทั้งหมด",
+            "humanViews": "ยอดเข้าชมจากผู้ใช้จริง",
+            "guestViews": "ยอดเข้าชมจากผู้เยี่ยมชม",
+            "aiViews": "ยอดเข้าชมจาก AI",
+            "aiContentAccesses": "การเข้าถึงเนื้อหาโดย AI",
+            "uniqueHumanViewers": "ผู้ชมจริงไม่ซ้ำกัน",
+            "organicViews": "ยอดเข้าชมแบบออร์แกนิก",
+            "promotedHumanViews": "ยอดเข้าชมโปรโมต (ผู้ใช้จริง)",
+            "invalidViews": "ยอดเข้าชมที่ไม่ถูกต้อง / ถูกกรอง",
+            "legacyViews": "ข้อมูลเดิม / ยังไม่จำแนก",
+            "aiSeparationNotice": "ยอดเข้าชมทั้งหมดรวมกิจกรรม AI ที่ถูกต้องเพื่อความโปร่งใส โดยยอดจาก AI จะไม่ถูกนำไปรวมในผู้ชมจริงไม่ซ้ำกัน, DAU/MAU, การเข้าถึงแบบออร์แกนิกของมนุษย์ หรือยอดแสดงโฆษณาแบบชำระเงิน"
+        }
     },
     "profile": {
         "postsTab": "โพสต์",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "ป้อนรหัสผ่านใหม่อีกครั้ง",
             "confirmPasswordPlaceholder": "ป้อนรหัสผ่านอีกครั้ง",
             "email": "ที่อยู่อีเมล",
-            "emailPlaceholder": "chue@example.com",
+            "emailPlaceholder": "chue{'@'}example.com",
             "enterNewPasswordPlaceholder": "ป้อนรหัสผ่านใหม่ที่รัดกุม",
             "name": "ชื่อ-นามสกุล",
             "namePlaceholder": "ป้อนชื่อ-นามสกุลของคุณ",
@@ -726,7 +742,9 @@
             "commentsSeries": "ความคิดเห็นใหม่",
             "revenueSeries": "ยอดเติมเงิน (VND)",
             "adSpendSeries": "ค่าใช้จ่ายโฆษณา (VND)",
-            "growthRate": "อัตราการเติบโตในงวด"
+            "growthRate": "อัตราการเติบโตในงวด",
+            "viewsSectionTitle": "สถิติการเข้าชมโพสต์",
+            "viewsSectionSubtitle": "สรุปยอดเข้าชมแบบเรียลไทม์ตามเกณฑ์ 500ms / กันซ้ำ 5 นาที แยกชัดเจนระหว่างผู้ใช้จริง ผู้เยี่ยมชม AI และทราฟฟิกที่ถูกกรอง"
         },
         "health": {
             "title": "สถานะสุขภาพระบบและรันไทม์",
@@ -926,11 +944,23 @@
                 "features": "สวิตช์ฟีเจอร์และโหมดบำรุงรักษา",
                 "content": "ขีดจำกัดเนื้อหา",
                 "ads": "ระบบโฆษณา",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "การนับยอดเข้าชม"
             },
             "maintenanceWarning": "โหมดบำรุงรักษาจะบล็อกผู้ใช้งานที่ไม่ใช่เจ้าหน้าที่ด้วย HTTP 503 โดยยังคงให้ผู้ดูแลระบบเข้าใช้งานได้",
             "brandingAssetsHint": "อัปโหลดโลโก้แบรนด์ favicon และรูปภาพ Open Graph เริ่มต้นโดยตรงจากอุปกรณ์ของคุณ",
-            "brandingAssetsTitle": "ไฟล์ภาพแบรนด์และ SEO"
+            "brandingAssetsTitle": "ไฟล์ภาพแบรนด์และ SEO",
+            "viewsPolicyHint": "กำหนดเกณฑ์การนับยอดเข้าชมบนฟีดข่าวและกฎกันซ้ำ ทุกการเปลี่ยนแปลงต้องมีสิทธิ์ผู้ดูแลระบบและจะถูกบันทึกใน Audit Log",
+            "viewHints": {
+                "views_min_duration_ms": "ระยะเวลาแสดงผลต่อเนื่องขั้นต่ำบนหน้าจอเป็นมิลลิวินาที (ค่าเริ่มต้น: 500ms, ช่วง: 100–10,000)",
+                "views_min_visible_ratio": "สัดส่วนเปอร์เซ็นต์ขั้นต่ำของโพสต์หรือพื้นที่ตัวแทนที่มองเห็นได้ (ค่าเริ่มต้น: 50%, ช่วง: 10–100)",
+                "views_dedup_window_seconds": "ช่วงเวลากันนับซ้ำฝั่งเซิร์ฟเวอร์ต่อผู้ชมและโพสต์เป็นวินาที (ค่าเริ่มต้น: 300 วินาที / 5 นาที)",
+                "views_track_guests": "อนุญาตให้ผู้เยี่ยมชมที่ไม่ได้เข้าสู่ระบบบันทึกยอดเข้าชมโพสต์ที่ถูกต้อง",
+                "views_track_ai": "อนุญาตให้ AI Agent ที่ยืนยันแล้วบันทึกยอดเข้าชม AI และการเข้าถึงเนื้อหา AI โดยแยกประเภทชัดเจน",
+                "views_track_author_self": "นับยอดเข้าชมเมื่อผู้เขียนดูโพสต์ของตนเอง (แนะนำ: ปิด)",
+                "views_bot_filtering": "กรองบอตค้นหา คำขอ prefetch และทราฟฟิกบอตอัตโนมัติที่ไม่ถูกต้อง",
+                "views_retention_days": "จำนวนวันที่เก็บข้อมูลดิบกันซ้ำก่อนลบอัตโนมัติโดยยังคงยอดรวมทั้งหมดไว้ (ค่าเริ่มต้น: 30, ช่วง: 7–180)"
+            }
         },
         "notifications": {
             "title": "ศูนย์แจ้งเตือนผู้ดูแลระบบ",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: ตรวจพบ {count} แคมเปญที่มีการคลิกถี่ผิดปกติจาก IP เดียวภายใน 24 ชั่วโมง",
-            "campaignFinancialSummary": "@{username} · งบประมาณ: {budget} · ใช้ไป: {spent} · กันไว้: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · งบประมาณ: {budget} · ใช้ไป: {spent} · กันไว้: {held}",
             "campaignPerformanceSummary": "การแสดงผล: {impressions} · คลิก: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "การปฏิเสธแคมเปญนี้จะคืนงบประมาณที่กันไว้ทั้งหมดกลับไปยังยอดเงินโฆษณาของผู้ลงโฆษณาโดยอัตโนมัติ"
         },
@@ -1187,7 +1217,7 @@
                 "mask": "ปิดบัง"
             },
             "systemActor": "ระบบ",
-            "transferOwnerUsernameLabel": "ชื่อผู้ใช้ของเจ้าของใหม่ (@username)",
+            "transferOwnerUsernameLabel": "ชื่อผู้ใช้ของเจ้าของใหม่ ({'@'}username)",
             "unknownAuthor": "ไม่ระบุ",
             "usernamePlaceholder": "ชื่อผู้ใช้"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "ปกติ"
             },
             "priorityAria": "ระดับความสำคัญของรายงาน",
-            "reporterBy": "ผู้รายงาน: @{username}",
-            "reviewedBy": "ตรวจสอบโดย @{username}",
+            "reporterBy": "ผู้รายงาน: {'@'}{username}",
+            "reviewedBy": "ตรวจสอบโดย {'@'}{username}",
             "systemActor": "ระบบ",
             "targetRef": "{type} #{id}",
             "unknownUser": "ไม่ทราบ"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "ผู้ใช้ที่ใช้งานทั้งหมด",
                 "staff": "เฉพาะเจ้าหน้าที่",
-                "user": "ผู้ใช้เฉพาะราย (@username)",
+                "user": "ผู้ใช้เฉพาะราย ({'@'}username)",
                 "verified": "ผู้ใช้ที่ยืนยันตัวตนแล้ว"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "โปรไฟล์",
             "emailLabel": "ที่อยู่อีเมล",
-            "emailPlaceholder": "chue@example.com",
+            "emailPlaceholder": "chue{'@'}example.com",
             "emailUnverified": "ที่อยู่อีเมลของคุณยังไม่ได้รับการยืนยัน",
             "headingDescription": "อัปเดตชื่อที่แสดงสาธารณะ ชื่อผู้ใช้ อีเมล และเขตเวลาของคุณ",
             "headingTitle": "ข้อมูลโปรไฟล์",
@@ -2460,7 +2490,7 @@
             "saveChanges": "บันทึกการเปลี่ยนแปลง",
             "srHeading": "การตั้งค่าโปรไฟล์",
             "timezoneLabel": "เขตเวลา",
-            "usernameLabel": "ชื่อผู้ใช้ (@username)",
+            "usernameLabel": "ชื่อผู้ใช้ ({'@'}username)",
             "usernamePlaceholder": "ชื่อผู้ใช้",
             "verificationLinkSent": "ส่งลิงก์ยืนยันใหม่ไปยังที่อยู่อีเมลของคุณแล้ว"
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "ยกเลิกการอัปโหลดแล้ว",
         "uploading": "กำลังอัปโหลด...",
         "zoomLabel": "ซูม"
+    },
+    "socialList": {
+        "you": "คุณ",
+        "unfollow": "เลิกติดตาม",
+        "followAria": "ติดตาม {name}",
+        "unfollowAria": "เลิกติดตาม {name}",
+        "followError": "ไม่สามารถอัปเดตสถานะการติดตามได้ กรุณาลองใหม่",
+        "reactionsTitle": "ความรู้สึก",
+        "allReactions": "ทั้งหมด",
+        "filterReactionsAria": "กรองตามประเภทความรู้สึก",
+        "viewReactionsAria": "ดูความรู้สึก {count} รายการ",
+        "searchPeople": "ค้นหาด้วยชื่อหรือชื่อผู้ใช้...",
+        "searchFollowers": "ค้นหาผู้ติดตาม...",
+        "searchFollowing": "ค้นหาผู้ที่กำลังติดตาม...",
+        "loadError": "ไม่สามารถโหลดรายการได้ในขณะนี้",
+        "retry": "ลองอีกครั้ง",
+        "loadMore": "โหลดเพิ่มเติม",
+        "clearSearch": "ล้างการค้นหา",
+        "noSearchResults": "ไม่พบผู้ใช้ที่ตรงกัน",
+        "noSearchResultsHint": "ลองค้นหาด้วยชื่อหรือชื่อผู้ใช้อื่น",
+        "noReactionsYet": "ยังไม่มีการแสดงความรู้สึก",
+        "noReactionsYetHint": "เป็นคนแรกที่แสดงความรู้สึกกับโพสต์นี้",
+        "followersTitle": "ผู้ติดตาม",
+        "followingTitle": "กำลังติดตาม",
+        "postsLabel": "โพสต์",
+        "followTabsAria": "สลับระหว่างผู้ติดตามและกำลังติดตาม",
+        "noFollowersYet": "ยังไม่มีผู้ติดตาม",
+        "noFollowersYetHint": "เมื่อมีคนติดตามบัญชีนี้ พวกเขาจะแสดงที่นี่",
+        "noFollowingYet": "ยังไม่ได้ติดตามใคร",
+        "noFollowingYetHint": "บัญชีที่โปรไฟล์นี้ติดตามจะแสดงที่นี่",
+        "exploreCommunities": "สำรวจชุมชน",
+        "restrictedTitle": "ไม่สามารถดูรายการนี้ได้",
+        "restrictedHint": "คุณไม่สามารถดูรายชื่อการเชื่อมต่อของบัญชีนี้ได้"
     }
 }

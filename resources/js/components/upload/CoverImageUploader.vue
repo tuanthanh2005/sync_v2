@@ -311,7 +311,7 @@ onBeforeUnmount(() => {
 
         <!-- Interactive 3:1 Cover Reposition & Crop Modal -->
         <Dialog v-model:open="cropDialogOpen">
-            <DialogContent class="max-w-xl">
+            <DialogContent class="sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>{{ t('upload.cropCoverTitle') }}</DialogTitle>
                 </DialogHeader>

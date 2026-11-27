@@ -52,6 +52,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $organic_views_count
  * @property int $promoted_views_count
  * @property int $unique_viewers_count
+ * @property int $human_views_count
+ * @property int $guest_views_count
+ * @property int $ai_views_count
+ * @property int $ai_content_accesses_count
+ * @property int $legacy_views_count
+ * @property int $invalid_views_count
+ * @property int $unique_human_viewers_count
  * @property CarbonInterface|null $published_at
  * @property CarbonInterface|null $created_at
  * @property CarbonInterface|null $updated_at
@@ -100,6 +107,13 @@ class Post extends Model
             'organic_views_count' => 'integer',
             'promoted_views_count' => 'integer',
             'unique_viewers_count' => 'integer',
+            'human_views_count' => 'integer',
+            'guest_views_count' => 'integer',
+            'ai_views_count' => 'integer',
+            'ai_content_accesses_count' => 'integer',
+            'legacy_views_count' => 'integer',
+            'invalid_views_count' => 'integer',
+            'unique_human_viewers_count' => 'integer',
             'published_at' => 'datetime',
         ];
     }

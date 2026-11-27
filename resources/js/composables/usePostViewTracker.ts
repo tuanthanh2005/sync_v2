@@ -1,5 +1,16 @@
-import { onBeforeUnmount, onMounted, type Ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import {
+    computed,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    toValue,
+    type ComputedRef,
+    type MaybeRefOrGetter,
+    type Ref,
+} from 'vue';
 import PostInteractionController from '@/actions/App/Http/Controllers/Social/PostInteractionController';
+import type { PostViewAnalytics } from '@/types';
 
 export type PostViewSource =
     | 'feed'
@@ -13,18 +24,66 @@ type QueuedView = {
     post_id: number;
     source: PostViewSource;
     is_promoted: boolean;
+    visible_ms: number;
+    visible_ratio: number;
+    is_tall_post_probe: boolean;
+    is_tab_visible: boolean;
+};
+
+type ViewTrackingRuntimeConfig = {
+    minDurationMs: number;
+    minVisibleRatio: number;
+    dedupWindowSeconds: number;
+    trackGuests: boolean;
+    trackAi: boolean;
 };
 
 type ObservedMeta = {
     postId: number;
     source: PostViewSource;
     isPromoted: boolean;
-    dwellMs: number;
     timer: ReturnType<typeof setTimeout> | null;
+    visibleSinceMs: number | null;
     isVisible: boolean;
+    visibleRatio: number;
+    isTallPostProbe: boolean;
+    recordedInCurrentStay: boolean;
 };
 
-const trackedPostIds = new Set<number>();
+type LivePostViewState = {
+    views_count: number;
+    view_analytics: PostViewAnalytics | null;
+};
+
+type TrackViewsResponse = {
+    recorded?: number;
+    skipped?: number;
+    invalid_traffic?: boolean;
+    dedup_window_seconds?: number;
+    counts?: Record<
+        string,
+        {
+            views_count?: number;
+            view_analytics?: PostViewAnalytics | null;
+        }
+    >;
+};
+
+const DEFAULT_CONFIG: ViewTrackingRuntimeConfig = {
+    minDurationMs: 500,
+    minVisibleRatio: 50,
+    dedupWindowSeconds: 300,
+    trackGuests: true,
+    trackAi: true,
+};
+
+let activeConfig: ViewTrackingRuntimeConfig = { ...DEFAULT_CONFIG };
+
+// Shared reactive store updated ONLY after backend confirmation (never optimistic before server confirms).
+const livePostViews = reactive<Record<number, LivePostViewState>>({});
+
+// Timestamped cooldown map per post_id (replaces permanent V1 set so returning after 5 min works seamlessly).
+const lastTrackedAt = new Map<number, number>();
 const pendingQueue = new Map<number, QueuedView>();
 const observedElements = new WeakMap<Element, ObservedMeta>();
 const activeElements = new Set<Element>();
@@ -33,7 +92,7 @@ let sharedObserver: IntersectionObserver | null = null;
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 let listenersBound = false;
 
-const FLUSH_INTERVAL_MS = 4000;
+const FLUSH_INTERVAL_MS = 1000;
 const FLUSH_BATCH_THRESHOLD = 10;
 
 function readXsrfToken(): string {
@@ -46,6 +105,49 @@ function readXsrfToken(): string {
         .find((row) => row.startsWith('XSRF-TOKEN='));
 
     return match ? decodeURIComponent(match.slice('XSRF-TOKEN='.length)) : '';
+}
+
+function applyConfirmedCounts(
+    counts: TrackViewsResponse['counts'] | undefined,
+): void {
+    if (!counts || typeof counts !== 'object') {
+        return;
+    }
+
+    for (const [rawId, payload] of Object.entries(counts)) {
+        const postId = Number(rawId);
+        if (!Number.isFinite(postId) || postId <= 0 || !payload) {
+            continue;
+        }
+
+        const confirmedViews =
+            typeof payload.views_count === 'number' &&
+            Number.isFinite(payload.views_count)
+                ? Math.max(0, Math.trunc(payload.views_count))
+                : null;
+
+        if (confirmedViews === null) {
+            continue;
+        }
+
+        const existing = livePostViews[postId];
+        livePostViews[postId] = {
+            views_count: confirmedViews,
+            view_analytics:
+                payload.view_analytics !== undefined
+                    ? payload.view_analytics
+                    : (existing?.view_analytics ?? null),
+        };
+    }
+}
+
+function isInCooldown(postId: number): boolean {
+    const last = lastTrackedAt.get(postId);
+    if (last === undefined) {
+        return false;
+    }
+
+    return Date.now() - last < activeConfig.dedupWindowSeconds * 1000;
 }
 
 function flushQueue(useKeepalive = false): void {
@@ -66,18 +168,44 @@ function flushQueue(useKeepalive = false): void {
     const xsrf = readXsrfToken();
 
     try {
-        void fetch(PostInteractionController.trackViews.url(), {
-            method: 'POST',
-            credentials: 'same-origin',
-            keepalive: useKeepalive,
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                ...(xsrf ? { 'X-XSRF-TOKEN': xsrf } : {}),
+        const requestPromise = fetch(
+            PostInteractionController.trackViews.url(),
+            {
+                method: 'POST',
+                credentials: 'same-origin',
+                keepalive: useKeepalive,
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...(xsrf ? { 'X-XSRF-TOKEN': xsrf } : {}),
+                },
+                body: JSON.stringify({ views: batch }),
             },
-            body: JSON.stringify({ views: batch }),
-        });
+        );
+
+        if (!useKeepalive) {
+            void requestPromise
+                .then(async (response) => {
+                    if (!response.ok) {
+                        return;
+                    }
+                    const data = (await response.json()) as TrackViewsResponse;
+                    if (
+                        typeof data.dedup_window_seconds === 'number' &&
+                        data.dedup_window_seconds >= 30
+                    ) {
+                        activeConfig = {
+                            ...activeConfig,
+                            dedupWindowSeconds: data.dedup_window_seconds,
+                        };
+                    }
+                    applyConfirmedCounts(data.counts);
+                })
+                .catch(() => {
+                    // Silently ignore telemetry transport errors so UI never degrades
+                });
+        }
     } catch {
         // Silently ignore telemetry transport errors so UI never degrades
     }
@@ -101,12 +229,14 @@ function clearElementTimer(meta: ObservedMeta): void {
         clearTimeout(meta.timer);
         meta.timer = null;
     }
+    meta.visibleSinceMs = null;
 }
 
-function startDwellIfEligible(el: Element, meta: ObservedMeta): void {
+function startDwellIfEligible(meta: ObservedMeta): void {
     if (
-        trackedPostIds.has(meta.postId) ||
+        meta.recordedInCurrentStay ||
         !meta.isVisible ||
+        isInCooldown(meta.postId) ||
         typeof document === 'undefined' ||
         document.visibilityState !== 'visible'
     ) {
@@ -117,27 +247,45 @@ function startDwellIfEligible(el: Element, meta: ObservedMeta): void {
         return;
     }
 
+    const minDurationMs = Math.max(100, activeConfig.minDurationMs);
+    meta.visibleSinceMs = performance.now();
+
     meta.timer = setTimeout(() => {
         meta.timer = null;
 
         if (
             !meta.isVisible ||
+            meta.recordedInCurrentStay ||
             document.visibilityState !== 'visible' ||
-            trackedPostIds.has(meta.postId)
+            isInCooldown(meta.postId)
         ) {
             return;
         }
 
-        trackedPostIds.add(meta.postId);
+        const elapsedMs =
+            meta.visibleSinceMs !== null
+                ? Math.max(
+                      minDurationMs,
+                      Math.round(performance.now() - meta.visibleSinceMs),
+                  )
+                : minDurationMs;
+
+        // Lock this viewport stay so staying idle > 5 min NEVER auto-increments views.
+        meta.recordedInCurrentStay = true;
+        lastTrackedAt.set(meta.postId, Date.now());
+
         pendingQueue.set(meta.postId, {
             post_id: meta.postId,
             source: meta.source,
             is_promoted: meta.isPromoted,
+            visible_ms: elapsedMs,
+            visible_ratio: meta.visibleRatio,
+            is_tall_post_probe: meta.isTallPostProbe,
+            is_tab_visible: true,
         });
-        sharedObserver?.unobserve(el);
-        activeElements.delete(el);
+
         scheduleFlush();
-    }, meta.dwellMs);
+    }, minDurationMs);
 }
 
 function handleVisibilityChange(): void {
@@ -157,10 +305,63 @@ function handleVisibilityChange(): void {
         for (const el of activeElements) {
             const meta = observedElements.get(el);
             if (meta && meta.isVisible) {
-                startDwellIfEligible(el, meta);
+                startDwellIfEligible(meta);
             }
         }
     }
+}
+
+function evaluateVisibility(entry: IntersectionObserverEntry): {
+    qualified: boolean;
+    visibleRatio: number;
+    isTallPostProbe: boolean;
+} {
+    if (!entry.isIntersecting) {
+        return { qualified: false, visibleRatio: 0, isTallPostProbe: false };
+    }
+
+    const viewportHeight =
+        entry.rootBounds?.height ||
+        (typeof window !== 'undefined' ? window.innerHeight : 800);
+    const cardHeight = entry.boundingClientRect.height;
+    const visibleHeight = entry.intersectionRect.height;
+    const minRatio = Math.max(10, Math.min(100, activeConfig.minVisibleRatio));
+
+    // Representative viewport probe for posts taller than the viewport:
+    // measure visible height against viewport height so tall posts can qualify cleanly.
+    const isTallPost = cardHeight > viewportHeight * 0.9;
+    if (isTallPost) {
+        const probeDenominator = Math.max(
+            1,
+            Math.min(cardHeight, viewportHeight),
+        );
+        const probeRatio = Math.min(
+            100,
+            Math.round((visibleHeight / probeDenominator) * 100),
+        );
+        const rawRatio = Math.min(
+            100,
+            Math.round(entry.intersectionRatio * 100),
+        );
+        const qualified = probeRatio >= minRatio;
+
+        return {
+            qualified,
+            visibleRatio: Math.max(rawRatio, Math.min(100, probeRatio)),
+            isTallPostProbe: true,
+        };
+    }
+
+    const ratioPercent = Math.min(
+        100,
+        Math.round(entry.intersectionRatio * 100),
+    );
+
+    return {
+        qualified: ratioPercent >= minRatio,
+        visibleRatio: ratioPercent,
+        isTallPostProbe: false,
+    };
 }
 
 function ensureObserver(): IntersectionObserver | null {
@@ -183,29 +384,66 @@ function ensureObserver(): IntersectionObserver | null {
                         continue;
                     }
 
-                    // Qualify if >= 50% visible OR (for very tall posts) >= 260px of the card is inside viewport.
-                    const visibleHeight = entry.intersectionRect.height;
-                    const qualified =
-                        entry.isIntersecting &&
-                        (entry.intersectionRatio >= 0.5 ||
-                            visibleHeight >= 260);
+                    const result = evaluateVisibility(entry);
+                    meta.isVisible = result.qualified;
+                    meta.visibleRatio = result.visibleRatio;
+                    meta.isTallPostProbe = result.isTallPostProbe;
 
-                    meta.isVisible = qualified;
-
-                    if (qualified) {
-                        startDwellIfEligible(entry.target, meta);
+                    if (result.qualified) {
+                        startDwellIfEligible(meta);
                     } else {
                         clearElementTimer(meta);
+                        // Only reset stay lock when the post genuinely leaves viewport
+                        // so scrolling away and returning after >= 5 minutes can record a fresh view.
+                        if (!entry.isIntersecting) {
+                            meta.recordedInCurrentStay = false;
+                        }
                     }
                 }
             },
             {
-                threshold: [0, 0.25, 0.5, 0.75],
+                threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
             },
         );
     }
 
     return sharedObserver;
+}
+
+export function useLivePostViewCount(
+    postId: MaybeRefOrGetter<number>,
+    initialCount: MaybeRefOrGetter<number | undefined>,
+): ComputedRef<number> {
+    return computed(() => {
+        const id = toValue(postId);
+        const propCount = Math.max(0, Number(toValue(initialCount) ?? 0));
+        const confirmed = livePostViews[id]?.views_count;
+
+        if (confirmed === undefined) {
+            return propCount;
+        }
+
+        return Math.max(propCount, confirmed);
+    });
+}
+
+export function useLivePostViewAnalytics(
+    postId: MaybeRefOrGetter<number>,
+    initialAnalytics: MaybeRefOrGetter<PostViewAnalytics | null | undefined>,
+): ComputedRef<PostViewAnalytics | null> {
+    return computed(() => {
+        const id = toValue(postId);
+        const propAnalytics = toValue(initialAnalytics) ?? null;
+        const confirmed = livePostViews[id]?.view_analytics;
+
+        if (confirmed && propAnalytics) {
+            return confirmed.total_views >= propAnalytics.total_views
+                ? confirmed
+                : propAnalytics;
+        }
+
+        return confirmed ?? propAnalytics;
+    });
 }
 
 export function usePostViewTracker(
@@ -216,9 +454,43 @@ export function usePostViewTracker(
         isPromoted?: boolean;
     },
 ): void {
+    const page = usePage();
+
     onMounted(() => {
         const el = elementRef.value;
-        if (!el || options.postId <= 0 || trackedPostIds.has(options.postId)) {
+        if (!el || options.postId <= 0) {
+            return;
+        }
+
+        const serverViewsConfig = page.props.systemSettings?.views;
+        if (serverViewsConfig) {
+            activeConfig = {
+                minDurationMs: Math.max(
+                    100,
+                    Number(serverViewsConfig.minDurationMs ?? 500),
+                ),
+                minVisibleRatio: Math.max(
+                    10,
+                    Math.min(
+                        100,
+                        Number(serverViewsConfig.minVisibleRatio ?? 50),
+                    ),
+                ),
+                dedupWindowSeconds: Math.max(
+                    30,
+                    Number(serverViewsConfig.dedupWindowSeconds ?? 300),
+                ),
+                trackGuests: Boolean(serverViewsConfig.trackGuests ?? true),
+                trackAi: Boolean(serverViewsConfig.trackAi ?? true),
+            };
+        }
+
+        // Skip observing if server explicitly disabled guest or AI tracking for this viewer.
+        const currentUser = page.props.auth?.user ?? null;
+        if (currentUser === null && !activeConfig.trackGuests) {
+            return;
+        }
+        if (currentUser?.is_ai_agent && !activeConfig.trackAi) {
             return;
         }
 
@@ -227,14 +499,16 @@ export function usePostViewTracker(
             return;
         }
 
-        const source = options.source ?? 'feed';
         const meta: ObservedMeta = {
             postId: options.postId,
-            source,
+            source: options.source ?? 'feed',
             isPromoted: Boolean(options.isPromoted),
-            dwellMs: source === 'detail' ? 1500 : 2000,
             timer: null,
+            visibleSinceMs: null,
             isVisible: false,
+            visibleRatio: 0,
+            isTallPostProbe: false,
+            recordedInCurrentStay: false,
         };
 
         observedElements.set(el, meta);

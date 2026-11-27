@@ -21,6 +21,7 @@ use App\Models\UserBlock;
 use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class FeedService
 {
@@ -172,14 +173,29 @@ class FeedService
         $authorIds = array_values(array_unique(array_map(static fn (mixed $id): int => (int) $id, $posts->pluck('user_id')->all())));
         $badgesByUser = app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers($authorIds);
 
+        /** @var array<int, array<string, int>> $reactionSummaries */
+        $reactionSummaries = [];
+        $reactionCountRows = DB::table('post_reactions')
+            ->whereIn('post_id', $postIds)
+            ->selectRaw('post_id, type, COUNT(*) as total')
+            ->groupBy('post_id', 'type')
+            ->get();
+
+        foreach ($reactionCountRows as $row) {
+            $pid = (int) $row->post_id;
+            $rxType = (string) $row->type;
+            $reactionSummaries[$pid][$rxType] = (int) $row->total;
+        }
+
         return array_values(
-            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts, $badgesByUser): array {
+            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts, $badgesByUser, $reactionSummaries): array {
                 $item = $this->serializeOne(
                     $post,
                     $viewer,
                     $viewerReactions[$post->id] ?? null,
                     isset($viewerBookmarks[$post->id]),
                     $post->poll !== null ? ($viewerVotes[$post->poll->id] ?? []) : [],
+                    $reactionSummaries[$post->id] ?? [],
                 );
                 if (is_array($item['author'] ?? null)) {
                     $item['author']['badges'] = $badgesByUser[$post->user_id] ?? [];
@@ -195,6 +211,7 @@ class FeedService
      * Serialize a single post cleanly for Inertia payloads.
      *
      * @param  list<int>  $votedOptionIds
+     * @param  array<string, int>|null  $reactionSummary
      * @return array<string, mixed>
      */
     public function serializeOne(
@@ -203,9 +220,22 @@ class FeedService
         ?string $viewerReaction = null,
         bool $isBookmarked = false,
         array $votedOptionIds = [],
+        ?array $reactionSummary = null,
     ): array {
         $author = $post->author;
         $profile = $author?->profile;
+
+        if ($reactionSummary === null && $post->reactions_count > 0) {
+            $reactionSummary = [];
+            $rows = DB::table('post_reactions')
+                ->where('post_id', $post->id)
+                ->selectRaw('type, COUNT(*) as total')
+                ->groupBy('type')
+                ->get();
+            foreach ($rows as $row) {
+                $reactionSummary[(string) $row->type] = (int) $row->total;
+            }
+        }
 
         if ($viewer !== null && $viewerReaction === null && $votedOptionIds === []) {
             $reactionRecord = PostReaction::query()
@@ -243,12 +273,27 @@ class FeedService
             'is_pinned' => $post->is_pinned,
             'moderation_status' => $post->moderation_status->value,
             'reactions_count' => $post->reactions_count,
+            'reaction_summary' => $reactionSummary ?? [],
             'comments_count' => $post->comments_count,
             'shares_count' => $post->shares_count,
             'views_count' => (int) ($post->views_count ?? 0),
             'organic_views_count' => (int) ($post->organic_views_count ?? 0),
             'promoted_views_count' => (int) ($post->promoted_views_count ?? 0),
             'unique_viewers_count' => (int) ($post->unique_viewers_count ?? 0),
+            'view_analytics' => $viewer !== null && ($viewer->id === $post->user_id || $viewer->isStaff())
+                ? [
+                    'total_views' => (int) ($post->views_count ?? 0),
+                    'human_views' => (int) ($post->human_views_count ?? 0),
+                    'guest_views' => (int) ($post->guest_views_count ?? 0),
+                    'ai_views' => (int) ($post->ai_views_count ?? 0),
+                    'ai_content_accesses' => (int) ($post->ai_content_accesses_count ?? 0),
+                    'unique_human_viewers' => (int) ($post->unique_human_viewers_count ?? 0),
+                    'organic_views' => (int) ($post->organic_views_count ?? 0),
+                    'promoted_human_views' => (int) ($post->promoted_views_count ?? 0),
+                    'invalid_views' => (int) ($post->invalid_views_count ?? 0),
+                    'legacy_views' => (int) ($post->legacy_views_count ?? 0),
+                ]
+                : null,
             'published_at' => ($post->published_at ?? $post->created_at)?->toIso8601String(),
             'content_origin' => $post->content_origin->value,
             'is_ai_assisted' => (bool) $post->is_ai_assisted,

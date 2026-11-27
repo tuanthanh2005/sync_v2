@@ -189,7 +189,23 @@
         "reactionTriggerHint": "마우스를 올리거나 길게 눌러 반응 선택",
         "shareAction": "공유",
         "sharesExact": "공유 {count}회",
-        "viewsExact": "조회 {count}회"
+        "viewsExact": "조회 {count}회",
+        "viewsTooltip": "총 조회수 {count}회 (검증된 사람, 게스트 및 AI 활동 포함)",
+        "viewAnalytics": {
+            "title": "게시물 조회 분석",
+            "privacyNote": "집계된 지표만 표시되며 개별 조회자 신원은 절대 공개되지 않습니다.",
+            "totalViews": "총 조회수",
+            "humanViews": "실제 사용자 조회",
+            "guestViews": "게스트 조회",
+            "aiViews": "AI 조회",
+            "aiContentAccesses": "AI 콘텐츠 접근",
+            "uniqueHumanViewers": "고유 실제 조회자",
+            "organicViews": "오가닉 조회",
+            "promotedHumanViews": "프로모션 조회(실제 사용자)",
+            "invalidViews": "무효 / 필터링된 조회",
+            "legacyViews": "기존 데이터 / 미분류",
+            "aiSeparationNotice": "투명성을 위해 총 조회수에는 검증된 AI 활동이 포함됩니다. AI 조회는 고유 실제 조회자, DAU/MAU, 오가닉 도달 및 유료 광고 노출 수에서 엄격히 제외됩니다."
+        }
     },
     "profile": {
         "postsTab": "게시물",
@@ -310,7 +326,7 @@
             "confirmNewPasswordPlaceholder": "새 비밀번호 다시 입력",
             "confirmPasswordPlaceholder": "비밀번호 다시 입력",
             "email": "이메일 주소",
-            "emailPlaceholder": "예: name@example.com",
+            "emailPlaceholder": "예: name{'@'}example.com",
             "enterNewPasswordPlaceholder": "안전한 새 비밀번호 입력",
             "name": "이름",
             "namePlaceholder": "전체 이름을 입력하세요",
@@ -726,7 +742,9 @@
             "commentsSeries": "신규 댓글",
             "revenueSeries": "충전액 (VND)",
             "adSpendSeries": "광고 지출액 (VND)",
-            "growthRate": "기간 성장률"
+            "growthRate": "기간 성장률",
+            "viewsSectionTitle": "게시물 조회 분석",
+            "viewsSectionSubtitle": "500ms 노출 / 5분 중복 방지 기준으로 실제 사용자, 게스트, AI 및 필터링된 트래픽을 실시간 분류합니다."
         },
         "health": {
             "title": "시스템 상태 및 런타임",
@@ -926,11 +944,23 @@
                 "features": "기능 플래그 및 점검 모드",
                 "content": "콘텐츠 제한",
                 "ads": "광고 엔진",
-                "seo": "SEO"
+                "seo": "SEO",
+                "views": "조회수 추적"
             },
             "maintenanceWarning": "점검 모드를 활성화하면 관리자 접근은 유지하면서 일반 트래픽에 HTTP 503을 반환합니다.",
             "brandingAssetsHint": "브랜드 로고, 파비콘 및 기본 Open Graph 이미지를 기기에서 직접 업로드하세요.",
-            "brandingAssetsTitle": "브랜드 및 SEO 시각 자산"
+            "brandingAssetsTitle": "브랜드 및 SEO 시각 자산",
+            "viewsPolicyHint": "뉴스 피드 조회 기준과 중복 방지 규칙을 설정합니다. 모든 변경에는 관리자 권한이 필요하며 감사 로그에 기록됩니다.",
+            "viewHints": {
+                "views_min_duration_ms": "뷰포트 내 최소 연속 표시 시간(밀리초, 기본값: 500ms, 범위: 100–10,000).",
+                "views_min_visible_ratio": "게시물 또는 대표 측정 영역의 최소 노출 비율(기본값: 50%, 범위: 10–100).",
+                "views_dedup_window_seconds": "조회자 및 게시물별 서버 측 중복 방지 시간(초, 기본값: 300초 / 5분).",
+                "views_track_guests": "익명 게스트 세션의 유효한 게시물 조회 기록을 허용합니다.",
+                "views_track_ai": "검증된 AI 에이전트가 명확히 분류된 AI 조회 및 AI 콘텐츠 접근을 기록하도록 허용합니다.",
+                "views_track_author_self": "작성자가 자신의 게시물을 볼 때도 조회수로 집계합니다(권장: 비활성화).",
+                "views_bot_filtering": "검색 엔진 크롤러, 프리페치 요청 및 비정상적인 봇 트래픽을 차단합니다.",
+                "views_retention_days": "총 조회수를 유지한 채 원본 중복 방지 로그를 자동 정리하기 전 보관 일수(기본값: 30, 범위: 7–180)."
+            }
         },
         "notifications": {
             "title": "관리자 알림 센터",
@@ -1123,7 +1153,7 @@
         },
         "adsExtra": {
             "anomalySummary": "{flag}: 24시간 내 단일 IP에서 비정상적인 대량 클릭이 발생한 캠페인이 {count}건 감지되었습니다.",
-            "campaignFinancialSummary": "@{username} · 예산: {budget} · 지출: {spent} · 보류: {held}",
+            "campaignFinancialSummary": "{'@'}{username} · 예산: {budget} · 지출: {spent} · 보류: {held}",
             "campaignPerformanceSummary": "노출: {impressions} · 클릭: {clicks} · CTR: {ctr}%",
             "rejectConsequence": "이 캠페인을 반려하면 보류된 모든 예산이 광고주의 광고 잔액으로 자동 환불됩니다."
         },
@@ -1187,7 +1217,7 @@
                 "mask": "가림"
             },
             "systemActor": "시스템",
-            "transferOwnerUsernameLabel": "새 소유자 사용자 이름 (@username)",
+            "transferOwnerUsernameLabel": "새 소유자 사용자 이름 ({'@'}username)",
             "unknownAuthor": "알 수 없음",
             "usernamePlaceholder": "사용자 이름"
         },
@@ -1255,8 +1285,8 @@
                 "normal": "보통"
             },
             "priorityAria": "신고 우선순위",
-            "reporterBy": "신고자: @{username}",
-            "reviewedBy": "검토자: @{username}",
+            "reporterBy": "신고자: {'@'}{username}",
+            "reviewedBy": "검토자: {'@'}{username}",
             "systemActor": "시스템",
             "targetRef": "{type} #{id}",
             "unknownUser": "알 수 없는 사용자"
@@ -1265,7 +1295,7 @@
             "audience": {
                 "all": "모든 활성 사용자",
                 "staff": "운영진 전용",
-                "user": "특정 사용자 (@username)",
+                "user": "특정 사용자 ({'@'}username)",
                 "verified": "인증된 사용자"
             },
             "category": {
@@ -2449,7 +2479,7 @@
         "profile": {
             "breadcrumb": "프로필",
             "emailLabel": "이메일 주소",
-            "emailPlaceholder": "예: name@example.com",
+            "emailPlaceholder": "예: name{'@'}example.com",
             "emailUnverified": "이메일 주소가 아직 인증되지 않았습니다.",
             "headingDescription": "공개 표시 이름, 사용자 이름, 이메일 및 시간대를 업데이트하세요.",
             "headingTitle": "프로필 정보",
@@ -2460,7 +2490,7 @@
             "saveChanges": "변경 사항 저장",
             "srHeading": "프로필 설정",
             "timezoneLabel": "시간대",
-            "usernameLabel": "사용자 이름 (@username)",
+            "usernameLabel": "사용자 이름 ({'@'}username)",
             "usernamePlaceholder": "사용자 이름",
             "verificationLinkSent": "새로운 인증 링크가 이메일 주소로 발송되었습니다."
         },
@@ -2589,5 +2619,38 @@
         "uploadCancelled": "업로드가 취소되었습니다.",
         "uploading": "업로드 중...",
         "zoomLabel": "확대/축소"
+    },
+    "socialList": {
+        "you": "나",
+        "unfollow": "언팔로우",
+        "followAria": "{name} 팔로우",
+        "unfollowAria": "{name} 언팔로우",
+        "followError": "팔로우 상태를 업데이트하지 못했습니다. 다시 시도해 주세요.",
+        "reactionsTitle": "반응",
+        "allReactions": "전체",
+        "filterReactionsAria": "반응 유형별 필터",
+        "viewReactionsAria": "반응 {count}개 보기",
+        "searchPeople": "이름 또는 사용자 이름으로 검색...",
+        "searchFollowers": "팔로워 검색...",
+        "searchFollowing": "팔로잉 검색...",
+        "loadError": "지금 목록을 불러올 수 없습니다.",
+        "retry": "다시 시도",
+        "loadMore": "더 보기",
+        "clearSearch": "검색 지우기",
+        "noSearchResults": "일치하는 사용자가 없습니다",
+        "noSearchResultsHint": "다른 이름이나 사용자 이름으로 검색해 보세요.",
+        "noReactionsYet": "아직 반응이 없습니다",
+        "noReactionsYetHint": "이 게시물에 첫 번째 반응을 남겨보세요.",
+        "followersTitle": "팔로워",
+        "followingTitle": "팔로잉",
+        "postsLabel": "게시물",
+        "followTabsAria": "팔로워와 팔로잉 전환",
+        "noFollowersYet": "아직 팔로워가 없습니다",
+        "noFollowersYetHint": "누군가 이 계정을 팔로우하면 여기에 표시됩니다.",
+        "noFollowingYet": "아직 팔로우하는 사람이 없습니다",
+        "noFollowingYetHint": "이 프로필이 팔로우하는 계정이 여기에 표시됩니다.",
+        "exploreCommunities": "커뮤니티 둘러보기",
+        "restrictedTitle": "목록을 볼 수 없음",
+        "restrictedHint": "이 계정의 연결 목록을 볼 수 없습니다."
     }
 }

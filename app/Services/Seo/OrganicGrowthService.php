@@ -57,6 +57,10 @@ class OrganicGrowthService
             return;
         }
 
+        if ($request->user() !== null && ! $request->user()->isHumanMember()) {
+            return;
+        }
+
         try {
             if (! Schema::hasTable('seo_organic_events')) {
                 return;
@@ -113,6 +117,10 @@ class OrganicGrowthService
         array $metadata = [],
     ): void {
         if (! Schema::hasTable('seo_organic_events')) {
+            return;
+        }
+
+        if ($user !== null && ! $user->isHumanMember()) {
             return;
         }
 

@@ -139,7 +139,7 @@ class LocalizationAuditService
                 } else {
                     $enPh = $this->extractVuePlaceholders($enVal);
                     $loPh = $this->extractVuePlaceholders($targetFrontend[$key]);
-                    if ($enPh !== $loPh) {
+                    if ($enPh !== $loPh || $this->hasUnescapedVueI18nAtSign($targetFrontend[$key])) {
                         $fePlaceholderErrors[] = $key;
                     }
                 }
@@ -338,7 +338,10 @@ class LocalizationAuditService
                 $status = 'missing';
             } elseif (trim($localeVal) === '') {
                 $status = 'empty';
-            } elseif ($this->extractVuePlaceholders($enVal) !== $this->extractVuePlaceholders($localeVal)) {
+            } elseif (
+                $this->extractVuePlaceholders($enVal) !== $this->extractVuePlaceholders($localeVal)
+                || $this->hasUnescapedVueI18nAtSign($localeVal)
+            ) {
                 $status = 'placeholder_error';
             } elseif ($isOverridden) {
                 $status = 'overridden';
@@ -562,6 +565,22 @@ class LocalizationAuditService
         sort($list);
 
         return $list;
+    }
+
+    /**
+     * Detect unescaped `@` characters in vue-i18n v11 message strings.
+     * In vue-i18n, raw `@` begins linked-message syntax and throws a fatal SyntaxError at runtime
+     * unless escaped as `{'@'}` (or `{"@"}`).
+     */
+    private function hasUnescapedVueI18nAtSign(string $value): bool
+    {
+        if (! str_contains($value, '@')) {
+            return false;
+        }
+
+        $withoutEscapedLiterals = str_replace(["{'@'}", '{"@"}'], '', $value);
+
+        return str_contains($withoutEscapedLiterals, '@');
     }
 
     /**

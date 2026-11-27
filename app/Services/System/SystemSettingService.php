@@ -87,6 +87,16 @@ class SystemSettingService
             'seo_meta_description' => ['group' => 'seo', 'type' => 'string', 'value' => 'SyncViet global community platform for ideas, discussions, and communities.', 'is_public' => true],
             'seo_robots_index' => ['group' => 'seo', 'type' => 'boolean', 'value' => true, 'is_public' => true],
 
+            // Post View Tracking V2.0 Settings (Social News Feed Standard)
+            'views_min_duration_ms' => ['group' => 'views', 'type' => 'integer', 'value' => (int) config('syncviet.views.min_duration_ms', 500), 'is_public' => true],
+            'views_min_visible_ratio' => ['group' => 'views', 'type' => 'integer', 'value' => (int) config('syncviet.views.min_visible_ratio', 50), 'is_public' => true],
+            'views_dedup_window_seconds' => ['group' => 'views', 'type' => 'integer', 'value' => (int) config('syncviet.views.dedup_window_seconds', 300), 'is_public' => true],
+            'views_track_guests' => ['group' => 'views', 'type' => 'boolean', 'value' => (bool) config('syncviet.views.track_guests', true), 'is_public' => true],
+            'views_track_ai' => ['group' => 'views', 'type' => 'boolean', 'value' => (bool) config('syncviet.views.track_ai', true), 'is_public' => true],
+            'views_track_author_self' => ['group' => 'views', 'type' => 'boolean', 'value' => (bool) config('syncviet.views.track_author_self', false), 'is_public' => false],
+            'views_bot_filtering' => ['group' => 'views', 'type' => 'boolean', 'value' => (bool) config('syncviet.views.bot_filtering', true), 'is_public' => false],
+            'views_retention_days' => ['group' => 'views', 'type' => 'integer', 'value' => (int) config('syncviet.views.retention_days', 30), 'is_public' => false],
+
             // Monetization & Controlled Google AdSense Settings (Zero Arbitrary JS Injection)
             'monetization_usd_to_vnd_rate' => ['group' => 'monetization', 'type' => 'integer', 'value' => (int) config('syncviet.monetization.default_usd_to_vnd_rate', 25_500), 'is_public' => true],
             'monetization_max_pending_payments' => ['group' => 'monetization', 'type' => 'integer', 'value' => (int) config('syncviet.monetization.max_pending_payments_per_user', 5), 'is_public' => true],
@@ -199,6 +209,13 @@ class SystemSettingService
                 ],
                 'commentMaxLength' => (int) $all['content_comment_max_length'],
             ],
+            'views' => [
+                'minDurationMs' => max(100, min(10_000, (int) $all['views_min_duration_ms'])),
+                'minVisibleRatio' => max(10, min(100, (int) $all['views_min_visible_ratio'])),
+                'dedupWindowSeconds' => max(30, min(86_400, (int) $all['views_dedup_window_seconds'])),
+                'trackGuests' => (bool) $all['views_track_guests'],
+                'trackAi' => (bool) $all['views_track_ai'],
+            ],
         ];
     }
 
@@ -223,12 +240,21 @@ class SystemSettingService
                 'upload_max_mb_cms',
             ];
 
+            $boundedIntegerKeys = [
+                'views_min_duration_ms' => [100, 10_000],
+                'views_min_visible_ratio' => [10, 100],
+                'views_dedup_window_seconds' => [30, 86_400],
+                'views_retention_days' => [7, 180],
+            ];
+
             $meta = $defaults[$key];
             $storedValue = match ($meta['type']) {
                 'boolean' => filter_var($rawValue, FILTER_VALIDATE_BOOLEAN) ? '1' : '0',
                 'integer' => in_array($key, $uploadLimitKeys, true)
                     ? (string) max(1, min(40, (int) $rawValue))
-                    : (string) max(0, (int) $rawValue),
+                    : (isset($boundedIntegerKeys[$key])
+                        ? (string) max($boundedIntegerKeys[$key][0], min($boundedIntegerKeys[$key][1], (int) $rawValue))
+                        : (string) max(0, (int) $rawValue)),
                 'json' => json_encode($rawValue) ?: '[]',
                 default => trim((string) $rawValue),
             };
