@@ -87,7 +87,7 @@ class PostController extends Controller
         Gate::authorize('view', $post);
 
         $post->load([
-            'author:id,name,username,status',
+            'author:id,name,username,avatar_url,status',
             'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
             'community:id,name,slug,visibility,status,members_count',
             'hashtags:id,name,slug,posts_count,is_restricted,is_spam',

@@ -331,7 +331,7 @@
             "name": "Nombre completo",
             "namePlaceholder": "Introduce tu nombre completo",
             "newPassword": "Nueva contraseña",
-            "newPasswordPlaceholder": "Al menos 8 caracteres",
+            "newPasswordPlaceholder": "Al menos 12 caracteres",
             "password": "Contraseña",
             "passwordConfirmation": "Confirmar contraseña",
             "passwordPlaceholder": "Introduce tu contraseña",
@@ -393,6 +393,13 @@
             "logout": "Cerrar sesión",
             "pageTitle": "Verificar correo",
             "resendButton": "Reenviar correo de verificación"
+        },
+        "passwordRules": {
+            "title": "Requisitos de la contraseña",
+            "minLength": "Al menos 12 caracteres",
+            "mixedCase": "Mayúsculas y minúsculas (A–Z, a–z)",
+            "number": "Al menos un número (0–9)",
+            "symbol": "Al menos un carácter especial (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Introduce tu contraseña para revocar todas las sesiones activas en otros navegadores y dispositivos.",
             "logoutOtherSessionsTitle": "Cerrar otras sesiones del navegador",
             "newPassword": "Nueva contraseña",
-            "newPasswordPlaceholder": "Introduce una nueva contraseña",
+            "newPasswordPlaceholder": "Ingresa la nueva contraseña (mín. 12 caracteres)",
             "pageTitle": "Configuración de seguridad",
             "passwordPlaceholder": "Introduce tu contraseña",
             "sessionsDesc": "Administra y cierra las sesiones activas en otros navegadores y dispositivos.",

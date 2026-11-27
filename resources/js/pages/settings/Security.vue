@@ -9,6 +9,7 @@ import InputError from '@/components/InputError.vue';
 import type { Props as ManageTwoFactorProps } from '@/components/ManageTwoFactor.vue';
 import ManageTwoFactor from '@/components/ManageTwoFactor.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
+import PasswordRequirementsHint from '@/components/PasswordRequirementsHint.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { t, locale } = useI18n();
 const logoutDialogOpen = ref(false);
+const newPassword = ref('');
 
 watchEffect(() => {
     setLayoutProps({
@@ -106,6 +108,8 @@ watchEffect(() => {
                     'password_confirmation',
                     'current_password',
                 ]"
+                @success="newPassword = ''"
+                @error="newPassword = ''"
                 class="space-y-5"
                 v-slot="{ errors, processing }"
             >
@@ -131,6 +135,7 @@ watchEffect(() => {
                     }}</Label>
                     <PasswordInput
                         id="password"
+                        v-model="newPassword"
                         name="password"
                         class="mt-1 block w-full"
                         autocomplete="new-password"
@@ -139,6 +144,7 @@ watchEffect(() => {
                         "
                         :passwordrules="props.passwordRules"
                     />
+                    <PasswordRequirementsHint :password="newPassword" />
                     <InputError :message="errors.password" />
                 </div>
 

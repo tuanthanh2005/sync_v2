@@ -64,7 +64,7 @@ class AdDeliveryService
                     ->whereNotNull('published_at');
             })
             ->with([
-                'post.author:id,name,username,status,premium_until,premium_suspended_at',
+                'post.author:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
                 'post.author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'post.community:id,name,slug',
                 'post.hashtags:id,name,slug',

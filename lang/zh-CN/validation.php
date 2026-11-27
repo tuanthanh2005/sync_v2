@@ -197,6 +197,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => '姓名',
+        'username' => '用户名',
+        'email' => '电子邮箱',
+        'password' => '密码',
+        'current_password' => '当前密码',
+        'password_confirmation' => '确认密码',
+    ],
 
 ];

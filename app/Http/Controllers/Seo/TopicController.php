@@ -104,7 +104,7 @@ class TopicController extends Controller
             ->where('seo_noindex', false)
             ->whereHas('hashtags', static fn ($q) => $q->where('hashtags.id', $hashtag->id))
             ->with([
-                'author:id,name,username,status',
+                'author:id,name,username,avatar_url,status',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',

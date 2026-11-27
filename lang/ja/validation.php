@@ -197,6 +197,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => '名前',
+        'username' => 'ユーザー名',
+        'email' => 'メールアドレス',
+        'password' => 'パスワード',
+        'current_password' => '現在のパスワード',
+        'password_confirmation' => 'パスワード（確認）',
+    ],
 
 ];

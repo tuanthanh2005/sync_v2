@@ -128,9 +128,9 @@ class MessagingService
                     ->orWhere('user_two_id', $viewer->id);
             })
             ->with([
-                'userOne:id,name,username,status,premium_until,premium_suspended_at',
+                'userOne:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
                 'userOne.profile:id,user_id,avatar_disk,avatar_path',
-                'userTwo:id,name,username,status,premium_until,premium_suspended_at',
+                'userTwo:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
                 'userTwo.profile:id,user_id,avatar_disk,avatar_path',
             ])
             ->orderByDesc('last_message_at')
@@ -179,7 +179,7 @@ class MessagingService
                         'id' => $other->id,
                         'name' => $other->name,
                         'username' => $other->username,
-                        'avatar' => $other->profile?->avatarUrl(),
+                        'avatar' => $other->avatarUrl(),
                         'is_premium' => $other->isPremium(),
                     ],
                     'last_message' => $lastMessage?->body,
@@ -194,9 +194,9 @@ class MessagingService
         if ($activeConversation !== null) {
             $this->markRead($viewer, $activeConversation);
             $activeConversation->loadMissing([
-                'userOne:id,name,username,status,premium_until,premium_suspended_at',
+                'userOne:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
                 'userOne.profile:id,user_id,avatar_disk,avatar_path',
-                'userTwo:id,name,username,status,premium_until,premium_suspended_at',
+                'userTwo:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
                 'userTwo.profile:id,user_id,avatar_disk,avatar_path',
             ]);
             $other = $activeConversation->otherUserFor($viewer);
@@ -223,7 +223,7 @@ class MessagingService
                     'id' => $other->id,
                     'name' => $other->name,
                     'username' => $other->username,
-                    'avatar' => $other->profile?->avatarUrl(),
+                    'avatar' => $other->avatarUrl(),
                     'is_premium' => $other->isPremium(),
                 ],
                 'messages' => $messages,

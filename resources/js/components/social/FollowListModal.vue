@@ -80,6 +80,7 @@ const nextPage = ref<number | null>(null);
 
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
 let activeAbortController: AbortController | null = null;
+let suppressNextSearchWatch = false;
 
 const liveFollowersCount = computed(() =>
     getLiveFollowersCount(props.profileUserId, props.initialFollowersCount),
@@ -118,7 +119,8 @@ async function fetchList(page = 1, append = false): Promise<void> {
     }
 
     activeAbortController?.abort();
-    activeAbortController = new AbortController();
+    const controller = new AbortController();
+    activeAbortController = controller;
 
     if (append) {
         loadingMore.value = true;
@@ -149,7 +151,7 @@ async function fetchList(page = 1, append = false): Promise<void> {
         const response = await fetch(url, {
             method: 'GET',
             credentials: 'same-origin',
-            signal: activeAbortController.signal,
+            signal: controller.signal,
             headers: {
                 Accept: 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
@@ -161,6 +163,10 @@ async function fetchList(page = 1, append = false): Promise<void> {
         }
 
         const data = (await response.json()) as FollowListPayload;
+        if (activeAbortController !== controller) {
+            return;
+        }
+
         restricted.value = Boolean(data.restricted);
 
         if (data.counts) {
@@ -177,10 +183,14 @@ async function fetchList(page = 1, append = false): Promise<void> {
         if ((err as { name?: string })?.name === 'AbortError') {
             return;
         }
-        errorMessage.value = t('socialList.loadError');
+        if (activeAbortController === controller) {
+            errorMessage.value = t('socialList.loadError');
+        }
     } finally {
-        loading.value = false;
-        loadingMore.value = false;
+        if (activeAbortController === controller) {
+            loading.value = false;
+            loadingMore.value = false;
+        }
     }
 }
 
@@ -188,13 +198,25 @@ function switchTab(next: FollowModalTab): void {
     if (activeTab.value === next) {
         return;
     }
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+        searchTimer = null;
+    }
     activeTab.value = next;
-    searchQuery.value = '';
+    if (searchQuery.value !== '') {
+        suppressNextSearchWatch = true;
+        searchQuery.value = '';
+    }
     items.value = [];
     void fetchList(1, false);
 }
 
 function clearSearch(): void {
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+        searchTimer = null;
+    }
+    suppressNextSearchWatch = searchQuery.value !== '';
     searchQuery.value = '';
     void fetchList(1, false);
 }
@@ -209,15 +231,27 @@ function loadMore(): void {
 watch(
     () => props.open,
     (isOpen) => {
+        if (searchTimer !== null) {
+            clearTimeout(searchTimer);
+            searchTimer = null;
+        }
+
         if (isOpen) {
             activeTab.value = props.initialTab;
-            searchQuery.value = '';
+            if (searchQuery.value !== '') {
+                suppressNextSearchWatch = true;
+                searchQuery.value = '';
+            }
             items.value = [];
             void fetchList(1, false);
         } else {
             activeAbortController?.abort();
+            activeAbortController = null;
+            loading.value = false;
+            loadingMore.value = false;
         }
     },
+    { immediate: true },
 );
 
 watch(
@@ -225,7 +259,10 @@ watch(
     (tab) => {
         if (props.open && tab !== activeTab.value) {
             activeTab.value = tab;
-            searchQuery.value = '';
+            if (searchQuery.value !== '') {
+                suppressNextSearchWatch = true;
+                searchQuery.value = '';
+            }
             items.value = [];
             void fetchList(1, false);
         }
@@ -233,6 +270,10 @@ watch(
 );
 
 watch(searchQuery, () => {
+    if (suppressNextSearchWatch) {
+        suppressNextSearchWatch = false;
+        return;
+    }
     if (!props.open) {
         return;
     }

@@ -331,7 +331,7 @@
             "name": "Họ và tên",
             "namePlaceholder": "Nhập họ và tên của bạn",
             "newPassword": "Mật khẩu mới",
-            "newPasswordPlaceholder": "Tối thiểu 8 ký tự",
+            "newPasswordPlaceholder": "Tối thiểu 12 ký tự",
             "password": "Mật khẩu",
             "passwordConfirmation": "Xác nhận mật khẩu",
             "passwordPlaceholder": "Nhập mật khẩu của bạn",
@@ -393,6 +393,13 @@
             "logout": "Đăng xuất",
             "pageTitle": "Xác minh email",
             "resendButton": "Gửi lại email xác minh"
+        },
+        "passwordRules": {
+            "title": "Yêu cầu mật khẩu",
+            "minLength": "Tối thiểu 12 ký tự",
+            "mixedCase": "Có chữ hoa và chữ thường (A–Z, a–z)",
+            "number": "Ít nhất một chữ số (0–9)",
+            "symbol": "Ít nhất một ký tự đặc biệt (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Nhập mật khẩu để thu hồi toàn bộ phiên đăng nhập đang hoạt động trên các trình duyệt và thiết bị khác.",
             "logoutOtherSessionsTitle": "Đăng xuất các phiên trình duyệt khác",
             "newPassword": "Mật khẩu mới",
-            "newPasswordPlaceholder": "Nhập mật khẩu mới",
+            "newPasswordPlaceholder": "Nhập mật khẩu mới (tối thiểu 12 ký tự)",
             "pageTitle": "Cài đặt bảo mật",
             "passwordPlaceholder": "Nhập mật khẩu của bạn",
             "sessionsDesc": "Quản lý và đăng xuất các phiên đang hoạt động trên trình duyệt và thiết bị khác.",

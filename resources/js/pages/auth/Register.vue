@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
-import { computed, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
+import PasswordRequirementsHint from '@/components/PasswordRequirementsHint.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,7 @@ defineProps<{
 
 const { t } = useI18n();
 const page = usePage();
+const newPassword = ref('');
 
 const pageErrors = computed(
     () => (page.props.errors ?? {}) as Record<string, string | undefined>,
@@ -78,6 +80,7 @@ watchEffect(() => {
         <Form
             v-bind="store.form()"
             :reset-on-success="['password', 'password_confirmation']"
+            @success="newPassword = ''"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-5"
         >
@@ -132,6 +135,7 @@ watchEffect(() => {
                     }}</Label>
                     <PasswordInput
                         id="password"
+                        v-model="newPassword"
                         required
                         :tabindex="4"
                         autocomplete="new-password"
@@ -139,6 +143,7 @@ watchEffect(() => {
                         :placeholder="t('auth.fields.newPasswordPlaceholder')"
                         :passwordrules="passwordRules"
                     />
+                    <PasswordRequirementsHint :password="newPassword" />
                     <InputError :message="errors.password" />
                 </div>
 

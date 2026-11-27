@@ -4,6 +4,7 @@ import { ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
+import PasswordRequirementsHint from '@/components/PasswordRequirementsHint.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +19,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const inputEmail = ref(props.email);
+const newPassword = ref('');
 
 watchEffect(() => {
     setLayoutProps({
@@ -35,6 +37,7 @@ watchEffect(() => {
             v-bind="update.form()"
             :transform="(data) => ({ ...data, token, email })"
             :reset-on-success="['password', 'password_confirmation']"
+            @success="newPassword = ''"
             v-slot="{ errors, processing }"
         >
             <div class="grid gap-5">
@@ -58,6 +61,7 @@ watchEffect(() => {
                     }}</Label>
                     <PasswordInput
                         id="password"
+                        v-model="newPassword"
                         name="password"
                         autocomplete="new-password"
                         class="mt-1 block w-full"
@@ -67,6 +71,7 @@ watchEffect(() => {
                         "
                         :passwordrules="passwordRules"
                     />
+                    <PasswordRequirementsHint :password="newPassword" />
                     <InputError :message="errors.password" />
                 </div>
 

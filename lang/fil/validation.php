@@ -159,6 +159,13 @@ return [
     'uuid' => 'Ang :attribute ay dapat isang wastong UUID.',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'pangalan',
+        'username' => 'username',
+        'email' => 'email address',
+        'password' => 'password',
+        'current_password' => 'kasalukuyang password',
+        'password_confirmation' => 'kumpirmasyon ng password',
+    ],
 
 ];

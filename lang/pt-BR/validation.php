@@ -159,6 +159,13 @@ return [
     'uuid' => 'O campo :attribute deve ser um UUID válido.',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'nome',
+        'username' => 'nome de usuário',
+        'email' => 'e-mail',
+        'password' => 'senha',
+        'current_password' => 'senha atual',
+        'password_confirmation' => 'confirmação de senha',
+    ],
 
 ];

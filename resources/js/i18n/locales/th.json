@@ -331,7 +331,7 @@
             "name": "ชื่อ-นามสกุล",
             "namePlaceholder": "ป้อนชื่อ-นามสกุลของคุณ",
             "newPassword": "รหัสผ่านใหม่",
-            "newPasswordPlaceholder": "อย่างน้อย 8 ตัวอักษร",
+            "newPasswordPlaceholder": "อย่างน้อย 12 ตัวอักษร",
             "password": "รหัสผ่าน",
             "passwordConfirmation": "ยืนยันรหัสผ่าน",
             "passwordPlaceholder": "ป้อนรหัสผ่านของคุณ",
@@ -393,6 +393,13 @@
             "logout": "ออกจากระบบ",
             "pageTitle": "ยืนยันอีเมล",
             "resendButton": "ส่งอีเมลยืนยันอีกครั้ง"
+        },
+        "passwordRules": {
+            "title": "ข้อกำหนดของรหัสผ่าน",
+            "minLength": "อย่างน้อย 12 ตัวอักษร",
+            "mixedCase": "ตัวพิมพ์ใหญ่และตัวพิมพ์เล็ก (A–Z, a–z)",
+            "number": "ตัวเลขอย่างน้อย 1 ตัว (0–9)",
+            "symbol": "อักขระพิเศษอย่างน้อย 1 ตัว (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "ป้อนรหัสผ่านของคุณเพื่อเพิกถอนเซสชันที่ใช้งานอยู่ทั้งหมดบนเบราว์เซอร์และอุปกรณ์อื่น",
             "logoutOtherSessionsTitle": "ออกจากระบบเซสชันเบราว์เซอร์อื่น",
             "newPassword": "รหัสผ่านใหม่",
-            "newPasswordPlaceholder": "ป้อนรหัสผ่านใหม่",
+            "newPasswordPlaceholder": "กรอกรหัสผ่านใหม่ (อย่างน้อย 12 ตัวอักษร)",
             "pageTitle": "การตั้งค่าความปลอดภัย",
             "passwordPlaceholder": "ป้อนรหัสผ่านของคุณ",
             "sessionsDesc": "จัดการและออกจากระบบเซสชันที่ใช้งานอยู่บนเบราว์เซอร์และอุปกรณ์อื่น",

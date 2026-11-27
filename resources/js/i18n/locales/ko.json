@@ -331,7 +331,7 @@
             "name": "이름",
             "namePlaceholder": "전체 이름을 입력하세요",
             "newPassword": "새 비밀번호",
-            "newPasswordPlaceholder": "8자 이상",
+            "newPasswordPlaceholder": "최소 12자 이상",
             "password": "비밀번호",
             "passwordConfirmation": "비밀번호 확인",
             "passwordPlaceholder": "비밀번호를 입력하세요",
@@ -393,6 +393,13 @@
             "logout": "로그아웃",
             "pageTitle": "이메일 인증",
             "resendButton": "인증 이메일 다시 보내기"
+        },
+        "passwordRules": {
+            "title": "비밀번호 조건",
+            "minLength": "최소 12자 이상",
+            "mixedCase": "대문자 및 소문자 포함 (A–Z, a–z)",
+            "number": "숫자 1개 이상 포함 (0–9)",
+            "symbol": "특수문자 1개 이상 포함 (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "다른 브라우저 및 기기의 모든 활성 세션을 만료하려면 비밀번호를 입력하세요.",
             "logoutOtherSessionsTitle": "다른 브라우저 세션 로그아웃",
             "newPassword": "새 비밀번호",
-            "newPasswordPlaceholder": "새 비밀번호 입력",
+            "newPasswordPlaceholder": "새 비밀번호 입력 (최소 12자)",
             "pageTitle": "보안 설정",
             "passwordPlaceholder": "비밀번호 입력",
             "sessionsDesc": "다른 브라우저 및 기기의 활성 세션을 관리하고 로그아웃하세요.",

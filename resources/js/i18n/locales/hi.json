@@ -331,7 +331,7 @@
             "name": "पूरा नाम",
             "namePlaceholder": "अपना पूरा नाम दर्ज करें",
             "newPassword": "नया पासवर्ड",
-            "newPasswordPlaceholder": "कम से कम 8 अक्षर",
+            "newPasswordPlaceholder": "कम से कम 12 अक्षर",
             "password": "पासवर्ड",
             "passwordConfirmation": "पासवर्ड की पुष्टि करें",
             "passwordPlaceholder": "अपना पासवर्ड दर्ज करें",
@@ -393,6 +393,13 @@
             "logout": "साइन आउट करें",
             "pageTitle": "ईमेल सत्यापित करें",
             "resendButton": "सत्यापन ईमेल पुनः भेजें"
+        },
+        "passwordRules": {
+            "title": "पासवर्ड की आवश्यकताएँ",
+            "minLength": "कम से कम 12 अक्षर",
+            "mixedCase": "बड़े और छोटे अक्षर (A–Z, a–z)",
+            "number": "कम से कम एक अंक (0–9)",
+            "symbol": "कम से कम एक विशेष वर्ण (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "अन्य ब्राउज़र और उपकरणों पर सभी सक्रिय सत्र रद्द करने के लिए अपना पासवर्ड दर्ज करें।",
             "logoutOtherSessionsTitle": "अन्य ब्राउज़र सत्रों से साइन आउट करें",
             "newPassword": "नया पासवर्ड",
-            "newPasswordPlaceholder": "नया पासवर्ड दर्ज करें",
+            "newPasswordPlaceholder": "नया पासवर्ड दर्ज करें (कम से कम 12 अक्षर)",
             "pageTitle": "सुरक्षा सेटिंग्स",
             "passwordPlaceholder": "अपना पासवर्ड दर्ज करें",
             "sessionsDesc": "अन्य ब्राउज़र और उपकरणों पर सक्रिय सत्र प्रबंधित करें और साइन आउट करें।",

@@ -143,7 +143,7 @@ class SearchService
 
         // Users search (active & non-blocked only)
         $usersQuery = User::query()
-            ->select(['id', 'name', 'username', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
+            ->select(['id', 'name', 'username', 'avatar_url', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
             ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
             ->where('status', UserStatus::Active->value)
             ->where(function (Builder $query) use ($patterns): void {
@@ -268,7 +268,7 @@ class SearchService
             $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
             $usersQuery = User::query()
-                ->select(['id', 'name', 'username', 'status'])
+                ->select(['id', 'name', 'username', 'avatar_url', 'status'])
                 ->with(['profile:id,user_id,avatar_disk,avatar_path,is_verified_badge'])
                 ->where('status', UserStatus::Active->value)
                 ->where(function (Builder $q) use ($patterns): void {
@@ -285,7 +285,7 @@ class SearchService
                 'id' => $u->id,
                 'name' => $u->name,
                 'username' => $u->username,
-                'avatar' => $u->profile?->avatarUrl(),
+                'avatar' => $u->avatarUrl(),
                 'is_verified' => $u->profile !== null && $u->profile->is_verified_badge,
             ])->all());
 
@@ -416,14 +416,14 @@ class SearchService
         );
 
         $accountsQuery = User::query()
-            ->select(['id', 'name', 'username', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
+            ->select(['id', 'name', 'username', 'avatar_url', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
             ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
             ->where('status', UserStatus::Active->value)
             ->whereHas('profile')
             ->leftJoin('profiles', 'profiles.user_id', '=', 'users.id')
             ->orderByDesc('profiles.followers_count')
             ->orderByDesc('users.id')
-            ->select('users.id', 'users.name', 'users.username', 'users.status', 'users.premium_until', 'users.premium_suspended_at', 'users.account_type', 'users.ai_disclosure');
+            ->select('users.id', 'users.name', 'users.username', 'users.avatar_url', 'users.status', 'users.premium_until', 'users.premium_suspended_at', 'users.account_type', 'users.ai_disclosure');
 
         if ($viewer !== null) {
             $accountsQuery->where('users.id', '!=', $viewer->id);
@@ -521,7 +521,7 @@ class SearchService
                 'name' => $user->name,
                 'username' => $user->username,
                 'headline' => $user->profile?->headline,
-                'avatar' => $user->profile?->avatarUrl(),
+                'avatar' => $user->avatarUrl(),
                 'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
                 'is_premium' => $user->isPremium(),
                 'is_ai_agent' => $user->isAiAgent(),

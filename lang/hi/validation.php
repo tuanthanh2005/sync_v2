@@ -159,6 +159,13 @@ return [
     'uuid' => ':attribute फ़ील्ड एक मान्य UUID होना चाहिए।',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'नाम',
+        'username' => 'उपयोगकर्ता नाम',
+        'email' => 'ईमेल पता',
+        'password' => 'पासवर्ड',
+        'current_password' => 'वर्तमान पासवर्ड',
+        'password_confirmation' => 'पासवर्ड पुष्टि',
+    ],
 
 ];

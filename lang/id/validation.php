@@ -159,6 +159,13 @@ return [
     'uuid' => 'Kolom :attribute harus berupa UUID yang valid.',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'nama',
+        'username' => 'nama pengguna',
+        'email' => 'alamat email',
+        'password' => 'kata sandi',
+        'current_password' => 'kata sandi saat ini',
+        'password_confirmation' => 'konfirmasi kata sandi',
+    ],
 
 ];

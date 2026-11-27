@@ -331,7 +331,7 @@
             "name": "الاسم الكامل",
             "namePlaceholder": "أدخل اسمك الكامل",
             "newPassword": "كلمة المرور الجديدة",
-            "newPasswordPlaceholder": "8 أحرف على الأقل",
+            "newPasswordPlaceholder": "12 حرفاً على الأقل",
             "password": "كلمة المرور",
             "passwordConfirmation": "تأكيد كلمة المرور",
             "passwordPlaceholder": "أدخل كلمة مرورك",
@@ -393,6 +393,13 @@
             "logout": "تسجيل الخروج",
             "pageTitle": "تأكيد البريد الإلكتروني",
             "resendButton": "إعادة إرسال رسالة التحقق"
+        },
+        "passwordRules": {
+            "title": "متطلبات كلمة المرور",
+            "minLength": "12 حرفاً على الأقل",
+            "mixedCase": "أحرف كبيرة وصغيرة (A–Z، a–z)",
+            "number": "رقم واحد على الأقل (0–9)",
+            "symbol": "رمز خاص واحد على الأقل (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "أدخل كلمة مرورك لإنهاء جميع الجلسات النشطة على المتصفحات والأجهزة الأخرى.",
             "logoutOtherSessionsTitle": "تسجيل الخروج من جلسات المتصفح الأخرى",
             "newPassword": "كلمة المرور الجديدة",
-            "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+            "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة (12 حرفاً على الأقل)",
             "pageTitle": "إعدادات الأمان",
             "passwordPlaceholder": "أدخل كلمة مرورك",
             "sessionsDesc": "أدر الجلسات النشطة وسجّل الخروج من المتصفحات والأجهزة الأخرى.",

@@ -331,7 +331,7 @@
             "name": "Full name",
             "namePlaceholder": "Enter your full name",
             "newPassword": "New password",
-            "newPasswordPlaceholder": "At least 8 characters",
+            "newPasswordPlaceholder": "At least 12 characters",
             "password": "Password",
             "passwordConfirmation": "Confirm password",
             "passwordPlaceholder": "Enter your password",
@@ -393,6 +393,13 @@
             "logout": "Sign out",
             "pageTitle": "Verify Email",
             "resendButton": "Resend verification email"
+        },
+        "passwordRules": {
+            "title": "Password requirements",
+            "minLength": "At least 12 characters",
+            "mixedCase": "Uppercase & lowercase letters (A–Z, a–z)",
+            "number": "At least one number (0–9)",
+            "symbol": "At least one special character (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Enter your password to revoke all active sessions on other browsers and devices.",
             "logoutOtherSessionsTitle": "Sign out other browser sessions",
             "newPassword": "New password",
-            "newPasswordPlaceholder": "Enter new password",
+            "newPasswordPlaceholder": "Enter new password (min. 12 characters)",
             "pageTitle": "Security Settings",
             "passwordPlaceholder": "Enter your password",
             "sessionsDesc": "Manage and sign out active sessions on other browsers and devices.",

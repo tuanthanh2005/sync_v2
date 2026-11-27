@@ -200,13 +200,13 @@ class OnboardingAndActivationService
             ->with('profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count')
             ->orderByDesc('created_at')
             ->limit(6)
-            ->get(['id', 'name', 'username', 'account_type', 'ai_disclosure', 'premium_until', 'premium_suspended_at'])
+            ->get(['id', 'name', 'username', 'avatar_url', 'account_type', 'ai_disclosure', 'premium_until', 'premium_suspended_at'])
             ->map(static fn (User $u): array => [
                 'id' => $u->id,
                 'name' => $u->name,
                 'username' => $u->username,
                 'headline' => $u->profile?->headline,
-                'avatar' => $u->profile?->avatarUrl(),
+                'avatar' => $u->avatarUrl(),
                 'is_ai_agent' => $u->isAiAgent(),
                 'ai_disclosure' => $u->ai_disclosure,
                 'is_premium' => $u->isPremium(),

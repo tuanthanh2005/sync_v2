@@ -159,6 +159,13 @@ return [
     'uuid' => 'ช่อง :attribute ต้องเป็น UUID ที่ถูกต้อง',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'ชื่อ',
+        'username' => 'ชื่อผู้ใช้',
+        'email' => 'อีเมล',
+        'password' => 'รหัสผ่าน',
+        'current_password' => 'รหัสผ่านปัจจุบัน',
+        'password_confirmation' => 'ยืนยันรหัสผ่าน',
+    ],
 
 ];

@@ -72,7 +72,7 @@ class FeedService
         $query = Post::query()
             ->publicVisible()
             ->with([
-                'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -312,7 +312,7 @@ class FeedService
                 'name' => $author->name,
                 'username' => $author->username,
                 'headline' => $profile?->headline,
-                'avatar' => $profile?->avatarUrl(),
+                'avatar' => $author->avatarUrl(),
                 'is_verified' => $profile !== null && $profile->is_verified_badge,
                 'is_premium' => $author->isPremium(),
                 'is_ai_agent' => $author->isAiAgent(),

@@ -331,7 +331,7 @@
             "name": "Vollständiger Name",
             "namePlaceholder": "Ihren vollständigen Namen eingeben",
             "newPassword": "Neues Passwort",
-            "newPasswordPlaceholder": "Mindestens 8 Zeichen",
+            "newPasswordPlaceholder": "Mindestens 12 Zeichen",
             "password": "Passwort",
             "passwordConfirmation": "Passwort bestätigen",
             "passwordPlaceholder": "Ihr Passwort eingeben",
@@ -393,6 +393,13 @@
             "logout": "Abmelden",
             "pageTitle": "E-Mail bestätigen",
             "resendButton": "Bestätigungs-E-Mail erneut senden"
+        },
+        "passwordRules": {
+            "title": "Passwortanforderungen",
+            "minLength": "Mindestens 12 Zeichen",
+            "mixedCase": "Groß- und Kleinbuchstaben (A–Z, a–z)",
+            "number": "Mindestens eine Zahl (0–9)",
+            "symbol": "Mindestens ein Sonderzeichen (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Geben Sie Ihr Passwort ein, um alle aktiven Sitzungen in anderen Browsern und auf anderen Geräten zu widerrufen.",
             "logoutOtherSessionsTitle": "Andere Browsersitzungen abmelden",
             "newPassword": "Neues Passwort",
-            "newPasswordPlaceholder": "Neues Passwort eingeben",
+            "newPasswordPlaceholder": "Neues Passwort eingeben (mind. 12 Zeichen)",
             "pageTitle": "Sicherheitseinstellungen",
             "passwordPlaceholder": "Ihr Passwort eingeben",
             "sessionsDesc": "Aktive Sitzungen in anderen Browsern und auf anderen Geräten verwalten und abmelden.",

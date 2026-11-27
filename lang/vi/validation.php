@@ -159,6 +159,13 @@ return [
     'uuid' => 'Trường :attribute phải là một UUID hợp lệ.',
 
     'custom' => [],
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'họ tên',
+        'username' => 'tên người dùng',
+        'email' => 'địa chỉ email',
+        'password' => 'mật khẩu',
+        'current_password' => 'mật khẩu hiện tại',
+        'password_confirmation' => 'xác nhận mật khẩu',
+    ],
 
 ];

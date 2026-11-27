@@ -85,7 +85,7 @@ class ProfileService
             $postQuery = Post::query()
                 ->where('user_id', $targetUser->id)
                 ->with([
-                    'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                    'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                     'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                     'media',
                     'poll.options',
@@ -134,7 +134,7 @@ class ProfileService
                 'bio' => $profile->bio,
                 'location' => $profile->location,
                 'website_url' => $profile->website_url,
-                'avatar' => $profile->avatarUrl(),
+                'avatar' => $targetUser->avatarUrl(),
                 'cover' => $profile->coverUrl(),
                 'is_verified' => $profile->is_verified_badge,
                 'is_premium' => $targetUser->isPremium(),
@@ -207,6 +207,9 @@ class ProfileService
             } elseif ($removeAvatar) {
                 $profile->avatar_disk = null;
                 $profile->avatar_path = null;
+                if ($user->avatar_url !== null) {
+                    $user->forceFill(['avatar_url' => null])->save();
+                }
             }
 
             if ($newCover !== null) {

@@ -331,7 +331,7 @@
             "name": "Nom complet",
             "namePlaceholder": "Saisissez votre nom complet",
             "newPassword": "Nouveau mot de passe",
-            "newPasswordPlaceholder": "Au moins 8 caractères",
+            "newPasswordPlaceholder": "Au moins 12 caractères",
             "password": "Mot de passe",
             "passwordConfirmation": "Confirmer le mot de passe",
             "passwordPlaceholder": "Saisissez votre mot de passe",
@@ -393,6 +393,13 @@
             "logout": "Se déconnecter",
             "pageTitle": "Vérifier l'adresse e-mail",
             "resendButton": "Renvoyer l'e-mail de vérification"
+        },
+        "passwordRules": {
+            "title": "Exigences du mot de passe",
+            "minLength": "Au moins 12 caractères",
+            "mixedCase": "Majuscules et minuscules (A–Z, a–z)",
+            "number": "Au moins un chiffre (0–9)",
+            "symbol": "Au moins un caractère spécial (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Saisissez votre mot de passe pour révoquer toutes les sessions actives sur d'autres navigateurs et appareils.",
             "logoutOtherSessionsTitle": "Déconnecter les autres sessions du navigateur",
             "newPassword": "Nouveau mot de passe",
-            "newPasswordPlaceholder": "Saisissez un nouveau mot de passe",
+            "newPasswordPlaceholder": "Saisissez un nouveau mot de passe (min. 12 caractères)",
             "pageTitle": "Paramètres de sécurité",
             "passwordPlaceholder": "Saisissez votre mot de passe",
             "sessionsDesc": "Gérez et déconnectez les sessions actives sur d'autres navigateurs et appareils.",

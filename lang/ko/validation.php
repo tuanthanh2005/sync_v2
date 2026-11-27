@@ -197,6 +197,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => '이름',
+        'username' => '사용자 이름',
+        'email' => '이메일 주소',
+        'password' => '비밀번호',
+        'current_password' => '현재 비밀번호',
+        'password_confirmation' => '비밀번호 확인',
+    ],
 
 ];

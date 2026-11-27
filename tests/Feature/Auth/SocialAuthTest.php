@@ -4,6 +4,7 @@ use App\Enums\AccountType;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
+use App\Services\Social\ProfileService;
 use App\Services\System\LanguageService;
 use App\Services\System\LocalizationAuditService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -231,4 +232,43 @@ test('all 15 frontend locale JSON packs have zero unescaped vue-i18n @ character
             "Locale {$code}.json contains an unescaped '@' character which breaks vue-i18n v11 compilation."
         );
     }
+});
+
+test('Google avatar syncs automatically to public profile, feed, and social lists until replaced or removed', function (): void {
+    $googleAvatar = 'https://lh3.googleusercontent.com/a/default-sync-photo';
+
+    mockGoogleSocialiteUser(
+        id: 'google-avatar-sync-008',
+        name: 'Avatar Sync Member',
+        email: 'avatarsync@example.com',
+        avatar: $googleAvatar,
+    );
+
+    $this->get(route('auth.social.callback', ['provider' => 'google']))
+        ->assertRedirect(route('dashboard'));
+
+    /** @var User $user */
+    $user = User::query()->where('email', 'avatarsync@example.com')->firstOrFail();
+
+    // Public profile payload shows Google avatar immediately without requiring custom upload
+    $payload = app(ProfileService::class)->profilePayload($user, $user);
+    expect($payload['profile_user']['avatar'])->toBe($googleAvatar);
+
+    // Explicitly removing avatar clears Google avatar fallback cleanly
+    app(ProfileService::class)->updateDetails($user, ['remove_avatar' => true]);
+    $user->refresh();
+    $payloadAfterRemove = app(ProfileService::class)->profilePayload($user, $user);
+    expect($payloadAfterRemove['profile_user']['avatar'])->toBeNull();
+});
+
+test('mail:test command warns when mailer is log and succeeds with smtp transport', function (): void {
+    config()->set('mail.default', 'log');
+
+    $this->artisan('mail:test', ['email' => 'check@example.com'])
+        ->assertFailed();
+
+    config()->set('mail.default', 'array');
+
+    $this->artisan('mail:test', ['email' => 'check@example.com'])
+        ->assertFailed();
 });

@@ -331,7 +331,7 @@
             "name": "Ad soyad",
             "namePlaceholder": "Adınızı ve soyadınızı girin",
             "newPassword": "Yeni şifre",
-            "newPasswordPlaceholder": "En az 8 karakter",
+            "newPasswordPlaceholder": "En az 12 karakter",
             "password": "Şifre",
             "passwordConfirmation": "Şifreyi onayla",
             "passwordPlaceholder": "Şifrenizi girin",
@@ -393,6 +393,13 @@
             "logout": "Çıkış yap",
             "pageTitle": "E-posta Doğrula",
             "resendButton": "Doğrulama e-postasını yeniden gönder"
+        },
+        "passwordRules": {
+            "title": "Şifre gereksinimleri",
+            "minLength": "En az 12 karakter",
+            "mixedCase": "Büyük ve küçük harf (A–Z, a–z)",
+            "number": "En az bir rakam (0–9)",
+            "symbol": "En az bir özel karakter (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Diğer tarayıcı ve cihazlardaki tüm aktif oturumları sonlandırmak için şifrenizi girin.",
             "logoutOtherSessionsTitle": "Diğer tarayıcı oturumlarından çıkış yap",
             "newPassword": "Yeni şifre",
-            "newPasswordPlaceholder": "Yeni şifre girin",
+            "newPasswordPlaceholder": "Yeni şifre girin (en az 12 karakter)",
             "pageTitle": "Güvenlik Ayarları",
             "passwordPlaceholder": "Şifrenizi girin",
             "sessionsDesc": "Diğer tarayıcılardaki ve cihazlardaki aktif oturumları yönetin ve çıkış yapın.",

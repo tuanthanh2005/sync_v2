@@ -331,7 +331,7 @@
             "name": "姓名",
             "namePlaceholder": "请输入您的姓名",
             "newPassword": "新密码",
-            "newPasswordPlaceholder": "至少 8 个字符",
+            "newPasswordPlaceholder": "至少 12 个字符",
             "password": "密码",
             "passwordConfirmation": "确认密码",
             "passwordPlaceholder": "请输入您的密码",
@@ -393,6 +393,13 @@
             "logout": "退出登录",
             "pageTitle": "验证邮箱",
             "resendButton": "重新发送验证邮件"
+        },
+        "passwordRules": {
+            "title": "密码要求",
+            "minLength": "至少 12 个字符",
+            "mixedCase": "包含大写和小写字母（A–Z、a–z）",
+            "number": "至少包含一个数字（0–9）",
+            "symbol": "至少包含一个特殊字符（!{'@'}#$%^&*）"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "输入您的密码以吊销其他浏览器与设备上的所有活跃会话。",
             "logoutOtherSessionsTitle": "退出其他浏览器会话",
             "newPassword": "新密码",
-            "newPasswordPlaceholder": "输入新密码",
+            "newPasswordPlaceholder": "输入新密码（至少 12 个字符）",
             "pageTitle": "安全设置",
             "passwordPlaceholder": "输入您的密码",
             "sessionsDesc": "管理并退出其他浏览器和设备上的活跃会话。",

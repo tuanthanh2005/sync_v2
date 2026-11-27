@@ -197,6 +197,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'الاسم',
+        'username' => 'اسم المستخدم',
+        'email' => 'البريد الإلكتروني',
+        'password' => 'كلمة المرور',
+        'current_password' => 'كلمة المرور الحالية',
+        'password_confirmation' => 'تأكيد كلمة المرور',
+    ],
 
 ];

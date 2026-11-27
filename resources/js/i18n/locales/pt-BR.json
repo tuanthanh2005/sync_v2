@@ -331,7 +331,7 @@
             "name": "Nome completo",
             "namePlaceholder": "Digite seu nome completo",
             "newPassword": "Nova senha",
-            "newPasswordPlaceholder": "Pelo menos 8 caracteres",
+            "newPasswordPlaceholder": "Pelo menos 12 caracteres",
             "password": "Senha",
             "passwordConfirmation": "Confirmar senha",
             "passwordPlaceholder": "Digite sua senha",
@@ -393,6 +393,13 @@
             "logout": "Sair",
             "pageTitle": "Verificar e-mail",
             "resendButton": "Reenviar e-mail de verificação"
+        },
+        "passwordRules": {
+            "title": "Requisitos da senha",
+            "minLength": "Pelo menos 12 caracteres",
+            "mixedCase": "Letras maiúsculas e minúsculas (A–Z, a–z)",
+            "number": "Pelo menos um número (0–9)",
+            "symbol": "Pelo menos um caractere especial (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Digite sua senha para revogar todas as sessões ativas em outros navegadores e dispositivos.",
             "logoutOtherSessionsTitle": "Encerrar outras sessões do navegador",
             "newPassword": "Nova senha",
-            "newPasswordPlaceholder": "Digite a nova senha",
+            "newPasswordPlaceholder": "Digite a nova senha (mín. 12 caracteres)",
             "pageTitle": "Configurações de segurança",
             "passwordPlaceholder": "Digite sua senha",
             "sessionsDesc": "Gerencie e encerre sessões ativas em outros navegadores e dispositivos.",

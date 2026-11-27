@@ -82,7 +82,7 @@ class SocialDirectoryService
                 $this->applyActiveUserConstraints($userQuery, $blockedIds, $search);
             })
             ->with([
-                'user:id,name,username,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'user:id,name,username,avatar_url,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'user.profile:id,user_id,headline,bio,location,avatar_disk,avatar_path,is_verified_badge',
             ])
             ->orderByDesc('post_reactions.created_at')
@@ -187,7 +187,7 @@ class SocialDirectoryService
                 $this->applyActiveUserConstraints($userQuery, $blockedIds, $search, includeHeadline: true);
             })
             ->with([
-                "{$relationName}:id,name,username,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure",
+                "{$relationName}:id,name,username,avatar_url,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure",
                 "{$relationName}.profile:id,user_id,headline,bio,location,avatar_disk,avatar_path,is_verified_badge",
             ])
             ->orderByDesc('follows.created_at')
@@ -358,7 +358,7 @@ class SocialDirectoryService
             'headline' => $profile?->headline,
             'bio' => $profile?->bio,
             'location' => $profile?->location,
-            'avatar' => $profile?->avatarUrl(),
+            'avatar' => $member->avatarUrl(),
             'is_verified' => $profile !== null && $profile->is_verified_badge,
             'is_premium' => $member->isPremium(),
             'is_ai_agent' => $member->isAiAgent(),

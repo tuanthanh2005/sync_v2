@@ -331,7 +331,7 @@
             "name": "氏名",
             "namePlaceholder": "氏名を入力",
             "newPassword": "新しいパスワード",
-            "newPasswordPlaceholder": "8文字以上",
+            "newPasswordPlaceholder": "12文字以上",
             "password": "パスワード",
             "passwordConfirmation": "パスワード（確認）",
             "passwordPlaceholder": "パスワードを入力",
@@ -393,6 +393,13 @@
             "logout": "ログアウト",
             "pageTitle": "メール認証",
             "resendButton": "認証メールを再送信"
+        },
+        "passwordRules": {
+            "title": "パスワードの条件",
+            "minLength": "12文字以上",
+            "mixedCase": "大文字と小文字（A–Z、a–z）",
+            "number": "数字を1文字以上（0–9）",
+            "symbol": "記号を1文字以上（!{'@'}#$%^&*）"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "他のブラウザおよび端末のすべてのアクティブセッションを無効にするには、パスワードを入力してください。",
             "logoutOtherSessionsTitle": "他のブラウザセッションからログアウト",
             "newPassword": "新しいパスワード",
-            "newPasswordPlaceholder": "新しいパスワードを入力",
+            "newPasswordPlaceholder": "新しいパスワードを入力（12文字以上）",
             "pageTitle": "セキュリティ設定",
             "passwordPlaceholder": "パスワードを入力",
             "sessionsDesc": "他のブラウザおよび端末上のアクティブセッションを管理・ログアウトします。",

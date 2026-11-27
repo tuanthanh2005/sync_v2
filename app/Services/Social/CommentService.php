@@ -37,13 +37,13 @@ class CommentService
             ->whereNull('parent_id')
             ->where('moderation_status', ModerationStatus::Approved->value)
             ->with([
-                'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'replies' => function ($replyQuery) use ($blockedIds): void {
                     $replyQuery
                         ->where('moderation_status', ModerationStatus::Approved->value)
                         ->with([
-                            'author:id,name,username,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                            'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                             'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                         ]);
 
@@ -75,7 +75,7 @@ class CommentService
                         'name' => $comment->author->name,
                         'username' => $comment->author->username,
                         'headline' => $comment->author->profile?->headline,
-                        'avatar' => $comment->author->profile?->avatarUrl(),
+                        'avatar' => $comment->author->avatarUrl(),
                         'is_verified' => $comment->author->profile !== null && $comment->author->profile->is_verified_badge,
                         'is_premium' => $comment->author->isPremium(),
                         'is_ai_agent' => $comment->author->isAiAgent(),
@@ -99,7 +99,7 @@ class CommentService
                                     'name' => $reply->author->name,
                                     'username' => $reply->author->username,
                                     'headline' => $reply->author->profile?->headline,
-                                    'avatar' => $reply->author->profile?->avatarUrl(),
+                                    'avatar' => $reply->author->avatarUrl(),
                                     'is_verified' => $reply->author->profile !== null && $reply->author->profile->is_verified_badge,
                                     'is_premium' => $reply->author->isPremium(),
                                     'is_ai_agent' => $reply->author->isAiAgent(),

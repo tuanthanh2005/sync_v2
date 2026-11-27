@@ -110,6 +110,7 @@ const nextPage = ref<number | null>(null);
 
 let searchTimer: ReturnType<typeof setTimeout> | null = null;
 let activeAbortController: AbortController | null = null;
+let suppressNextSearchWatch = false;
 
 const populatedTabs = computed(() =>
     REACTION_TABS.filter((tab) => (countsByType.value[tab.key] ?? 0) > 0),
@@ -127,7 +128,8 @@ async function fetchReactions(page = 1, append = false): Promise<void> {
     }
 
     activeAbortController?.abort();
-    activeAbortController = new AbortController();
+    const controller = new AbortController();
+    activeAbortController = controller;
 
     if (append) {
         loadingMore.value = true;
@@ -155,7 +157,7 @@ async function fetchReactions(page = 1, append = false): Promise<void> {
         const response = await fetch(url, {
             method: 'GET',
             credentials: 'same-origin',
-            signal: activeAbortController.signal,
+            signal: controller.signal,
             headers: {
                 Accept: 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
@@ -167,6 +169,10 @@ async function fetchReactions(page = 1, append = false): Promise<void> {
         }
 
         const data = (await response.json()) as ReactionUsersPayload;
+        if (activeAbortController !== controller) {
+            return;
+        }
+
         totalCount.value = data.total_count;
         countsByType.value = {
             like: data.counts_by_type?.like ?? 0,
@@ -180,10 +186,14 @@ async function fetchReactions(page = 1, append = false): Promise<void> {
         if ((err as { name?: string })?.name === 'AbortError') {
             return;
         }
-        errorMessage.value = t('socialList.loadError');
+        if (activeAbortController === controller) {
+            errorMessage.value = t('socialList.loadError');
+        }
     } finally {
-        loading.value = false;
-        loadingMore.value = false;
+        if (activeAbortController === controller) {
+            loading.value = false;
+            loadingMore.value = false;
+        }
     }
 }
 
@@ -196,6 +206,11 @@ function selectFilter(next: ReactionFilterKey): void {
 }
 
 function clearSearch(): void {
+    if (searchTimer !== null) {
+        clearTimeout(searchTimer);
+        searchTimer = null;
+    }
+    suppressNextSearchWatch = searchQuery.value !== '';
     searchQuery.value = '';
     void fetchReactions(1, false);
 }
@@ -210,19 +225,35 @@ function loadMore(): void {
 watch(
     () => props.open,
     (isOpen) => {
+        if (searchTimer !== null) {
+            clearTimeout(searchTimer);
+            searchTimer = null;
+        }
+
         if (isOpen) {
             activeFilter.value = props.initialType;
-            searchQuery.value = '';
+            if (searchQuery.value !== '') {
+                suppressNextSearchWatch = true;
+                searchQuery.value = '';
+            }
             totalCount.value = props.initialTotal;
             items.value = [];
             void fetchReactions(1, false);
         } else {
             activeAbortController?.abort();
+            activeAbortController = null;
+            loading.value = false;
+            loadingMore.value = false;
         }
     },
+    { immediate: true },
 );
 
 watch(searchQuery, () => {
+    if (suppressNextSearchWatch) {
+        suppressNextSearchWatch = false;
+        return;
+    }
     if (!props.open) {
         return;
     }

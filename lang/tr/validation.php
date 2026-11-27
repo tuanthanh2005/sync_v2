@@ -197,6 +197,13 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'ad',
+        'username' => 'kullanıcı adı',
+        'email' => 'e-posta adresi',
+        'password' => 'şifre',
+        'current_password' => 'mevcut şifre',
+        'password_confirmation' => 'şifre onayı',
+    ],
 
 ];

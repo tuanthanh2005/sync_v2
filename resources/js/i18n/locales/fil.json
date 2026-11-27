@@ -331,7 +331,7 @@
             "name": "Buong pangalan",
             "namePlaceholder": "Ilagay ang iyong buong pangalan",
             "newPassword": "Bagong password",
-            "newPasswordPlaceholder": "Hindi bababa sa 8 karakter",
+            "newPasswordPlaceholder": "Hindi bababa sa 12 karakter",
             "password": "Kontrasenyas",
             "passwordConfirmation": "Kumpirmahin ang password",
             "passwordPlaceholder": "Ilagay ang iyong password",
@@ -393,6 +393,13 @@
             "logout": "Mag-sign out",
             "pageTitle": "Beripikahin ang Email",
             "resendButton": "Ipadala muli ang email ng beripikasyon"
+        },
+        "passwordRules": {
+            "title": "Mga kinakailangan sa password",
+            "minLength": "Hindi bababa sa 12 karakter",
+            "mixedCase": "Malaki at maliit na titik (A–Z, a–z)",
+            "number": "Hindi bababa sa isang numero (0–9)",
+            "symbol": "Hindi bababa sa isang espesyal na karakter (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Ilagay ang iyong password upang bawiin ang lahat ng aktibong sesyon sa iba pang mga browser at device.",
             "logoutOtherSessionsTitle": "Mag-sign out sa iba pang mga sesyon ng browser",
             "newPassword": "Bagong password",
-            "newPasswordPlaceholder": "Ilagay ang bagong password",
+            "newPasswordPlaceholder": "Ilagay ang bagong password (min. 12 karakter)",
             "pageTitle": "Mga Setting ng Seguridad",
             "passwordPlaceholder": "Ilagay ang iyong password",
             "sessionsDesc": "Pamahalaan at mag-sign out sa mga aktibong sesyon sa iba pang mga browser at device.",

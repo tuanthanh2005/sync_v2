@@ -120,7 +120,7 @@ class SocialAuthController extends Controller
                     return $existing;
                 }
 
-                // Merge OAuth identity into existing active account
+                // Merge OAuth identity into existing active account or keep Google avatar synced when no custom upload exists
                 if (! $existing->social_provider) {
                     $existing->forceFill([
                         'social_provider' => $provider,
@@ -128,6 +128,13 @@ class SocialAuthController extends Controller
                         'avatar_url' => $existing->avatar_url ?? $avatarUrl,
                         'email_verified_at' => $existing->email_verified_at ?? now(),
                     ])->save();
+                } elseif (
+                    $existing->social_provider === $provider
+                    && $avatarUrl !== null
+                    && $existing->avatar_url !== null
+                    && $existing->avatar_url !== $avatarUrl
+                ) {
+                    $existing->forceFill(['avatar_url' => $avatarUrl])->save();
                 }
 
                 return $existing;

@@ -331,7 +331,7 @@
             "name": "Nama lengkap",
             "namePlaceholder": "Masukkan nama lengkap Anda",
             "newPassword": "Kata sandi baru",
-            "newPasswordPlaceholder": "Minimal 8 karakter",
+            "newPasswordPlaceholder": "Minimal 12 karakter",
             "password": "Kata sandi",
             "passwordConfirmation": "Konfirmasi kata sandi",
             "passwordPlaceholder": "Masukkan kata sandi Anda",
@@ -393,6 +393,13 @@
             "logout": "Keluar",
             "pageTitle": "Verifikasi Email",
             "resendButton": "Kirim ulang email verifikasi"
+        },
+        "passwordRules": {
+            "title": "Persyaratan kata sandi",
+            "minLength": "Minimal 12 karakter",
+            "mixedCase": "Huruf besar & huruf kecil (A–Z, a–z)",
+            "number": "Minimal satu angka (0–9)",
+            "symbol": "Minimal satu karakter khusus (!{'@'}#$%^&*)"
         }
     },
     "communities": {
@@ -2512,7 +2519,7 @@
             "logoutOtherSessionsDesc": "Masukkan kata sandi Anda untuk mencabut semua sesi aktif di peramban dan perangkat lain.",
             "logoutOtherSessionsTitle": "Keluar dari sesi peramban lain",
             "newPassword": "Kata sandi baru",
-            "newPasswordPlaceholder": "Masukkan kata sandi baru",
+            "newPasswordPlaceholder": "Masukkan kata sandi baru (min. 12 karakter)",
             "pageTitle": "Pengaturan Keamanan",
             "passwordPlaceholder": "Masukkan kata sandi Anda",
             "sessionsDesc": "Kelola dan keluar dari sesi aktif di peramban dan perangkat lain.",
