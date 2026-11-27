@@ -75,7 +75,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property CarbonInterface|null $updated_at
  * @property CarbonInterface|null $deleted_at
  */
-#[Fillable(['name', 'username', 'email', 'password', 'has_password', 'timezone', 'preferred_locale', 'social_provider', 'social_provider_id', 'avatar_url', 'email_verified_at'])]
+#[Fillable(['name', 'username', 'email', 'password', 'has_password', 'timezone', 'preferred_locale', 'social_provider', 'social_provider_id', 'avatar_url'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {

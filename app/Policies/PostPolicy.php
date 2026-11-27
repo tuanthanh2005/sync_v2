@@ -78,12 +78,12 @@ class PostPolicy
 
     public function update(User $user, Post $post): bool
     {
-        return $user->isActive() && $post->user_id === $user->id;
+        return $user->isActive() && $user->hasVerifiedEmail() && $post->user_id === $user->id;
     }
 
     public function delete(User $user, Post $post): bool
     {
-        if (! $user->isActive()) {
+        if (! $user->isActive() || ! $user->hasVerifiedEmail()) {
             return false;
         }
 

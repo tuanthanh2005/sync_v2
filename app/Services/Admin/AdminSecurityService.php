@@ -2,19 +2,29 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\AccountType;
 use App\Models\AuditLog;
+use App\Models\AuthSecurityEvent;
 use App\Models\BackupRecord;
+use App\Models\DisposableEmailDomain;
 use App\Models\FooterLink;
 use App\Models\Language;
 use App\Models\LoginHistory;
 use App\Models\PaymentWebhookLog;
+use App\Models\PendingRegistration;
 use App\Models\PolicyPage;
 use App\Models\Role;
 use App\Models\SystemSetting;
 use App\Models\User;
+use App\Services\Auth\AuthSecurityEventService;
+use App\Services\Auth\DisposableEmailService;
+use App\Services\Auth\PendingRegistrationService;
+use App\Services\Auth\TurnstileService;
 use App\Services\Security\AuditLogger;
+use App\Services\System\SystemSettingService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +34,10 @@ class AdminSecurityService
 {
     public function __construct(
         private readonly AuditLogger $auditLogger,
+        private readonly SystemSettingService $settings,
+        private readonly TurnstileService $turnstile,
+        private readonly PendingRegistrationService $pendingRegistrations,
+        private readonly AuthSecurityEventService $authEvents,
     ) {}
 
     /**
@@ -135,7 +149,222 @@ class AdminSecurityService
             'suspicious' => $suspicious,
             'sessions' => $sessions,
             'webhooks' => $webhooks,
+            'authProtection' => $this->authProtectionPayload(),
         ];
+    }
+
+    /**
+     * Real-time Authentication Protection telemetry, configuration, and pending/unverified review queues.
+     * Never exposes OTPs, password hashes, session tokens, or Turnstile secret keys.
+     *
+     * @return array<string, mixed>
+     */
+    public function authProtectionPayload(): array
+    {
+        $since24h = now()->subHours(24);
+        $todayStart = now()->startOfDay();
+
+        $humanUsers = static fn () => User::query()->where('account_type', AccountType::Human->value);
+        $verifiedUsers = $humanUsers()->whereNotNull('email_verified_at')->count();
+        $unverifiedUsers = $humanUsers()->whereNull('email_verified_at')->count();
+
+        $pendingActive = Schema::hasTable('pending_registrations')
+            ? PendingRegistration::query()
+                ->where('status', PendingRegistration::STATUS_PENDING)
+                ->where('expires_at', '>', now())
+                ->count()
+            : 0;
+
+        $registrationsToday = $humanUsers()
+            ->whereNotNull('email_verified_at')
+            ->where('created_at', '>=', $todayStart)
+            ->count();
+
+        $failedLogins24h = LoginHistory::query()
+            ->where('event_type', 'failed')
+            ->where('created_at', '>=', $since24h)
+            ->count();
+
+        $eventCounts = [];
+        $recentEvents = [];
+        if (Schema::hasTable('auth_security_events')) {
+            $eventCounts = AuthSecurityEvent::query()
+                ->where('created_at', '>=', $since24h)
+                ->selectRaw('event_type, COUNT(*) as total')
+                ->groupBy('event_type')
+                ->pluck('total', 'event_type')
+                ->map(static fn ($v): int => (int) $v)
+                ->all();
+
+            $recentEvents = AuthSecurityEvent::query()
+                ->latest('id')
+                ->limit(40)
+                ->get()
+                ->map(static fn (AuthSecurityEvent $e): array => [
+                    'id' => $e->id,
+                    'event_type' => $e->event_type,
+                    'severity' => $e->severity,
+                    'email_masked' => $e->email_masked,
+                    'ip_address' => $e->ip_address,
+                    'risk_score' => $e->risk_score,
+                    'details' => $e->details,
+                    'created_at' => $e->created_at->toIso8601String(),
+                ])->values()->all();
+        }
+
+        $securityIncidents24h = Schema::hasTable('auth_security_events')
+            ? AuthSecurityEvent::query()
+                ->where('created_at', '>=', $since24h)
+                ->whereIn('severity', ['high', 'critical'])
+                ->count()
+            : 0;
+
+        $pendingList = Schema::hasTable('pending_registrations')
+            ? PendingRegistration::query()
+                ->where('status', PendingRegistration::STATUS_PENDING)
+                ->where('expires_at', '>', now())
+                ->latest('id')
+                ->limit(25)
+                ->get()
+                ->map(fn (PendingRegistration $p): array => [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'username' => $p->username,
+                    'email_masked' => $this->authEvents->maskEmail($p->normalized_email),
+                    'ip_address' => $p->ip_address,
+                    'risk_score' => $p->risk_score,
+                    'expires_at' => $p->expires_at->toIso8601String(),
+                    'created_at' => $p->created_at?->toIso8601String(),
+                ])->values()->all()
+            : [];
+
+        $disposableDomains = Schema::hasTable('disposable_email_domains')
+            ? DisposableEmailDomain::query()
+                ->orderBy('domain')
+                ->limit(100)
+                ->get(['id', 'domain', 'is_active', 'notes'])
+                ->map(static fn (DisposableEmailDomain $d): array => [
+                    'id' => $d->id,
+                    'domain' => $d->domain,
+                    'is_active' => (bool) $d->is_active,
+                    'notes' => $d->notes,
+                ])->values()->all()
+            : [];
+
+        $unverifiedAudit = $this->pendingRegistrations->auditAndRemediateUnverifiedUsers(revokeSessions: false);
+
+        return [
+            'metrics' => [
+                'verified_users' => $verifiedUsers,
+                'unverified_users' => $unverifiedUsers,
+                'pending_registrations' => $pendingActive,
+                'registrations_today' => $registrationsToday,
+                'failed_logins_24h' => $failedLogins24h,
+                'otp_requests_24h' => $eventCounts['otp_sent'] ?? 0,
+                'forgot_password_24h' => $eventCounts['forgot_password_requested'] ?? 0,
+                'captcha_failed_24h' => $eventCounts['captcha_failed'] ?? 0,
+                'blocked_registrations_24h' => $eventCounts['registration_blocked'] ?? 0,
+                'suspicious_registrations_24h' => $eventCounts['registration_suspicious'] ?? 0,
+                'rate_limited_24h' => $eventCounts['rate_limited'] ?? 0,
+                'security_incidents_24h' => $securityIncidents24h,
+            ],
+            'config' => [
+                'feature_registration' => $this->settings->featureEnabled('feature_registration'),
+                'mandatory_email_verification' => true,
+                'is_production' => app()->isProduction(),
+                'auth_emergency_registration_pause' => (bool) $this->settings->get('auth_emergency_registration_pause', false),
+                'auth_turnstile_enabled' => (bool) $this->settings->get('auth_turnstile_enabled', false),
+                'auth_turnstile_site_key' => $this->turnstile->siteKey(),
+                'turnstile_has_secret' => $this->turnstile->hasSecretKey(),
+                'turnstile_secret_masked' => $this->turnstile->maskedSecretKey(),
+                'auth_otp_expire_minutes' => (int) $this->settings->get('auth_otp_expire_minutes', 5),
+                'auth_otp_resend_cooldown' => (int) $this->settings->get('auth_otp_resend_cooldown', 60),
+                'auth_otp_max_attempts' => (int) $this->settings->get('auth_otp_max_attempts', 5),
+                'auth_otp_max_per_email_hour' => (int) $this->settings->get('auth_otp_max_per_email_hour', 5),
+                'auth_global_otp_hourly_budget' => (int) $this->settings->get('auth_global_otp_hourly_budget', 300),
+                'auth_register_limit_10min' => (int) $this->settings->get('auth_register_limit_10min', 3),
+                'auth_register_limit_day' => (int) $this->settings->get('auth_register_limit_day', 10),
+                'auth_login_failed_limit_min' => (int) $this->settings->get('auth_login_failed_limit_min', 5),
+                'auth_forgot_password_limit_15min' => (int) $this->settings->get('auth_forgot_password_limit_15min', 3),
+                'auth_disposable_email_protection' => (bool) $this->settings->get('auth_disposable_email_protection', true),
+                'auth_suspicious_risk_threshold' => (int) $this->settings->get('auth_suspicious_risk_threshold', 50),
+                'auth_pending_retention_hours' => (int) $this->settings->get('auth_pending_retention_hours', 24),
+            ],
+            'unverified_audit' => $unverifiedAudit,
+            'pending_list' => $pendingList,
+            'disposable_domains' => $disposableDomains,
+            'recent_events' => $recentEvents,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function updateAuthProtectionSettings(array $validated, User $actor): void
+    {
+        $payload = [
+            'feature_registration' => (bool) ($validated['feature_registration'] ?? true),
+            'feature_require_email_verification' => true,
+            'auth_emergency_registration_pause' => (bool) ($validated['auth_emergency_registration_pause'] ?? false),
+            'auth_turnstile_enabled' => (bool) ($validated['auth_turnstile_enabled'] ?? false),
+            'auth_turnstile_site_key' => trim((string) ($validated['auth_turnstile_site_key'] ?? '')),
+            'auth_otp_expire_minutes' => (int) ($validated['auth_otp_expire_minutes'] ?? 5),
+            'auth_otp_resend_cooldown' => (int) ($validated['auth_otp_resend_cooldown'] ?? 60),
+            'auth_otp_max_attempts' => (int) ($validated['auth_otp_max_attempts'] ?? 5),
+            'auth_otp_max_per_email_hour' => (int) ($validated['auth_otp_max_per_email_hour'] ?? 5),
+            'auth_global_otp_hourly_budget' => (int) ($validated['auth_global_otp_hourly_budget'] ?? 300),
+            'auth_register_limit_10min' => (int) ($validated['auth_register_limit_10min'] ?? 3),
+            'auth_register_limit_day' => (int) ($validated['auth_register_limit_day'] ?? 10),
+            'auth_login_failed_limit_min' => (int) ($validated['auth_login_failed_limit_min'] ?? 5),
+            'auth_forgot_password_limit_15min' => (int) ($validated['auth_forgot_password_limit_15min'] ?? 3),
+            'auth_disposable_email_protection' => (bool) ($validated['auth_disposable_email_protection'] ?? true),
+            'auth_suspicious_risk_threshold' => (int) ($validated['auth_suspicious_risk_threshold'] ?? 50),
+            'auth_pending_retention_hours' => (int) ($validated['auth_pending_retention_hours'] ?? 24),
+        ];
+
+        $rawSecret = isset($validated['auth_turnstile_secret']) && is_string($validated['auth_turnstile_secret'])
+            ? trim($validated['auth_turnstile_secret'])
+            : '';
+
+        if ($rawSecret !== '') {
+            $payload['auth_turnstile_secret_encrypted'] = Crypt::encryptString($rawSecret);
+        }
+
+        $this->settings->updateMany($payload, $actor, $this->auditLogger);
+    }
+
+    public function toggleEmergencyPause(bool $paused, User $actor): void
+    {
+        $this->settings->updateMany([
+            'auth_emergency_registration_pause' => $paused,
+        ], $actor, $this->auditLogger);
+
+        $this->authEvents->record('emergency_pause_toggled', $paused ? 'high' : 'info', $actor, null, null, 0, [
+            'paused' => $paused,
+        ]);
+    }
+
+    public function addDisposableDomain(string $domain, ?string $notes, User $actor): DisposableEmailDomain
+    {
+        $clean = Str::lower(trim(ltrim($domain, '@')));
+        $record = DisposableEmailDomain::query()->updateOrCreate(
+            ['domain' => $clean],
+            ['is_active' => true, 'notes' => $notes !== null && trim($notes) !== '' ? trim($notes) : null],
+        );
+
+        DisposableEmailService::flushCache();
+        $this->auditLogger->log('security.disposable_domain.added', $record, ['domain' => $clean], $actor);
+
+        return $record;
+    }
+
+    public function removeDisposableDomain(DisposableEmailDomain $domain, User $actor): void
+    {
+        $name = $domain->domain;
+        $domain->delete();
+
+        DisposableEmailService::flushCache();
+        $this->auditLogger->log('security.disposable_domain.removed', null, ['domain' => $name], $actor);
     }
 
     public function revokeSession(User $actor, string $sessionId): void

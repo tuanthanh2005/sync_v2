@@ -428,7 +428,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="space-y-5">
+    <div class="min-w-0 space-y-5">
         <Head
             :title="
                 query
@@ -640,10 +640,10 @@ onBeforeUnmount(() => {
             <!-- Personal Recent Searches (session-scoped, clearable) -->
             <div
                 v-if="recentSearches.length > 0 && isExploreMode"
-                class="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs"
+                class="no-scrollbar flex flex-nowrap items-center gap-1.5 overflow-x-auto pt-0.5 text-xs sm:flex-wrap sm:overflow-visible"
             >
                 <span
-                    class="inline-flex items-center gap-1 text-[11px] text-muted-foreground"
+                    class="inline-flex shrink-0 items-center gap-1 text-[11px] whitespace-nowrap text-muted-foreground"
                 >
                     <History class="size-3.5" aria-hidden="true" />
                     <span>{{ t('search.recentSearches') }}:</span>
@@ -652,14 +652,14 @@ onBeforeUnmount(() => {
                     v-for="term in recentSearches"
                     :key="term"
                     type="button"
-                    class="rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-[11px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                    class="shrink-0 rounded-full border border-border bg-muted/40 px-2.5 py-0.5 text-[11px] font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:text-primary"
                     @click="executeSearch(term)"
                 >
                     {{ term }}
                 </button>
                 <button
                     type="button"
-                    class="ms-auto text-[11px] text-muted-foreground hover:text-destructive"
+                    class="ms-auto shrink-0 text-[11px] whitespace-nowrap text-muted-foreground hover:text-destructive"
                     @click="clearRecentSearches"
                 >
                     {{ t('search.clearHistory') }}
@@ -709,12 +709,14 @@ onBeforeUnmount(() => {
             <!-- Categories Quick Browse -->
             <section
                 v-if="discovery.categories.length > 0"
-                class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
             >
                 <h2 class="text-sm font-semibold text-foreground">
                     {{ t('search.exploreCategories') }}
                 </h2>
-                <div class="flex flex-wrap gap-2">
+                <div
+                    class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 sm:flex-wrap sm:overflow-visible sm:py-0"
+                >
                     <Link
                         v-for="cat in discovery.categories"
                         :key="cat.value"
@@ -723,11 +725,11 @@ onBeforeUnmount(() => {
                                 query: { tab: cat.value },
                             })
                         "
-                        class="inline-flex items-center gap-1.5 rounded-xl border border-border bg-muted/30 px-3 py-2 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary-soft/50 hover:text-primary"
+                        class="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-border bg-muted/30 px-3 py-2 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:bg-primary-soft/50 hover:text-primary"
                     >
                         <component
                             :is="categoryIcon(cat.icon)"
-                            class="size-4 text-primary"
+                            class="size-4 shrink-0 text-primary"
                             aria-hidden="true"
                         />
                         <span>{{ cat.label }}</span>
@@ -738,7 +740,7 @@ onBeforeUnmount(() => {
             <!-- Active Topics / Hashtags -->
             <section
                 v-if="discovery.topics.length > 0"
-                class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
             >
                 <h2
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
@@ -746,7 +748,9 @@ onBeforeUnmount(() => {
                     <Hash class="size-4 text-primary" aria-hidden="true" />
                     <span>{{ t('search.topicsOfInterest') }}</span>
                 </h2>
-                <div class="flex flex-wrap gap-2">
+                <div
+                    class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 sm:flex-wrap sm:overflow-visible sm:py-0"
+                >
                     <Link
                         v-for="tag in discovery.topics"
                         :key="tag.id"
@@ -755,7 +759,7 @@ onBeforeUnmount(() => {
                                 query: { hashtag: tag.slug },
                             })
                         "
-                        class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/35 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                        class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-muted/35 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:text-primary"
                     >
                         <span>#{{ tag.name }}</span>
                         <span class="text-muted-foreground tabular-nums"
@@ -768,7 +772,7 @@ onBeforeUnmount(() => {
             <!-- Suggested Communities -->
             <section
                 v-if="discovery.suggested_communities.length > 0"
-                class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
             >
                 <div class="flex items-center justify-between gap-2">
                     <h2
@@ -779,17 +783,19 @@ onBeforeUnmount(() => {
                     </h2>
                     <Link
                         :href="CommunityController.index.url()"
-                        class="text-xs font-medium text-primary hover:underline"
+                        class="shrink-0 text-xs font-medium text-primary hover:underline"
                     >
                         {{ t('search.viewAll') }}
                     </Link>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div
+                    class="no-scrollbar flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0"
+                >
                     <Link
                         v-for="community in discovery.suggested_communities"
                         :key="community.id"
                         :href="CommunityController.show.url(community.slug)"
-                        class="flex items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 hover:bg-surface-hover/50"
+                        class="flex w-[250px] shrink-0 snap-start items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 hover:bg-surface-hover/50 sm:w-auto sm:shrink"
                     >
                         <Avatar class="size-10 shrink-0 rounded-xl">
                             <AvatarImage
@@ -832,7 +838,7 @@ onBeforeUnmount(() => {
             <!-- Notable Accounts -->
             <section
                 v-if="discovery.notable_accounts.length > 0"
-                class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
             >
                 <h2
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
@@ -840,12 +846,14 @@ onBeforeUnmount(() => {
                     <UserRound class="size-4 text-primary" aria-hidden="true" />
                     <span>{{ t('search.notableAccounts') }}</span>
                 </h2>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div
+                    class="no-scrollbar flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0"
+                >
                     <Link
                         v-for="person in discovery.notable_accounts"
                         :key="person.id"
                         :href="ProfileViewController.show.url(person.username)"
-                        class="flex items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 hover:bg-surface-hover/50"
+                        class="flex w-[250px] shrink-0 snap-start items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 hover:bg-surface-hover/50 sm:w-auto sm:shrink"
                     >
                         <Avatar class="size-10 shrink-0 rounded-full">
                             <AvatarImage
@@ -946,7 +954,7 @@ onBeforeUnmount(() => {
                 v-if="!hashtag"
                 role="tablist"
                 :aria-label="t('search.filterTabsLabel')"
-                class="sv-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap"
+                class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
             >
                 <button
                     v-for="tab in resultTabs"
@@ -977,12 +985,14 @@ onBeforeUnmount(() => {
                     hashtags.length > 0 &&
                     (active_type === 'all' || active_type === 'topics')
                 "
-                class="space-y-2.5 rounded-xl border border-border bg-card p-5"
+                class="min-w-0 space-y-2.5 rounded-xl border border-border bg-card p-4 sm:p-5"
             >
                 <h2 class="text-sm font-semibold text-foreground">
                     {{ t('search.hashtagsSection') }}
                 </h2>
-                <div class="flex flex-wrap gap-2">
+                <div
+                    class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 sm:flex-wrap sm:overflow-visible sm:py-0"
+                >
                     <Link
                         v-for="tag in hashtags"
                         :key="tag.id"
@@ -991,7 +1001,7 @@ onBeforeUnmount(() => {
                                 query: { hashtag: tag.slug },
                             })
                         "
-                        class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                        class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:text-primary"
                     >
                         <span>#{{ tag.name }}</span>
                         <span class="text-muted-foreground tabular-nums"
@@ -1007,7 +1017,7 @@ onBeforeUnmount(() => {
                     communities.length > 0 &&
                     (active_type === 'all' || active_type === 'communities')
                 "
-                class="space-y-3 rounded-xl border border-border bg-card p-5"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5"
             >
                 <h2
                     class="flex items-center gap-2 text-sm font-semibold text-foreground"
@@ -1015,12 +1025,14 @@ onBeforeUnmount(() => {
                     <Users class="size-4 text-primary" aria-hidden="true" />
                     <span>{{ t('search.communitiesSection') }}</span>
                 </h2>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div
+                    class="no-scrollbar flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0"
+                >
                     <Link
                         v-for="community in communities"
                         :key="community.id"
                         :href="CommunityController.show.url(community.slug)"
-                        class="flex items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40"
+                        class="flex w-[250px] shrink-0 snap-start items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 sm:w-auto sm:shrink"
                     >
                         <Avatar class="size-10 shrink-0 rounded-xl">
                             <AvatarImage
@@ -1066,17 +1078,19 @@ onBeforeUnmount(() => {
                     users.length > 0 &&
                     (active_type === 'all' || active_type === 'users')
                 "
-                class="space-y-3 rounded-xl border border-border bg-card p-5 shadow-xs"
+                class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 shadow-xs sm:p-5"
             >
                 <h2 class="text-sm font-semibold text-foreground">
                     {{ t('search.usersSection') }}
                 </h2>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div
+                    class="no-scrollbar flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0"
+                >
                     <Link
                         v-for="person in users"
                         :key="person.id"
                         :href="ProfileViewController.show.url(person.username)"
-                        class="flex items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40"
+                        class="flex w-[250px] shrink-0 snap-start items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 sm:w-auto sm:shrink"
                     >
                         <Avatar class="size-10 shrink-0 rounded-full">
                             <AvatarImage
@@ -1228,12 +1242,14 @@ onBeforeUnmount(() => {
 
                 <section
                     v-if="discovery.topics.length > 0"
-                    class="space-y-2.5 rounded-xl border border-border bg-card p-5"
+                    class="min-w-0 space-y-2.5 rounded-xl border border-border bg-card p-4 sm:p-5"
                 >
                     <h3 class="text-sm font-semibold text-foreground">
                         {{ t('search.topicsOfInterest') }}
                     </h3>
-                    <div class="flex flex-wrap gap-2">
+                    <div
+                        class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 sm:flex-wrap sm:overflow-visible sm:py-0"
+                    >
                         <Link
                             v-for="tag in discovery.topics"
                             :key="tag.id"
@@ -1242,7 +1258,7 @@ onBeforeUnmount(() => {
                                     query: { hashtag: tag.slug },
                                 })
                             "
-                            class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                            class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:text-primary"
                         >
                             <span>#{{ tag.name }}</span>
                             <span class="text-muted-foreground tabular-nums"
@@ -1254,17 +1270,19 @@ onBeforeUnmount(() => {
 
                 <section
                     v-if="discovery.suggested_communities.length > 0"
-                    class="space-y-3 rounded-xl border border-border bg-card p-5"
+                    class="min-w-0 space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5"
                 >
                     <h3 class="text-sm font-semibold text-foreground">
                         {{ t('search.suggestedCommunities') }}
                     </h3>
-                    <div class="grid gap-3 sm:grid-cols-2">
+                    <div
+                        class="no-scrollbar flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0"
+                    >
                         <Link
                             v-for="community in discovery.suggested_communities"
                             :key="community.id"
                             :href="CommunityController.show.url(community.slug)"
-                            class="flex items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40"
+                            class="flex w-[250px] shrink-0 snap-start items-center gap-3 rounded-xl border border-border/80 p-3 transition-colors hover:border-primary/40 sm:w-auto sm:shrink"
                         >
                             <Avatar class="size-9 shrink-0 rounded-xl">
                                 <AvatarImage

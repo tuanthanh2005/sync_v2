@@ -212,14 +212,64 @@ const canSubmit = computed<boolean>(
         !isOverCharLimit.value,
 );
 
-function adjustTextareaHeight(): void {
+const hasOpenedDiscardDialog = ref(false);
+let resizeRafId: number | null = null;
+let focusRafId: number | null = null;
+let draftSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let lastTextareaLength = 0;
+
+const supportsFieldSizing =
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('field-sizing', 'content');
+
+function adjustTextareaHeight(forceShrink = false): void {
+    if (supportsFieldSizing) {
+        return;
+    }
+
     const el = contentTextareaRef.value;
     if (!el) {
         return;
     }
 
-    el.style.height = 'auto';
-    el.style.height = `${Math.max(152, el.scrollHeight)}px`;
+    const len = el.value.length;
+    const shouldMeasureShrink = forceShrink || len < lastTextareaLength;
+    lastTextareaLength = len;
+
+    if (shouldMeasureShrink) {
+        el.style.height = 'auto';
+        el.style.height = `${Math.max(152, el.scrollHeight)}px`;
+        return;
+    }
+
+    if (el.scrollHeight > el.clientHeight) {
+        el.style.height = `${Math.max(152, el.scrollHeight)}px`;
+    }
+}
+
+function scheduleTextareaHeight(forceShrink = false): void {
+    if (supportsFieldSizing || typeof window === 'undefined') {
+        return;
+    }
+
+    if (forceShrink) {
+        if (resizeRafId !== null) {
+            window.cancelAnimationFrame(resizeRafId);
+            resizeRafId = null;
+        }
+        void nextTick(() => adjustTextareaHeight(true));
+        return;
+    }
+
+    if (resizeRafId !== null) {
+        return;
+    }
+
+    resizeRafId = window.requestAnimationFrame(() => {
+        resizeRafId = null;
+        adjustTextareaHeight(false);
+    });
 }
 
 function persistDraft(): void {
@@ -250,7 +300,28 @@ function persistDraft(): void {
     }
 }
 
+function cancelPendingDraftSave(): void {
+    if (draftSaveTimer !== null) {
+        clearTimeout(draftSaveTimer);
+        draftSaveTimer = null;
+    }
+}
+
+function flushPendingDraftSave(): void {
+    cancelPendingDraftSave();
+    persistDraft();
+}
+
+function schedulePersistDraft(): void {
+    cancelPendingDraftSave();
+    draftSaveTimer = setTimeout(() => {
+        draftSaveTimer = null;
+        persistDraft();
+    }, 350);
+}
+
 function clearStoredDraft(): void {
+    cancelPendingDraftSave();
     if (typeof window === 'undefined') {
         return;
     }
@@ -263,6 +334,7 @@ function clearStoredDraft(): void {
 }
 
 function handleBeforeUnload(event: BeforeUnloadEvent): void {
+    flushPendingDraftSave();
     if (hasUnsavedDraft.value && modalOpen.value && !form.processing) {
         event.preventDefault();
         event.returnValue = '';
@@ -282,24 +354,26 @@ function openComposer(initialAction?: 'image' | 'poll' | 'link'): boolean {
     if (initialAction === 'image') {
         showImages.value = true;
         void nextTick(() => {
-            adjustTextareaHeight();
+            adjustTextareaHeight(true);
             imageUploaderRef.value?.openPicker();
         });
     } else if (initialAction === 'poll') {
         showPoll.value = true;
-        void nextTick(() => {
-            adjustTextareaHeight();
-        });
+        scheduleTextareaHeight(true);
     } else if (initialAction === 'link') {
         showLink.value = true;
-        void nextTick(() => {
-            adjustTextareaHeight();
-        });
+        scheduleTextareaHeight(true);
     } else {
-        void nextTick(() => {
-            adjustTextareaHeight();
-            contentTextareaRef.value?.focus({ preventScroll: true });
-        });
+        scheduleTextareaHeight(true);
+        if (typeof window !== 'undefined') {
+            if (focusRafId !== null) {
+                window.cancelAnimationFrame(focusRafId);
+            }
+            focusRafId = window.requestAnimationFrame(() => {
+                focusRafId = null;
+                contentTextareaRef.value?.focus({ preventScroll: true });
+            });
+        }
     }
 
     return true;
@@ -308,7 +382,7 @@ function openComposer(initialAction?: 'image' | 'poll' | 'link'): boolean {
 function handleModalOpenChange(nextOpen: boolean): void {
     if (nextOpen) {
         modalOpen.value = true;
-        void nextTick(() => adjustTextareaHeight());
+        scheduleTextareaHeight(true);
         return;
     }
 
@@ -316,7 +390,10 @@ function handleModalOpenChange(nextOpen: boolean): void {
         return;
     }
 
+    flushPendingDraftSave();
+
     if (hasUnsavedDraft.value) {
+        hasOpenedDiscardDialog.value = true;
         discardDialogOpen.value = true;
         return;
     }
@@ -341,7 +418,7 @@ function insertEmoji(emoji: string): void {
     form.content = `${form.content}${emoji}`;
     showEmojiPicker.value = false;
     void nextTick(() => {
-        adjustTextareaHeight();
+        adjustTextareaHeight(true);
         contentTextareaRef.value?.focus({ preventScroll: true });
     });
 }
@@ -350,7 +427,7 @@ function insertHashtagPrefix(): void {
     const needsSpace = form.content.length > 0 && !/\s$/.test(form.content);
     form.content = `${form.content}${needsSpace ? ' ' : ''}#`;
     void nextTick(() => {
-        adjustTextareaHeight();
+        adjustTextareaHeight(true);
         contentTextareaRef.value?.focus({ preventScroll: true });
     });
 }
@@ -491,13 +568,6 @@ watch(
 );
 
 watch(
-    () => form.content,
-    () => {
-        void nextTick(() => adjustTextareaHeight());
-    },
-);
-
-watch(
     () => [
         form.title,
         form.content,
@@ -507,7 +577,7 @@ watch(
         form.poll_question,
     ],
     () => {
-        persistDraft();
+        schedulePersistDraft();
     },
 );
 
@@ -564,7 +634,16 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+    flushPendingDraftSave();
     if (typeof window !== 'undefined') {
+        if (resizeRafId !== null) {
+            window.cancelAnimationFrame(resizeRafId);
+            resizeRafId = null;
+        }
+        if (focusRafId !== null) {
+            window.cancelAnimationFrame(focusRafId);
+            focusRafId = null;
+        }
         window.removeEventListener('beforeunload', handleBeforeUnload);
     }
 });
@@ -662,7 +741,7 @@ onBeforeUnmount(() => {
             <DialogContent
                 structured
                 :show-close-button="false"
-                class="h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none border-0 bg-card shadow-xl sm:h-auto sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:max-w-[640px] sm:rounded-2xl sm:border sm:border-border"
+                class="h-[100dvh] max-h-[100dvh] w-full max-w-none rounded-none border-0 bg-card shadow-lg sm:h-auto sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:max-w-[640px] sm:rounded-2xl sm:border sm:border-border"
             >
                 <!-- Modal Header: Flexbox single row, title & close button vertically aligned -->
                 <div
@@ -860,8 +939,8 @@ onBeforeUnmount(() => {
                                                 'home.composer.contentPlaceholder',
                                             )
                                         "
-                                        class="block min-h-[152px] w-full resize-none overflow-hidden bg-transparent px-3.5 pt-3 pb-2 text-base leading-[1.6] text-foreground placeholder:text-muted-foreground/75 focus:outline-none"
-                                        @input="adjustTextareaHeight"
+                                        class="block [field-sizing:content] min-h-[152px] w-full resize-none overflow-hidden bg-transparent px-3.5 pt-3 pb-2 text-base leading-[1.6] text-foreground placeholder:text-muted-foreground/75 focus:outline-none"
+                                        @input="scheduleTextareaHeight(false)"
                                     />
                                     <div
                                         class="flex items-center justify-end px-3.5 pb-2.5"
@@ -1300,6 +1379,7 @@ onBeforeUnmount(() => {
 
         <!-- Unsaved Draft Confirmation Dialog -->
         <ConfirmActionDialog
+            v-if="hasOpenedDiscardDialog"
             :open="discardDialogOpen"
             :title="t('home.composer.discardDraftTitle')"
             :description="t('home.composer.discardDraftDesc')"

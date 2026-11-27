@@ -5,11 +5,13 @@ import {
     onMounted,
     reactive,
     toValue,
+    watch,
     type ComputedRef,
     type MaybeRefOrGetter,
     type Ref,
 } from 'vue';
 import PostInteractionController from '@/actions/App/Http/Controllers/Social/PostInteractionController';
+import { isModalRuntimeActive } from '@/composables/useModalRuntimeLock';
 import type { PostViewAnalytics } from '@/types';
 
 export type PostViewSource =
@@ -236,6 +238,7 @@ function startDwellIfEligible(meta: ObservedMeta): void {
     if (
         meta.recordedInCurrentStay ||
         !meta.isVisible ||
+        isModalRuntimeActive.value ||
         isInCooldown(meta.postId) ||
         typeof document === 'undefined' ||
         document.visibilityState !== 'visible'
@@ -256,6 +259,7 @@ function startDwellIfEligible(meta: ObservedMeta): void {
         if (
             !meta.isVisible ||
             meta.recordedInCurrentStay ||
+            isModalRuntimeActive.value ||
             document.visibilityState !== 'visible' ||
             isInCooldown(meta.postId)
         ) {
@@ -373,6 +377,30 @@ function ensureObserver(): IntersectionObserver | null {
         listenersBound = true;
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('pagehide', () => flushQueue(true));
+        watch(isModalRuntimeActive, (modalActive) => {
+            if (modalActive) {
+                for (const el of activeElements) {
+                    const meta = observedElements.get(el);
+                    if (meta) {
+                        clearElementTimer(meta);
+                    }
+                }
+                if (flushTimer !== null) {
+                    clearTimeout(flushTimer);
+                    flushTimer = null;
+                }
+            } else if (document.visibilityState === 'visible') {
+                for (const el of activeElements) {
+                    const meta = observedElements.get(el);
+                    if (meta && meta.isVisible) {
+                        startDwellIfEligible(meta);
+                    }
+                }
+                if (pendingQueue.size > 0) {
+                    scheduleFlush();
+                }
+            }
+        });
     }
 
     if (sharedObserver === null) {

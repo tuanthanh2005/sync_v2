@@ -257,10 +257,15 @@ export async function renderCroppedImageFile(
 ): Promise<File> {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
         const el = new Image();
+        el.decoding = 'async';
         el.onload = () => resolve(el);
         el.onerror = () => reject(new Error('Image load failed'));
         el.src = imageUrl;
     });
+
+    if (typeof img.decode === 'function') {
+        await img.decode().catch(() => undefined);
+    }
 
     const canvas = document.createElement('canvas');
     canvas.width = options.outputWidth;

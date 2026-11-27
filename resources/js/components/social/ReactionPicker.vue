@@ -341,7 +341,7 @@ function handleOutsidePointerDown(event: PointerEvent): void {
 
 function handleWindowScrollOrResize(): void {
     if (pickerOpen.value) {
-        positionPicker();
+        closePicker(false);
     }
 }
 

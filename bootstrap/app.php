@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Middleware\EnsureAdminHasTwoFactor;
+use App\Http\Middleware\EnsureAuthenticatedEmailIsVerified;
 use App\Http\Middleware\EnsureUserHasPermission;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\EnsureUserIsActive;
@@ -45,6 +46,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
             SeoMiddleware::class,
             CheckMaintenanceMode::class,
+            EnsureAuthenticatedEmailIsVerified::class,
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,

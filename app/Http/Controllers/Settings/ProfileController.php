@@ -9,12 +9,14 @@ use App\Http\Requests\Settings\ProfileUpdateRequest;
 use App\Jobs\Seo\ProcessSeoEntityJob;
 use App\Models\ReferralCode;
 use App\Services\Security\AuditLogger;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,9 +27,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+
         return Inertia::render('settings/Profile', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => true,
             'status' => $request->session()->get('status'),
+            'pendingEmailChange' => $request->session()->get('settings.pending_email_change'),
+            'hasPassword' => (bool) $user->has_password,
         ]);
     }
 
@@ -36,13 +42,22 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Enforce verified OTP email change flow: direct email mutation via PATCH /settings/profile is forbidden.
+        if (
+            isset($validated['email'])
+            && is_string($validated['email'])
+            && Str::lower(trim($validated['email'])) !== Str::lower(trim($user->email))
+        ) {
+            throw ValidationException::withMessages([
+                'email' => [__('To change your email address, please use the verified email change section and confirm via OTP.')],
+            ]);
         }
 
-        $request->user()->save();
+        $user->fill(Arr::only($validated, ['name', 'username', 'timezone']));
+        $user->save();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
 

@@ -39,7 +39,7 @@ class CommentPolicy
 
     public function delete(User $user, Comment $comment): bool
     {
-        if (! $user->isActive()) {
+        if (! $user->isActive() || ! $user->hasVerifiedEmail()) {
             return false;
         }
 

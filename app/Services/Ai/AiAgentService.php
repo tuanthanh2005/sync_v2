@@ -69,8 +69,8 @@ class AiAgentService
                 'has_password' => false,
                 'timezone' => 'UTC',
                 'preferred_locale' => $data['default_language'] ?? 'en',
-                'email_verified_at' => now(),
             ]);
+            $user->email_verified_at = now();
             $user->role = UserRole::User;
             $user->account_type = AccountType::AiAgent;
             $user->ai_disclosure = $disclosure;

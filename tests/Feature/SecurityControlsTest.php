@@ -7,6 +7,7 @@ use App\Models\LoginHistory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
@@ -21,23 +22,37 @@ test('passwords are hashed with argon2id by default', function (): void {
 });
 
 test('registration endpoint is rate limited after exceeding threshold', function (): void {
-    for ($i = 0; $i < 5; $i++) {
+    Notification::fake();
+
+    // Multi-dimensional AuthRateLimiterService blocks automated signup bursts after 3 attempts
+    for ($i = 0; $i < 3; $i++) {
         $this->post(route('register.store'), [
             'name' => "User {$i}",
             'email' => "ratelimit{$i}@example.com",
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ])->assertRedirect();
-
-        auth()->logout();
+            'password' => 'SyncViet#2026Strong!',
+            'password_confirmation' => 'SyncViet#2026Strong!',
+        ])->assertRedirect(route('verification.notice', absolute: false));
     }
 
+    // Attempts 4..15 are rejected by AuthRateLimiterService before DB writes or mail sending
+    for ($i = 3; $i < 15; $i++) {
+        $this->post(route('register.store'), [
+            'name' => "Blocked User {$i}",
+            'email' => "blocked{$i}@example.com",
+            'password' => 'SyncViet#2026Strong!',
+            'password_confirmation' => 'SyncViet#2026Strong!',
+        ])->assertSessionHasErrors('email');
+    }
+
+    // Attempt 16 hits the outer HTTP middleware throttle:register ceiling (429 Too Many Requests)
     $this->post(route('register.store'), [
         'name' => 'Blocked User',
         'email' => 'blocked_ratelimit@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => 'SyncViet#2026Strong!',
+        'password_confirmation' => 'SyncViet#2026Strong!',
     ])->assertTooManyRequests();
+
+    $this->assertDatabaseMissing('pending_registrations', ['normalized_email' => 'blocked_ratelimit@example.com']);
 });
 
 test('authenticated user can log out other browser sessions with password confirmation and records audit log', function (): void {

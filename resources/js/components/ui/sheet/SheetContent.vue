@@ -39,7 +39,7 @@ const { t } = useI18n()
     <DialogContent
       data-slot="sheet-content"
       :class="cn(
-        'sv-scrollbar bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 overflow-y-auto overscroll-contain shadow-lg transition-transform ease-in-out data-[state=closed]:duration-200 data-[state=open]:duration-250',
+        'sv-scrollbar bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex min-h-0 flex-col gap-4 overflow-y-auto overscroll-contain shadow-md transition-transform ease-out data-[state=closed]:duration-120 data-[state=open]:duration-150 motion-reduce:animate-none motion-reduce:transition-none',
         side === 'right'
           && 'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-[100dvh] w-[85vw] max-w-sm border-l safe-pt safe-pb',
         side === 'left'

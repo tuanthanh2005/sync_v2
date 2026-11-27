@@ -155,4 +155,30 @@ return [
         'bot_filtering' => (bool) env('SYNCVIET_VIEWS_BOT_FILTERING', true),
         'retention_days' => (int) env('SYNCVIET_VIEWS_RETENTION_DAYS', 30),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Advanced Authentication Security, Email Verification & Anti-Bot V1.0
+    |--------------------------------------------------------------------------
+    */
+    'auth_security' => [
+        'turnstile_enabled' => (bool) env('TURNSTILE_ENABLED', false),
+        'turnstile_site_key' => (string) env('TURNSTILE_SITE_KEY', ''),
+        'turnstile_secret_key' => (string) env('TURNSTILE_SECRET_KEY', ''),
+        'turnstile_verify_url' => (string) env('TURNSTILE_VERIFY_URL', 'https://challenges.cloudflare.com/turnstile/v0/siteverify'),
+        'otp_expire_minutes' => (int) env('AUTH_OTP_EXPIRE_MINUTES', 5),
+        'otp_link_expire_minutes' => (int) env('AUTH_OTP_LINK_EXPIRE_MINUTES', 30),
+        'otp_resend_cooldown_seconds' => (int) env('AUTH_OTP_RESEND_COOLDOWN', 60),
+        'otp_max_attempts' => (int) env('AUTH_OTP_MAX_ATTEMPTS', 5),
+        'otp_max_per_email_hour' => (int) env('AUTH_OTP_MAX_PER_EMAIL_HOUR', 5),
+        'global_otp_hourly_budget' => (int) env('AUTH_GLOBAL_OTP_HOURLY_BUDGET', 300),
+        'pending_retention_hours' => (int) env('AUTH_PENDING_RETENTION_HOURS', 24),
+        'max_active_pending_registrations' => (int) env('AUTH_MAX_ACTIVE_PENDING', 5000),
+        'register_limit_per_10min' => (int) env('AUTH_REGISTER_LIMIT_10MIN', 3),
+        'register_limit_per_day' => (int) env('AUTH_REGISTER_LIMIT_DAY', 10),
+        'login_failed_limit_per_min' => (int) env('AUTH_LOGIN_FAILED_LIMIT_MIN', 5),
+        'forgot_password_limit_15min' => (int) env('AUTH_FORGOT_PASSWORD_LIMIT_15MIN', 3),
+        'reset_password_limit_15min' => (int) env('AUTH_RESET_PASSWORD_LIMIT_15MIN', 5),
+        'change_email_limit_hour' => (int) env('AUTH_CHANGE_EMAIL_LIMIT_HOUR', 3),
+    ],
 ];

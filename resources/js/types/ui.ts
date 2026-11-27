@@ -65,6 +65,14 @@ export type SystemSettingsPublic = {
         trackGuests: boolean;
         trackAi: boolean;
     };
+    auth?: {
+        mandatoryEmailVerification: boolean;
+        emergencyRegistrationPause: boolean;
+        turnstileEnabled: boolean;
+        turnstileSiteKey: string;
+        otpExpireMinutes: number;
+        otpResendCooldown: number;
+    };
 };
 
 export type PostViewAnalytics = {

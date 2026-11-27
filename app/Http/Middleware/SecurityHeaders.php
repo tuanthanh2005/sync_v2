@@ -53,6 +53,12 @@ class SecurityHeaders
             $frameParts[] = 'https://googleads.g.doubleclick.net https://tpc.googlesyndication.com';
         }
 
+        if ((bool) $this->settings->get('auth_turnstile_enabled', false)) {
+            $scriptParts[] = 'https://challenges.cloudflare.com';
+            $connectParts[] = 'https://challenges.cloudflare.com';
+            $frameParts[] = 'https://challenges.cloudflare.com';
+        }
+
         $scriptSrc = implode(' ', $scriptParts);
         $connectSrc = implode(' ', $connectParts);
         $frameSrc = implode(' ', $frameParts);

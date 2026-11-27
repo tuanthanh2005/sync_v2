@@ -11,6 +11,7 @@ use App\Notifications\SocialActivityNotification;
 use App\Services\Admin\DatabaseBackupService;
 use App\Services\Ai\AiAutomationControlService;
 use App\Services\Ai\AiPublishingAndSchedulerService;
+use App\Services\Auth\PendingRegistrationService;
 use App\Services\Growth\GrowthAnalyticsService;
 use App\Services\Growth\ReferralService;
 use App\Services\Growth\RetentionAndDigestService;
@@ -365,6 +366,33 @@ Artisan::command('app:views:prune', function (PostViewTrackingService $views): v
     $deleted = $views->pruneOldEvents();
     $this->info("Post view events pruned: {$deleted}");
 })->purpose('Prune expired raw post view events per retention policy while preserving post view counters');
+
+Artisan::command('app:auth:cleanup-pending', function (PendingRegistrationService $pending): void {
+    $res = $pending->cleanupExpired();
+    Cache::put('syncviet.cron.last_heartbeat', now()->toIso8601String(), now()->addHours(2));
+    $this->info(sprintf(
+        'Auth pending cleanup: expired=%d pending_deleted=%d challenges_deleted=%d',
+        $res['pending_expired'],
+        $res['pending_deleted'],
+        $res['challenges_deleted'],
+    ));
+})->purpose('Expire and batch-purge stale pending registrations and OTP verification challenges without touching real users');
+
+Artisan::command('app:auth:remediate-unverified {--dry-run : Audit only without revoking active sessions}', function (PendingRegistrationService $pending): void {
+    $revoke = ! (bool) $this->option('dry-run');
+    $res = $pending->auditAndRemediateUnverifiedUsers(revokeSessions: $revoke);
+    $this->info(sprintf(
+        'Unverified accounts audit: total=%d with_posts=%d with_payments=%d with_rewards=%d sessions_revoked=%d remember_tokens_rotated=%d',
+        $res['total_unverified'],
+        $res['with_posts'],
+        $res['with_payments'],
+        $res['with_rewards'],
+        $res['sessions_revoked'],
+        $res['remember_tokens_rotated'],
+    ));
+})->purpose('Audit existing unverified accounts and revoke their active sessions & remember tokens without deleting real data');
+
+Schedule::command('app:auth:cleanup-pending')->hourly()->withoutOverlapping();
 
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();

@@ -398,7 +398,7 @@ function isItemActive(item: NavItem): boolean {
         <!-- Top Sticky Header (56px mobile / 64px desktop + Safe Area) -->
         <header
             :class="[
-                'safe-pt sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md transition-transform duration-200',
+                'safe-pt sticky top-0 z-40 border-b border-border bg-card/98 transition-transform duration-150',
                 headerHidden && !mobileMenuOpen
                     ? '-translate-y-full lg:translate-y-0'
                     : 'translate-y-0',

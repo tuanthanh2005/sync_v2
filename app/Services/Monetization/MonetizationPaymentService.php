@@ -135,6 +135,12 @@ class MonetizationPaymentService
             ]);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'payment' => [__('Please verify your email address before creating a payment order.')],
+            ]);
+        }
+
         if (! $this->settings->featureEnabled('feature_payments')) {
             throw ValidationException::withMessages([
                 'payment' => [__('Payments are currently disabled by the administrator.')],

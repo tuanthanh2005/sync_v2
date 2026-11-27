@@ -196,6 +196,7 @@ class OnboardingAndActivationService
         $recommendedAccounts = User::query()
             ->where('id', '!=', $user->id)
             ->where('status', UserStatus::Active->value)
+            ->whereNotNull('email_verified_at')
             ->whereIn('account_type', [AccountType::Human->value, AccountType::AiAgent->value])
             ->with('profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count')
             ->orderByDesc('created_at')

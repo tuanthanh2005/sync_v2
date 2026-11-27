@@ -33,6 +33,47 @@ const rules = computed(() => [
         label: t('auth.passwordRules.symbol'),
     },
 ]);
+
+const metCount = computed(() => rules.value.filter((r) => r.met).length);
+
+const strengthScore = computed(() => {
+    if (value.value.length === 0) {
+        return 0;
+    }
+    if (metCount.value === 4 && value.value.length >= 15) {
+        return 4;
+    }
+    return Math.min(4, Math.max(1, metCount.value));
+});
+
+const strengthMeta = computed(() => {
+    switch (strengthScore.value) {
+        case 4:
+            return {
+                label: t('auth.passwordRules.strengthVeryStrong'),
+                barClass: 'bg-success',
+                textClass: 'text-success',
+            };
+        case 3:
+            return {
+                label: t('auth.passwordRules.strengthStrong'),
+                barClass: 'bg-primary',
+                textClass: 'text-primary',
+            };
+        case 2:
+            return {
+                label: t('auth.passwordRules.strengthFair'),
+                barClass: 'bg-warning',
+                textClass: 'text-warning',
+            };
+        default:
+            return {
+                label: t('auth.passwordRules.strengthWeak'),
+                barClass: 'bg-destructive',
+                textClass: 'text-destructive',
+            };
+    }
+});
 </script>
 
 <template>
@@ -40,9 +81,35 @@ const rules = computed(() => [
         class="rounded-lg border border-border/80 bg-muted/35 px-3 py-2.5 text-start text-xs"
         data-test="password-requirements-hint"
     >
-        <p class="mb-1.5 font-medium text-foreground/90">
-            {{ t('auth.passwordRules.title') }}
-        </p>
+        <div class="mb-1.5 flex items-center justify-between gap-2">
+            <p class="font-medium text-foreground/90">
+                {{ t('auth.passwordRules.title') }}
+            </p>
+            <span
+                v-if="value.length > 0"
+                :class="['font-semibold', strengthMeta.textClass]"
+            >
+                {{ strengthMeta.label }}
+            </span>
+        </div>
+
+        <div
+            v-if="value.length > 0"
+            class="mb-2 grid grid-cols-4 gap-1"
+            aria-hidden="true"
+        >
+            <div
+                v-for="step in 4"
+                :key="step"
+                :class="[
+                    'h-1 rounded-full transition-colors',
+                    step <= strengthScore
+                        ? strengthMeta.barClass
+                        : 'bg-border/70',
+                ]"
+            />
+        </div>
+
         <ul class="grid gap-1 sm:grid-cols-2">
             <li
                 v-for="rule in rules"

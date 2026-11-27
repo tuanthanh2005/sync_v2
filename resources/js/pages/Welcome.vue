@@ -34,6 +34,7 @@ import BannerSlot from '@/components/monetization/BannerSlot.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
 import { Button } from '@/components/ui/button';
+import { isModalRuntimeActive } from '@/composables/useModalRuntimeLock';
 import { login, register } from '@/routes';
 import type {
     ActiveBannerDisplay,
@@ -344,6 +345,13 @@ onMounted(() => {
     }
 
     freshnessTimer = setInterval(() => {
+        if (
+            document.hidden ||
+            !navigator.onLine ||
+            isModalRuntimeActive.value
+        ) {
+            return;
+        }
         void checkForNewerPosts();
     }, 90_000);
 

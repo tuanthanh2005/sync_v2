@@ -97,15 +97,25 @@ const articleRef = ref<HTMLElement | null>(null);
 const isContentExpanded = ref(false);
 const isEditing = ref(false);
 const reportOpen = ref(false);
+const hasOpenedReportModal = ref(false);
 const boostModalOpen = ref(false);
+const hasOpenedBoostModal = ref(false);
 const lightboxOpen = ref(false);
+const hasOpenedLightbox = ref(false);
 const lightboxIndex = ref(0);
 const reactionModalOpen = ref(false);
 const hasOpenedReactionModal = ref(false);
+const confirmDeleteOpen = ref(false);
+const hasOpenedConfirmDelete = ref(false);
 
 function openReactionUsersModal(): void {
     hasOpenedReactionModal.value = true;
     reactionModalOpen.value = true;
+}
+
+function openBoostModal(): void {
+    hasOpenedBoostModal.value = true;
+    boostModalOpen.value = true;
 }
 
 usePostViewTracker(articleRef, {
@@ -149,6 +159,7 @@ watch(
 );
 
 function openImageViewer(index: number): void {
+    hasOpenedLightbox.value = true;
     lightboxIndex.value = index;
     lightboxOpen.value = true;
 }
@@ -321,10 +332,10 @@ function saveEdit(): void {
     });
 }
 
-const confirmDeleteOpen = ref(false);
 const deletingPost = ref(false);
 
 function deletePost(): void {
+    hasOpenedConfirmDelete.value = true;
     confirmDeleteOpen.value = true;
 }
 
@@ -359,6 +370,7 @@ function openReportDialog(): void {
     }
 
     reportForm.target_id = props.post.id;
+    hasOpenedReportModal.value = true;
     reportOpen.value = true;
 }
 
@@ -540,7 +552,7 @@ function submitReport(): void {
                     <DropdownMenuItem
                         v-if="post.can_boost && !post.boost_summary"
                         class="min-h-10 cursor-pointer text-primary focus:text-primary"
-                        @click="boostModalOpen = true"
+                        @click="openBoostModal"
                     >
                         <Zap class="mr-2 size-4" />
                         <span>{{ t('monetization.boost.ctaButton') }}</span>
@@ -772,7 +784,7 @@ function submitReport(): void {
                         @click="submitPollVote(option.id)"
                     >
                         <span
-                            class="pointer-events-none absolute inset-y-0 left-0 bg-primary/12 transition-all"
+                            class="pointer-events-none absolute inset-y-0 left-0 bg-primary/12 transition-[width] duration-150"
                             :style="{ width: `${option.percentage}%` }"
                         />
                         <span class="relative flex items-center gap-2">
@@ -959,7 +971,7 @@ function submitReport(): void {
         </footer>
 
         <ImageLightbox
-            v-if="post.media.length > 0"
+            v-if="post.media.length > 0 && hasOpenedLightbox"
             v-model:open="lightboxOpen"
             :images="
                 post.media.map((m) => ({
@@ -971,7 +983,7 @@ function submitReport(): void {
             :initial-index="lightboxIndex"
         />
 
-        <Dialog v-model:open="reportOpen">
+        <Dialog v-if="hasOpenedReportModal" v-model:open="reportOpen">
             <DialogContent class="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>{{ t('report.title') }}</DialogTitle>
@@ -1032,6 +1044,7 @@ function submitReport(): void {
         </Dialog>
 
         <ConfirmActionDialog
+            v-if="hasOpenedConfirmDelete"
             v-model:open="confirmDeleteOpen"
             :title="t('post.delete')"
             :description="t('post.confirmDelete')"
@@ -1042,7 +1055,7 @@ function submitReport(): void {
         />
 
         <BoostPostModal
-            v-if="post.can_boost"
+            v-if="post.can_boost && hasOpenedBoostModal"
             v-model:open="boostModalOpen"
             :post-id="post.id"
             :post-excerpt="post.title || post.content.slice(0, 140)"

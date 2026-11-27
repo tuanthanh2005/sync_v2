@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\LogoutOtherSessionsRequest;
 use App\Http\Requests\Settings\PasswordUpdateRequest;
 use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
+use App\Notifications\SecurityAlertNotification;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\BrowserSessionService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -53,15 +55,28 @@ class SecurityController extends Controller
     public function update(PasswordUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->update([
+        $user->forceFill([
             'password' => $request->password,
             'has_password' => true,
-        ]);
+            'remember_token' => Str::random(60),
+        ])->save();
 
         // Mark password as confirmed in session so OAuth users can enable 2FA right after setting their first password
         $request->session()->put('auth.password_confirmed_at', time());
 
         $this->auditLogger->log('auth.password_updated', $user, [], $user, $request);
+
+        if ($user->hasVerifiedEmail()) {
+            try {
+                $user->notify(new SecurityAlertNotification(
+                    alertKey: 'password_changed',
+                    titleKey: 'Your account password has been changed',
+                    bodyKey: 'Your account password was recently updated from your security settings.',
+                ));
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Password updated.')]);
 

@@ -18,7 +18,7 @@ const user = computed(() => page.props.auth.user);
 <template>
     <div class="flex min-h-[100dvh] flex-col bg-background text-foreground">
         <header
-            class="safe-pt sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md"
+            class="safe-pt sticky top-0 z-40 border-b border-border bg-card/98"
         >
             <div
                 class="mx-auto flex h-14 max-w-[1360px] items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4 lg:px-6"

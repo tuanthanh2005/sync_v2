@@ -35,7 +35,7 @@ class ProfileViewController extends Controller
     {
         $viewer = $request->user();
 
-        if (! $user->isActive() && ! ($viewer !== null && $viewer->isStaff())) {
+        if ((! $user->isActive() || ! $user->hasVerifiedEmail()) && ! ($viewer !== null && $viewer->isStaff())) {
             abort(404);
         }
 
@@ -126,7 +126,7 @@ class ProfileViewController extends Controller
     {
         $viewer = $request->user();
 
-        if (! $user->isActive() && ! ($viewer !== null && $viewer->isStaff())) {
+        if ((! $user->isActive() || ! $user->hasVerifiedEmail()) && ! ($viewer !== null && $viewer->isStaff())) {
             abort(404);
         }
 

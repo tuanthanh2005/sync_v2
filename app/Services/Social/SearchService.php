@@ -141,11 +141,12 @@ class SearchService
         $postsPaginator = $postsQuery->paginate(10, ['*'], 'page', $safePage);
         $posts = $this->feedService->serializeCollection(collect($postsPaginator->items()), $viewer);
 
-        // Users search (active & non-blocked only)
+        // Users search (verified, active & non-blocked only)
         $usersQuery = User::query()
             ->select(['id', 'name', 'username', 'avatar_url', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
             ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
             ->where('status', UserStatus::Active->value)
+            ->whereNotNull('email_verified_at')
             ->where(function (Builder $query) use ($patterns): void {
                 foreach ($patterns as $pattern) {
                     $query->orWhere('name', 'like', $pattern)
@@ -271,6 +272,7 @@ class SearchService
                 ->select(['id', 'name', 'username', 'avatar_url', 'status'])
                 ->with(['profile:id,user_id,avatar_disk,avatar_path,is_verified_badge'])
                 ->where('status', UserStatus::Active->value)
+                ->whereNotNull('email_verified_at')
                 ->where(function (Builder $q) use ($patterns): void {
                     foreach ($patterns as $p) {
                         $q->orWhere('name', 'like', $p)->orWhere('username', 'like', $p);
@@ -418,7 +420,8 @@ class SearchService
         $accountsQuery = User::query()
             ->select(['id', 'name', 'username', 'avatar_url', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
             ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
-            ->where('status', UserStatus::Active->value)
+            ->where('users.status', UserStatus::Active->value)
+            ->whereNotNull('users.email_verified_at')
             ->whereHas('profile')
             ->leftJoin('profiles', 'profiles.user_id', '=', 'users.id')
             ->orderByDesc('profiles.followers_count')

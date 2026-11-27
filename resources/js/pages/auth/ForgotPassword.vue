@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Form, Head, setLayoutProps } from '@inertiajs/vue3';
-import { watchEffect } from 'vue';
+import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import TurnstileWidget from '@/components/auth/TurnstileWidget.vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,19 @@ defineProps<{
 }>();
 
 const { t } = useI18n();
+const page = usePage();
+const turnstileToken = ref('');
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget> | null>(null);
+
+const turnstileSiteKey = computed(
+    () => page.props.systemSettings?.auth?.turnstileSiteKey ?? '',
+);
+
+const turnstileEnabled = computed(
+    () =>
+        Boolean(page.props.systemSettings?.auth?.turnstileEnabled) &&
+        turnstileSiteKey.value !== '',
+);
 
 watchEffect(() => {
     setLayoutProps({
@@ -37,7 +51,17 @@ watchEffect(() => {
         </div>
 
         <div class="space-y-6">
-            <Form v-bind="email.form()" v-slot="{ errors, processing }">
+            <Form
+                v-bind="email.form()"
+                @finish="turnstileRef?.reset()"
+                v-slot="{ errors, processing }"
+            >
+                <input
+                    type="hidden"
+                    name="cf_turnstile_response"
+                    :value="turnstileToken"
+                />
+
                 <div class="grid gap-2">
                     <Label for="email">{{ t('auth.fields.email') }}</Label>
                     <Input
@@ -51,10 +75,22 @@ watchEffect(() => {
                     <InputError :message="errors.email" />
                 </div>
 
+                <div v-if="turnstileEnabled" class="mt-4 grid gap-1.5">
+                    <TurnstileWidget
+                        ref="turnstileRef"
+                        v-model="turnstileToken"
+                        :site-key="turnstileSiteKey"
+                        action="forgot_password"
+                    />
+                    <InputError :message="errors.cf_turnstile_response" />
+                </div>
+
                 <div class="my-6 flex items-center justify-start">
                     <Button
                         class="w-full rounded-lg"
-                        :disabled="processing"
+                        :disabled="
+                            processing || (turnstileEnabled && !turnstileToken)
+                        "
                         data-test="email-password-reset-link-button"
                     >
                         <Spinner v-if="processing" />

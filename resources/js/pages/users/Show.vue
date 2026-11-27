@@ -245,7 +245,7 @@ function submitProfileDetails(): void {
                     type="button"
                     size="sm"
                     variant="secondary"
-                    class="absolute end-3 bottom-3 h-8 gap-1.5 rounded-lg border border-border/70 bg-card/90 px-2.5 text-xs shadow-xs backdrop-blur-xs hover:bg-card"
+                    class="absolute end-3 bottom-3 h-8 gap-1.5 rounded-lg border border-border/70 bg-card/95 px-2.5 text-xs shadow-xs hover:bg-card"
                     @click="openEditModal"
                 >
                     <Camera class="size-3.5 text-primary" aria-hidden="true" />

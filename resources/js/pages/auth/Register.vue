@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
+import { AlertTriangle } from '@lucide/vue';
 import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import TurnstileWidget from '@/components/auth/TurnstileWidget.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import PasswordRequirementsHint from '@/components/PasswordRequirementsHint.vue';
@@ -20,13 +22,33 @@ defineProps<{
 const { t } = useI18n();
 const page = usePage();
 const newPassword = ref('');
+const turnstileToken = ref('');
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget> | null>(null);
 
 const pageErrors = computed(
     () => (page.props.errors ?? {}) as Record<string, string | undefined>,
 );
 
 const showGoogleLogin = computed(
-    () => page.props.systemSettings?.features?.googleLogin ?? true,
+    () =>
+        (page.props.systemSettings?.features?.googleLogin ?? true) &&
+        !isRegistrationPaused.value,
+);
+
+const isRegistrationPaused = computed(
+    () =>
+        Boolean(page.props.systemSettings?.auth?.emergencyRegistrationPause) ||
+        page.props.systemSettings?.features?.registration === false,
+);
+
+const turnstileEnabled = computed(
+    () =>
+        Boolean(page.props.systemSettings?.auth?.turnstileEnabled) &&
+        turnstileSiteKey.value !== '',
+);
+
+const turnstileSiteKey = computed(
+    () => page.props.systemSettings?.auth?.turnstileSiteKey ?? '',
 );
 
 watchEffect(() => {
@@ -40,6 +62,15 @@ watchEffect(() => {
 <template>
     <div>
         <Head :title="t('auth.register.pageTitle')" />
+
+        <div
+            v-if="isRegistrationPaused"
+            class="mb-5 flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning-soft px-4 py-3 text-start text-sm text-warning-soft-foreground"
+            data-test="registration-paused-banner"
+        >
+            <AlertTriangle class="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+            <span>{{ t('auth.register.pausedNotice') }}</span>
+        </div>
 
         <!-- Google OAuth Button -->
         <template v-if="showGoogleLogin">
@@ -78,12 +109,27 @@ watchEffect(() => {
         </template>
 
         <Form
+            v-if="!isRegistrationPaused"
             v-bind="store.form()"
             :reset-on-success="['password', 'password_confirmation']"
             @success="newPassword = ''"
+            @error="turnstileRef?.reset()"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-5"
         >
+            <input
+                type="text"
+                name="website_hp"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                class="hidden"
+            />
+            <input
+                type="hidden"
+                name="cf_turnstile_response"
+                :value="turnstileToken"
+            />
             <div class="grid gap-4">
                 <div class="grid gap-2">
                     <Label for="name">{{ t('auth.fields.name') }}</Label>
@@ -165,11 +211,23 @@ watchEffect(() => {
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
+                <div v-if="turnstileEnabled" class="grid gap-1.5">
+                    <TurnstileWidget
+                        ref="turnstileRef"
+                        v-model="turnstileToken"
+                        :site-key="turnstileSiteKey"
+                        action="register"
+                    />
+                    <InputError :message="errors.cf_turnstile_response" />
+                </div>
+
                 <Button
                     type="submit"
                     class="mt-2 w-full rounded-lg"
                     tabindex="6"
-                    :disabled="processing"
+                    :disabled="
+                        processing || (turnstileEnabled && !turnstileToken)
+                    "
                     data-test="register-user-button"
                 >
                     <Spinner v-if="processing" />

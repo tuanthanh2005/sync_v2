@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInitials } from '@/composables/useInitials';
+import { isModalRuntimeActive } from '@/composables/useModalRuntimeLock';
 import { formatDateTime } from '@/lib/formatters';
 import {
     index as messagesIndex,
@@ -47,7 +48,12 @@ function submitMessage(): void {
 
 onMounted(() => {
     pollTimer = setInterval(() => {
-        if (document.hidden || !navigator.onLine || !props.activeConversation) {
+        if (
+            document.hidden ||
+            !navigator.onLine ||
+            isModalRuntimeActive.value ||
+            !props.activeConversation
+        ) {
             return;
         }
 

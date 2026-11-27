@@ -559,7 +559,9 @@ function submitAction(reason: string): void {
                         })
                     }}</DialogTitle>
                 </DialogHeader>
-                <div class="max-h-80 space-y-2 overflow-y-auto text-xs">
+                <div
+                    class="sv-scrollbar max-h-80 space-y-2 overflow-y-auto overscroll-contain text-xs"
+                >
                     <div
                         v-for="h in historyPost?.edit_histories || []"
                         :key="h.id"

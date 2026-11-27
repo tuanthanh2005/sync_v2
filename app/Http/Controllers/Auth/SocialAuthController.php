@@ -17,6 +17,7 @@ use App\Services\System\SystemSettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
@@ -86,6 +87,13 @@ class SocialAuthController extends Controller
                 ->withErrors(['email' => __('Unable to sign in with Google. Please try again.')]);
         }
 
+        // Enforce trustworthy email ownership verification from OAuth provider claim when present
+        $rawClaims = property_exists($socialUser, 'user') && is_array($socialUser->user) ? $socialUser->user : [];
+        if (array_key_exists('email_verified', $rawClaims) && ! (bool) $rawClaims['email_verified']) {
+            return redirect()->route('login')
+                ->withErrors(['email' => __('Your Google account email is not verified. Please verify your Google email first.')]);
+        }
+
         $providerId = Str::limit(trim((string) $socialUser->getId()), 100, '');
         $avatarUrl = $this->sanitizeAvatarUrl($socialUser->getAvatar());
         $wasCreated = false;
@@ -120,14 +128,30 @@ class SocialAuthController extends Controller
                     return $existing;
                 }
 
-                // Merge OAuth identity into existing active account or keep Google avatar synced when no custom upload exists
+                // Prevent Pre-Account-Takeover: if an attacker pre-registered an unverified password account
+                // with the victim's email before the victim signed in with verified Google OAuth,
+                // invalidate the unverified password hash and revoke any pre-existing sessions.
+                $wasUnverifiedPasswordAccount = $existing->email_verified_at === null && $existing->has_password;
+
                 if (! $existing->social_provider) {
-                    $existing->forceFill([
+                    $updates = [
                         'social_provider' => $provider,
                         'social_provider_id' => $providerId !== '' ? $providerId : null,
                         'avatar_url' => $existing->avatar_url ?? $avatarUrl,
                         'email_verified_at' => $existing->email_verified_at ?? now(),
-                    ])->save();
+                    ];
+
+                    if ($wasUnverifiedPasswordAccount) {
+                        $updates['password'] = Str::random(40);
+                        $updates['has_password'] = false;
+                        $updates['remember_token'] = Str::random(60);
+                    }
+
+                    $existing->forceFill($updates)->save();
+
+                    if ($wasUnverifiedPasswordAccount && Schema::hasTable('sessions')) {
+                        DB::table('sessions')->where('user_id', $existing->id)->delete();
+                    }
                 } elseif (
                     $existing->social_provider === $provider
                     && $avatarUrl !== null
@@ -140,7 +164,10 @@ class SocialAuthController extends Controller
                 return $existing;
             }
 
-            if (! $this->settings->featureEnabled('feature_registration')) {
+            if (
+                ! $this->settings->featureEnabled('feature_registration')
+                || (bool) $this->settings->get('auth_emergency_registration_pause', false)
+            ) {
                 $registrationPaused = true;
 
                 return null;
@@ -160,12 +187,12 @@ class SocialAuthController extends Controller
                 'has_password' => false,
                 'timezone' => 'Asia/Ho_Chi_Minh',
                 'preferred_locale' => app()->getLocale(),
-                'email_verified_at' => now(),
                 'social_provider' => $provider,
                 'social_provider_id' => $providerId !== '' ? $providerId : null,
                 'avatar_url' => $avatarUrl,
             ]);
 
+            $newUser->email_verified_at = now();
             $newUser->role = UserRole::User;
             $newUser->status = UserStatus::Active;
             $newUser->account_type = AccountType::Human;

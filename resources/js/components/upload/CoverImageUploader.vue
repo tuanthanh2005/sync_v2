@@ -268,7 +268,7 @@ onBeforeUnmount(() => {
                     type="button"
                     size="sm"
                     variant="secondary"
-                    class="h-8 gap-1.5 rounded-lg border border-border/70 bg-card/90 px-2.5 text-xs shadow-xs backdrop-blur-xs hover:bg-card"
+                    class="h-8 gap-1.5 rounded-lg border border-border/70 bg-card/95 px-2.5 text-xs shadow-xs hover:bg-card"
                     :disabled="disabled"
                     @click="openPicker"
                 >
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
                     type="button"
                     size="icon"
                     variant="secondary"
-                    class="size-8 rounded-lg border border-border/70 bg-card/90 text-muted-foreground shadow-xs backdrop-blur-xs hover:bg-card hover:text-destructive"
+                    class="size-8 rounded-lg border border-border/70 bg-card/95 text-muted-foreground shadow-xs hover:bg-card hover:text-destructive"
                     :aria-label="t('upload.removeCover')"
                     :title="t('upload.removeCover')"
                     :disabled="disabled"

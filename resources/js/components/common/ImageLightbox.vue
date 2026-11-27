@@ -2,6 +2,7 @@
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from '@lucide/vue';
 import { onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useModalRootLock } from '@/composables/useModalRuntimeLock';
 
 const { t } = useI18n();
 
@@ -12,6 +13,7 @@ export type LightboxImage = {
 };
 
 const open = defineModel<boolean>('open', { required: true });
+useModalRootLock(() => open.value);
 
 const props = withDefaults(
     defineProps<{
@@ -323,7 +325,7 @@ onBeforeUnmount(() => {
                         t('accessibility.imageNumber', { number: idx + 1 })
                     "
                     :class="[
-                        'h-2 rounded-full transition-all',
+                        'h-2 rounded-full transition-[width,background-color] duration-150',
                         idx === currentIndex
                             ? 'w-6 bg-white'
                             : 'w-2 bg-white/40',

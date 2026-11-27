@@ -40,7 +40,7 @@ class CommunityPolicy
 
     public function update(User $user, Community $community): bool
     {
-        if (! $user->isActive()) {
+        if (! $user->isActive() || ! $user->hasVerifiedEmail()) {
             return false;
         }
 
@@ -49,7 +49,7 @@ class CommunityPolicy
 
     public function moderate(User $user, Community $community): bool
     {
-        if (! $user->isActive()) {
+        if (! $user->isActive() || ! $user->hasVerifiedEmail()) {
             return false;
         }
 

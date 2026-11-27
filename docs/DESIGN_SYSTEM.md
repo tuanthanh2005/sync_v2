@@ -106,8 +106,8 @@ Toàn bộ scroll container của SyncViet tuân thủ một hệ thống scroll
     - **Light Mode**: `--scrollbar-thumb: rgba(100, 116, 139, 0.35)`, `--scrollbar-thumb-hover: rgba(100, 116, 139, 0.65)`.
     - **Dark Mode**: `--scrollbar-thumb: rgba(148, 163, 184, 0.30)`, `--scrollbar-thumb-hover: rgba(148, 163, 184, 0.60)`.
 - **Cơ chế tự ẩn sau 3 giây & Cô lập từng vùng cuộn**:
-    - Dùng `@property --sv-scrollbar-thumb-color` chuyển màu mượt `180ms ease-out` giữa `transparent` và `var(--scrollbar-thumb)` mà không đổi `scrollbar-width` giữa `none` ↔ `thin`.
-    - `initializeAutoHideScrollbars(3000)` ([useAutoHideScrollbar.ts](file:///d:/du_an_multi_IT/resources/js/composables/useAutoHideScrollbar.ts)) gắn **1 passive capturing listener duy nhất** kết hợp `WeakMap` (không `MutationObserver`, không `setInterval`, tự giải phóng khi unmount), hỗ trợ chuột, touchpad, bàn phím, hover vùng mép scrollbar (hỗ trợ RTL) và giữ hiển thị khi đang kéo.
+    - Dùng selector trạng thái trực tiếp trên chính container (`[data-scrolling='true']::-webkit-scrollbar-thumb`, `[data-scrollbar-hover='true']`, `[data-scrollbar-dragging='true']`, `[data-scrollbar-mode='always']`) thay cho `@property` có `inherits: true`, tránh invalidation/RecalcStyle lan xuống cây DOM con trong khi không đổi `scrollbar-width` giữa `none` ↔ `thin`.
+    - `initializeAutoHideScrollbars(3000)` ([useAutoHideScrollbar.ts](file:///d:/du_an_multi_IT/resources/js/composables/useAutoHideScrollbar.ts)) gắn **1 passive capturing listener duy nhất** kết hợp `WeakMap` + cache `MediaQueryList`/`getElementStyleMeta` + throttle `pointermove` (không `MutationObserver`, không `setInterval`, không `getComputedStyle` lặp lại khi di chuột), hỗ trợ chuột, touchpad, bàn phím, hover vùng mép scrollbar (hỗ trợ RTL) và giữ hiển thị khi đang kéo.
     - Mỗi scroll container độc lập hoàn toàn: cuộn News Feed không làm scrollbar của Modal, Sidebar hay Dropdown xuất hiện theo.
     - Component tái sử dụng `AutoHideScrollArea.vue` hỗ trợ cấu hình `hideDelay` (mặc định `3000ms`), `size`, `orientation`, `autoHide`, `alwaysVisible`, `nativeMode`, `overscrollContain`.
 - **Payment / Checkout / Confirmation Modals (`DialogContent structured`)**:
@@ -131,3 +131,17 @@ Toàn bộ scroll container của SyncViet tuân thủ một hệ thống scroll
 - **Reaction Picker & Action Bar (`ReactionPicker.vue`, `PostCard.vue`)**: Bỏ hoàn toàn mũi tên rời cạnh nút cảm xúc; sử dụng popover teleported tự căn biên viewport (Desktop hover 350ms + hover bridge + click nhanh bật/tắt; Mobile long-press 450ms tự hủy khi cuộn; đầy đủ bàn phím/ARIA) với biểu tượng mang bản sắc SyncViet; thanh tương tác thống nhất `Reaction · Comment · Share · Views (Eye + compact number + tooltip chính xác) ... Bookmark`.
 - **Feed Navigation & Search/Explore (`Welcome.vue`, `Search.vue`)**: Tab chủ đề gắn biểu tượng `@lucide/vue` có thanh cuộn ngang mobile tự căn giữa tab đang chọn; `/search` hỗ trợ đủ 6 trạng thái (Explore mặc định, gợi ý realtime debounce 300ms + `AbortController`, skeleton, kết quả phân loại có phân trang, không có kết quả kèm gợi ý tách biệt, lỗi rõ ràng).
 - **Compact Social Footer & Admin CMS (`MiniFooter.vue`, `FullFooter.vue`, `admin/Policies.vue`)**: Footer gọn dạng liên kết cách bởi dấu `·` + dropdown `More ▾` (`modal: false`) + bản quyền + email hỗ trợ thật (chặn triệt để tên miền mẫu `example.com`); trang quản trị CMS đầy đủ tạo/sửa trang, dịch 15 ngôn ngữ, tải ảnh nội bộ, SEO/Open Graph, lịch sử phiên bản & khôi phục, xem trước footer trực tiếp.
+
+## 14. Global Modal Performance, Smooth Scrolling & Interaction Optimization V3.0
+
+1. **Zero Fullscreen Blur & Lightweight Composites**:
+    - `DialogOverlay.vue`, `DialogScrollContent.vue`, `SheetOverlay.vue` dùng nền tối đơn giản `bg-slate-950/50` (tuyệt đối không dùng `backdrop-blur-*` hay `filter: blur()` lên giao diện nền); header/bottom-nav sticky dùng nền semantic đặc `bg-card/98` để cuộn và mở modal luôn đạt GPU fast path.
+    - Bỏ hoàn toàn `transition-all` và `shadow-xl` nặng trên modal/button; chỉ animate `opacity` và `transform` ở thời lượng gọn (`150ms` mở / `100ms` đóng Dialog; `150ms` mở / `120ms` đóng Sheet; `100ms` mở / `75ms` đóng Dropdown/Select/Tooltip) kèm `motion-reduce:animate-none`.
+2. **Standardized Modal Sizing & Native Smooth Scrolling**:
+    - `DialogContent.vue` hỗ trợ `size` (`sm | md | lg | xl | full`) và chế độ `structured` (`flex min-h-0 flex-col overflow-hidden p-0`) để Header/Footer `shrink-0` cố định và Body (`<AutoHideScrollArea class="flex-1">`) là vùng cuộn native duy nhất (`overscroll-contain`), không lồng nhiều vùng cuộn và giữ nguyên momentum/wheel scrolling gốc của trình duyệt/OS.
+3. **Background Activity Pause (`useModalRuntimeLock.ts`)**:
+    - `Dialog.vue`, `Sheet.vue`, `ImageLightbox.vue` tự động đồng bộ qua `useModalRuntimeLock()` khi mở/đóng; trong thời gian modal đang mở, `usePostViewTracker.ts` tạm dừng hẹn giờ dwell + flush batch và `Welcome.vue`/`Messages.vue` tạm bỏ qua tick polling nền, khôi phục sạch khi đóng modal.
+4. **Input, Media & Card DOM Hygiene**:
+    - `PostComposer.vue`: rAF-batched `scheduleTextareaHeight` bỏ forced reflow kép trên mỗi phím gõ (chỉ reset `height = 'auto'` khi thu gọn/xóa chữ hoặc chương trình chèn nội dung), debounce lưu nháp (`350ms` + flush khi đóng/beforeunload), lazy-mount `ConfirmActionDialog`.
+    - `PostCard.vue`: lazy-mount `ImageLightbox`, `Dialog` báo cáo, `ConfirmActionDialog` xóa bài, `BoostPostModal`, `ReactionUsersModal` (`v-if="hasOpened..."`) để không nhân bản cây modal nhàn rỗi theo từng card trên Feed.
+    - `ImageUploadPreview.vue` & `lib/imageUpload.ts`: bật `decoding="async"` và `img.decode()` bất đồng bộ trước khi vẽ Canvas Cropper, giải phóng Object URL đầy đủ khi xóa/unmount.

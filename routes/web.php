@@ -32,6 +32,9 @@ use App\Http\Controllers\Admin\Seo\SeoUrlsAndSitemapsController;
 use App\Http\Controllers\Admin\SystemSettingsController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Ads\AdCampaignController;
+use App\Http\Controllers\Auth\EmailVerificationChallengeController;
+use App\Http\Controllers\Auth\PendingRegistrationController;
+use App\Http\Controllers\Auth\SecureForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Billing\PaymentWebhookController;
 use App\Http\Controllers\Billing\WalletController;
@@ -112,6 +115,37 @@ Route::prefix('auth/{provider}')
         Route::get('redirect', [SocialAuthController::class, 'redirect'])->name('auth.social.redirect');
         Route::get('callback', [SocialAuthController::class, 'callback'])->name('auth.social.callback');
     });
+
+// ─── Hardened Authentication, Pending Registration & OTP Verification V1.0 ───
+Route::post('/register', [PendingRegistrationController::class, 'store'])
+    ->middleware(['guest', 'throttle:register'])
+    ->name('register.store');
+
+Route::post('/forgot-password', [SecureForgotPasswordController::class, 'store'])
+    ->middleware(['guest', 'throttle:15,1'])
+    ->name('password.email');
+
+Route::get('/email/verify', [EmailVerificationChallengeController::class, 'show'])
+    ->name('verification.notice');
+Route::post('/email/verify/otp', [EmailVerificationChallengeController::class, 'verifyOtp'])
+    ->middleware('throttle:20,1')
+    ->name('auth.verify.otp');
+Route::post('/email/verify/resend', [EmailVerificationChallengeController::class, 'resend'])
+    ->middleware('throttle:10,1')
+    ->name('auth.verify.resend');
+Route::post('/email/verify/change-email', [EmailVerificationChallengeController::class, 'changeEmail'])
+    ->middleware('throttle:10,1')
+    ->name('auth.verify.change-email');
+Route::post('/email/verify/cancel', [EmailVerificationChallengeController::class, 'cancel'])
+    ->middleware('throttle:10,1')
+    ->name('auth.verify.cancel');
+Route::get('/verify-email/confirm/{token}', [EmailVerificationChallengeController::class, 'showConfirmLink'])
+    ->where('token', '[a-f0-9]{64}')
+    ->name('auth.verify.confirm.show');
+Route::post('/verify-email/confirm/{token}', [EmailVerificationChallengeController::class, 'confirmLink'])
+    ->where('token', '[a-f0-9]{64}')
+    ->middleware('throttle:15,1')
+    ->name('auth.verify.confirm.store');
 
 Route::get('/policies/{policyPage:slug}', [PolicyPageController::class, 'show'])
     ->name('policies.show');
@@ -867,6 +901,24 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::delete('/security/sessions/{sessionId}', [SecurityAuditController::class, 'revokeSession'])
                 ->middleware('permission:security.manage,users.suspend')
                 ->name('security.sessions.revoke');
+            Route::post('/security/auth-protection/settings', [SecurityAuditController::class, 'updateAuthProtection'])
+                ->middleware('permission:security.manage,settings.update')
+                ->name('security.auth-protection.settings');
+            Route::post('/security/auth-protection/emergency-pause', [SecurityAuditController::class, 'toggleEmergencyPause'])
+                ->middleware('permission:security.manage,settings.update')
+                ->name('security.auth-protection.emergency-pause');
+            Route::post('/security/auth-protection/disposable-domains', [SecurityAuditController::class, 'storeDisposableDomain'])
+                ->middleware('permission:security.manage,settings.update')
+                ->name('security.auth-protection.disposable-domains.store');
+            Route::delete('/security/auth-protection/disposable-domains/{disposableEmailDomain}', [SecurityAuditController::class, 'destroyDisposableDomain'])
+                ->middleware('permission:security.manage,settings.update')
+                ->name('security.auth-protection.disposable-domains.destroy');
+            Route::post('/security/auth-protection/remediate-unverified', [SecurityAuditController::class, 'remediateUnverified'])
+                ->middleware('permission:security.manage')
+                ->name('security.auth-protection.remediate-unverified');
+            Route::post('/security/auth-protection/cleanup-pending', [SecurityAuditController::class, 'cleanupPending'])
+                ->middleware('permission:security.manage')
+                ->name('security.auth-protection.cleanup-pending');
 
             Route::get('/backups', [SecurityAuditController::class, 'backups'])
                 ->middleware('permission:backups.view')

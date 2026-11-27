@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Form, Head, setLayoutProps, usePage } from '@inertiajs/vue3';
-import { computed, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+import TurnstileWidget from '@/components/auth/TurnstileWidget.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -14,13 +15,16 @@ import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
-defineProps<{
+const props = defineProps<{
     status?: string;
     canResetPassword: boolean;
+    requireTurnstile?: boolean;
 }>();
 
 const { t } = useI18n();
 const page = usePage();
+const turnstileToken = ref('');
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget> | null>(null);
 
 const pageErrors = computed(
     () => (page.props.errors ?? {}) as Record<string, string | undefined>,
@@ -31,7 +35,22 @@ const showGoogleLogin = computed(
 );
 
 const showRegistration = computed(
-    () => page.props.systemSettings?.features?.registration ?? true,
+    () =>
+        (page.props.systemSettings?.features?.registration ?? true) &&
+        !page.props.systemSettings?.auth?.emergencyRegistrationPause,
+);
+
+const turnstileSiteKey = computed(
+    () => page.props.systemSettings?.auth?.turnstileSiteKey ?? '',
+);
+
+const showTurnstile = computed(
+    () =>
+        Boolean(
+            props.requireTurnstile || pageErrors.value.cf_turnstile_response,
+        ) &&
+        Boolean(page.props.systemSettings?.auth?.turnstileEnabled) &&
+        turnstileSiteKey.value !== '',
 );
 
 watchEffect(() => {
@@ -92,9 +111,15 @@ watchEffect(() => {
         <Form
             v-bind="store.form()"
             :reset-on-success="['password']"
+            @error="turnstileRef?.reset()"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-5"
         >
+            <input
+                type="hidden"
+                name="cf_turnstile_response"
+                :value="turnstileToken"
+            />
             <div class="grid gap-5">
                 <div class="grid gap-2">
                     <Label for="email">{{ t('auth.fields.email') }}</Label>
@@ -145,11 +170,26 @@ watchEffect(() => {
                     </Label>
                 </div>
 
+                <div v-if="showTurnstile" class="grid gap-1.5">
+                    <TurnstileWidget
+                        ref="turnstileRef"
+                        v-model="turnstileToken"
+                        :site-key="turnstileSiteKey"
+                        action="login"
+                    />
+                    <InputError
+                        :message="
+                            errors.cf_turnstile_response ||
+                            pageErrors.cf_turnstile_response
+                        "
+                    />
+                </div>
+
                 <Button
                     type="submit"
                     class="mt-2 w-full rounded-lg"
                     :tabindex="4"
-                    :disabled="processing"
+                    :disabled="processing || (showTurnstile && !turnstileToken)"
                     data-test="login-button"
                 >
                     <Spinner v-if="processing" />

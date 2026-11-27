@@ -17,6 +17,16 @@ defineOptions({
     inheritAttrs: false,
 });
 
+const MODAL_SIZE_CLASSES = {
+    sm: 'sm:max-w-md',
+    md: 'sm:max-w-lg',
+    lg: 'sm:max-w-2xl',
+    xl: 'sm:max-w-4xl',
+    full: 'sm:max-w-[calc(100vw-2rem)]',
+} as const;
+
+export type DialogSize = keyof typeof MODAL_SIZE_CLASSES;
+
 const props = withDefaults(
     defineProps<
         DialogContentProps & {
@@ -28,11 +38,14 @@ const props = withDefaults(
              * button and action buttons permanently accessible).
              */
             structured?: boolean;
+            /** Standard modal width preset (overridable via class prop). */
+            size?: DialogSize;
         }
     >(),
     {
         showCloseButton: true,
         structured: false,
+        size: 'md',
     },
 );
 const emits = defineEmits<DialogContentEmits>();
@@ -42,6 +55,7 @@ const delegatedProps = reactiveOmit(
     'class',
     'showCloseButton',
     'structured',
+    'size',
 );
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);
@@ -56,9 +70,10 @@ const { t } = useI18n();
             v-bind="{ ...$attrs, ...forwarded }"
             :class="
                 cn(
-                    'bg-card text-card-foreground border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] w-full rounded-t-2xl border shadow-xl duration-200 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom sm:inset-auto sm:top-[50%] sm:left-[50%] sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-2xl sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0',
+                    'bg-card text-card-foreground border-border data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] w-full rounded-t-2xl border shadow-lg duration-150 data-[state=closed]:duration-100 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom motion-reduce:animate-none sm:inset-auto sm:top-[50%] sm:left-[50%] sm:max-h-[88dvh] sm:w-[calc(100%-2rem)] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-2xl sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95 sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=open]:slide-in-from-bottom-0',
+                    MODAL_SIZE_CLASSES[props.size],
                     props.structured
-                        ? 'flex flex-col overflow-hidden p-0'
+                        ? 'flex min-h-0 flex-col overflow-hidden p-0'
                         : 'sv-scrollbar grid gap-4 overflow-y-auto overscroll-contain p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] sm:p-6',
                     props.class,
                 )

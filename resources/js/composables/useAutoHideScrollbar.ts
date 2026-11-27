@@ -27,17 +27,79 @@ type GlobalContainerState = {
 
 const DEFAULT_HIDE_DELAY_MS = 3000;
 const EDGE_HOVER_PROXIMITY_PX = 14;
+const STYLE_CACHE_TTL_MS = 600;
+const POINTER_THROTTLE_MS = 48;
+
+type CachedElementStyle = {
+    checkedAt: number;
+    allowsVertical: boolean;
+    allowsHorizontal: boolean;
+    rtl: boolean;
+};
 
 const globalStates = new WeakMap<HTMLElement, GlobalContainerState>();
+const styleCache = new WeakMap<HTMLElement, CachedElementStyle>();
 let globalInitialized = false;
 let globalCleanup: (() => void) | null = null;
+let finePointerQuery: MediaQueryList | null = null;
+let finePointerCached: boolean | null = null;
+let finePointerListener: ((e: MediaQueryListEvent) => void) | null = null;
 
 function isFinePointerDevice(): boolean {
     if (typeof window === 'undefined' || !window.matchMedia) {
         return false;
     }
 
-    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (finePointerCached !== null) {
+        return finePointerCached;
+    }
+
+    finePointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+    finePointerCached = finePointerQuery.matches;
+    finePointerListener = (e: MediaQueryListEvent) => {
+        finePointerCached = e.matches;
+    };
+    finePointerQuery.addEventListener('change', finePointerListener);
+
+    return finePointerCached;
+}
+
+function getElementStyleMeta(el: HTMLElement): CachedElementStyle {
+    const now = performance.now();
+    const cached = styleCache.get(el);
+    if (cached && now - cached.checkedAt < STYLE_CACHE_TTL_MS) {
+        return cached;
+    }
+
+    // Fast path for SyncViet explicit scroll containers (avoids getComputedStyle reflow cost)
+    if (
+        el.dataset.svScrollArea === 'true' ||
+        el.dataset.svScrollable === 'true' ||
+        el.classList.contains('sv-scrollbar')
+    ) {
+        const meta: CachedElementStyle = {
+            checkedAt: now,
+            allowsVertical: true,
+            allowsHorizontal: true,
+            rtl: el.dir === 'rtl' || document.documentElement.dir === 'rtl',
+        };
+        styleCache.set(el, meta);
+        return meta;
+    }
+
+    const style = window.getComputedStyle(el);
+    const meta: CachedElementStyle = {
+        checkedAt: now,
+        allowsVertical:
+            style.overflowY === 'auto' || style.overflowY === 'scroll',
+        allowsHorizontal:
+            style.overflowX === 'auto' || style.overflowX === 'scroll',
+        rtl:
+            style.direction === 'rtl' || document.documentElement.dir === 'rtl',
+    };
+    styleCache.set(el, meta);
+
+    return meta;
 }
 
 function getOrCreateState(el: HTMLElement): GlobalContainerState {
@@ -103,7 +165,9 @@ function markElementScrolling(el: HTMLElement, defaultDelayMs: number): void {
         el.dataset.svScrollable = 'true';
     }
 
-    el.dataset.scrolling = 'true';
+    if (el.dataset.scrolling !== 'true') {
+        el.dataset.scrolling = 'true';
+    }
     scheduleHide(el, resolveDelay(el, defaultDelayMs));
 }
 
@@ -121,15 +185,11 @@ function isScrollableElement(el: HTMLElement): boolean {
         return false;
     }
 
-    const style = window.getComputedStyle(el);
-    const verticalScrollable =
-        hasVertical &&
-        (style.overflowY === 'auto' || style.overflowY === 'scroll');
-    const horizontalScrollable =
-        hasHorizontal &&
-        (style.overflowX === 'auto' || style.overflowX === 'scroll');
-
-    return verticalScrollable || horizontalScrollable;
+    const meta = getElementStyleMeta(el);
+    return (
+        (hasVertical && meta.allowsVertical) ||
+        (hasHorizontal && meta.allowsHorizontal)
+    );
 }
 
 function isPointerNearScrollbarEdge(
@@ -138,12 +198,16 @@ function isPointerNearScrollbarEdge(
     clientY: number,
 ): boolean {
     const isRtl =
-        window.getComputedStyle(el).direction === 'rtl' ||
-        document.documentElement.dir === 'rtl';
+        el === document.documentElement
+            ? document.documentElement.dir === 'rtl'
+            : getElementStyleMeta(el).rtl;
 
     if (el === document.documentElement) {
         const hasV = el.scrollHeight > el.clientHeight + 1;
         const hasH = el.scrollWidth > el.clientWidth + 1;
+        if (!hasV && !hasH) {
+            return false;
+        }
         const nearVertical =
             hasV &&
             (isRtl
@@ -260,12 +324,49 @@ export function initializeAutoHideScrollbars(
         markElementScrolling(scrollEl, defaultDelayMs);
     };
 
+    let lastPointerCheckAt = 0;
+
     const processPointerMove = (): void => {
         pointerMoveFrame = null;
         const event = lastPointerEvent;
         lastPointerEvent = null;
 
         if (!event || !isFinePointerDevice()) {
+            return;
+        }
+
+        const now = performance.now();
+        if (!hoveredElement && now - lastPointerCheckAt < POINTER_THROTTLE_MS) {
+            return;
+        }
+        lastPointerCheckAt = now;
+
+        // Fast check: keep current hovered scrollbar if cursor remains on its edge
+        if (
+            hoveredElement &&
+            hoveredElement.isConnected &&
+            isPointerNearScrollbarEdge(
+                hoveredElement,
+                event.clientX,
+                event.clientY,
+            )
+        ) {
+            return;
+        }
+
+        const docEl = document.documentElement;
+        if (
+            docEl.scrollHeight > docEl.clientHeight + 1 &&
+            isPointerNearScrollbarEdge(docEl, event.clientX, event.clientY)
+        ) {
+            if (hoveredElement !== docEl) {
+                clearHover(hoveredElement);
+                hoveredElement = docEl;
+                const state = getOrCreateState(docEl);
+                state.hovering = true;
+                clearContainerTimer(state);
+                docEl.dataset.scrollbarHover = 'true';
+            }
             return;
         }
 
@@ -277,16 +378,6 @@ export function initializeAutoHideScrollbars(
             isPointerNearScrollbarEdge(candidate, event.clientX, event.clientY)
         ) {
             nextHovered = candidate;
-        } else if (
-            candidate !== document.documentElement &&
-            isScrollableElement(document.documentElement) &&
-            isPointerNearScrollbarEdge(
-                document.documentElement,
-                event.clientX,
-                event.clientY,
-            )
-        ) {
-            nextHovered = document.documentElement;
         }
 
         if (hoveredElement !== nextHovered) {
@@ -482,14 +573,20 @@ export function useAutoHideScrollbar(
             return;
         }
 
-        isScrolling.value = true;
-        boundEl.dataset.scrolling = 'true';
+        if (!isScrolling.value) {
+            isScrolling.value = true;
+        }
+        if (boundEl.dataset.scrolling !== 'true') {
+            boundEl.dataset.scrolling = 'true';
+        }
         resetTimer();
     }
 
     function onScroll(): void {
         show();
     }
+
+    let containerPointerCheckAt = 0;
 
     function onPointerMove(event: PointerEvent): void {
         if (
@@ -498,6 +595,15 @@ export function useAutoHideScrollbar(
         ) {
             return;
         }
+
+        const now = performance.now();
+        if (
+            !isHovering.value &&
+            now - containerPointerCheckAt < POINTER_THROTTLE_MS
+        ) {
+            return;
+        }
+        containerPointerCheckAt = now;
 
         const near = isPointerNearScrollbarEdge(
             boundEl,

@@ -3,9 +3,11 @@
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\User;
+use App\Notifications\AuthOtpVerificationNotification;
 use App\Policies\AccountPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 
 uses(RefreshDatabase::class);
@@ -107,21 +109,46 @@ test('banned users are logged out when visiting protected routes', function (): 
 });
 
 test('registration generates unique lowercase username and enforces server-side default role and status', function (): void {
+    Notification::fake();
+
     $this->post(route('register.store'), [
         'name' => 'Nguyễn Văn Hùng',
         'email' => 'hung@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => 'SyncViet#2026Strong!',
+        'password_confirmation' => 'SyncViet#2026Strong!',
         'role' => 'admin',
         'status' => 'banned',
-    ])->assertRedirect(route('dashboard', absolute: false));
+    ])->assertRedirect(route('verification.notice', absolute: false));
+
+    expect(User::query()->where('email', 'hung@example.com')->exists())->toBeFalse();
+
+    $otp = null;
+    Notification::assertSentOnDemand(
+        AuthOtpVerificationNotification::class,
+        function (AuthOtpVerificationNotification $notification, array $channels, object $notifiable) use (&$otp): bool {
+            $mail = $notification->toMail($notifiable);
+            foreach ($mail->introLines as $line) {
+                if (is_string($line) && preg_match('/\*\*(\d{6})\*\*/', $line, $m) === 1) {
+                    $otp = $m[1];
+                }
+            }
+
+            return true;
+        },
+    );
+
+    expect($otp)->toMatch('/^\d{6}$/');
+
+    $this->post(route('auth.verify.otp'), ['code' => $otp])
+        ->assertRedirect(route('dashboard', absolute: false));
 
     $user = User::query()->where('email', 'hung@example.com')->firstOrFail();
 
     expect($user->username)->toBe('nguyen_van_hung')
         ->and($user->role)->toBe(UserRole::User)
         ->and($user->status)->toBe(UserStatus::Active)
-        ->and($user->timezone)->toBe('Asia/Ho_Chi_Minh');
+        ->and($user->timezone)->toBe('Asia/Ho_Chi_Minh')
+        ->and($user->email_verified_at)->not->toBeNull();
 });
 
 test('profile update validates username format and saves timezone', function (): void {

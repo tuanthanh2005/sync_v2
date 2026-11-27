@@ -72,6 +72,7 @@ const showProgressBar = computed(
             <img
                 :src="src"
                 :alt="alt || fileName || t('upload.previewAlt')"
+                decoding="async"
                 class="size-full object-cover"
             />
 

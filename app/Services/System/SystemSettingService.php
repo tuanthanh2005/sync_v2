@@ -107,6 +107,24 @@ class SystemSettingService
             'adsense_allowed_pages' => ['group' => 'adsense', 'type' => 'json', 'value' => ['home', 'explore', 'community', 'post'], 'is_public' => true],
             'adsense_consent_required' => ['group' => 'adsense', 'type' => 'boolean', 'value' => true, 'is_public' => true],
             'adsense_ads_txt_line' => ['group' => 'adsense', 'type' => 'string', 'value' => '', 'is_public' => false],
+
+            // Authentication Security, Email Verification & Anti-Bot Protection V1.0
+            'auth_emergency_registration_pause' => ['group' => 'auth_security', 'type' => 'boolean', 'value' => false, 'is_public' => true],
+            'auth_turnstile_enabled' => ['group' => 'auth_security', 'type' => 'boolean', 'value' => (bool) config('syncviet.auth_security.turnstile_enabled', false), 'is_public' => true],
+            'auth_turnstile_site_key' => ['group' => 'auth_security', 'type' => 'string', 'value' => (string) config('syncviet.auth_security.turnstile_site_key', ''), 'is_public' => true],
+            'auth_turnstile_secret_encrypted' => ['group' => 'auth_security', 'type' => 'string', 'value' => '', 'is_public' => false],
+            'auth_otp_expire_minutes' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.otp_expire_minutes', 5), 'is_public' => true],
+            'auth_otp_resend_cooldown' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.otp_resend_cooldown_seconds', 60), 'is_public' => true],
+            'auth_otp_max_attempts' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.otp_max_attempts', 5), 'is_public' => false],
+            'auth_otp_max_per_email_hour' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.otp_max_per_email_hour', 5), 'is_public' => false],
+            'auth_global_otp_hourly_budget' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.global_otp_hourly_budget', 300), 'is_public' => false],
+            'auth_register_limit_10min' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.register_limit_per_10min', 3), 'is_public' => false],
+            'auth_register_limit_day' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.register_limit_per_day', 10), 'is_public' => false],
+            'auth_login_failed_limit_min' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.login_failed_limit_per_min', 5), 'is_public' => false],
+            'auth_forgot_password_limit_15min' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.forgot_password_limit_15min', 3), 'is_public' => false],
+            'auth_disposable_email_protection' => ['group' => 'auth_security', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'auth_suspicious_risk_threshold' => ['group' => 'auth_security', 'type' => 'integer', 'value' => 50, 'is_public' => false],
+            'auth_pending_retention_hours' => ['group' => 'auth_security', 'type' => 'integer', 'value' => (int) config('syncviet.auth_security.pending_retention_hours', 24), 'is_public' => false],
         ];
     }
 
@@ -216,6 +234,14 @@ class SystemSettingService
                 'trackGuests' => (bool) $all['views_track_guests'],
                 'trackAi' => (bool) $all['views_track_ai'],
             ],
+            'auth' => [
+                'mandatoryEmailVerification' => true,
+                'emergencyRegistrationPause' => (bool) $all['auth_emergency_registration_pause'],
+                'turnstileEnabled' => (bool) $all['auth_turnstile_enabled'] && trim((string) $all['auth_turnstile_site_key']) !== '',
+                'turnstileSiteKey' => trim((string) $all['auth_turnstile_site_key']),
+                'otpExpireMinutes' => max(3, min(15, (int) $all['auth_otp_expire_minutes'])),
+                'otpResendCooldown' => max(30, min(300, (int) $all['auth_otp_resend_cooldown'])),
+            ],
         ];
     }
 
@@ -245,7 +271,22 @@ class SystemSettingService
                 'views_min_visible_ratio' => [10, 100],
                 'views_dedup_window_seconds' => [30, 86_400],
                 'views_retention_days' => [7, 180],
+                'auth_otp_expire_minutes' => [3, 15],
+                'auth_otp_resend_cooldown' => [30, 300],
+                'auth_otp_max_attempts' => [3, 10],
+                'auth_otp_max_per_email_hour' => [2, 15],
+                'auth_global_otp_hourly_budget' => [20, 5000],
+                'auth_register_limit_10min' => [1, 20],
+                'auth_register_limit_day' => [3, 50],
+                'auth_login_failed_limit_min' => [3, 20],
+                'auth_forgot_password_limit_15min' => [1, 10],
+                'auth_suspicious_risk_threshold' => [20, 100],
+                'auth_pending_retention_hours' => [6, 72],
             ];
+
+            if ($key === 'feature_require_email_verification' && app()->isProduction()) {
+                $rawValue = true;
+            }
 
             $meta = $defaults[$key];
             $storedValue = match ($meta['type']) {

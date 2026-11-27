@@ -257,31 +257,7 @@
 /* ==========================================================================
    Global Modern Auto-Hide Scrollbar System (macOS-inspired, Zero Layout Shift)
    ========================================================================== */
-@property --sv-scrollbar-thumb-color {
-    syntax: '<color>';
-    inherits: true;
-    initial-value: transparent;
-}
-
 @media (hover: hover) and (pointer: fine) {
-    html,
-    [data-sv-scroll-area='true'],
-    [data-sv-scrollable='true'],
-    .sv-scrollbar {
-        transition: --sv-scrollbar-thumb-color 180ms ease-out;
-    }
-
-    html[data-scrolling='true'],
-    html[data-scrollbar-hover='true'],
-    html[data-scrollbar-dragging='true'],
-    html[data-scrollbar-mode='always'],
-    [data-scrolling='true'],
-    [data-scrollbar-hover='true'],
-    [data-scrollbar-dragging='true'],
-    [data-scrollbar-mode='always'] {
-        --sv-scrollbar-thumb-color: var(--scrollbar-thumb);
-    }
-
     /* WebKit / Chromium / Edge / Safari / Opera: 4px visual thumb -> 6px on hover with 0px shift */
     :not(.no-scrollbar):not([data-scrollbar-mode='native'])::-webkit-scrollbar {
         width: var(--scrollbar-size, 6px);
@@ -316,8 +292,23 @@
         border-radius: var(--scrollbar-radius, 9999px);
         border: 1px solid transparent;
         background-clip: content-box;
-        background-color: var(--sv-scrollbar-thumb-color);
+        background-color: transparent;
         box-shadow: none;
+    }
+
+    [data-scrolling='true']:not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb,
+    [data-scrollbar-hover='true']:not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb,
+    [data-scrollbar-dragging='true']:not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb,
+    [data-scrollbar-mode='always']:not(.no-scrollbar):not(
+            [data-scrollbar-mode='native']
+        )::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
     }
 
     :not(.no-scrollbar):not(
@@ -337,17 +328,42 @@
         [data-sv-scrollable='true'],
         .sv-scrollbar {
             scrollbar-width: thin;
-            scrollbar-color: var(--sv-scrollbar-thumb-color) transparent;
+            scrollbar-color: transparent transparent;
+        }
+
+        html[data-scrolling='true'],
+        html[data-scrollbar-hover='true'],
+        html[data-scrollbar-dragging='true'],
+        html[data-scrollbar-mode='always'],
+        [data-sv-scroll-area='true'][data-scrolling='true'],
+        [data-sv-scroll-area='true'][data-scrollbar-hover='true'],
+        [data-sv-scroll-area='true'][data-scrollbar-dragging='true'],
+        [data-sv-scroll-area='true'][data-scrollbar-mode='always'],
+        [data-sv-scrollable='true'][data-scrolling='true'],
+        [data-sv-scrollable='true'][data-scrollbar-hover='true'],
+        [data-sv-scrollable='true'][data-scrollbar-dragging='true'],
+        .sv-scrollbar[data-scrolling='true'],
+        .sv-scrollbar[data-scrollbar-hover='true'],
+        .sv-scrollbar[data-scrollbar-dragging='true'] {
+            scrollbar-color: var(--scrollbar-thumb) transparent;
         }
     }
 
     /* Respect OS High Contrast / Forced Colors accessibility preferences */
     @media (forced-colors: active), (prefers-contrast: more) {
-        html,
-        [data-sv-scroll-area='true'],
-        [data-sv-scrollable='true'],
-        .sv-scrollbar {
-            --sv-scrollbar-thumb-color: var(--scrollbar-thumb-hover);
+        :not(.no-scrollbar):not(
+                [data-scrollbar-mode='native']
+            )::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb-hover);
+        }
+
+        @supports not selector(::-webkit-scrollbar) {
+            html,
+            [data-sv-scroll-area='true'],
+            [data-sv-scrollable='true'],
+            .sv-scrollbar {
+                scrollbar-color: var(--scrollbar-thumb-hover) transparent;
+            }
         }
     }
 }

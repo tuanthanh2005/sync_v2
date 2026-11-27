@@ -221,6 +221,10 @@ class SeoQualityGateService
             return $this->excluded('user_inactive_or_banned', 0);
         }
 
+        if (! $user->hasVerifiedEmail()) {
+            return $this->excluded('unverified_user', 0);
+        }
+
         $user->loadMissing('profile');
 
         $hasBio = $user->profile !== null && (
