@@ -122,7 +122,9 @@
                 "business": "商业",
                 "finance": "理财变现",
                 "qa": "问答",
-                "marketplace": "集市"
+                "marketplace": "集市",
+                "recommended": "推荐",
+                "following": "关注"
             },
             "newPostsAvailable": "有新帖子可查看"
         },
@@ -152,7 +154,9 @@
             "addPoll": "投票",
             "discardDraftConfirm": "放弃",
             "discardDraftDesc": "您未保存的文字、图片或投票选项将被清空。",
-            "discardDraftTitle": "放弃帖子草稿？"
+            "discardDraftTitle": "放弃帖子草稿？",
+            "rateLimitNotice": "您发布得过于频繁。下方已完整保留您正在编辑的内容。",
+            "retryInSeconds": "可在 {seconds} 秒后重试。"
         },
         "empty": {
             "title": "探索 {brand} 社区",
@@ -217,6 +221,14 @@
             "invalidViews": "无效 / 已过滤浏览",
             "legacyViews": "历史数据 / 未分类",
             "aiSeparationNotice": "为保证透明，总浏览量包含合规的 AI 活动。AI 浏览严格不计入独立真实浏览者、DAU/MAU、真实自然触达或付费广告展示次数。"
+        },
+        "editedBadge": "已编辑",
+        "hideFromFeed": "从我的信息流隐藏",
+        "moderationBanner": {
+            "pendingTitle": "等待内容审核 — 仅您本人与审核团队可见",
+            "rejectedTitle": "审核未通过 — 已从公开信息流隐藏",
+            "hiddenTitle": "已被内容审核隐藏 — 仅您本人与工作人员可见",
+            "appealLink": "提交申诉"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "多语言翻译与辅助",
             "growthOverview": "增长概览",
             "growthReferrals": "推荐与反作弊",
-            "growthCampaigns": "活动与徽章"
+            "growthCampaigns": "活动与徽章",
+            "postFeedSettings": "发帖与信息流设置"
         },
         "common": {
             "search": "搜索...",
@@ -756,7 +769,8 @@
             "yes": "是",
             "no": "否",
             "enabled": "已启用",
-            "disabled": "已禁用"
+            "disabled": "已禁用",
+            "saveChanges": "保存更改"
         },
         "dashboard": {
             "title": "平台运营仪表盘",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "切换认证状态",
                 "transfer_owner": "转让所有权",
                 "unlock_comments": "解锁评论",
-                "unpin": "取消置顶"
+                "unpin": "取消置顶",
+                "approve": "批准帖子",
+                "reject": "拒绝帖子"
             },
             "badgeClosedJoins": "已关闭加入",
             "badgeContentWarning": "内容警告：{label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "系统",
             "transferOwnerUsernameLabel": "新创建者用户名 ({'@'}username)",
             "unknownAuthor": "未知",
-            "usernamePlaceholder": "用户名"
+            "usernamePlaceholder": "用户名",
+            "postFilters": {
+                "rejected": "已拒绝"
+            },
+            "riskScoreBadge": "风险评分: {score}/100"
         },
         "financeExtra": {
             "colAmount": "金额",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "翻译后的摘要",
             "translationTitleLabel": "翻译后的标题",
             "uploadAndInsert": "上传并插入"
+        },
+        "postFeed": {
+            "title": "发帖、反垃圾与信息流排序设置",
+            "subtitle": "配置信任等级限额、反垃圾阈值、信息流分发比例，并运行纯数学排名模拟。",
+            "resetAll": "全部恢复默认值",
+            "resetSection": "重置此板块",
+            "resetConfirmTitle": "恢复默认策略设置？",
+            "resetConfirmDesc": "所选规则将恢复为 SysNoxis 基准值，并记录审计日志。",
+            "resetConfirmButton": "恢复默认值",
+            "simulatorError": "无法计算排名模拟，请检查输入的数字。",
+            "stats": {
+                "published24h": "已发布 (24小时)",
+                "pendingReview": "待审核",
+                "rateLimited24h": "触发限流 (24小时)",
+                "duplicatesBlocked24h": "拦截重复 (24小时)"
+            },
+            "tabs": {
+                "publishing": "发帖限额与配额",
+                "antispam": "反垃圾策略",
+                "moderation": "内容审核",
+                "feed": "信息流与多样性",
+                "trending": "热门权重公式",
+                "simulator": "排名模拟器",
+                "telemetry": "垃圾事件与审计日志"
+            },
+            "publishing": {
+                "title": "按信任等级划分的发帖配额与保护",
+                "subtitle": "新注册账号在安全观察期内（即使已购买 Premium）仍适用新手安全限额。",
+                "enablePosting": "启用发布新帖功能",
+                "maxPostLength": "最大帖子字符数",
+                "maxCommentLength": "最大评论字符数",
+                "editsPerDay": "24小时内最大编辑次数",
+                "newMemberAgeDays": "新会员观察期（天）",
+                "tier": "信任等级",
+                "posts24h": "发帖数 / 24小时",
+                "posts60m": "发帖数 / 60分钟",
+                "minInterval": "最小发帖间隔 (秒)",
+                "comments24h": "评论数 / 24小时",
+                "maxImages": "每帖最多图片数",
+                "tiers": {
+                    "new": "新会员",
+                    "standard": "标准会员",
+                    "premium": "Premium 会员"
+                }
+            },
+            "antispam": {
+                "title": "反垃圾与重复内容检测规则",
+                "subtitle": "评估突发刷屏、完全/近似重复内容、过多链接、提及与标签风险。",
+                "enableAntiSpam": "启用反垃圾风险引擎",
+                "enableDuplicate": "启用重复及近似内容防护",
+                "duplicateWindow": "重复检测时间窗口（小时）",
+                "similarityThreshold": "近似重复相似度阈值 (%)",
+                "mediumThreshold": "中风险阈值",
+                "highThreshold": "高风险阈值（转人工审核）",
+                "violationThreshold": "严重违规阈值（自动拒绝）",
+                "maxLinks": "每帖链接数软上限",
+                "maxMentions": "每帖提及人数软上限",
+                "maxHashtags": "每帖 #话题标签软上限"
+            },
+            "moderation": {
+                "title": "内容审核流程与自动化策略",
+                "subtitle": "控制高风险帖子何时进入人工复审以及可疑链接/违规内容的处理方式。",
+                "riskBasedEnabled": "启用基于风险分数的自动待审",
+                "requireManualAll": "强制所有会员新帖需经人工审核",
+                "aiAssistEnabled": "启用可选 AI 辅助审核",
+                "reviewThreshold": "人工审核触发分数线",
+                "suspiciousLinkAction": "可疑或短链处置动作",
+                "violationAction": "严重违规处置动作",
+                "actions": {
+                    "allow": "允许（仅计入风险分）",
+                    "flag": "标记并转审核",
+                    "pendingReview": "送入待审核队列",
+                    "reject": "自动拒绝发布"
+                }
+            },
+            "feed": {
+                "title": "信息流排序、多样性与冷启动公平分发",
+                "subtitle": "管理信息流标签、作者/分类去重上限以及 70/20/10 自然流分配比例。",
+                "enableTrending": "启用热门 (Trending) 标签页",
+                "enableRecommended": "启用推荐 (Recommended) 标签页",
+                "enableFreshDiscovery": "启用新帖与冷启动探索配额位",
+                "categoryDiversity": "开启相邻帖子的分类多样性打散",
+                "candidateWindowHours": "热门候选池时间范围（小时）",
+                "refreshIntervalMinutes": "分数重算间隔（分钟）",
+                "pageSize": "每页信息流加载帖数",
+                "authorDiversityMax": "单页同一作者最多出现帖数",
+                "adSpacing": "赞助帖展示间隔（条数）",
+                "allocationRankingPct": "高质量排序占比 (%)",
+                "allocationFreshPct": "新帖曝光占比 (%)",
+                "allocationDiscoveryPct": "跨主题探索占比 (%)",
+                "allocationSummary": "总分配合计: {sum}%（系统在混合推荐流时将按比例自动归一化）。"
+            },
+            "trending": {
+                "title": "自然热门分公式与防刷机制",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp。严格排除广告与 AI 信号。",
+                "weightHumanView": "权重：自然真人浏览",
+                "weightReaction": "权重：有效互动表情",
+                "weightComment": "权重：有效评论",
+                "weightBookmark": "权重：有效收藏",
+                "weightShare": "权重：有效分享",
+                "decayBaseHours": "时间衰减基数（小时）",
+                "decayExponent": "时间衰减指数",
+                "perUserCap": "单用户24小时计分信号上限",
+                "viewEngagementRatio": "异常浏览量抑制比（浏览/互动）"
+            },
+            "simulator": {
+                "title": "热门分纯计算模拟器（零数据库写入）",
+                "subtitle": "使用假设的互动数值预览当前权重与时间衰减公式效果，绝不修改任何真实帖子数据。",
+                "humanViews": "自然浏览量",
+                "reactions": "互动表情",
+                "comments": "评论数",
+                "bookmarks": "收藏数",
+                "shares": "分享数",
+                "ageHours": "发布时长（小时）",
+                "runButton": "计算模拟分数",
+                "trendingScore": "最终热门分",
+                "rawScore": "原始互动分",
+                "decayFactor": "时间衰减除数",
+                "effectiveViews": "有效计分浏览量",
+                "dampened": "已抑制"
+            },
+            "telemetry": {
+                "title": "反垃圾事件日志与策略变更审计",
+                "subtitle": "审查触发的限流记录、重复拦截事件、高风险审核及管理员配置变更。",
+                "auditLogs": "近期设置与审核审计日志",
+                "riskMedium": "中风险",
+                "riskHigh": "高风险",
+                "riskViolation": "严重违规"
+            }
         }
     },
     "common": {

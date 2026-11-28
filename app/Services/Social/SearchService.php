@@ -385,9 +385,14 @@ class SearchService
 
         // Featured / engaging posts — ONLY label as Trending when real human/guest engagement exists (excludes AI views).
         $engagingPosts = $this->feedService->baseVisibleQuery($viewer)
-            ->whereRaw('(reactions_count + comments_count + human_views_count + guest_views_count + legacy_views_count) >= 3')
-            ->orderByRaw('(reactions_count * 3 + comments_count * 4 + human_views_count + guest_views_count + legacy_views_count) DESC')
+            ->where(static function (Builder $q): void {
+                $q->where('trending_score', '>', 0)
+                    ->orWhereRaw('(valid_reactions_count + valid_comments_count + valid_bookmarks_count + valid_shares_count) >= 1')
+                    ->orWhereRaw('(reactions_count + comments_count + human_views_count + guest_views_count + legacy_views_count) >= 3');
+            })
+            ->orderByDesc('trending_score')
             ->orderByDesc('published_at')
+            ->orderByDesc('id')
             ->limit($compactFallback ? 3 : 4)
             ->get();
 

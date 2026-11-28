@@ -122,7 +122,9 @@
                 "business": "Negosyo",
                 "finance": "Kita",
                 "qa": "Tanong at Sagot",
-                "marketplace": "Pamilihan"
+                "marketplace": "Pamilihan",
+                "recommended": "Para sa Iyo",
+                "following": "Sinusundan"
             },
             "newPostsAvailable": "May mga bagong post"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Botohan",
             "discardDraftConfirm": "Itapon",
             "discardDraftDesc": "Mabubura ang iyong hindi na-save na teksto, larawan, o mga pagpipilian sa botohan.",
-            "discardDraftTitle": "Itapon ang burador ng post?"
+            "discardDraftTitle": "Itapon ang burador ng post?",
+            "rateLimitNotice": "Masyado kang mabilis mag-post ngayon. Nananatiling ligtas ang draft mo sa ibaba.",
+            "retryInSeconds": "Maaari kang sumubok muli sa {seconds}s."
         },
         "empty": {
             "title": "Tuklasin ang komunidad ng {brand}",
@@ -217,6 +221,14 @@
             "invalidViews": "Di-wasto / Na-filter na View",
             "legacyViews": "Luma / Walang Kategorya",
             "aiSeparationNotice": "Kasama sa kabuuang view ang na-verify na aktibidad ng AI para sa transparency. Mahigpit na hindi isinasama ang mga AI view sa natatanging taong manonood, DAU/MAU, organic reach ng tao, at bayad na ad impression."
+        },
+        "editedBadge": "Na-edit",
+        "hideFromFeed": "Itago mula sa aking feed",
+        "moderationBanner": {
+            "pendingTitle": "Naghihintay ng moderasyon — nakikita lang ng iyong account at ng staff",
+            "rejectedTitle": "Tinanggihan ng moderasyon — nakatago sa pampublikong feed",
+            "hiddenTitle": "Nakatago dahil sa moderasyon — para sa iyo at sa staff lang",
+            "appealLink": "Magpadala ng apela"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Pagsasalin at Tulong",
             "growthOverview": "Buod ng Paglago",
             "growthReferrals": "Mga Referral at Panloloko",
-            "growthCampaigns": "Mga Kampanya at Badge"
+            "growthCampaigns": "Mga Kampanya at Badge",
+            "postFeedSettings": "Mga Setting ng Post at Feed"
         },
         "common": {
             "search": "Maghanap...",
@@ -756,7 +769,8 @@
             "yes": "Oo",
             "no": "Hindi",
             "enabled": "Naka-on",
-            "disabled": "Naka-off"
+            "disabled": "Naka-off",
+            "saveChanges": "I-save ang mga pagbabago"
         },
         "dashboard": {
             "title": "Panel ng Operasyon ng Plataporma",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "I-toggle ang Beripikado",
                 "transfer_owner": "Ilipat ang Pagmamay-ari",
                 "unlock_comments": "I-unlock ang mga Komento",
-                "unpin": "I-unpin"
+                "unpin": "I-unpin",
+                "approve": "Aprubahan ang post",
+                "reject": "Tanggihan ang post"
             },
             "badgeClosedJoins": "Sarado ang Pagsali",
             "badgeContentWarning": "Babala sa nilalaman: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "sistema",
             "transferOwnerUsernameLabel": "Username ng bagong may-ari ({'@'}username)",
             "unknownAuthor": "hindi kilala",
-            "usernamePlaceholder": "username"
+            "usernamePlaceholder": "username",
+            "postFilters": {
+                "rejected": "Tinanggihan"
+            },
+            "riskScoreBadge": "Panganib: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Halaga",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Isinaling buod",
             "translationTitleLabel": "Isinaling pamagat",
             "uploadAndInsert": "I-upload at ipasok"
+        },
+        "postFeed": {
+            "title": "Pag-post, Anti-Spam at Ranking ng Feed",
+            "subtitle": "I-configure ang quota ng tiwala, antispam, distribusyon ng feed, at ranking simulator.",
+            "resetAll": "I-reset lahat sa default",
+            "resetSection": "I-reset ang seksyon",
+            "resetConfirmTitle": "Ibalik ang mga default na setting?",
+            "resetConfirmDesc": "Babalik ang mga napiling panuntunan sa baseline ng SysNoxis at ire-record sa audit log.",
+            "resetConfirmButton": "Ibalik ang mga default",
+            "simulatorError": "Hindi makalkula ang ranking simulation. Suriin ang mga numero.",
+            "stats": {
+                "published24h": "Na-publish (24h)",
+                "pendingReview": "Naghihintay ng pagsusuri",
+                "rateLimited24h": "Na-rate limit (24h)",
+                "duplicatesBlocked24h": "Naharang na duplicate (24h)"
+            },
+            "tabs": {
+                "publishing": "Mga Quota at Limitasyon",
+                "antispam": "Anti-Spam",
+                "moderation": "Moderasyon",
+                "feed": "Feed at Pagkakaiba-iba",
+                "trending": "Mga Timbang ng Trending",
+                "simulator": "Simulator ng Ranking",
+                "telemetry": "Mga Log ng Spam at Audit"
+            },
+            "publishing": {
+                "title": "Mga Quota at Proteksyon sa Pag-post",
+                "subtitle": "Mananatili sa panimulang limitasyon ang mga bagong account habang nasa safety window kahit may Premium.",
+                "enablePosting": "I-enable ang paggawa ng post",
+                "maxPostLength": "Max haba ng post (character)",
+                "maxCommentLength": "Max haba ng komento",
+                "editsPerDay": "Max pag-edit bawat 24h",
+                "newMemberAgeDays": "Panahon ng bagong miyembro (araw)",
+                "tier": "Antas ng Tiwala",
+                "posts24h": "Post / 24h",
+                "posts60m": "Post / 60m",
+                "minInterval": "Min pagitan (seg)",
+                "comments24h": "Komento / 24h",
+                "maxImages": "Max larawan / post",
+                "tiers": {
+                    "new": "Bagong Miyembro",
+                    "standard": "Karaniwang Miyembro",
+                    "premium": "Miyembrong Premium"
+                }
+            },
+            "antispam": {
+                "title": "Mga Panuntunan sa Anti-Spam at Duplicate",
+                "subtitle": "Markahan ang panganib ng duplicate content, sobrang link, mention, at hashtag.",
+                "enableAntiSpam": "I-enable ang Anti-Spam Engine",
+                "enableDuplicate": "I-enable ang Duplicate Guard",
+                "duplicateWindow": "Duplicate window (oras)",
+                "similarityThreshold": "Threshold ng pagkakapareho (%)",
+                "mediumThreshold": "Katamtamang threshold ng panganib",
+                "highThreshold": "Mataas na threshold (Review)",
+                "violationThreshold": "Threshold ng paglabag (Auto Reject)",
+                "maxLinks": "Limitasyon ng link / post",
+                "maxMentions": "Limitasyon ng pagbanggit / post",
+                "maxHashtags": "Limitasyon ng #hashtag / post"
+            },
+            "moderation": {
+                "title": "Patakaran sa Moderasyon at Automation",
+                "subtitle": "Kontrolin kung kailan mapupunta sa review ang mapanganib na post at paano hawakan ang kahina-hinalang link.",
+                "riskBasedEnabled": "I-enable ang risk-based Pending Review",
+                "requireManualAll": "I-require ang manual review sa lahat ng post",
+                "aiAssistEnabled": "I-enable ang opsyonal na AI moderation assist",
+                "reviewThreshold": "Marka ng threshold para sa review",
+                "suspiciousLinkAction": "Aksyon sa kahina-hinalang link",
+                "violationAction": "Aksyon sa malubhang paglabag",
+                "actions": {
+                    "allow": "Payagan (Puntos lang)",
+                    "flag": "I-flag at suriin",
+                    "pendingReview": "Ipadala sa Pending Review",
+                    "reject": "Awtomatikong tanggihan"
+                }
+            },
+            "feed": {
+                "title": "Ranking ng Feed, Pagkakaiba-iba at Patas na Distribusyon",
+                "subtitle": "Pamahalaan ang mga tab, limitasyon ng diversity, at 70/20/10 allocation.",
+                "enableTrending": "I-enable ang Trending tab",
+                "enableRecommended": "I-enable ang Recommended tab",
+                "enableFreshDiscovery": "I-enable ang Fresh & Discovery slots",
+                "categoryDiversity": "Ipatupad ang pagkakaiba-iba ng kategorya",
+                "candidateWindowHours": "Candidate window (oras)",
+                "refreshIntervalMinutes": "Refresh interval (minuto)",
+                "pageSize": "Post bawat pahina ng feed",
+                "authorDiversityMax": "Max post bawat may-akda sa bawat page",
+                "adSpacing": "Agwat ng sponsored post (post)",
+                "allocationRankingPct": "Bahagi ng naka-rank (%)",
+                "allocationFreshPct": "Bahagi ng mga bagong post (%)",
+                "allocationDiscoveryPct": "Bahagi ng pagtuklas (%)",
+                "allocationSummary": "Kabuuang halo: {sum}% (awtomatikong ibinabalanse sa Recommended feed)."
+            },
+            "trending": {
+                "title": "Formula ng Organic Trending Score at Proteksyon",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Hindi kasama ang Ads o AI.",
+                "weightHumanView": "Timbang: Tunay na view ng tao",
+                "weightReaction": "Timbang: Wastong reaksyon",
+                "weightComment": "Timbang: Wastong komento",
+                "weightBookmark": "Timbang: Wastong bookmark",
+                "weightShare": "Timbang: Wastong pagbahagi",
+                "decayBaseHours": "Base ng pagbaba sa oras (oras)",
+                "decayExponent": "Eksponent ng pagbaba sa oras",
+                "perUserCap": "Max signal bawat user / 24h",
+                "viewEngagementRatio": "Ratio ng pagbabawas sa labis na view"
+            },
+            "simulator": {
+                "title": "Trending Score Simulator (Walang pagbabago sa DB)",
+                "subtitle": "Subukan ang iyong mga timbang at decay curve nang hindi binabago ang anumang tunay na post.",
+                "humanViews": "Organic views",
+                "reactions": "Reaksyon",
+                "comments": "Komento",
+                "bookmarks": "Mga Bookmark",
+                "shares": "Pagbahagi",
+                "ageHours": "Edad (oras)",
+                "runButton": "Kalkulahin ang Score",
+                "trendingScore": "Trending Score",
+                "rawScore": "Raw Score",
+                "decayFactor": "Decay Divisor",
+                "effectiveViews": "Epektibong Views",
+                "dampened": "Pinahina"
+            },
+            "telemetry": {
+                "title": "Mga Kaganapan sa Anti-Spam at Audit Log",
+                "subtitle": "Suriin ang mga na-trigger na rate limit, naharang na duplicate, at update ng admin.",
+                "auditLogs": "Kamakailang Audit Log ng Settings at Moderasyon",
+                "riskMedium": "Katamtamang panganib",
+                "riskHigh": "Mataas na panganib",
+                "riskViolation": "Paglabag"
+            }
         }
     },
     "common": {

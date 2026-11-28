@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Social\PostPollVoteRequest;
 use App\Http\Requests\Social\PostReactionRequest;
 use App\Models\Post;
+use App\Models\UserHiddenPost;
 use App\Services\Social\PostService;
 use App\Services\Social\PostViewTrackingService;
 use App\Services\Social\SocialDirectoryService;
@@ -102,11 +103,48 @@ class PostInteractionController extends Controller
         return back();
     }
 
-    public function share(Request $request, Post $post): RedirectResponse
+    public function share(Request $request, Post $post): RedirectResponse|JsonResponse
     {
         Gate::authorize('view', $post);
 
-        $this->postService->incrementShare($post);
+        $user = $request->user();
+        $secret = (string) config('app.key', 'syncviet');
+        $actorKey = $user !== null
+            ? 'user:'.$user->id
+            : 'guest:'.($request->session()->getId() ?: (string) $request->ip()).'|'.mb_substr((string) $request->userAgent(), 0, 120);
+
+        $actorHash = hash_hmac('sha256', $actorKey, $secret);
+        $channel = $request->string('channel', 'copy_link')->toString();
+
+        $sharesCount = $this->postService->incrementShare($post, $user, $actorHash, $channel);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'shares_count' => $sharesCount,
+            ]);
+        }
+
+        return back();
+    }
+
+    public function hideFromFeed(Request $request, Post $post): RedirectResponse|JsonResponse
+    {
+        $user = $request->user();
+        abort_if($user === null, 403);
+
+        UserHiddenPost::query()->firstOrCreate(
+            ['user_id' => $user->id, 'post_id' => $post->id],
+            ['created_at' => now()],
+        );
+
+        if ($request->expectsJson()) {
+            return response()->json(['hidden' => true]);
+        }
+
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => __('Post hidden from your feed.'),
+        ]);
 
         return back();
     }

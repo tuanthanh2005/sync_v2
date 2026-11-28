@@ -37,7 +37,10 @@ class RbacService
                     'dashboard.view', 'analytics.view', 'system_health.view', 'system_health.manage',
                     'users.view', 'users.update', 'users.suspend', 'users.ban', 'users.restore', 'users.delete', 'users.manage',
                     'roles.view', 'verification.view', 'verification.approve', 'verification.reject',
-                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore', 'posts.manage',
+                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore', 'posts.manage', 'posts.moderate',
+                    'posts.settings.view', 'posts.settings.manage',
+                    'feed.settings.view', 'feed.settings.manage',
+                    'spam_events.view', 'ranking.analytics.view',
                     'comments.view', 'comments.update', 'comments.delete', 'comments.restore',
                     'communities.view', 'communities.update', 'communities.delete', 'communities.restore', 'communities.manage',
                     'polls.view', 'polls.update', 'polls.delete',
@@ -68,7 +71,8 @@ class RbacService
                     'dashboard.view', 'analytics.view',
                     'users.view', 'users.suspend',
                     'verification.view',
-                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore',
+                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore', 'posts.moderate',
+                    'spam_events.view', 'ranking.analytics.view',
                     'comments.view', 'comments.update', 'comments.delete', 'comments.restore',
                     'communities.view', 'communities.update',
                     'polls.view', 'polls.update',
@@ -87,7 +91,8 @@ class RbacService
                 'hierarchy_level' => 45,
                 'permissions' => [
                     'dashboard.view', 'analytics.view',
-                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore',
+                    'posts.view', 'posts.update', 'posts.delete', 'posts.restore', 'posts.moderate',
+                    'posts.settings.view', 'feed.settings.view', 'spam_events.view', 'ranking.analytics.view',
                     'comments.view', 'comments.update', 'comments.delete', 'comments.restore',
                     'communities.view', 'communities.update', 'communities.manage',
                     'polls.view', 'polls.update', 'polls.delete',
@@ -161,7 +166,11 @@ class RbacService
             'users' => ['view', 'update', 'suspend', 'ban', 'restore', 'delete', 'manage'],
             'roles' => ['view', 'update', 'manage'],
             'verification' => ['view', 'approve', 'reject'],
-            'posts' => ['view', 'update', 'delete', 'restore', 'manage'],
+            'posts' => ['view', 'update', 'delete', 'restore', 'manage', 'moderate'],
+            'posts.settings' => ['view', 'manage'],
+            'feed.settings' => ['view', 'manage'],
+            'spam_events' => ['view'],
+            'ranking.analytics' => ['view'],
             'comments' => ['view', 'update', 'delete', 'restore'],
             'communities' => ['view', 'update', 'delete', 'restore', 'manage'],
             'polls' => ['view', 'update', 'delete'],
@@ -210,7 +219,7 @@ class RbacService
             return;
         }
 
-        if (Role::query()->exists() && Permission::query()->exists()) {
+        if (Role::query()->exists() && Permission::query()->where('slug', 'posts.settings.view')->exists()) {
             return;
         }
 

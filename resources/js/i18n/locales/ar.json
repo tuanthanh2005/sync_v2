@@ -122,7 +122,9 @@
                 "business": "الأعمال",
                 "finance": "الدخل والربح",
                 "qa": "أسئلة وأجوبة",
-                "marketplace": "السوق"
+                "marketplace": "السوق",
+                "recommended": "لك",
+                "following": "المتابَعون"
             },
             "newPostsAvailable": "تتوفر منشورات جديدة"
         },
@@ -152,7 +154,9 @@
             "addPoll": "استطلاع",
             "discardDraftConfirm": "تجاهل",
             "discardDraftDesc": "سيتم مسح النص أو الصور أو خيارات الاستطلاع غير المحفوظة.",
-            "discardDraftTitle": "هل تريد تجاهل مسودة المنشور؟"
+            "discardDraftTitle": "هل تريد تجاهل مسودة المنشور؟",
+            "rateLimitNotice": "أنت تنشر بسرعة كبيرة حاليًا. تم الحفاظ على مسودتك بأمان أدناه.",
+            "retryInSeconds": "يمكنك المحاولة مجددًا خلال {seconds} ثانية."
         },
         "empty": {
             "title": "استكشف مجتمع {brand}",
@@ -217,6 +221,14 @@
             "invalidViews": "المشاهدات غير الصالحة / المصفّاة",
             "legacyViews": "سجل قديم / غير مصنّف",
             "aiSeparationNotice": "يتضمن إجمالي المشاهدات نشاط الذكاء الاصطناعي الموثّق للشفافية. وتُستبعد مشاهدات الذكاء الاصطناعي تماماً من المشاهدين الحقيقيين الفريدين ومقاييس DAU/MAU والوصول العضوي البشري ومرات ظهور الإعلانات المدفوعة."
+        },
+        "editedBadge": "تم التعديل",
+        "hideFromFeed": "إخفاء من موجزي",
+        "moderationBanner": {
+            "pendingTitle": "بانتظار المراجعة — مرئي لك ولفريق الإشراف فقط",
+            "rejectedTitle": "مرفوض من الإشراف — مخفي عن الموجز العام",
+            "hiddenTitle": "مخفي بواسطة الإشراف — مرئي لك ولفريق الإشراف فقط",
+            "appealLink": "تقديم طعن"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "الترجمة والمساعدة",
             "growthOverview": "نظرة عامة على النمو",
             "growthReferrals": "الإحالات والاحتيال",
-            "growthCampaigns": "الحملات والشارات"
+            "growthCampaigns": "الحملات والشارات",
+            "postFeedSettings": "إعدادات النشر والموجز"
         },
         "common": {
             "search": "بحث...",
@@ -756,7 +769,8 @@
             "yes": "نعم",
             "no": "لا",
             "enabled": "مفعَّل",
-            "disabled": "معطَّل"
+            "disabled": "معطَّل",
+            "saveChanges": "حفظ التغييرات"
         },
         "dashboard": {
             "title": "لوحة عمليات المنصة",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "تبديل التوثيق",
                 "transfer_owner": "نقل الملكية",
                 "unlock_comments": "فتح التعليقات",
-                "unpin": "إلغاء التثبيت"
+                "unpin": "إلغاء التثبيت",
+                "approve": "الموافقة على المنشور",
+                "reject": "رفض المنشور"
             },
             "badgeClosedJoins": "الانضمام مغلق",
             "badgeContentWarning": "تحذير محتوى: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "النظام",
             "transferOwnerUsernameLabel": "اسم مستخدم المالك الجديد ({'@'}username)",
             "unknownAuthor": "غير معروف",
-            "usernamePlaceholder": "اسم المستخدم"
+            "usernamePlaceholder": "اسم المستخدم",
+            "postFilters": {
+                "rejected": "مرفوضة"
+            },
+            "riskScoreBadge": "المخاطر: {score}/100"
         },
         "financeExtra": {
             "colAmount": "المبلغ",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "الملخص المترجم",
             "translationTitleLabel": "العنوان المترجم",
             "uploadAndInsert": "رفع وإدراج"
+        },
+        "postFeed": {
+            "title": "إعدادات النشر ومكافحة البريد العشوائي وترتيب الموجز",
+            "subtitle": "إعداد حصص مستويات الثقة وحدود مكافحة البريد العشوائي وتوزيع الموجز ومحاكاة الترتيب.",
+            "resetAll": "إعادة تعيين الكل للافتراضي",
+            "resetSection": "إعادة تعيين القسم",
+            "resetConfirmTitle": "استعادة إعدادات السياسة الافتراضية؟",
+            "resetConfirmDesc": "ستعود القواعد المحددة إلى القيم الأساسية في SysNoxis مع تسجيلها في سجل التدقيق.",
+            "resetConfirmButton": "استعادة الافتراضي",
+            "simulatorError": "تعذر حساب محاكاة الترتيب. يرجى التحقق من الأرقام المدخلة.",
+            "stats": {
+                "published24h": "منشور (24 ساعة)",
+                "pendingReview": "بانتظار المراجعة",
+                "rateLimited24h": "محدود المعدل (24 ساعة)",
+                "duplicatesBlocked24h": "التكرارات المحجوبة (24 ساعة)"
+            },
+            "tabs": {
+                "publishing": "الحصص والحدود",
+                "antispam": "مكافحة البريد العشوائي",
+                "moderation": "الإشراف",
+                "feed": "الموجز والتنوع",
+                "trending": "أوزان الرائج",
+                "simulator": "محاكي الترتيب",
+                "telemetry": "سجلات البريد العشوائي والتدقيق"
+            },
+            "publishing": {
+                "title": "حصص النشر وضوابط الأمان حسب مستوى الثقة",
+                "subtitle": "تبقى الحسابات الجديدة ضمن حدود الحماية الأولية خلال فترة الأمان حتى مع اشتراك Premium.",
+                "enablePosting": "تفعيل إنشاء المنشورات",
+                "maxPostLength": "الحد الأقصى لطول المنشور",
+                "maxCommentLength": "الحد الأقصى لطول التعليق",
+                "editsPerDay": "الحد الأقصى للتعديلات خلال 24 ساعة",
+                "newMemberAgeDays": "فترة العضو الجديد (أيام)",
+                "tier": "مستوى الثقة",
+                "posts24h": "المنشورات / 24 ساعة",
+                "posts60m": "المنشورات / 60 دقيقة",
+                "minInterval": "الفاصل الأدنى (ثانية)",
+                "comments24h": "التعليقات / 24 ساعة",
+                "maxImages": "أقصى عدد صور / منشور",
+                "tiers": {
+                    "new": "عضو جديد",
+                    "standard": "عضو قياسي",
+                    "premium": "عضو Premium"
+                }
+            },
+            "antispam": {
+                "title": "قواعد مكافحة البريد العشوائي وكشف التكرار",
+                "subtitle": "تقييم الاندفاع السريع والمحتوى المكرر وكثرة الروابط والإشارات والوسوم.",
+                "enableAntiSpam": "تفعيل محرك مكافحة البريد العشوائي",
+                "enableDuplicate": "تفعيل حماية التكرار والتشابه",
+                "duplicateWindow": "نافذة كشف التكرار (ساعات)",
+                "similarityThreshold": "حد التشابه (%)",
+                "mediumThreshold": "حد الخطر المتوسط",
+                "highThreshold": "حد الخطر المرتفع (مراجعة)",
+                "violationThreshold": "حد المخالفة (رفض تلقائي)",
+                "maxLinks": "الحد الموصى به للروابط / منشور",
+                "maxMentions": "حد الإشارات / منشور",
+                "maxHashtags": "حد الوسوم # / منشور"
+            },
+            "moderation": {
+                "title": "سير عمل الإشراف وسياسة الأتمتة",
+                "subtitle": "تحكم في وقت دخول المنشورات الخطرة للمراجعة وكيفية التعامل مع الروابط المشبوهة.",
+                "riskBasedEnabled": "تفعيل المراجعة المعلقة حسب المخاطر",
+                "requireManualAll": "فرض المراجعة اليدوية لجميع منشورات الأعضاء",
+                "aiAssistEnabled": "تفعيل مساعدة الإشراف بالذكاء الاصطناعي الاختيارية",
+                "reviewThreshold": "درجة حد المراجعة",
+                "suspiciousLinkAction": "إجراء الروابط المشبوهة / المختصرة",
+                "violationAction": "إجراء المخالفات الجسيمة",
+                "actions": {
+                    "allow": "سماح (تقييم فقط)",
+                    "flag": "وضع علامة ومراجعة",
+                    "pendingReview": "إرسال للمراجعة المعلقة",
+                    "reject": "رفض تلقائي"
+                }
+            },
+            "feed": {
+                "title": "ترتيب الموجز والتنوع والتوزيع العادل",
+                "subtitle": "إدارة التبويبات وحدود التنوع ونطاق المرشحين وتوزيع 70/20/10.",
+                "enableTrending": "تفعيل تبويب الرائج",
+                "enableRecommended": "تفعيل تبويب المقترح",
+                "enableFreshDiscovery": "تفعيل خانات المحتوى الجديد والاكتشاف",
+                "categoryDiversity": "تطبيق تنوع التصنيفات بين المنشورات المتتالية",
+                "candidateWindowHours": "نطاق المرشحين للرائج (ساعات)",
+                "refreshIntervalMinutes": "فاصل تحديث النقاط (دقيقة)",
+                "pageSize": "عدد المنشورات لكل صفحة",
+                "authorDiversityMax": "أقصى منشورات للمؤلف في الصفحة",
+                "adSpacing": "تباعد المنشورات الممولة (منشورات)",
+                "allocationRankingPct": "نسبة الترتيب الأساسي (%)",
+                "allocationFreshPct": "نسبة المنشورات الجديدة (%)",
+                "allocationDiscoveryPct": "نسبة الاستكشاف والتنوع (%)",
+                "allocationSummary": "المجموع الكلي للنسب: {sum}% (يُعدَّل نسبيًا عند دمج الموجز المقترح)."
+            },
+            "trending": {
+                "title": "معادلة النقاط الرائجة العضوية ومنع التلاعب",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. يُستثنى الممول والذكاء الاصطناعي.",
+                "weightHumanView": "الوزن: مشاهدات البشر العضوية",
+                "weightReaction": "الوزن: التفاعلات الصالحة",
+                "weightComment": "الوزن: التعليقات الصالحة",
+                "weightBookmark": "الوزن: الإشارات المرجعية الصالحة",
+                "weightShare": "الوزن: المشاركات الصالحة",
+                "decayBaseHours": "أساس التلاشي الزمني (ساعات)",
+                "decayExponent": "أس التلاشي الزمني",
+                "perUserCap": "أقصى إشارات تصنيف / مستخدم / 24 ساعة",
+                "viewEngagementRatio": "نسبة تخفيف المشاهدات غير الطبيعية"
+            },
+            "simulator": {
+                "title": "محاكي نقاط الرائج (دون تعديل قاعدة البيانات)",
+                "subtitle": "اختبر الأوزان الحالية ومنحنى التلاشي بأرقام افتراضية دون تعديل أي منشور حقيقي.",
+                "humanViews": "مشاهدات عضوية",
+                "reactions": "التفاعلات",
+                "comments": "التعليقات",
+                "bookmarks": "الإشارات",
+                "shares": "المشاركات",
+                "ageHours": "العمر (ساعات)",
+                "runButton": "حساب النقاط",
+                "trendingScore": "نقاط الرائج",
+                "rawScore": "النقاط الأولية",
+                "decayFactor": "قاسم التلاشي الزمني",
+                "effectiveViews": "المشاهدات الفعالة",
+                "dampened": "مخفف"
+            },
+            "telemetry": {
+                "title": "أحداث مكافحة البريد العشوائي وسجل التدقيق",
+                "subtitle": "فحص قيود المعدل وحظر التكرار والمراجعات عالية الخطورة وتحديثات المشرفين.",
+                "auditLogs": "سجل تدقيق الإعدادات والإشراف الأخير",
+                "riskMedium": "خطر متوسط",
+                "riskHigh": "خطر مرتفع",
+                "riskViolation": "مخالفة"
+            }
         }
     },
     "common": {

@@ -122,7 +122,9 @@
                 "business": "비즈니스",
                 "finance": "수익·금융",
                 "qa": "질문·답변",
-                "marketplace": "마켓플레이스"
+                "marketplace": "마켓플레이스",
+                "recommended": "추천",
+                "following": "팔로잉"
             },
             "newPostsAvailable": "새 게시물이 있습니다"
         },
@@ -152,7 +154,9 @@
             "addPoll": "투표",
             "discardDraftConfirm": "삭제",
             "discardDraftDesc": "저장되지 않은 텍스트, 사진 또는 투표 선택지가 모두 삭제됩니다.",
-            "discardDraftTitle": "게시물 초안을 삭제할까요?"
+            "discardDraftTitle": "게시물 초안을 삭제할까요?",
+            "rateLimitNotice": "게시 속도가 너무 빠릅니다. 작성 중인 초안은 아래에 안전하게 보존됩니다.",
+            "retryInSeconds": "{seconds}초 후에 다시 시도할 수 있습니다."
         },
         "empty": {
             "title": "{brand} 커뮤니티를 둘러보세요",
@@ -217,6 +221,14 @@
             "invalidViews": "무효 / 필터링된 조회",
             "legacyViews": "기존 데이터 / 미분류",
             "aiSeparationNotice": "투명성을 위해 총 조회수에는 검증된 AI 활동이 포함됩니다. AI 조회는 고유 실제 조회자, DAU/MAU, 오가닉 도달 및 유료 광고 노출 수에서 엄격히 제외됩니다."
+        },
+        "editedBadge": "수정됨",
+        "hideFromFeed": "내 피드에서 숨기기",
+        "moderationBanner": {
+            "pendingTitle": "검토 대기 중 — 작성자와 운영진에게만 표시됩니다",
+            "rejectedTitle": "모더레이션 거부됨 — 공개 피드에서 숨겨졌습니다",
+            "hiddenTitle": "모더레이션에 의해 숨김 처리됨 — 작성자와 운영진만 볼 수 있습니다",
+            "appealLink": "이의 제기하기"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "번역 및 어시스턴트",
             "growthOverview": "성장 개요",
             "growthReferrals": "추천 및 부정행위",
-            "growthCampaigns": "캠페인 및 배지"
+            "growthCampaigns": "캠페인 및 배지",
+            "postFeedSettings": "게시물 및 피드 설정"
         },
         "common": {
             "search": "검색...",
@@ -756,7 +769,8 @@
             "yes": "예",
             "no": "아니오",
             "enabled": "활성화됨",
-            "disabled": "비활성화됨"
+            "disabled": "비활성화됨",
+            "saveChanges": "변경 사항 저장"
         },
         "dashboard": {
             "title": "플랫폼 운영 대시보드",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "인증 전환",
                 "transfer_owner": "소유권 이전",
                 "unlock_comments": "댓글 잠금 해제",
-                "unpin": "고정 해제"
+                "unpin": "고정 해제",
+                "approve": "게시물 승인",
+                "reject": "게시물 거부"
             },
             "badgeClosedJoins": "가입 마감",
             "badgeContentWarning": "콘텐츠 경고: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "시스템",
             "transferOwnerUsernameLabel": "새 소유자 사용자 이름 ({'@'}username)",
             "unknownAuthor": "알 수 없음",
-            "usernamePlaceholder": "사용자 이름"
+            "usernamePlaceholder": "사용자 이름",
+            "postFilters": {
+                "rejected": "거부됨"
+            },
+            "riskScoreBadge": "위험도: {score}/100"
         },
         "financeExtra": {
             "colAmount": "금액",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "번역된 요약",
             "translationTitleLabel": "번역된 제목",
             "uploadAndInsert": "업로드 및 삽입"
+        },
+        "postFeed": {
+            "title": "게시, 스팸 방지 및 피드 순위 설정",
+            "subtitle": "신뢰 등급별 할당량, 스팸 임계값, 피드 분배 및 순수 랭킹 시뮬레이션을 설정합니다.",
+            "resetAll": "모두 기본값으로 재설정",
+            "resetSection": "섹션 재설정",
+            "resetConfirmTitle": "기본 정책 설정을 복원하시겠습니까?",
+            "resetConfirmDesc": "선택한 규칙이 SysNoxis 기본값으로 복원되며 감사 로그에 기록됩니다.",
+            "resetConfirmButton": "복원하기",
+            "simulatorError": "순위 시뮬레이션을 계산할 수 없습니다. 입력값을 확인하세요.",
+            "stats": {
+                "published24h": "게시됨 (24시간)",
+                "pendingReview": "검토 대기 중",
+                "rateLimited24h": "속도 제한됨 (24시간)",
+                "duplicatesBlocked24h": "중복 차단 (24시간)"
+            },
+            "tabs": {
+                "publishing": "게시 할당량 및 한도",
+                "antispam": "스팸 방지",
+                "moderation": "모더레이션",
+                "feed": "피드 및 다양성",
+                "trending": "트렌딩 가중치",
+                "simulator": "순위 시뮬레이터",
+                "telemetry": "스팸 로그 및 감사"
+            },
+            "publishing": {
+                "title": "신뢰 등급별 게시 한도 및 보호",
+                "subtitle": "신규 계정은 Premium에 가입해도 안전 기간 동안 초기 제한이 적용됩니다.",
+                "enablePosting": "게시물 작성 활성화",
+                "maxPostLength": "최대 게시물 길이 (글자)",
+                "maxCommentLength": "최대 댓글 길이 (글자)",
+                "editsPerDay": "24시간 최대 수정 횟수",
+                "newMemberAgeDays": "신규 회원 기간 (일)",
+                "tier": "신뢰 등급",
+                "posts24h": "게시물 / 24시간",
+                "posts60m": "게시물 / 60분",
+                "minInterval": "최소 간격 (초)",
+                "comments24h": "댓글 / 24시간",
+                "maxImages": "최대 이미지 / 게시물",
+                "tiers": {
+                    "new": "신규 회원",
+                    "standard": "일반 회원",
+                    "premium": "프리미엄 회원"
+                }
+            },
+            "antispam": {
+                "title": "스팸 방지 및 중복 탐지 규칙",
+                "subtitle": "연속 게시, 중복/유사 콘텐츠, 과도한 링크, 멘션 및 해시태그 위험 점수를 산정합니다.",
+                "enableAntiSpam": "스팸 방지 엔진 활성화",
+                "enableDuplicate": "중복 및 유사 콘텐츠 차단 활성화",
+                "duplicateWindow": "중복 탐지 기간 (시간)",
+                "similarityThreshold": "유사도 임계값 (%)",
+                "mediumThreshold": "중간 위험 임계값",
+                "highThreshold": "고위험 임계값 (검토 대기)",
+                "violationThreshold": "위반 임계값 (자동 거부)",
+                "maxLinks": "게시물당 링크 제한",
+                "maxMentions": "게시물당 멘션 제한",
+                "maxHashtags": "게시물당 #해시태그 제한"
+            },
+            "moderation": {
+                "title": "모더레이션 워크플로우 및 정책",
+                "subtitle": "위험 게시물의 검토 대기 전환 조건과 의심 링크 및 위반 처리 방식을 설정합니다.",
+                "riskBasedEnabled": "위험 기반 자동 검토 대기 활성화",
+                "requireManualAll": "모든 회원 게시물 수동 검토 필수",
+                "aiAssistEnabled": "선택적 AI 모더레이션 지원 활성화",
+                "reviewThreshold": "모더레이션 검토 임계 점수",
+                "suspiciousLinkAction": "의심/단축 링크 처리",
+                "violationAction": "심각한 위반 처리",
+                "actions": {
+                    "allow": "허용 (점수만 반영)",
+                    "flag": "신고 표시 및 검토",
+                    "pendingReview": "검토 대기로 전송",
+                    "reject": "자동 거부"
+                }
+            },
+            "feed": {
+                "title": "피드 순위, 다양성 및 공정 분배",
+                "subtitle": "피드 탭, 다양성 제한, 후보 기간 및 70/20/10 배분 비율을 관리합니다.",
+                "enableTrending": "인기 피드 탭 활성화",
+                "enableRecommended": "추천 피드 탭 활성화",
+                "enableFreshDiscovery": "신규 및 발견 슬롯 활성화",
+                "categoryDiversity": "연속 게시물 카테고리 다양성 적용",
+                "candidateWindowHours": "후보 게시물 기간 (시간)",
+                "refreshIntervalMinutes": "점수 갱신 주기 (분)",
+                "pageSize": "페이지당 게시물 수",
+                "authorDiversityMax": "페이지당 동일 작성자 최대 게시물 수",
+                "adSpacing": "스폰서 게시물 간격 (게시물 수)",
+                "allocationRankingPct": "품질 랭킹 비중 (%)",
+                "allocationFreshPct": "신규 게시물 비중 (%)",
+                "allocationDiscoveryPct": "탐색 다양성 비중 (%)",
+                "allocationSummary": "합계 비율: {sum}% (추천 피드 조합 시 비례 정규화됨)."
+            },
+            "trending": {
+                "title": "오가닉 트렌딩 공식 및 조작 방지",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp (광고 및 AI 제외).",
+                "weightHumanView": "가중치: 오가닉 사람 조회수",
+                "weightReaction": "가중치: 유효 반응",
+                "weightComment": "가중치: 유효 댓글",
+                "weightBookmark": "가중치: 유효 북마크",
+                "weightShare": "가중치: 유효 공유",
+                "decayBaseHours": "시간 감쇠 기준 (시간)",
+                "decayExponent": "시간 감쇠 지수",
+                "perUserCap": "사용자당 24시간 최대 순위 신호",
+                "viewEngagementRatio": "비정상 조회수 감쇠 비율"
+            },
+            "simulator": {
+                "title": "트렌딩 점수 시뮬레이터 (DB 변경 없음)",
+                "subtitle": "실제 게시물이나 데이터베이스를 변경하지 않고 가상 수치로 가중치를 테스트합니다.",
+                "humanViews": "오가닉 조회",
+                "reactions": "반응",
+                "comments": "댓글",
+                "bookmarks": "북마크",
+                "shares": "공유",
+                "ageHours": "경과 시간 (시간)",
+                "runButton": "점수 계산",
+                "trendingScore": "트렌딩 점수",
+                "rawScore": "원시 점수",
+                "decayFactor": "시간 감쇠 제수",
+                "effectiveViews": "유효 조회수",
+                "dampened": "감쇠됨"
+            },
+            "telemetry": {
+                "title": "스팸 이벤트 및 정책 감사 기록",
+                "subtitle": "발생한 속도 제한, 중복 차단, 고위험 검토 및 관리자 변경 사항을 확인합니다.",
+                "auditLogs": "최근 설정 및 모더레이션 감사 로그",
+                "riskMedium": "중간 위험",
+                "riskHigh": "고위험",
+                "riskViolation": "위반"
+            }
         }
     },
     "common": {

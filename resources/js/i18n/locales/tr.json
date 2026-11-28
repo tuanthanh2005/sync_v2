@@ -122,7 +122,9 @@
                 "business": "İş Dünyası",
                 "finance": "Kazanç",
                 "qa": "Soru-Cevap",
-                "marketplace": "Pazar Yeri"
+                "marketplace": "Pazar Yeri",
+                "recommended": "Sizin İçin",
+                "following": "Takip Edilenler"
             },
             "newPostsAvailable": "Yeni gönderiler var"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Anket",
             "discardDraftConfirm": "Taslağı sil",
             "discardDraftDesc": "Kaydedilmemiş metin, fotoğraf veya anket seçenekleriniz temizlenecektir.",
-            "discardDraftTitle": "Gönderi taslağı silinsin mi?"
+            "discardDraftTitle": "Gönderi taslağı silinsin mi?",
+            "rateLimitNotice": "Şu anda çok hızlı gönderi paylaşıyorsunuz. Taslağınız aşağıda güvenle korunuyor.",
+            "retryInSeconds": "{seconds} saniye içinde tekrar deneyebilirsiniz."
         },
         "empty": {
             "title": "{brand} topluluğunu keşfedin",
@@ -217,6 +221,14 @@
             "invalidViews": "Geçersiz / Filtrelenen Görüntülenmeler",
             "legacyViews": "Eski / Sınıflandırılmamış",
             "aiSeparationNotice": "Şeffaflık için toplam görüntülenmelere doğrulanmış yapay zeka etkinliği dahildir. Yapay zeka görüntülenmeleri tekil gerçek izleyiciler, DAU/MAU, organik insan erişimi ve ücretli reklam gösterimlerinden kesinlikle hariç tutulur."
+        },
+        "editedBadge": "Düzenlendi",
+        "hideFromFeed": "Akışımdan gizle",
+        "moderationBanner": {
+            "pendingTitle": "Moderasyon incelemesi bekliyor — yalnızca sizinle yetkililere görünür",
+            "rejectedTitle": "Moderasyon tarafından reddedildi — herkese açık akışlardan gizlendi",
+            "hiddenTitle": "Moderasyon tarafından gizlendi — yalnızca size ve yetkililere görünür",
+            "appealLink": "İtiraz gönder"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Çeviri ve Asistan",
             "growthOverview": "Büyüme Özeti",
             "growthReferrals": "Davetler ve Suistimal",
-            "growthCampaigns": "Kampanyalar ve Rozetler"
+            "growthCampaigns": "Kampanyalar ve Rozetler",
+            "postFeedSettings": "Gönderi ve Akış Ayarları"
         },
         "common": {
             "search": "Ara...",
@@ -756,7 +769,8 @@
             "yes": "Evet",
             "no": "Hayır",
             "enabled": "Etkin",
-            "disabled": "Devre dışı"
+            "disabled": "Devre dışı",
+            "saveChanges": "Değişiklikleri kaydet"
         },
         "dashboard": {
             "title": "Platform Operasyon Kontrol Paneli",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "Doğrulamayı Değiştir",
                 "transfer_owner": "Sahipliği Devret",
                 "unlock_comments": "Yorumların Kilidini Aç",
-                "unpin": "Sabitlemeyi Kaldır"
+                "unpin": "Sabitlemeyi Kaldır",
+                "approve": "Gönderiyi onayla",
+                "reject": "Gönderiyi reddet"
             },
             "badgeClosedJoins": "Katılımlar Kapalı",
             "badgeContentWarning": "İçerik uyarısı: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "sistem",
             "transferOwnerUsernameLabel": "Yeni sahip kullanıcı adı ({'@'}username)",
             "unknownAuthor": "bilinmiyor",
-            "usernamePlaceholder": "kullanici_adi"
+            "usernamePlaceholder": "kullanici_adi",
+            "postFilters": {
+                "rejected": "Reddedildi"
+            },
+            "riskScoreBadge": "Risk: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Tutar",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Çevrilmiş özet",
             "translationTitleLabel": "Çevrilmiş başlık",
             "uploadAndInsert": "Yükle ve ekle"
+        },
+        "postFeed": {
+            "title": "Gönderi Paylaşımı, Anti-Spam ve Akış Sıralama Ayarları",
+            "subtitle": "Güven düzeyi kotalarını, spam eşiklerini, akış dağıtımını ve sıralama simülatörünü yapılandırın.",
+            "resetAll": "Tümünü varsayılana sıfırla",
+            "resetSection": "Bölümü sıfırla",
+            "resetConfirmTitle": "Varsayılan politika ayarları geri yüklensin mi?",
+            "resetConfirmDesc": "Seçili kurallar SysNoxis varsayılan değerlerine dönecek ve denetim günlüğüne kaydedilecektir.",
+            "resetConfirmButton": "Varsayılanları geri yükle",
+            "simulatorError": "Sıralama simülasyonu hesaplanamadı. Sayısal değerleri kontrol edin.",
+            "stats": {
+                "published24h": "Yayınlanan (24s)",
+                "pendingReview": "İnceleme bekliyor",
+                "rateLimited24h": "Hız sınırlamalı (24s)",
+                "duplicatesBlocked24h": "Engellenen kopyalar (24s)"
+            },
+            "tabs": {
+                "publishing": "Kotalar ve Limitler",
+                "antispam": "Anti-Spam",
+                "moderation": "Moderasyon",
+                "feed": "Akış ve Çeşitlilik",
+                "trending": "Trend Ağırlıkları",
+                "simulator": "Sıralama Simülatörü",
+                "telemetry": "Spam Günlükleri ve Denetim"
+            },
+            "publishing": {
+                "title": "Güven Düzeyi Yayın Kotaları ve Korumalar",
+                "subtitle": "Yeni hesaplar, Premium sahibi olsalar bile güvenlik süresi boyunca başlangıç sınırlarında kalır.",
+                "enablePosting": "Gönderi oluşturmayı etkinleştir",
+                "maxPostLength": "Maks. gönderi uzunluğu (karakter)",
+                "maxCommentLength": "Maks. yorum uzunluğu (karakter)",
+                "editsPerDay": "24 saatte maks. düzenleme",
+                "newMemberAgeDays": "Yeni üye süresi (gün)",
+                "tier": "Güven Düzeyi",
+                "posts24h": "Gönderi / 24s",
+                "posts60m": "Gönderi / 60dk",
+                "minInterval": "Min. aralık (sn)",
+                "comments24h": "Yorum / 24s",
+                "maxImages": "Maks. görsel / gönderi",
+                "tiers": {
+                    "new": "Yeni Üye",
+                    "standard": "Standart Üye",
+                    "premium": "Premium Üye"
+                }
+            },
+            "antispam": {
+                "title": "Anti-Spam ve Kopya Tespit Kuralları",
+                "subtitle": "Hızlı tekrarları, kopya/benzer içerikleri, aşırı bağlantıları ve etiketleri puanlayın.",
+                "enableAntiSpam": "Anti-Spam Motorunu Etkinleştir",
+                "enableDuplicate": "Kopya ve Benzerlik Korumasını Etkinleştir",
+                "duplicateWindow": "Kopya penceresi (saat)",
+                "similarityThreshold": "Benzerlik eşiği (%)",
+                "mediumThreshold": "Orta risk eşiği",
+                "highThreshold": "Yüksek risk eşiği (İnceleme)",
+                "violationThreshold": "İhlal eşiği (Otomatik Red)",
+                "maxLinks": "Bağlantı sınırı / gönderi",
+                "maxMentions": "Bahsetme sınırı / gönderi",
+                "maxHashtags": "#Etiket sınırı / gönderi"
+            },
+            "moderation": {
+                "title": "Moderasyon İş Akışı ve Politika",
+                "subtitle": "Riskli gönderilerin ne zaman incelemeye alınacağını ve şüpheli bağlantıların yönetimini belirleyin.",
+                "riskBasedEnabled": "Risk tabanlı incelemeyi etkinleştir",
+                "requireManualAll": "Tüm üye gönderileri için manuel inceleme zorunlu kıl",
+                "aiAssistEnabled": "İsteğe bağlı yapay zeka moderasyon desteğini etkinleştir",
+                "reviewThreshold": "İnceleme eşik puanı",
+                "suspiciousLinkAction": "Şüpheli / kısaltılmış bağlantı işlemi",
+                "violationAction": "Ağır ihlal işlemi",
+                "actions": {
+                    "allow": "İzin ver (Yalnızca puanla)",
+                    "flag": "İşaretle ve incele",
+                    "pendingReview": "Bekleyen İncelemeye Gönder",
+                    "reject": "Otomatik reddet"
+                }
+            },
+            "feed": {
+                "title": "Akış Sıralaması, Çeşitlilik ve Adil Dağıtım",
+                "subtitle": "Sekmeleri, çeşitlilik sınırlarını, aday penceresini ve 70/20/10 oranını yönetin.",
+                "enableTrending": "Trend Akışı sekmesini etkinleştir",
+                "enableRecommended": "Önerilen Akış sekmesini etkinleştir",
+                "enableFreshDiscovery": "Yeni ve Keşif yuvalarını etkinleştir",
+                "categoryDiversity": "Ardışık gönderilerde kategori çeşitliliğini zorunlu tut",
+                "candidateWindowHours": "Aday penceresi (saat)",
+                "refreshIntervalMinutes": "Puan yenileme aralığı (dk)",
+                "pageSize": "Sayfa başına gönderi",
+                "authorDiversityMax": "Sayfa başına yazar başı maks. gönderi",
+                "adSpacing": "Sponsorlu gönderi aralığı (gönderi)",
+                "allocationRankingPct": "Sıralı kalite payı (%)",
+                "allocationFreshPct": "Yeni gönderi payı (%)",
+                "allocationDiscoveryPct": "Keşif ve çeşitlilik payı (%)",
+                "allocationSummary": "Toplam dağılım: {sum}% (Önerilen akış oluşturulurken orantılı olarak normalize edilir)."
+            },
+            "trending": {
+                "title": "Organik Trend Puanı Formülü ve Manipülasyon Koruması",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Reklam ve YZ hariçtir.",
+                "weightHumanView": "Ağırlık: Organik insan görüntüleme",
+                "weightReaction": "Ağırlık: Geçerli tepkiler",
+                "weightComment": "Ağırlık: Geçerli yorumlar",
+                "weightBookmark": "Ağırlık: Geçerli yer imleri",
+                "weightShare": "Ağırlık: Geçerli paylaşımlar",
+                "decayBaseHours": "Zaman aşımı tabanı (saat)",
+                "decayExponent": "Zaman aşımı üssü",
+                "perUserCap": "Kullanıcı başı 24s maks. sinyal",
+                "viewEngagementRatio": "Anormal görüntüleme sönümleme oranı"
+            },
+            "simulator": {
+                "title": "Trend Puanı Simülatörü (Veritabanına Yazmaz)",
+                "subtitle": "Gerçek gönderileri veya veritabanını değiştirmeden mevcut ağırlıklarınızı varsayımsal verilerle test edin.",
+                "humanViews": "Organik görüntüleme",
+                "reactions": "Tepkiler",
+                "comments": "Yorumlar",
+                "bookmarks": "Yer imleri",
+                "shares": "Paylaşımlar",
+                "ageHours": "Yaş (saat)",
+                "runButton": "Puanı Hesapla",
+                "trendingScore": "Trend Puanı",
+                "rawScore": "Ham Etkileşim Puanı",
+                "decayFactor": "Zaman Aşımı Böleni",
+                "effectiveViews": "Etkili Görüntüleme",
+                "dampened": "Sönümlendi"
+            },
+            "telemetry": {
+                "title": "Anti-Spam Olayları ve Denetim Geçmişi",
+                "subtitle": "Tetiklenen hız sınırlarını, kopya engellerini ve yönetici güncellemelerini inceleyin.",
+                "auditLogs": "Son Ayarlar ve Moderasyon Denetim Günlüğü",
+                "riskMedium": "Orta risk",
+                "riskHigh": "Yüksek risk",
+                "riskViolation": "İhlal"
+            }
         }
     },
     "common": {

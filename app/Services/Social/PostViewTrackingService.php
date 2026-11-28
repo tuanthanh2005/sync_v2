@@ -653,6 +653,7 @@ class PostViewTrackingService
                     $updates['promoted_views_count'] = DB::raw('promoted_views_count + 1');
                 } else {
                     $updates['organic_views_count'] = DB::raw('organic_views_count + 1');
+                    $updates['needs_rerank'] = true;
                 }
 
                 if (! $alreadyViewedEver) {

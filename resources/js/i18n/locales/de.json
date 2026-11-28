@@ -122,7 +122,9 @@
                 "business": "Wirtschaft",
                 "finance": "Einkommen",
                 "qa": "Fragen & Antworten",
-                "marketplace": "Marktplatz"
+                "marketplace": "Marktplatz",
+                "recommended": "Für dich",
+                "following": "Folge ich"
             },
             "newPostsAvailable": "Neue Beiträge verfügbar"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Umfrage",
             "discardDraftConfirm": "Verwerfen",
             "discardDraftDesc": "Ihr ungespeicherter Text sowie Fotos oder Umfrageoptionen werden gelöscht.",
-            "discardDraftTitle": "Beitragsentwurf verwerfen?"
+            "discardDraftTitle": "Beitragsentwurf verwerfen?",
+            "rateLimitNotice": "Sie veröffentlichen zu schnell. Ihr Entwurf bleibt unten erhalten.",
+            "retryInSeconds": "Erneuter Versuch in {seconds} Sek."
         },
         "empty": {
             "title": "Entdecken Sie die {brand}-Community",
@@ -217,6 +221,14 @@
             "invalidViews": "Ungültige / gefilterte Aufrufe",
             "legacyViews": "Altbestand / Nicht kategorisiert",
             "aiSeparationNotice": "Die Gesamtaufrufe enthalten aus Transparenzgründen verifizierte KI-Aktivität. KI-Aufrufe sind strikt von eindeutigen menschlichen Betrachtern, DAU/MAU, organischer Reichweite und bezahlten Werbeimpressionen ausgeschlossen."
+        },
+        "editedBadge": "Bearbeitet",
+        "hideFromFeed": "Aus meinem Feed ausblenden",
+        "moderationBanner": {
+            "pendingTitle": "Wartet auf Moderation — nur für Sie und das Team sichtbar",
+            "rejectedTitle": "Von der Moderation abgelehnt — öffentlich ausgeblendet",
+            "hiddenTitle": "Von der Moderation ausgeblendet — nur für Sie und das Team sichtbar",
+            "appealLink": "Einspruch einlegen"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Übersetzung & Assistenz",
             "growthOverview": "Wachstumsübersicht",
             "growthReferrals": "Empfehlungen & Betrug",
-            "growthCampaigns": "Kampagnen & Abzeichen"
+            "growthCampaigns": "Kampagnen & Abzeichen",
+            "postFeedSettings": "Beitrags- & Feed-Einstellungen"
         },
         "common": {
             "search": "Suchen...",
@@ -756,7 +769,8 @@
             "yes": "Ja",
             "no": "Nein",
             "enabled": "Aktiviert",
-            "disabled": "Deaktiviert"
+            "disabled": "Deaktiviert",
+            "saveChanges": "Änderungen speichern"
         },
         "dashboard": {
             "title": "Plattform-Betriebsdashboard",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "Verifiziert umschalten",
                 "transfer_owner": "Eigentümerschaft übertragen",
                 "unlock_comments": "Kommentare entsperren",
-                "unpin": "Lösen"
+                "unpin": "Lösen",
+                "approve": "Beitrag genehmigen",
+                "reject": "Beitrag ablehnen"
             },
             "badgeClosedJoins": "Beitritt geschlossen",
             "badgeContentWarning": "Inhaltswarnung: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "System",
             "transferOwnerUsernameLabel": "Benutzername des neuen Eigentümers ({'@'}username)",
             "unknownAuthor": "unbekannt",
-            "usernamePlaceholder": "benutzername"
+            "usernamePlaceholder": "benutzername",
+            "postFilters": {
+                "rejected": "Abgelehnt"
+            },
+            "riskScoreBadge": "Risiko: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Betrag",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Übersetzte Zusammenfassung",
             "translationTitleLabel": "Übersetzter Titel",
             "uploadAndInsert": "Hochladen & einfügen"
+        },
+        "postFeed": {
+            "title": "Veröffentlichung, Anti-Spam & Feed-Ranking",
+            "subtitle": "Konfigurieren Sie Kontingente nach Vertrauensstufe, Anti-Spam-Schwellen, Feed-Verteilung und Ranking-Simulationen.",
+            "resetAll": "Alles auf Standard zurücksetzen",
+            "resetSection": "Bereich zurücksetzen",
+            "resetConfirmTitle": "Standardeinstellungen wiederherstellen?",
+            "resetConfirmDesc": "Ausgewählte Regeln werden auf SysNoxis-Standardwerte zurückgesetzt und im Audit-Protokoll vermerkt.",
+            "resetConfirmButton": "Zurücksetzen",
+            "simulatorError": "Ranking-Simulation fehlgeschlagen. Überprüfen Sie die Eingaben.",
+            "stats": {
+                "published24h": "Veröffentlicht (24h)",
+                "pendingReview": "Prüfung ausstehend",
+                "rateLimited24h": "Ratenbegrenzt (24h)",
+                "duplicatesBlocked24h": "Duplikate blockiert (24h)"
+            },
+            "tabs": {
+                "publishing": "Quoten & Limits",
+                "antispam": "Anti-Spam",
+                "moderation": "Moderation",
+                "feed": "Feed & Vielfalt",
+                "trending": "Trending-Gewichtung",
+                "simulator": "Ranking-Simulator",
+                "telemetry": "Spam-Protokolle & Audit"
+            },
+            "publishing": {
+                "title": "Veröffentlichungslimits nach Vertrauensstufe",
+                "subtitle": "Neue Konten bleiben auch mit Premium während der Sicherheitsfrist in den Starter-Limits.",
+                "enablePosting": "Erstellen von Beiträgen aktivieren",
+                "maxPostLength": "Max. Beitragslänge (Zeichen)",
+                "maxCommentLength": "Max. Kommentarlänge (Zeichen)",
+                "editsPerDay": "Max. Bearbeitungen pro 24h",
+                "newMemberAgeDays": "Neumitglieds-Zeitraum (Tage)",
+                "tier": "Vertrauensstufe",
+                "posts24h": "Beiträge / 24h",
+                "posts60m": "Beiträge / 60m",
+                "minInterval": "Min. Intervall (Sek.)",
+                "comments24h": "Kommentare / 24h",
+                "maxImages": "Max. Bilder / Beitrag",
+                "tiers": {
+                    "new": "Neues Mitglied",
+                    "standard": "Standardmitglied",
+                    "premium": "Premium-Mitglied"
+                }
+            },
+            "antispam": {
+                "title": "Anti-Spam- & Duplikaterkennungsregeln",
+                "subtitle": "Bewertet schnelle Bursts, Duplikate, übermäßige Links, Erwähnungen und Hashtags.",
+                "enableAntiSpam": "Anti-Spam-Engine aktivieren",
+                "enableDuplicate": "Duplikat- & Ähnlichkeitsschutz aktivieren",
+                "duplicateWindow": "Duplikat-Zeitfenster (Stunden)",
+                "similarityThreshold": "Ähnlichkeitsschwelle (%)",
+                "mediumThreshold": "Mittlere Risikoschwelle",
+                "highThreshold": "Hohe Risikoschwelle (Prüfung)",
+                "violationThreshold": "Verstoßschwelle (Auto-Ablehnung)",
+                "maxLinks": "Link-Limit / Beitrag",
+                "maxMentions": "Erwähnungs-Limit / Beitrag",
+                "maxHashtags": "#Hashtag-Limit / Beitrag"
+            },
+            "moderation": {
+                "title": "Moderations-Workflow & Automatisierung",
+                "subtitle": "Steuern Sie, wann riskante Beiträge geprüft werden und wie verdächtige Links behandelt werden.",
+                "riskBasedEnabled": "Risikobasierte Prüfung aktivieren",
+                "requireManualAll": "Manuelle Prüfung für alle Beiträge fordern",
+                "aiAssistEnabled": "Optionale KI-Moderationshilfe aktivieren",
+                "reviewThreshold": "Schwellenwert für Moderation",
+                "suspiciousLinkAction": "Aktion bei verdächtigem Link",
+                "violationAction": "Aktion bei schwerem Verstoß",
+                "actions": {
+                    "allow": "Erlauben (Nur bewerten)",
+                    "flag": "Markieren & prüfen",
+                    "pendingReview": "Zur Prüfung senden",
+                    "reject": "Automatisch ablehnen"
+                }
+            },
+            "feed": {
+                "title": "Feed-Ranking, Vielfalt & Faire Verteilung",
+                "subtitle": "Verwalten Sie Tabs, Diversitätsgrenzen, Kandidatenfenster und 70/20/10-Aufteilung.",
+                "enableTrending": "Tab „Trending“ aktivieren",
+                "enableRecommended": "Tab „Empfohlen“ aktivieren",
+                "enableFreshDiscovery": "Frische- & Entdeckungs-Slots aktivieren",
+                "categoryDiversity": "Kategorie-Vielfalt erzwingen",
+                "candidateWindowHours": "Kandidatenfenster (Stunden)",
+                "refreshIntervalMinutes": "Aktualisierungsintervall (Min.)",
+                "pageSize": "Beiträge pro Seite",
+                "authorDiversityMax": "Max. Beiträge pro Autor je Seite",
+                "adSpacing": "Anzeigenabstand (Beiträge)",
+                "allocationRankingPct": "Ranking-Anteil (%)",
+                "allocationFreshPct": "Frische-Anteil (%)",
+                "allocationDiscoveryPct": "Entdeckungs-Anteil (%)",
+                "allocationSummary": "Gesamtsumme: {sum}% (proportional im Empfohlen-Feed normiert)."
+            },
+            "trending": {
+                "title": "Organische Trending-Formel & Manipulationsschutz",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Ohne Anzeigen/KI.",
+                "weightHumanView": "Gewicht: Echte Aufrufe",
+                "weightReaction": "Gewicht: Gültige Reaktionen",
+                "weightComment": "Gewicht: Gültige Kommentare",
+                "weightBookmark": "Gewicht: Gültige Lesezeichen",
+                "weightShare": "Gewicht: Gültige Teilungen",
+                "decayBaseHours": "Zeitverfall-Basis (Stunden)",
+                "decayExponent": "Zeitverfall-Exponent",
+                "perUserCap": "Max. Signale / Nutzer / 24h",
+                "viewEngagementRatio": "Dämpfungsverhältnis ungewöhnlicher Aufrufe"
+            },
+            "simulator": {
+                "title": "Trending-Score-Simulator (Ohne DB-Schreibzugriff)",
+                "subtitle": "Testen Sie aktuelle Gewichtungen und Zeitverfall ohne Änderungen an echten Beiträgen.",
+                "humanViews": "Organische Aufrufe",
+                "reactions": "Reaktionen",
+                "comments": "Kommentare",
+                "bookmarks": "Lesezeichen",
+                "shares": "Geteilt",
+                "ageHours": "Alter (Stunden)",
+                "runButton": "Score berechnen",
+                "trendingScore": "Trending-Score",
+                "rawScore": "Rohwert",
+                "decayFactor": "Zeitverfall-Teiler",
+                "effectiveViews": "Effektive Aufrufe",
+                "dampened": "Gedämpft"
+            },
+            "telemetry": {
+                "title": "Anti-Spam-Ereignisse & Audit-Verlauf",
+                "subtitle": "Prüfen Sie ausgelöste Ratenlimits, Duplikatsperren und Admin-Änderungen.",
+                "auditLogs": "Letztes Einstellungs- & Moderationsprotokoll",
+                "riskMedium": "Mittleres Risiko",
+                "riskHigh": "Hohes Risiko",
+                "riskViolation": "Verstoß"
+            }
         }
     },
     "common": {

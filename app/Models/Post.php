@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ContentOrigin;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
+use App\Enums\PostLifecycleStatus;
 use App\Enums\PostVisibility;
 use Carbon\CarbonInterface;
 use Database\Factories\PostFactory;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $slug
  * @property string $language_code
  * @property string|null $content_fingerprint
+ * @property string|null $link_fingerprint
  * @property string $content
  * @property string|null $link_url
  * @property array<string, string|null>|null $link_meta
@@ -34,8 +36,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property bool $is_pinned
  * @property bool $comments_locked
  * @property string|null $content_warning
+ * @property string|null $language_code
  * @property ModerationStatus $moderation_status
+ * @property PostLifecycleStatus|null $lifecycle_status
  * @property bool $is_spam
+ * @property int $spam_risk_score
  * @property bool $is_ai_assisted
  * @property ContentOrigin $content_origin
  * @property int|null $ai_agent_id
@@ -48,6 +53,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $reactions_count
  * @property int $comments_count
  * @property int $shares_count
+ * @property int $bookmarks_count
+ * @property int $valid_reactions_count
+ * @property int $valid_comments_count
+ * @property int $valid_bookmarks_count
+ * @property int $valid_shares_count
+ * @property float $trending_raw_score
+ * @property float $trending_score
+ * @property CarbonInterface|null $trending_calculated_at
+ * @property bool $needs_rerank
  * @property int $views_count
  * @property int $organic_views_count
  * @property int $promoted_views_count
@@ -60,6 +74,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $invalid_views_count
  * @property int $unique_human_viewers_count
  * @property CarbonInterface|null $published_at
+ * @property CarbonInterface|null $edited_at
+ * @property int $edit_count
  * @property CarbonInterface|null $created_at
  * @property CarbonInterface|null $updated_at
  * @property CarbonInterface|null $deleted_at
@@ -81,6 +97,17 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
     /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'moderation_status' => ModerationStatus::Approved->value,
+        'lifecycle_status' => PostLifecycleStatus::Published->value,
+        'is_spam' => false,
+        'spam_risk_score' => 0,
+        'needs_rerank' => false,
+    ];
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array
@@ -89,10 +116,12 @@ class Post extends Model
             'category' => PostCategory::class,
             'visibility' => PostVisibility::class,
             'moderation_status' => ModerationStatus::class,
+            'lifecycle_status' => PostLifecycleStatus::class,
             'link_meta' => 'array',
             'is_pinned' => 'boolean',
             'comments_locked' => 'boolean',
             'is_spam' => 'boolean',
+            'spam_risk_score' => 'integer',
             'is_ai_assisted' => 'boolean',
             'content_origin' => ContentOrigin::class,
             'ai_agent_id' => 'integer',
@@ -103,6 +132,15 @@ class Post extends Model
             'reactions_count' => 'integer',
             'comments_count' => 'integer',
             'shares_count' => 'integer',
+            'bookmarks_count' => 'integer',
+            'valid_reactions_count' => 'integer',
+            'valid_comments_count' => 'integer',
+            'valid_bookmarks_count' => 'integer',
+            'valid_shares_count' => 'integer',
+            'trending_raw_score' => 'float',
+            'trending_score' => 'float',
+            'trending_calculated_at' => 'datetime',
+            'needs_rerank' => 'boolean',
             'views_count' => 'integer',
             'organic_views_count' => 'integer',
             'promoted_views_count' => 'integer',
@@ -115,6 +153,8 @@ class Post extends Model
             'invalid_views_count' => 'integer',
             'unique_human_viewers_count' => 'integer',
             'published_at' => 'datetime',
+            'edited_at' => 'datetime',
+            'edit_count' => 'integer',
         ];
     }
 
@@ -207,6 +247,8 @@ class Post extends Model
         return $query
             ->where('visibility', PostVisibility::Public->value)
             ->where('moderation_status', ModerationStatus::Approved->value)
+            ->where('is_spam', false)
+            ->where('lifecycle_status', PostLifecycleStatus::Published->value)
             ->whereNotNull('published_at');
     }
 }

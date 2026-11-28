@@ -91,6 +91,7 @@ import {
     media as adminMedia,
     polls as adminPolls,
     posts as adminPosts,
+    settings as adminContentSettings,
 } from '@/routes/admin/content';
 import { index as adminFinance } from '@/routes/admin/finance';
 import { index as adminLanguages } from '@/routes/admin/languages';
@@ -310,6 +311,15 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                               label: t('admin.nav.posts'),
                               href: adminPosts.url(),
                               icon: Newspaper,
+                          },
+                      ]
+                    : []),
+                ...(perms.viewPostFeedSettings || perms.managePostFeedSettings
+                    ? [
+                          {
+                              label: t('admin.nav.postFeedSettings'),
+                              href: adminContentSettings.url(),
+                              icon: Sliders,
                           },
                       ]
                     : []),

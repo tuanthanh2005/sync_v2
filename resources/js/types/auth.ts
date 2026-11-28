@@ -27,6 +27,8 @@ export type UserPermissions = {
     manageBoosts?: boolean;
     manageAdSense?: boolean;
     manageSettings?: boolean;
+    viewPostFeedSettings?: boolean;
+    managePostFeedSettings?: boolean;
     manageLanguages?: boolean;
     manageNotifications?: boolean;
     viewSecurity?: boolean;
@@ -78,6 +80,19 @@ export type User = {
     rbac_role?: string;
     hierarchy_level?: number;
     status: UserStatus;
+    posting_limits?: {
+        tier: string;
+        tier_label: string;
+        is_new_account: boolean;
+        posts_per_24h: number;
+        posts_per_60m: number;
+        min_interval_seconds: number;
+        comments_per_24h: number;
+        max_images_per_post: number;
+        edits_per_24h: number;
+        max_post_length: number;
+        max_comment_length: number;
+    };
     status_label: string;
     timezone: string;
     preferred_locale?: string | null;

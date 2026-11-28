@@ -122,7 +122,9 @@
                 "business": "व्यापार",
                 "finance": "कमाई",
                 "qa": "प्रश्नोत्तर",
-                "marketplace": "बाज़ार"
+                "marketplace": "बाज़ार",
+                "recommended": "आपके लिए",
+                "following": "फ़ॉलो कर रहे हैं"
             },
             "newPostsAvailable": "नई पोस्ट उपलब्ध हैं"
         },
@@ -152,7 +154,9 @@
             "addPoll": "पोल",
             "discardDraftConfirm": "हटाएं",
             "discardDraftDesc": "आपका सहेजा न गया टेक्स्ट, फ़ोटो या पोल विकल्प हटा दिए जाएंगे।",
-            "discardDraftTitle": "पोस्ट ड्राफ़्ट हटाएं?"
+            "discardDraftTitle": "पोस्ट ड्राफ़्ट हटाएं?",
+            "rateLimitNotice": "आप बहुत तेज़ी से पोस्ट कर रहे हैं। आपका ड्राफ्ट नीचे सुरक्षित है।",
+            "retryInSeconds": "आप {seconds} सेकंड में फिर प्रयास कर सकते हैं।"
         },
         "empty": {
             "title": "{brand} समुदाय को जानें",
@@ -217,6 +221,14 @@
             "invalidViews": "अमान्य / फ़िल्टर किए गए व्यूज़",
             "legacyViews": "पुराने / अवर्गीकृत",
             "aiSeparationNotice": "पारदर्शिता के लिए कुल व्यूज़ में सत्यापित AI गतिविधि शामिल है। AI व्यूज़ को अद्वितीय मानव दर्शकों, DAU/MAU, ऑर्गेनिक मानव पहुँच और भुगतान विज्ञापन इंप्रेशन से पूरी तरह बाहर रखा गया है।"
+        },
+        "editedBadge": "संपादित",
+        "hideFromFeed": "मेरे फ़ीड से छिपाएँ",
+        "moderationBanner": {
+            "pendingTitle": "मॉडरेशन समीक्षा लंबित — केवल आपको और स्टाफ़ को दिखाई दे रहा है",
+            "rejectedTitle": "मॉडरेशन द्वारा अस्वीकृत — सार्वजनिक फ़ीड से छिपाया गया",
+            "hiddenTitle": "मॉडरेशन द्वारा छिपाया गया — केवल आपको और स्टाफ़ को दिखाई दे रहा है",
+            "appealLink": "अपील सबमिट करें"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "अनुवाद और सहायता",
             "growthOverview": "विकास अवलोकन",
             "growthReferrals": "रेफ़रल और धोखाधड़ी",
-            "growthCampaigns": "अभियान और बैज"
+            "growthCampaigns": "अभियान और बैज",
+            "postFeedSettings": "पोस्ट और फ़ीड सेटिंग्स"
         },
         "common": {
             "search": "खोजें...",
@@ -756,7 +769,8 @@
             "yes": "हां",
             "no": "नहीं",
             "enabled": "सक्षम",
-            "disabled": "अक्षम"
+            "disabled": "अक्षम",
+            "saveChanges": "परिवर्तन सहेजें"
         },
         "dashboard": {
             "title": "प्लेटफ़ॉर्म संचालन डैशबोर्ड",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "सत्यापित स्थिति बदलें",
                 "transfer_owner": "स्वामित्व हस्तांतरित करें",
                 "unlock_comments": "टिप्पणियां अनलॉक करें",
-                "unpin": "अनपिन करें"
+                "unpin": "अनपिन करें",
+                "approve": "पोस्ट स्वीकृत करें",
+                "reject": "पोस्ट अस्वीकार करें"
             },
             "badgeClosedJoins": "शामिल होना बंद",
             "badgeContentWarning": "सामग्री चेतावनी: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "सिस्टम",
             "transferOwnerUsernameLabel": "नए स्वामी का उपयोगकर्ता नाम ({'@'}username)",
             "unknownAuthor": "अज्ञात",
-            "usernamePlaceholder": "उपयोगकर्ता नाम"
+            "usernamePlaceholder": "उपयोगकर्ता नाम",
+            "postFilters": {
+                "rejected": "अस्वीकृत"
+            },
+            "riskScoreBadge": "जोखिम: {score}/100"
         },
         "financeExtra": {
             "colAmount": "राशि",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "अनुवादित सारांश",
             "translationTitleLabel": "अनुवादित शीर्षक",
             "uploadAndInsert": "अपलोड करें और डालें"
+        },
+        "postFeed": {
+            "title": "पोस्ट प्रकाशन, एंटी-स्पैम और फ़ीड रैंकिंग",
+            "subtitle": "ट्रस्ट-टियर कोटा, स्पैम सीमाएं, फ़ीड वितरण और रैंकिंग सिमुलेशन कॉन्फ़िगर करें।",
+            "resetAll": "सभी को डिफ़ॉल्ट पर रीसेट करें",
+            "resetSection": "अनुभाग रीसेट करें",
+            "resetConfirmTitle": "डिफ़ॉल्ट नीति सेटिंग्स पुनर्स्थापित करें?",
+            "resetConfirmDesc": "चयनित नियम SysNoxis आधार मानों पर लौट आएंगे और ऑडिट लॉग में दर्ज होंगे।",
+            "resetConfirmButton": "डिफ़ॉल्ट बहाल करें",
+            "simulatorError": "रैंकिंग सिमुलेशन की गणना करने में असमर्थ। संख्यात्मक मान जांचें।",
+            "stats": {
+                "published24h": "प्रकाशित (24 घंटे)",
+                "pendingReview": "समीक्षा लंबित",
+                "rateLimited24h": "दर-सीमित (24 घंटे)",
+                "duplicatesBlocked24h": "डुप्लिकेट अवरुद्ध (24 घंटे)"
+            },
+            "tabs": {
+                "publishing": "कोटा और सीमाएं",
+                "antispam": "एंटी-स्पैम",
+                "moderation": "मॉडरेशन",
+                "feed": "फ़ीड और विविधता",
+                "trending": "ट्रेंडिंग भार",
+                "simulator": "रैंकिंग सिमुलेटर",
+                "telemetry": "स्पैम लॉग और ऑडिट"
+            },
+            "publishing": {
+                "title": "ट्रस्ट-टियर प्रकाशन कोटा और सुरक्षा",
+                "subtitle": "प्रीमियम होने पर भी नए खाते सुरक्षा अवधि के दौरान शुरुआती सीमा में रहते हैं।",
+                "enablePosting": "पोस्ट बनाना सक्षम करें",
+                "maxPostLength": "अधिकतम पोस्ट लंबाई (अक्षर)",
+                "maxCommentLength": "अधिकतम टिप्पणी लंबाई (अक्षर)",
+                "editsPerDay": "24 घंटे में अधिकतम संपादन",
+                "newMemberAgeDays": "नए सदस्य की अवधि (दिन)",
+                "tier": "विश्वास स्तर",
+                "posts24h": "पोस्ट / 24 घंटे",
+                "posts60m": "पोस्ट / 60 मिनट",
+                "minInterval": "न्यूनतम अंतराल (सेकंड)",
+                "comments24h": "टिप्पणियाँ / 24 घंटे",
+                "maxImages": "अधिकतम छवियाँ / पोस्ट",
+                "tiers": {
+                    "new": "नया सदस्य",
+                    "standard": "सामान्य सदस्य",
+                    "premium": "प्रीमियम सदस्य"
+                }
+            },
+            "antispam": {
+                "title": "एंटी-स्पैम और डुप्लिकेट पहचान नियम",
+                "subtitle": "तेज़ पोस्ट, समान सामग्री, अत्यधिक लिंक, मेंशन और हैशटैग का स्कोर तय करें।",
+                "enableAntiSpam": "एंटी-स्पैम इंजन सक्षम करें",
+                "enableDuplicate": "डुप्लिकेट और समानता सुरक्षा सक्षम करें",
+                "duplicateWindow": "डुप्लिकेट अवधि (घंटे)",
+                "similarityThreshold": "समानता सीमा (%)",
+                "mediumThreshold": "मध्यम जोखिम सीमा",
+                "highThreshold": "उच्च जोखिम सीमा (समीक्षा)",
+                "violationThreshold": "उल्लंघन सीमा (स्वतः अस्वीकृत)",
+                "maxLinks": "अधिकतम लिंक / पोस्ट",
+                "maxMentions": "अधिकतम उल्लेख / पोस्ट",
+                "maxHashtags": "अधिकतम #हैशटैग / पोस्ट"
+            },
+            "moderation": {
+                "title": "मॉडरेशन कार्यप्रवाह और स्वचालन नीति",
+                "subtitle": "नियंत्रित करें कि जोखिम भरे पोस्ट कब समीक्षा में जाएं और संदिग्ध लिंक कैसे संभाले जाएं।",
+                "riskBasedEnabled": "जोखिम-आधारित लंबित समीक्षा सक्षम करें",
+                "requireManualAll": "सभी सदस्य पोस्ट के लिए मैनुअल समीक्षा अनिवार्य करें",
+                "aiAssistEnabled": "वैकल्पिक AI मॉडरेशन सहायता सक्षम करें",
+                "reviewThreshold": "मॉडरेशन समीक्षा सीमा स्कोर",
+                "suspiciousLinkAction": "संदिग्ध लिंक पर कार्रवाई",
+                "violationAction": "गंभीर उल्लंघन पर कार्रवाई",
+                "actions": {
+                    "allow": "अनुमति दें (केवल स्कोर)",
+                    "flag": "चिह्नित करें और समीक्षा करें",
+                    "pendingReview": "लंबित समीक्षा में भेजें",
+                    "reject": "स्वतः अस्वीकार करें"
+                }
+            },
+            "feed": {
+                "title": "फ़ीड रैंकिंग, विविधता और निष्पक्ष वितरण",
+                "subtitle": "टैब, विविधता सीमाएं, कैंडिडेट विंडो और 70/20/10 मिश्रण प्रबंधित करें।",
+                "enableTrending": "ट्रेंडिंग फ़ीड टैब सक्षम करें",
+                "enableRecommended": "अनुशंसित फ़ीड टैब सक्षम करें",
+                "enableFreshDiscovery": "नए और डिस्कवरी स्लॉट सक्षम करें",
+                "categoryDiversity": "लगातार पोस्ट में श्रेणी विविधता लागू करें",
+                "candidateWindowHours": "ट्रेंडिंग कैंडिडेट विंडो (घंटे)",
+                "refreshIntervalMinutes": "स्कोर रीफ्रेश अंतराल (मिनट)",
+                "pageSize": "प्रति पृष्ठ पोस्ट संख्या",
+                "authorDiversityMax": "प्रति पृष्ठ एक लेखक की अधिकतम पोस्ट",
+                "adSpacing": "प्रायोजित पोस्ट अंतराल (पोस्ट)",
+                "allocationRankingPct": "रैंक गुणवत्ता हिस्सा (%)",
+                "allocationFreshPct": "नए पोस्ट का हिस्सा (%)",
+                "allocationDiscoveryPct": "डिस्कवरी हिस्सा (%)",
+                "allocationSummary": "संयुक्त योग: {sum}% (अनुशंसित फ़ीड में आनुपातिक रूप से सामान्यीकृत)।"
+            },
+            "trending": {
+                "title": "ऑर्गेनिक ट्रेंडिंग स्कोर फॉर्मूला और सुरक्षा",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp। विज्ञापन और AI शामिल नहीं।",
+                "weightHumanView": "भार: ऑर्गेनिक मानव दृश्य",
+                "weightReaction": "भार: वैध प्रतिक्रियाएं",
+                "weightComment": "भार: वैध टिप्पणियाँ",
+                "weightBookmark": "भार: वैध बुकमार्क",
+                "weightShare": "भार: वैध शेयर",
+                "decayBaseHours": "समय क्षय आधार (घंटे)",
+                "decayExponent": "समय क्षय घातांक",
+                "perUserCap": "अधिकतम रैंकिंग संकेत / उपयोगकर्ता / 24 घंटे",
+                "viewEngagementRatio": "असामान्य दृश्य मंदन अनुपात"
+            },
+            "simulator": {
+                "title": "ट्रेंडिंग स्कोर सिमुलेटर (डेटाबेस में कोई बदलाव नहीं)",
+                "subtitle": "किसी भी वास्तविक पोस्ट को बदले बिना काल्पनिक आंकड़ों के साथ अपने भार का परीक्षण करें।",
+                "humanViews": "ऑर्गेनिक दृश्य",
+                "reactions": "प्रतिक्रियाएं",
+                "comments": "टिप्पणियाँ",
+                "bookmarks": "बुकमार्क",
+                "shares": "शेयर",
+                "ageHours": "आयु (घंटे)",
+                "runButton": "स्कोर की गणना करें",
+                "trendingScore": "ट्रेंडिंग स्कोर",
+                "rawScore": "कच्चा स्कोर",
+                "decayFactor": "समय क्षय भाजक",
+                "effectiveViews": "प्रभावी दृश्य",
+                "dampened": "नियंत्रित"
+            },
+            "telemetry": {
+                "title": "एंटी-स्पैम घटनाएँ और ऑडिट इतिहास",
+                "subtitle": "ट्रिगर दर सीमाएं, डुप्लिकेट ब्लॉक, उच्च-जोखिम समीक्षाएं और व्यवस्थापक अपडेट देखें।",
+                "auditLogs": "हालिया सेटिंग्स और मॉडरेशन ऑडिट लॉग",
+                "riskMedium": "मध्यम जोखिम",
+                "riskHigh": "उच्च जोखिम",
+                "riskViolation": "उल्लंघन"
+            }
         }
     },
     "common": {

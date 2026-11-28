@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
+use App\Enums\PostLifecycleStatus;
 use App\Enums\PostVisibility;
 use App\Models\Post;
 use App\Models\User;
@@ -30,6 +31,8 @@ class PostFactory extends Factory
             'visibility' => PostVisibility::Public,
             'is_pinned' => false,
             'moderation_status' => ModerationStatus::Approved,
+            'lifecycle_status' => PostLifecycleStatus::Published,
+            'is_spam' => false,
             'reactions_count' => 0,
             'comments_count' => 0,
             'shares_count' => 0,

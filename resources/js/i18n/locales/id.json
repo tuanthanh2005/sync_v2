@@ -122,7 +122,9 @@
                 "business": "Bisnis",
                 "finance": "Penghasilan",
                 "qa": "Tanya Jawab",
-                "marketplace": "Jual Beli"
+                "marketplace": "Jual Beli",
+                "recommended": "Untuk Anda",
+                "following": "Mengikuti"
             },
             "newPostsAvailable": "Postingan baru tersedia"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Polling",
             "discardDraftConfirm": "Buang",
             "discardDraftDesc": "Teks, foto, atau opsi polling yang belum disimpan akan dihapus.",
-            "discardDraftTitle": "Buang draf postingan?"
+            "discardDraftTitle": "Buang draf postingan?",
+            "rateLimitNotice": "Anda memposting terlalu cepat saat ini. Draf Anda tetap tersimpan aman di bawah.",
+            "retryInSeconds": "Anda dapat mencoba lagi dalam {seconds} dtk."
         },
         "empty": {
             "title": "Jelajahi komunitas {brand}",
@@ -217,6 +221,14 @@
             "invalidViews": "Tayangan Tidak Valid / Difilter",
             "legacyViews": "Lama / Belum Diklasifikasi",
             "aiSeparationNotice": "Total tayangan mencakup aktivitas AI terverifikasi demi transparansi. Tayangan AI dikecualikan sepenuhnya dari penonton manusia unik, DAU/MAU, jangkauan organik manusia, dan tayangan iklan berbayar."
+        },
+        "editedBadge": "Diedit",
+        "hideFromFeed": "Sembunyikan dari feed saya",
+        "moderationBanner": {
+            "pendingTitle": "Menunggu tinjauan moderasi — hanya terlihat oleh Anda dan staf",
+            "rejectedTitle": "Ditolak moderasi — disembunyikan dari feed publik",
+            "hiddenTitle": "Disembunyikan moderasi — hanya terlihat oleh Anda dan staf",
+            "appealLink": "Ajukan banding"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Terjemahan & Asisten",
             "growthOverview": "Ringkasan Pertumbuhan",
             "growthReferrals": "Referral & Penipuan",
-            "growthCampaigns": "Kampanye & Lencana"
+            "growthCampaigns": "Kampanye & Lencana",
+            "postFeedSettings": "Pengaturan Postingan & Feed"
         },
         "common": {
             "search": "Cari...",
@@ -756,7 +769,8 @@
             "yes": "Ya",
             "no": "Tidak",
             "enabled": "Aktif",
-            "disabled": "Nonaktif"
+            "disabled": "Nonaktif",
+            "saveChanges": "Simpan perubahan"
         },
         "dashboard": {
             "title": "Dasbor Operasional Platform",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "Alihkan Terverifikasi",
                 "transfer_owner": "Alihkan Kepemilikan",
                 "unlock_comments": "Buka Kunci Komentar",
-                "unpin": "Lepas Sematan"
+                "unpin": "Lepas Sematan",
+                "approve": "Setujui postingan",
+                "reject": "Tolak postingan"
             },
             "badgeClosedJoins": "Pendaftaran Ditutup",
             "badgeContentWarning": "Peringatan konten: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "sistem",
             "transferOwnerUsernameLabel": "Nama pengguna pemilik baru ({'@'}username)",
             "unknownAuthor": "tidak diketahui",
-            "usernamePlaceholder": "nama_pengguna"
+            "usernamePlaceholder": "nama_pengguna",
+            "postFilters": {
+                "rejected": "Ditolak"
+            },
+            "riskScoreBadge": "Risiko: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Jumlah",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Ringkasan terjemahan",
             "translationTitleLabel": "Judul terjemahan",
             "uploadAndInsert": "Unggah & sisipkan"
+        },
+        "postFeed": {
+            "title": "Publikasi, Antispam & Peringkat Feed",
+            "subtitle": "Atur kuota tingkat kepercayaan, ambang batas antispam, distribusi feed, dan simulasi skor tren.",
+            "resetAll": "Reset semua ke bawaan",
+            "resetSection": "Reset bagian ini",
+            "resetConfirmTitle": "Pulihkan pengaturan kebijakan bawaan?",
+            "resetConfirmDesc": "Aturan terpilih akan kembali ke nilai dasar SysNoxis dan dicatat ke log audit.",
+            "resetConfirmButton": "Pulihkan bawaan",
+            "simulatorError": "Tidak dapat menjalankan simulasi peringkat. Periksa input angka.",
+            "stats": {
+                "published24h": "Diterbitkan (24j)",
+                "pendingReview": "Menunggu tinjauan",
+                "rateLimited24h": "Dibatasi laju (24j)",
+                "duplicatesBlocked24h": "Duplikat diblokir (24j)"
+            },
+            "tabs": {
+                "publishing": "Kuota & Batas",
+                "antispam": "Antispam",
+                "moderation": "Moderasi",
+                "feed": "Feed & Keragaman",
+                "trending": "Bobot Tren",
+                "simulator": "Simulator Peringkat",
+                "telemetry": "Log Spam & Audit"
+            },
+            "publishing": {
+                "title": "Kuota Publikasi Menurut Tingkat Kepercayaan",
+                "subtitle": "Akun baru tetap berada dalam batas pengaman awal selama masa aman meskipun memiliki Premium.",
+                "enablePosting": "Aktifkan pembuatan postingan",
+                "maxPostLength": "Panjang maks. postingan (karakter)",
+                "maxCommentLength": "Panjang maks. komentar",
+                "editsPerDay": "Maks. sunting per 24j",
+                "newMemberAgeDays": "Masa akun baru (hari)",
+                "tier": "Tingkat Kepercayaan",
+                "posts24h": "Post / 24j",
+                "posts60m": "Post / 60m",
+                "minInterval": "Jeda min. (detik)",
+                "comments24h": "Komentar / 24j",
+                "maxImages": "Maks. gambar / post",
+                "tiers": {
+                    "new": "Anggota Baru",
+                    "standard": "Anggota Standar",
+                    "premium": "Anggota Premium"
+                }
+            },
+            "antispam": {
+                "title": "Aturan Antispam & Deteksi Duplikat",
+                "subtitle": "Nilai risiko lonjakan cepat, duplikat persis/mirip, tautan, sebutan, dan tagar berlebih.",
+                "enableAntiSpam": "Aktifkan Mesin Antispam",
+                "enableDuplicate": "Aktifkan Penjaga Duplikat & Kemiripan",
+                "duplicateWindow": "Jendela duplikat (jam)",
+                "similarityThreshold": "Ambang batas kemiripan (%)",
+                "mediumThreshold": "Ambang risiko sedang",
+                "highThreshold": "Ambang risiko tinggi (Tinjau)",
+                "violationThreshold": "Ambang pelanggaran (Tolak otomatis)",
+                "maxLinks": "Batas tautan / post",
+                "maxMentions": "Batas sebutan / post",
+                "maxHashtags": "Batas #tagar / post"
+            },
+            "moderation": {
+                "title": "Alur Moderasi & Kebijakan Otomatisasi",
+                "subtitle": "Atur kapan kiriman berisiko masuk tinjauan dan cara menangani tautan mencurigakan.",
+                "riskBasedEnabled": "Aktifkan tinjauan otomatis berbasis risiko",
+                "requireManualAll": "Wajibkan tinjauan manual semua postingan",
+                "aiAssistEnabled": "Aktifkan bantuan moderasi AI opsional",
+                "reviewThreshold": "Skor ambang batas tinjauan",
+                "suspiciousLinkAction": "Tindakan tautan mencurigakan",
+                "violationAction": "Tindakan pelanggaran berat",
+                "actions": {
+                    "allow": "Izinkan (Hanya hitung skor)",
+                    "flag": "Tandai & tinjau",
+                    "pendingReview": "Kirim ke Tinjauan Tertunda",
+                    "reject": "Tolak otomatis"
+                }
+            },
+            "feed": {
+                "title": "Peringkat Feed, Keragaman & Distribusi Adil",
+                "subtitle": "Kelola tab, batas keberagaman, jendela kandidat, dan alokasi organik 70/20/10.",
+                "enableTrending": "Aktifkan tab Tren",
+                "enableRecommended": "Aktifkan tab Direkomendasikan",
+                "enableFreshDiscovery": "Aktifkan slot Penemuan & Konten Baru",
+                "categoryDiversity": "Terapkan keragaman kategori antar postingan",
+                "candidateWindowHours": "Jendela kandidat tren (jam)",
+                "refreshIntervalMinutes": "Interval pembaruan skor (menit)",
+                "pageSize": "Postingan per halaman feed",
+                "authorDiversityMax": "Maks. post per penulis per blok",
+                "adSpacing": "Jarak iklan bersponsor (post)",
+                "allocationRankingPct": "Porsi peringkat utama (%)",
+                "allocationFreshPct": "Porsi postingan terbaru (%)",
+                "allocationDiscoveryPct": "Porsi penemuan topik (%)",
+                "allocationSummary": "Total campuran: {sum}% (dinormalisasi secara proporsional pada feed Direkomendasikan)."
+            },
+            "trending": {
+                "title": "Formula Skor Tren Organik & Antimanipulasi",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Tidak termasuk iklan dan AI.",
+                "weightHumanView": "Bobot: Tayangan manusia organik",
+                "weightReaction": "Bobot: Reaksi valid",
+                "weightComment": "Bobot: Komentar valid",
+                "weightBookmark": "Bobot: Simpanan valid",
+                "weightShare": "Bobot: Bagikan valid",
+                "decayBaseHours": "Basis peluruhan waktu (jam)",
+                "decayExponent": "Eksponen peluruhan waktu",
+                "perUserCap": "Maks. sinyal peringkat / pengguna / 24j",
+                "viewEngagementRatio": "Rasio peredam tayangan tidak wajar"
+            },
+            "simulator": {
+                "title": "Simulator Skor Tren (Tanpa Efek Samping)",
+                "subtitle": "Uji bobot dan peluruhan saat ini dengan angka simulasi tanpa mengubah data postingan asli.",
+                "humanViews": "Tayangan organik",
+                "reactions": "Reaksi",
+                "comments": "Komentar",
+                "bookmarks": "Simpanan",
+                "shares": "Bagikan",
+                "ageHours": "Usia (jam)",
+                "runButton": "Hitung Skor",
+                "trendingScore": "Skor Tren",
+                "rawScore": "Skor Mentah",
+                "decayFactor": "Pembagi peluruhan",
+                "effectiveViews": "Tayangan efektif",
+                "dampened": "Diredam"
+            },
+            "telemetry": {
+                "title": "Peristiwa Antispam & Riwayat Audit",
+                "subtitle": "Pantau pembatasan laju, blokir duplikat, tinjauan risiko tinggi, dan pembaruan staf.",
+                "auditLogs": "Log Audit Pengaturan & Moderasi Terbaru",
+                "riskMedium": "Risiko sedang",
+                "riskHigh": "Risiko tinggi",
+                "riskViolation": "Pelanggaran"
+            }
         }
     },
     "common": {

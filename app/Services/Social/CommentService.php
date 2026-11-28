@@ -2,13 +2,16 @@
 
 namespace App\Services\Social;
 
+use App\Enums\AccountType;
 use App\Enums\ModerationStatus;
+use App\Enums\UserStatus;
 use App\Models\Comment;
 use App\Models\CommunityMember;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\SocialActivityNotification;
-use App\Services\Moderation\ContentFilterService;
+use App\Services\Moderation\AntiSpamEngine;
+use App\Services\Moderation\DuplicateDetectionService;
 use App\Services\Notification\NotificationService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +23,6 @@ class CommentService
         private readonly FeedService $feedService,
         private readonly NotificationService $notificationService,
         private readonly SystemSettingService $settings,
-        private readonly ContentFilterService $contentFilter,
     ) {}
 
     /**
@@ -114,7 +116,7 @@ class CommentService
     }
 
     /**
-     * @param  array{content: string, parent_id?: int|null}  $data
+     * @param  array{content: string, parent_id?: int|null, ip_address?: string|null}  $data
      */
     public function create(User $author, Post $post, array $data): Comment
     {
@@ -136,17 +138,34 @@ class CommentService
             ]);
         }
 
-        $maxLength = max(100, (int) $this->settings->get('content_comment_max_length', 1500));
-        if (mb_strlen(trim($data['content'])) > $maxLength) {
+        $trustResolver = app(TrustLevelResolver::class);
+        $duplicateDetector = app(DuplicateDetectionService::class);
+        $rateLimiter = app(PostingRateLimitService::class);
+        $antiSpam = app(AntiSpamEngine::class);
+        $rankingService = app(TrendingRankingService::class);
+
+        $cleanContent = $duplicateDetector->stripInvisibleOnly($data['content']);
+        if ($cleanContent === '') {
+            throw ValidationException::withMessages([
+                'content' => [__('Comment cannot be empty.')],
+            ]);
+        }
+
+        $limits = $trustResolver->limitsFor($author);
+        $maxLength = max(100, (int) $limits['max_comment_length']);
+        if (mb_strlen($cleanContent) > $maxLength) {
             throw ValidationException::withMessages([
                 'content' => [__('Comment exceeds the maximum length of :max characters.', ['max' => $maxLength])],
             ]);
         }
 
-        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
-        $filterCheck = $this->contentFilter->evaluate(trim($data['content']));
+        $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : request()->ip();
+        $rateLimiter->assertCanCreateComment($author, $ipAddress);
 
-        $created = DB::transaction(function () use ($author, $post, $data, $filteredContent, $filterCheck): Comment {
+        $evaluation = $antiSpam->evaluateComment($author, $post, $cleanContent, $ipAddress);
+        $filteredContent = $evaluation['filtered_content'];
+
+        $created = DB::transaction(function () use ($author, $post, $data, $filteredContent, $evaluation, $rateLimiter, $rankingService, $ipAddress): Comment {
             /** @var Post $lockedPost */
             $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
 
@@ -183,26 +202,42 @@ class CommentService
             ]);
             $comment->post_id = $lockedPost->id;
             $comment->user_id = $author->id;
-            $comment->moderation_status = $filterCheck['flagged'] ? ModerationStatus::Pending : ModerationStatus::Approved;
+            $comment->is_ai_generated = $author->isAiAgent();
+            $comment->moderation_status = $evaluation['flagged'] ? ModerationStatus::Pending : ModerationStatus::Approved;
             $comment->save();
 
             $lockedPost->comments_count = Comment::query()
                 ->where('post_id', $lockedPost->id)
                 ->where('moderation_status', ModerationStatus::Approved->value)
                 ->count();
+
+            if (
+                $comment->moderation_status === ModerationStatus::Approved
+                && $rankingService->isEligibleOrganicActor($author, $lockedPost->user_id)
+                && $rankingService->canUserContributeRankingSignal($author)
+            ) {
+                $lockedPost->valid_comments_count = (int) $lockedPost->valid_comments_count + 1;
+                $rankingService->recordRankingSignal($author, $lockedPost->id);
+                $lockedPost->needs_rerank = true;
+            }
+
             $lockedPost->save();
 
-            if ($lockedPost->community_id !== null) {
+            if ($lockedPost->community_id !== null && $comment->moderation_status === ModerationStatus::Approved) {
                 CommunityMember::query()
                     ->where('community_id', $lockedPost->community_id)
                     ->where('user_id', $author->id)
                     ->increment('points', 2);
             }
 
+            if (! $author->isAiAgent()) {
+                $rateLimiter->recordUsage($author, 'comment', $comment->id, $ipAddress);
+            }
+
             return $comment;
         });
 
-        if ($post->author !== null) {
+        if ($post->author !== null && $created->moderation_status === ModerationStatus::Approved) {
             $this->notificationService->notifyIfAllowed(
                 $post->author,
                 $author,
@@ -235,6 +270,20 @@ class CommentService
                     ->where('post_id', $lockedPost->id)
                     ->where('moderation_status', ModerationStatus::Approved->value)
                     ->count();
+
+                $lockedPost->valid_comments_count = Comment::query()
+                    ->where('post_id', $lockedPost->id)
+                    ->where('user_id', '!=', $lockedPost->user_id)
+                    ->where('moderation_status', ModerationStatus::Approved->value)
+                    ->where('is_spam', false)
+                    ->whereHas('author', static function ($query): void {
+                        $query->where('account_type', AccountType::Human->value)
+                            ->where('is_test_account', false)
+                            ->where('status', UserStatus::Active->value);
+                    })
+                    ->count();
+
+                $lockedPost->needs_rerank = true;
                 $lockedPost->save();
             }
         });

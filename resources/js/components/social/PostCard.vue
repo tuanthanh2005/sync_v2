@@ -8,6 +8,7 @@ import {
     Copy,
     ExternalLink,
     Eye,
+    EyeOff,
     Flag,
     Lock,
     MessageCircle,
@@ -303,6 +304,27 @@ function submitPollVote(optionId: number): void {
     );
 }
 
+const emit = defineEmits<{
+    hidden: [postId: number];
+}>();
+
+function hideFromMyFeed(): void {
+    if (!requireUser()) {
+        return;
+    }
+
+    router.post(
+        PostInteractionController.hideFromFeed.url(props.post.id),
+        {},
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit('hidden', props.post.id);
+            },
+        },
+    );
+}
+
 async function handleShare(): Promise<void> {
     const absoluteUrl = `${window.location.origin}${PostController.show.url(props.post.id)}`;
 
@@ -317,7 +339,7 @@ async function handleShare(): Promise<void> {
     if (user.value) {
         router.post(
             PostInteractionController.share.url(props.post.id),
-            {},
+            { channel: 'copy_link' },
             { preserveScroll: true },
         );
     }
@@ -507,6 +529,12 @@ function submitReport(): void {
                                     : ''
                             }}
                         </Link>
+                        <span
+                            v-if="post.edited_at || (post.edit_count ?? 0) > 0"
+                            class="ms-1 text-[11px] text-muted-foreground/80"
+                        >
+                            · {{ t('post.editedBadge') }}
+                        </span>
                     </p>
                 </div>
             </div>
@@ -558,6 +586,14 @@ function submitReport(): void {
                         <span>{{ t('monetization.boost.ctaButton') }}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                        v-if="user && user.id !== post.author?.id && !post.is_sponsored"
+                        class="min-h-10 cursor-pointer"
+                        @click="hideFromMyFeed"
+                    >
+                        <EyeOff class="me-2 size-4" />
+                        <span>{{ t('post.hideFromFeed') }}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                         v-if="user && user.id !== post.author?.id"
                         class="min-h-10 cursor-pointer"
                         @click="openReportDialog"
@@ -576,6 +612,43 @@ function submitReport(): void {
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>
+
+        <!-- Private Moderation Status Notice (only visible to Post Author or Staff) -->
+        <div
+            v-if="
+                post.moderation_status === 'pending' ||
+                post.moderation_status === 'rejected' ||
+                post.moderation_status === 'hidden'
+            "
+            :class="[
+                'mt-3 rounded-xl border px-3.5 py-2.5 text-xs',
+                post.moderation_status === 'pending'
+                    ? 'border-warning/35 bg-warning/10 text-foreground'
+                    : 'border-destructive/35 bg-destructive/10 text-foreground',
+            ]"
+        >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-semibold">
+                    {{
+                        post.moderation_status === 'pending'
+                            ? t('post.moderationBanner.pendingTitle')
+                            : post.moderation_status === 'rejected'
+                              ? t('post.moderationBanner.rejectedTitle')
+                              : t('post.moderationBanner.hiddenTitle')
+                    }}
+                </span>
+                <Link
+                    v-if="post.moderation_status !== 'pending' && user && user.id === post.author?.id"
+                    href="/settings/appeals"
+                    class="text-[11px] font-medium text-primary hover:underline"
+                >
+                    {{ t('post.moderationBanner.appealLink') }}
+                </Link>
+            </div>
+            <p v-if="post.moderation_reason" class="mt-1 text-[11px] text-muted-foreground">
+                {{ post.moderation_reason }}
+            </p>
+        </div>
 
         <!-- Edit form or Content -->
         <div v-if="isEditing" class="mt-4 space-y-3">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Ai\AiOverviewController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AppealController;
 use App\Http\Controllers\Admin\ContentModerationController;
+use App\Http\Controllers\Admin\ContentSettingsAndAnalyticsController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\Growth\GrowthCampaignsAndProgramsController;
 use App\Http\Controllers\Admin\Growth\GrowthOverviewController;
@@ -231,6 +232,9 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::post('/posts/{post}/share', [PostInteractionController::class, 'share'])
         ->middleware('throttle:30,1')
         ->name('posts.share');
+    Route::post('/posts/{post}/hide-from-feed', [PostInteractionController::class, 'hideFromFeed'])
+        ->middleware('throttle:60,1')
+        ->name('posts.hide-from-feed');
 
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
         ->middleware('throttle:30,1')
@@ -417,6 +421,19 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::post('/content/media/{media}/moderate', [ContentModerationController::class, 'moderateMedia'])
                 ->middleware('permission:media.update,media.delete')
                 ->name('content.media.moderate');
+
+            Route::get('/content/settings', [ContentSettingsAndAnalyticsController::class, 'index'])
+                ->middleware('permission:posts.settings.view,feed.settings.view,spam_events.view,settings.view')
+                ->name('content.settings');
+            Route::post('/content/settings', [ContentSettingsAndAnalyticsController::class, 'update'])
+                ->middleware('permission:posts.settings.manage,feed.settings.manage,settings.update')
+                ->name('content.settings.update');
+            Route::post('/content/settings/reset', [ContentSettingsAndAnalyticsController::class, 'reset'])
+                ->middleware('permission:posts.settings.manage,feed.settings.manage,settings.update')
+                ->name('content.settings.reset');
+            Route::post('/content/settings/simulate', [ContentSettingsAndAnalyticsController::class, 'simulate'])
+                ->middleware('permission:ranking.analytics.view,posts.settings.view,analytics.view,settings.view')
+                ->name('content.settings.simulate');
 
             Route::get('/content/keywords', [ContentModerationController::class, 'keywords'])
                 ->middleware('permission:keywords.view')

@@ -12,7 +12,9 @@ import {
     MessageCircleQuestion,
     MessageSquareText,
     ShoppingBag,
+    Sparkles,
     TrendingUp,
+    Users,
     Wallet,
 } from '@lucide/vue';
 import type { Component } from 'vue';
@@ -53,6 +55,10 @@ const props = withDefaults(
         hasMore?: boolean;
         activeTab?: string;
         categories?: CategoryOption[];
+        feedConfig?: {
+            enable_trending?: boolean;
+            enable_recommended?: boolean;
+        };
     }>(),
     {
         posts: () => [],
@@ -63,6 +69,7 @@ const props = withDefaults(
         hasMore: false,
         activeTab: 'trending',
         categories: () => [],
+        feedConfig: () => ({ enable_trending: true, enable_recommended: true }),
     },
 );
 
@@ -108,12 +115,34 @@ watch(
 
 const tabs = computed<Array<{ key: string; label: string; icon: Component }>>(
     () => [
-        {
-            key: 'trending',
-            label: t('home.feed.tabs.trending'),
-            icon: TrendingUp,
-        },
+        ...(props.feedConfig?.enable_trending !== false
+            ? [
+                  {
+                      key: 'trending',
+                      label: t('home.feed.tabs.trending'),
+                      icon: TrendingUp,
+                  },
+              ]
+            : []),
+        ...(props.feedConfig?.enable_recommended !== false
+            ? [
+                  {
+                      key: 'recommended',
+                      label: t('home.feed.tabs.recommended'),
+                      icon: Sparkles,
+                  },
+              ]
+            : []),
         { key: 'latest', label: t('home.feed.tabs.latest'), icon: Clock },
+        ...(user.value
+            ? [
+                  {
+                      key: 'following',
+                      label: t('home.feed.tabs.following'),
+                      icon: Users,
+                  },
+              ]
+            : []),
         { key: 'finance', label: t('home.feed.tabs.finance'), icon: Wallet },
         { key: 'technology', label: t('home.feed.tabs.technology'), icon: Cpu },
         {
@@ -216,6 +245,10 @@ function switchTab(tabKey: string): void {
             preserveScroll: false,
         },
     );
+}
+
+function handlePostHidden(postId: number): void {
+    organicItems.value = organicItems.value.filter((p) => p.id !== postId);
 }
 
 function reloadFreshFeed(): void {
@@ -530,7 +563,11 @@ onBeforeUnmount(() => {
                         : `post-${post.id}`
                 "
             >
-                <PostCard :post="post" :categories="categories" />
+                <PostCard
+                    :post="post"
+                    :categories="categories"
+                    @hidden="handlePostHidden"
+                />
                 <BannerSlot
                     v-if="idx === 2 && banners?.mobile_in_feed"
                     :banner="banners.mobile_in_feed"

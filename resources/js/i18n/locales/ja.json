@@ -122,7 +122,9 @@
                 "business": "ビジネス",
                 "finance": "収益化・金融",
                 "qa": "質問・回答",
-                "marketplace": "マーケットプレイス"
+                "marketplace": "マーケットプレイス",
+                "recommended": "おすすめ",
+                "following": "フォロー中"
             },
             "newPostsAvailable": "新しい投稿があります"
         },
@@ -152,7 +154,9 @@
             "addPoll": "投票",
             "discardDraftConfirm": "破棄",
             "discardDraftDesc": "未保存のテキスト、写真、または投票の選択肢は消去されます。",
-            "discardDraftTitle": "投稿の下書きを破棄しますか？"
+            "discardDraftTitle": "投稿の下書きを破棄しますか？",
+            "rateLimitNotice": "投稿間隔が短すぎます。下書きの内容は保持されています。",
+            "retryInSeconds": "{seconds}秒後に再試行できます。"
         },
         "empty": {
             "title": "{brand}コミュニティを探索しよう",
@@ -217,6 +221,14 @@
             "invalidViews": "無効・フィルタ済み閲覧",
             "legacyViews": "旧データ・未分類",
             "aiSeparationNotice": "透明性のため合計閲覧数には確認済みのAIアクティビティが含まれます。AI閲覧数はユニーク人間閲覧者、DAU/MAU、オーガニックリーチ、有料広告インプレッションには一切含まれません。"
+        },
+        "editedBadge": "編集済み",
+        "hideFromFeed": "フィードから非表示にする",
+        "moderationBanner": {
+            "pendingTitle": "モデレーション審査待ち — あなたとスタッフのみ閲覧可能です",
+            "rejectedTitle": "モデレーションにより却下 — 公開フィードからは非表示です",
+            "hiddenTitle": "モデレーションにより非表示 — あなたとスタッフのみ閲覧可能です",
+            "appealLink": "異議申し立て"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "翻訳とアシスタント",
             "growthOverview": "グロース概要",
             "growthReferrals": "紹介・不正対策",
-            "growthCampaigns": "キャンペーン・バッジ"
+            "growthCampaigns": "キャンペーン・バッジ",
+            "postFeedSettings": "投稿・フィード設定"
         },
         "common": {
             "search": "検索...",
@@ -756,7 +769,8 @@
             "yes": "はい",
             "no": "いいえ",
             "enabled": "有効",
-            "disabled": "無効"
+            "disabled": "無効",
+            "saveChanges": "変更を保存"
         },
         "dashboard": {
             "title": "プラットフォーム運用ダッシュボード",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "認証状態を切り替え",
                 "transfer_owner": "所有権を譲渡",
                 "unlock_comments": "コメントロック解除",
-                "unpin": "固定解除"
+                "unpin": "固定解除",
+                "approve": "投稿を承認",
+                "reject": "投稿を却下"
             },
             "badgeClosedJoins": "参加受付停止",
             "badgeContentWarning": "コンテンツ警告: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "システム",
             "transferOwnerUsernameLabel": "新しいオーナーのユーザー名 ({'@'}username)",
             "unknownAuthor": "不明",
-            "usernamePlaceholder": "ユーザー名"
+            "usernamePlaceholder": "ユーザー名",
+            "postFilters": {
+                "rejected": "却下済み"
+            },
+            "riskScoreBadge": "リスク: {score}/100"
         },
         "financeExtra": {
             "colAmount": "金額",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "翻訳済み概要",
             "translationTitleLabel": "翻訳済みタイトル",
             "uploadAndInsert": "アップロードして挿入"
+        },
+        "postFeed": {
+            "title": "投稿公開・スパム対策・フィードランキング設定",
+            "subtitle": "信頼レベル別の投稿上限、スパム判定しきい値、フィード配分、純粋なランキングシミュレーションを設定します。",
+            "resetAll": "すべて初期値に戻す",
+            "resetSection": "このセクションをリセット",
+            "resetConfirmTitle": "ポリシー設定をデフォルトに戻しますか？",
+            "resetConfirmDesc": "選択されたルールはSysNoxisの基本値に戻り、監査ログに記録されます。",
+            "resetConfirmButton": "復元する",
+            "simulatorError": "ランキングシミュレーションを実行できません。入力値を確認してください。",
+            "stats": {
+                "published24h": "公開済み (24時間)",
+                "pendingReview": "審査待ち",
+                "rateLimited24h": "レート制限 (24時間)",
+                "duplicatesBlocked24h": "重複ブロック (24時間)"
+            },
+            "tabs": {
+                "publishing": "投稿上限設定",
+                "antispam": "スパム対策",
+                "moderation": "モデレーション",
+                "feed": "フィードと多様性",
+                "trending": "トレンド重み付け",
+                "simulator": "ランキングシミュレーター",
+                "telemetry": "スパム履歴と監査"
+            },
+            "publishing": {
+                "title": "信頼レベル別の投稿上限・保護設定",
+                "subtitle": "新規アカウントはPremium加入中でも安全期間中は初期制限が適用されます。",
+                "enablePosting": "新規投稿の作成を有効にする",
+                "maxPostLength": "投稿の最大文字数",
+                "maxCommentLength": "コメントの最大文字数",
+                "editsPerDay": "24時間あたりの最大編集回数",
+                "newMemberAgeDays": "新規アカウント期間（日）",
+                "tier": "信頼レベル",
+                "posts24h": "投稿数 / 24時間",
+                "posts60m": "投稿数 / 60分",
+                "minInterval": "最小間隔 (秒)",
+                "comments24h": "コメント / 24時間",
+                "maxImages": "最大画像数 / 投稿",
+                "tiers": {
+                    "new": "新規メンバー",
+                    "standard": "標準メンバー",
+                    "premium": "プレミアム会員"
+                }
+            },
+            "antispam": {
+                "title": "スパム対策・重複検出ルール",
+                "subtitle": "連投、重複・類似投稿、過剰なリンク・メンション・ハッシュタグのリスクスコアを判定します。",
+                "enableAntiSpam": "スパム判定エンジンを有効化",
+                "enableDuplicate": "重複・類似コンテンツ防止を有効化",
+                "duplicateWindow": "重複判定期間（時間）",
+                "similarityThreshold": "類似判定しきい値 (%)",
+                "mediumThreshold": "中リスクしきい値",
+                "highThreshold": "高リスクしきい値（審査待ち）",
+                "violationThreshold": "違反しきい値（自動却下）",
+                "maxLinks": "投稿内リンク上限",
+                "maxMentions": "投稿内メンション上限",
+                "maxHashtags": "投稿内#ハッシュタグ上限"
+            },
+            "moderation": {
+                "title": "モデレーションワークフロー設定",
+                "subtitle": "リスク投稿の審査待ち移行や不審リンク・違反の自動処理ルールを設定します。",
+                "riskBasedEnabled": "リスクスコアに基づく自動審査待ちを有効化",
+                "requireManualAll": "全会員の投稿に手動審査を必須にする",
+                "aiAssistEnabled": "任意のAIモデレーション支援を有効化",
+                "reviewThreshold": "審査移行しきい値スコア",
+                "suspiciousLinkAction": "不審な短縮リンクへの対応",
+                "violationAction": "重大違反時の対応",
+                "actions": {
+                    "allow": "許可（スコアのみ加算）",
+                    "flag": "フラグを立てて審査",
+                    "pendingReview": "審査待ちに送る",
+                    "reject": "自動却下する"
+                }
+            },
+            "feed": {
+                "title": "フィードランキング・多様性・公平な配信配分",
+                "subtitle": "フィードタブ、多様性上限、候補期間、70/20/10配分比率を管理します。",
+                "enableTrending": "トレンドフィードタブを有効化",
+                "enableRecommended": "おすすめフィードタブを有効化",
+                "enableFreshDiscovery": "新規投稿・発見枠の公平配信を有効化",
+                "categoryDiversity": "連続投稿のカテゴリの多様性を維持",
+                "candidateWindowHours": "候補投稿の対象期間（時間）",
+                "refreshIntervalMinutes": "スコア再計算間隔（分）",
+                "pageSize": "1ページあたりの投稿表示数",
+                "authorDiversityMax": "1ページ内の同一著者最大投稿数",
+                "adSpacing": "スポンサー枠の間隔（投稿数）",
+                "allocationRankingPct": "ランキング上位枠 (%)",
+                "allocationFreshPct": "新着枠 (%)",
+                "allocationDiscoveryPct": "ディスカバリー枠 (%)",
+                "allocationSummary": "合計配分: {sum}%（おすすめフィード生成時に比率で自動正規化されます）。"
+            },
+            "trending": {
+                "title": "オーガニックトレンド計算式と不正操作対策",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp（広告・AIは除外）。",
+                "weightHumanView": "重み: オーガニック人間閲覧数",
+                "weightReaction": "重み: 有効リアクション",
+                "weightComment": "重み: 有効コメント",
+                "weightBookmark": "重み: 有効ブックマーク",
+                "weightShare": "重み: 有効シェア",
+                "decayBaseHours": "減衰基準時間（時間）",
+                "decayExponent": "時間減衰指数",
+                "perUserCap": "ユーザーあたり24時間信号上限",
+                "viewEngagementRatio": "異常閲覧数の抑制比率"
+            },
+            "simulator": {
+                "title": "トレンドスコア・シミュレーター（DB更新なし）",
+                "subtitle": "実際の投稿やデータベースを変更せず、現在の重み設定で仮の数値テストを行えます。",
+                "humanViews": "自然閲覧数",
+                "reactions": "リアクション",
+                "comments": "コメント",
+                "bookmarks": "ブックマーク",
+                "shares": "シェア",
+                "ageHours": "経過時間（時間）",
+                "runButton": "スコアを計算",
+                "trendingScore": "トレンドスコア",
+                "rawScore": "生スコア",
+                "decayFactor": "時間減衰除数",
+                "effectiveViews": "有効閲覧数",
+                "dampened": "抑制済み"
+            },
+            "telemetry": {
+                "title": "スパム検知イベント・設定変更履歴",
+                "subtitle": "レート制限、重複ブロック、高リスク判定、管理者変更を確認できます。",
+                "auditLogs": "最近の設定・モデレーション監査ログ",
+                "riskMedium": "中リスク",
+                "riskHigh": "高リスク",
+                "riskViolation": "規約違反"
+            }
         }
     },
     "common": {

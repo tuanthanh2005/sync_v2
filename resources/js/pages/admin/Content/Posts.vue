@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
 import {
+    CheckCircle2,
     EyeOff,
     History,
     Lock,
@@ -11,6 +12,7 @@ import {
     ShieldAlert,
     Trash2,
     Unlock,
+    XCircle,
 } from '@lucide/vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -44,6 +46,7 @@ type PostRow = {
     comments_locked: boolean;
     content_warning: string | null;
     is_spam: boolean;
+    spam_risk_score?: number;
     reactions_count: number;
     comments_count: number;
     ad_campaigns_count: number;
@@ -97,6 +100,8 @@ function moderationStatusLabel(status: string): string {
 
 function postActionLabel(action: string): string {
     const map: Record<string, string> = {
+        approve: 'admin.contentExtra.actions.approve',
+        reject: 'admin.contentExtra.actions.reject',
         hide: 'admin.contentExtra.actions.hide',
         restore_visibility: 'admin.contentExtra.actions.restore_visibility',
         lock_comments: 'admin.contentExtra.actions.lock_comments',
@@ -187,8 +192,9 @@ function submitAction(reason: string): void {
                 <Button
                     v-for="tab in [
                         'all',
-                        'hidden',
                         'pending',
+                        'rejected',
+                        'hidden',
                         'spam',
                         'sponsored',
                         'deleted',
@@ -299,6 +305,16 @@ function submitAction(reason: string): void {
                                     }}</Badge
                                 >
                                 <Badge
+                                    v-if="(post.spam_risk_score ?? 0) >= 30"
+                                    variant="outline"
+                                    class="text-[10px]"
+                                    >{{
+                                        t('admin.contentExtra.riskScoreBadge', {
+                                            score: post.spam_risk_score ?? 0,
+                                        })
+                                    }}</Badge
+                                >
+                                <Badge
                                     v-if="post.ad_campaigns_count > 0"
                                     variant="outline"
                                     class="text-[10px]"
@@ -365,6 +381,26 @@ function submitAction(reason: string): void {
                             >
                                 <History class="size-3.5" />
                                 <span>{{ post.edit_histories.length }}</span>
+                            </Button>
+                            <Button
+                                v-if="post.moderation_status !== 'approved' && !post.deleted_at"
+                                size="sm"
+                                variant="outline"
+                                class="h-7 gap-1 px-2 text-[11px]"
+                                @click="openAction(post, 'approve')"
+                            >
+                                <CheckCircle2 class="size-3.5 text-success" />
+                                <span>{{ t('admin.contentExtra.actions.approve') }}</span>
+                            </Button>
+                            <Button
+                                v-if="post.moderation_status !== 'rejected' && !post.deleted_at"
+                                size="sm"
+                                variant="outline"
+                                class="h-7 gap-1 px-2 text-[11px]"
+                                @click="openAction(post, 'reject')"
+                            >
+                                <XCircle class="size-3.5 text-destructive" />
+                                <span>{{ t('admin.contentExtra.actions.reject') }}</span>
                             </Button>
                             <Button
                                 size="sm"

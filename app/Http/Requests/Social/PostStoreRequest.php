@@ -6,6 +6,7 @@ use App\Enums\PostCategory;
 use App\Enums\PostVisibility;
 use App\Rules\ValidUploadedImage;
 use App\Services\Media\SafeImageUploadService;
+use App\Services\Social\TrustLevelResolver;
 use App\Services\System\SystemSettingService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -23,11 +24,20 @@ class PostStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $maxImages = max(1, min(10, (int) app(SystemSettingService::class)->get('content_post_max_images', 4)));
+        $user = $this->user();
+        $limits = $user !== null
+            ? app(TrustLevelResolver::class)->limitsFor($user)
+            : null;
+        $maxImages = $limits !== null
+            ? max(1, min(10, (int) $limits['max_images_per_post']))
+            : max(1, min(10, (int) app(SystemSettingService::class)->get('content_post_max_images', 4)));
+        $maxLength = $limits !== null
+            ? max(100, min(10_000, (int) $limits['max_post_length']))
+            : max(100, min(10_000, (int) app(SystemSettingService::class)->get('content_post_max_length', 3000)));
 
         return [
             'title' => ['nullable', 'string', 'max:180'],
-            'content' => ['required', 'string', 'min:1', 'max:10000'],
+            'content' => ['required', 'string', 'min:1', 'max:'.$maxLength],
             'community_id' => ['nullable', 'integer', 'min:1'],
             'category' => ['nullable', 'string', Rule::enum(PostCategory::class)],
             'visibility' => ['nullable', 'string', Rule::in([PostVisibility::Public->value, PostVisibility::Community->value, PostVisibility::Private->value])],
@@ -40,6 +50,7 @@ class PostStoreRequest extends FormRequest
             'poll_options' => ['nullable', 'array', 'min:2', 'max:5', 'required_with:poll_question'],
             'poll_options.*' => ['required', 'string', 'min:1', 'max:120'],
             'poll_duration_hours' => ['nullable', 'integer', 'min:1', 'max:720'],
+            'idempotency_key' => ['nullable', 'string', 'max:96'],
         ];
     }
 

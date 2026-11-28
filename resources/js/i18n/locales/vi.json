@@ -122,7 +122,9 @@
                 "business": "Kinh doanh",
                 "finance": "Kiếm tiền",
                 "qa": "Hỏi đáp",
-                "marketplace": "Mua bán"
+                "marketplace": "Mua bán",
+                "recommended": "Đề xuất",
+                "following": "Đang theo dõi"
             },
             "newPostsAvailable": "Có bài viết mới"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Bình chọn",
             "discardDraftConfirm": "Hủy bỏ",
             "discardDraftDesc": "Nội dung, hình ảnh và tùy chọn bình chọn chưa lưu sẽ bị xóa.",
-            "discardDraftTitle": "Hủy bản nháp bài viết?"
+            "discardDraftTitle": "Hủy bản nháp bài viết?",
+            "rateLimitNotice": "Bạn đang thao tác quá nhanh. Nội dung bạn đang soạn vẫn được giữ nguyên bên dưới.",
+            "retryInSeconds": "Bạn có thể thử gửi lại sau {seconds} giây."
         },
         "empty": {
             "title": "Khám phá cộng đồng {brand}",
@@ -217,6 +221,14 @@
             "invalidViews": "Lượt xem không hợp lệ / bị lọc",
             "legacyViews": "Lịch sử cũ / chưa phân loại",
             "aiSeparationNotice": "Tổng lượt xem bao gồm hoạt động AI hợp lệ để minh bạch. Lượt xem AI hoàn toàn không tính vào người xem thật duy nhất, DAU/MAU, tiếp cận tự nhiên hay hiển thị quảng cáo trả phí."
+        },
+        "editedBadge": "Đã chỉnh sửa",
+        "hideFromFeed": "Ẩn khỏi bảng tin của tôi",
+        "moderationBanner": {
+            "pendingTitle": "Đang chờ kiểm duyệt — chỉ bạn và quản trị viên nhìn thấy bài viết này",
+            "rejectedTitle": "Bài viết đã bị từ chối kiểm duyệt — không hiển thị công khai",
+            "hiddenTitle": "Đã bị ẩn bởi kiểm duyệt — chỉ bạn và quản trị viên nhìn thấy",
+            "appealLink": "Gửi khiếu nại"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Dịch thuật & Trợ lý AI",
             "growthOverview": "Tổng quan Tăng trưởng",
             "growthReferrals": "Giới thiệu & Chống gian lận",
-            "growthCampaigns": "Chiến dịch & Huy hiệu"
+            "growthCampaigns": "Chiến dịch & Huy hiệu",
+            "postFeedSettings": "Cài đặt Bài viết & Bảng tin"
         },
         "common": {
             "search": "Tìm kiếm...",
@@ -756,7 +769,8 @@
             "yes": "Có",
             "no": "Không",
             "enabled": "Đang bật",
-            "disabled": "Đang tắt"
+            "disabled": "Đang tắt",
+            "saveChanges": "Lưu thay đổi"
         },
         "dashboard": {
             "title": "Bảng điều hành Nền tảng",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "Bật/tắt Xác minh",
                 "transfer_owner": "Chuyển quyền sở hữu",
                 "unlock_comments": "Mở khóa bình luận",
-                "unpin": "Bỏ ghim"
+                "unpin": "Bỏ ghim",
+                "approve": "Duyệt bài viết",
+                "reject": "Từ chối bài viết"
             },
             "badgeClosedJoins": "Đóng tham gia",
             "badgeContentWarning": "Cảnh báo nội dung: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "hệ thống",
             "transferOwnerUsernameLabel": "Tên người dùng chủ sở hữu mới ({'@'}username)",
             "unknownAuthor": "không xác định",
-            "usernamePlaceholder": "tên người dùng"
+            "usernamePlaceholder": "tên người dùng",
+            "postFilters": {
+                "rejected": "Bị từ chối"
+            },
+            "riskScoreBadge": "Rủi ro: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Số tiền",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Tóm tắt bản dịch",
             "translationTitleLabel": "Tiêu đề bản dịch",
             "uploadAndInsert": "Tải lên & chèn"
+        },
+        "postFeed": {
+            "title": "Cài đặt Đăng bài, Chống spam & Xếp hạng Bảng tin",
+            "subtitle": "Cấu hình hạn mức theo cấp độ tin cậy, ngưỡng chống spam, phân phối bảng tin và mô phỏng điểm xu hướng an toàn.",
+            "resetAll": "Khôi phục tất cả mặc định",
+            "resetSection": "Đặt lại mục này",
+            "resetConfirmTitle": "Khôi phục cấu hình mặc định an toàn?",
+            "resetConfirmDesc": "Các quy tắc đã chọn sẽ quay về giá trị chuẩn của SysNoxis và được ghi vào nhật ký kiểm toán.",
+            "resetConfirmButton": "Khôi phục mặc định",
+            "simulatorError": "Không thể chạy mô phỏng xếp hạng. Vui lòng kiểm tra số liệu nhập vào.",
+            "stats": {
+                "published24h": "Bài đã đăng (24 giờ)",
+                "pendingReview": "Chờ kiểm duyệt",
+                "rateLimited24h": "Bị giới hạn tốc độ (24h)",
+                "duplicatesBlocked24h": "Trùng lặp bị chặn (24h)"
+            },
+            "tabs": {
+                "publishing": "Hạn mức & Đăng bài",
+                "antispam": "Chống Spam",
+                "moderation": "Kiểm duyệt",
+                "feed": "Bảng tin & Đa dạng",
+                "trending": "Trọng số Xu hướng",
+                "simulator": "Mô phỏng Xếp hạng",
+                "telemetry": "Nhật ký Spam & Kiểm toán"
+            },
+            "publishing": {
+                "title": "Hạn mức Đăng bài theo Cấp độ Tin cậy",
+                "subtitle": "Tài khoản mới vẫn tuân thủ ngưỡng an toàn trong những ngày đầu kể cả khi nâng cấp Premium.",
+                "enablePosting": "Bật tính năng tạo bài viết mới",
+                "maxPostLength": "Độ dài bài viết tối đa (ký tự)",
+                "maxCommentLength": "Độ dài bình luận tối đa (ký tự)",
+                "editsPerDay": "Số lần sửa tối đa / 24h",
+                "newMemberAgeDays": "Thời hạn tài khoản mới (ngày)",
+                "tier": "Cấp tin cậy",
+                "posts24h": "Bài / 24h",
+                "posts60m": "Bài / 60 phút",
+                "minInterval": "Giãn cách tối thiểu (giây)",
+                "comments24h": "Bình luận / 24h",
+                "maxImages": "Số ảnh tối đa / bài",
+                "tiers": {
+                    "new": "Thành viên mới",
+                    "standard": "Thành viên tiêu chuẩn",
+                    "premium": "Thành viên Premium"
+                }
+            },
+            "antispam": {
+                "title": "Quy tắc Chống spam & Phát hiện trùng lặp",
+                "subtitle": "Chấm điểm rủi ro spam cho bài lặp nội dung, spam link, nhắc tên và gắn thẻ hàng loạt.",
+                "enableAntiSpam": "Bật bộ máy chấm điểm Chống spam",
+                "enableDuplicate": "Bật chặn bài viết trùng lặp & gần giống",
+                "duplicateWindow": "Cửa sổ quét trùng lặp (giờ)",
+                "similarityThreshold": "Ngưỡng tương đồng gần giống (%)",
+                "mediumThreshold": "Ngưỡng rủi ro Trung bình",
+                "highThreshold": "Ngưỡng rủi ro Cao (Chờ duyệt)",
+                "violationThreshold": "Ngưỡng vi phạm (Tự động từ chối)",
+                "maxLinks": "Giới hạn liên kết / bài",
+                "maxMentions": "Giới hạn lượt nhắc tên / bài",
+                "maxHashtags": "Giới hạn #hashtag / bài"
+            },
+            "moderation": {
+                "title": "Quy trình Kiểm duyệt & Chính sách Tự động",
+                "subtitle": "Kiểm soát khi nào bài viết rủi ro vào hàng chờ duyệt và cách xử lý liên kết đáng ngờ hoặc vi phạm.",
+                "riskBasedEnabled": "Chuyển bài rủi ro cao vào Chờ duyệt",
+                "requireManualAll": "Yêu cầu duyệt thủ công tất cả bài thành viên",
+                "aiAssistEnabled": "Bật AI hỗ trợ phân loại kiểm duyệt",
+                "reviewThreshold": "Điểm ngưỡng chuyển kiểm duyệt",
+                "suspiciousLinkAction": "Xử lý liên kết rút gọn / đáng ngờ",
+                "violationAction": "Xử lý bài viết vi phạm nặng",
+                "actions": {
+                    "allow": "Cho phép (Chỉ cộng điểm rủi ro)",
+                    "flag": "Gắn cờ & Chờ duyệt",
+                    "pendingReview": "Đưa vào hàng chờ kiểm duyệt",
+                    "reject": "Từ chối tự động"
+                }
+            },
+            "feed": {
+                "title": "Bảng tin, Đa dạng nội dung & Phân phối công bằng",
+                "subtitle": "Quản lý các tab bảng tin, giới hạn lặp tác giả/chủ đề và tỷ lệ phân bổ 70/20/10.",
+                "enableTrending": "Bật tab Bảng tin Xu hướng",
+                "enableRecommended": "Bật tab Đề xuất cho bạn",
+                "enableFreshDiscovery": "Bật phân bổ bài mới & khám phá công bằng",
+                "categoryDiversity": "Bật đa dạng chủ đề giữa các bài liên tiếp",
+                "candidateWindowHours": "Khung thời gian quét xu hướng (giờ)",
+                "refreshIntervalMinutes": "Chu kỳ tính lại điểm (phút)",
+                "pageSize": "Số bài mỗi lượt tải trang",
+                "authorDiversityMax": "Số bài tối đa / tác giả mỗi trang",
+                "adSpacing": "Khoảng cách bài tài trợ (số bài)",
+                "allocationRankingPct": "Tỷ lệ bài điểm cao (%)",
+                "allocationFreshPct": "Tỷ lệ bài mới đăng (%)",
+                "allocationDiscoveryPct": "Tỷ lệ khám phá chéo chủ đề (%)",
+                "allocationSummary": "Tổng tỷ lệ phối trộn: {sum}% (được chuẩn hóa theo tỷ lệ khi tạo luồng Đề xuất)."
+            },
+            "trending": {
+                "title": "Công thức Điểm Xu hướng Hữu cơ & Chống Thao túng",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Không tính lượt từ Ads hay tài khoản AI.",
+                "weightHumanView": "Trọng số: Lượt xem người thật",
+                "weightReaction": "Trọng số: Cảm xúc hợp lệ",
+                "weightComment": "Trọng số: Bình luận hợp lệ",
+                "weightBookmark": "Trọng số: Lượt lưu bài hợp lệ",
+                "weightShare": "Trọng số: Chia sẻ hợp lệ",
+                "decayBaseHours": "Hằng số thời gian suy giảm (giờ)",
+                "decayExponent": "Số mũ suy giảm theo thời gian",
+                "perUserCap": "Giới hạn tín hiệu xếp hạng / người / 24h",
+                "viewEngagementRatio": "Ngưỡng hãm lượt xem bất thường (views/tương tác)"
+            },
+            "simulator": {
+                "title": "Bộ mô phỏng Điểm Xu hướng (Không ghi DB)",
+                "subtitle": "Thử nghiệm trọng số và đường cong suy giảm với dữ liệu giả lập, không làm thay đổi bài viết thật.",
+                "humanViews": "Lượt xem thật",
+                "reactions": "Cảm xúc",
+                "comments": "Bình luận",
+                "bookmarks": "Lưu bài",
+                "shares": "Chia sẻ",
+                "ageHours": "Tuổi bài (giờ)",
+                "runButton": "Tính điểm mô phỏng",
+                "trendingScore": "Điểm Xu hướng",
+                "rawScore": "Điểm tương tác thô",
+                "decayFactor": "Hệ số chia suy giảm",
+                "effectiveViews": "Lượt xem hiệu lực",
+                "dampened": "Đã hãm"
+            },
+            "telemetry": {
+                "title": "Sự kiện Chống spam & Lịch sử thay đổi",
+                "subtitle": "Theo dõi lượt vượt hạn mức, chặn bài trùng, rủi ro cao và cập nhật từ quản trị viên.",
+                "auditLogs": "Nhật ký Cài đặt & Kiểm duyệt gần đây",
+                "riskMedium": "Rủi ro trung bình",
+                "riskHigh": "Rủi ro cao",
+                "riskViolation": "Vi phạm"
+            }
         }
     },
     "common": {

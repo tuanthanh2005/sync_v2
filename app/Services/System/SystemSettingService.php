@@ -74,6 +74,72 @@ class SystemSettingService
             'content_blocked_domains' => ['group' => 'content', 'type' => 'string', 'value' => '', 'is_public' => false],
             'content_moderation_mode' => ['group' => 'content', 'type' => 'string', 'value' => 'post_publish_filter', 'is_public' => false],
 
+            // Publishing Rules & Per-Tier Quotas V1.0
+            'posting_new_member_age_days' => ['group' => 'publishing', 'type' => 'integer', 'value' => 7, 'is_public' => false],
+            'posting_limit_24h_new' => ['group' => 'publishing', 'type' => 'integer', 'value' => 10, 'is_public' => false],
+            'posting_limit_24h_standard' => ['group' => 'publishing', 'type' => 'integer', 'value' => 30, 'is_public' => false],
+            'posting_limit_24h_premium' => ['group' => 'publishing', 'type' => 'integer', 'value' => 100, 'is_public' => false],
+            'posting_limit_60m_new' => ['group' => 'publishing', 'type' => 'integer', 'value' => 3, 'is_public' => false],
+            'posting_limit_60m_standard' => ['group' => 'publishing', 'type' => 'integer', 'value' => 10, 'is_public' => false],
+            'posting_limit_60m_premium' => ['group' => 'publishing', 'type' => 'integer', 'value' => 20, 'is_public' => false],
+            'posting_min_interval_new' => ['group' => 'publishing', 'type' => 'integer', 'value' => 60, 'is_public' => false],
+            'posting_min_interval_standard' => ['group' => 'publishing', 'type' => 'integer', 'value' => 30, 'is_public' => false],
+            'posting_min_interval_premium' => ['group' => 'publishing', 'type' => 'integer', 'value' => 15, 'is_public' => false],
+            'comment_limit_24h_new' => ['group' => 'publishing', 'type' => 'integer', 'value' => 50, 'is_public' => false],
+            'comment_limit_24h_standard' => ['group' => 'publishing', 'type' => 'integer', 'value' => 200, 'is_public' => false],
+            'comment_limit_24h_premium' => ['group' => 'publishing', 'type' => 'integer', 'value' => 500, 'is_public' => false],
+            'post_max_images_new' => ['group' => 'publishing', 'type' => 'integer', 'value' => 4, 'is_public' => false],
+            'post_max_images_standard' => ['group' => 'publishing', 'type' => 'integer', 'value' => 4, 'is_public' => false],
+            'post_max_images_premium' => ['group' => 'publishing', 'type' => 'integer', 'value' => 8, 'is_public' => false],
+            'post_edits_per_day_limit' => ['group' => 'publishing', 'type' => 'integer', 'value' => 15, 'is_public' => false],
+            'post_edit_window_minutes' => ['group' => 'publishing', 'type' => 'integer', 'value' => 0, 'is_public' => false],
+
+            // Anti-Spam & Duplicate Detection V1.0
+            'antispam_enabled' => ['group' => 'antispam', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'duplicate_detection_enabled' => ['group' => 'antispam', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'duplicate_detection_window_hours' => ['group' => 'antispam', 'type' => 'integer', 'value' => 24, 'is_public' => false],
+            'duplicate_similarity_threshold' => ['group' => 'antispam', 'type' => 'integer', 'value' => 85, 'is_public' => false],
+            'antispam_medium_threshold' => ['group' => 'antispam', 'type' => 'integer', 'value' => 30, 'is_public' => false],
+            'antispam_high_threshold' => ['group' => 'antispam', 'type' => 'integer', 'value' => 60, 'is_public' => false],
+            'antispam_violation_threshold' => ['group' => 'antispam', 'type' => 'integer', 'value' => 85, 'is_public' => false],
+            'antispam_max_links_per_post' => ['group' => 'antispam', 'type' => 'integer', 'value' => 5, 'is_public' => false],
+            'antispam_max_mentions_per_post' => ['group' => 'antispam', 'type' => 'integer', 'value' => 10, 'is_public' => false],
+            'antispam_max_hashtags_per_post' => ['group' => 'antispam', 'type' => 'integer', 'value' => 10, 'is_public' => false],
+            'antispam_temp_restriction_hours' => ['group' => 'antispam', 'type' => 'integer', 'value' => 6, 'is_public' => false],
+
+            // Moderation Workflow V1.0
+            'moderation_risk_based_enabled' => ['group' => 'moderation', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'moderation_require_manual_review' => ['group' => 'moderation', 'type' => 'boolean', 'value' => false, 'is_public' => false],
+            'moderation_review_threshold' => ['group' => 'moderation', 'type' => 'integer', 'value' => 60, 'is_public' => false],
+            'moderation_ai_assist_enabled' => ['group' => 'moderation', 'type' => 'boolean', 'value' => false, 'is_public' => false],
+            'moderation_suspicious_link_action' => ['group' => 'moderation', 'type' => 'string', 'value' => 'flag', 'is_public' => false],
+            'moderation_violation_action' => ['group' => 'moderation', 'type' => 'string', 'value' => 'reject', 'is_public' => false],
+
+            // Feed Distribution & Personalization V1.0
+            'feed_enable_trending' => ['group' => 'feed', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feed_enable_recommended' => ['group' => 'feed', 'type' => 'boolean', 'value' => true, 'is_public' => true],
+            'feed_enable_fresh_discovery' => ['group' => 'feed', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'feed_candidate_window_hours' => ['group' => 'feed', 'type' => 'integer', 'value' => 168, 'is_public' => false],
+            'feed_refresh_interval_minutes' => ['group' => 'feed', 'type' => 'integer', 'value' => 5, 'is_public' => false],
+            'feed_page_size' => ['group' => 'feed', 'type' => 'integer', 'value' => 10, 'is_public' => true],
+            'feed_author_diversity_max' => ['group' => 'feed', 'type' => 'integer', 'value' => 2, 'is_public' => false],
+            'feed_category_diversity_enabled' => ['group' => 'feed', 'type' => 'boolean', 'value' => true, 'is_public' => false],
+            'feed_allocation_ranking_pct' => ['group' => 'feed', 'type' => 'integer', 'value' => 70, 'is_public' => false],
+            'feed_allocation_fresh_pct' => ['group' => 'feed', 'type' => 'integer', 'value' => 20, 'is_public' => false],
+            'feed_allocation_discovery_pct' => ['group' => 'feed', 'type' => 'integer', 'value' => 10, 'is_public' => false],
+            'feed_ad_spacing_posts' => ['group' => 'feed', 'type' => 'integer', 'value' => 6, 'is_public' => true],
+
+            // Trending Weights V1.0
+            'trending_weight_human_view' => ['group' => 'trending', 'type' => 'float', 'value' => 0.1, 'is_public' => false],
+            'trending_weight_reaction' => ['group' => 'trending', 'type' => 'float', 'value' => 2.0, 'is_public' => false],
+            'trending_weight_comment' => ['group' => 'trending', 'type' => 'float', 'value' => 4.0, 'is_public' => false],
+            'trending_weight_bookmark' => ['group' => 'trending', 'type' => 'float', 'value' => 5.0, 'is_public' => false],
+            'trending_weight_share' => ['group' => 'trending', 'type' => 'float', 'value' => 6.0, 'is_public' => false],
+            'trending_decay_base_hours' => ['group' => 'trending', 'type' => 'float', 'value' => 24.0, 'is_public' => false],
+            'trending_decay_exponent' => ['group' => 'trending', 'type' => 'float', 'value' => 1.5, 'is_public' => false],
+            'trending_per_user_contribution_cap' => ['group' => 'trending', 'type' => 'integer', 'value' => 20, 'is_public' => false],
+            'trending_view_engagement_ratio' => ['group' => 'trending', 'type' => 'integer', 'value' => 200, 'is_public' => false],
+
             // Advertising Engine Config
             'ad_feed_frequency' => ['group' => 'ads', 'type' => 'integer', 'value' => 5, 'is_public' => false],
             'ad_min_daily_budget_vnd' => ['group' => 'ads', 'type' => 'integer', 'value' => (int) config('syncviet.ad_pricing.min_daily_budget_vnd', 50_000), 'is_public' => true],
@@ -336,6 +402,56 @@ class SystemSettingService
                 'auth_forgot_password_limit_15min' => [1, 10],
                 'auth_suspicious_risk_threshold' => [20, 100],
                 'auth_pending_retention_hours' => [6, 72],
+                'content_post_max_length' => [100, 10_000],
+                'content_comment_max_length' => [100, 5_000],
+                'posting_new_member_age_days' => [1, 90],
+                'posting_limit_24h_new' => [1, 200],
+                'posting_limit_24h_standard' => [1, 500],
+                'posting_limit_24h_premium' => [1, 1_000],
+                'posting_limit_60m_new' => [1, 50],
+                'posting_limit_60m_standard' => [1, 100],
+                'posting_limit_60m_premium' => [1, 200],
+                'posting_min_interval_new' => [0, 3_600],
+                'posting_min_interval_standard' => [0, 3_600],
+                'posting_min_interval_premium' => [0, 3_600],
+                'comment_limit_24h_new' => [1, 1_000],
+                'comment_limit_24h_standard' => [1, 2_000],
+                'comment_limit_24h_premium' => [1, 5_000],
+                'post_max_images_new' => [1, 12],
+                'post_max_images_standard' => [1, 12],
+                'post_max_images_premium' => [1, 12],
+                'post_edits_per_day_limit' => [1, 200],
+                'post_edit_window_minutes' => [0, 525_600],
+                'duplicate_detection_window_hours' => [1, 720],
+                'duplicate_similarity_threshold' => [50, 100],
+                'antispam_medium_threshold' => [10, 90],
+                'antispam_high_threshold' => [20, 95],
+                'antispam_violation_threshold' => [30, 100],
+                'antispam_max_links_per_post' => [0, 50],
+                'antispam_max_mentions_per_post' => [0, 50],
+                'antispam_max_hashtags_per_post' => [0, 50],
+                'antispam_temp_restriction_hours' => [1, 720],
+                'moderation_review_threshold' => [20, 95],
+                'feed_candidate_window_hours' => [12, 720],
+                'feed_refresh_interval_minutes' => [1, 60],
+                'feed_page_size' => [5, 30],
+                'feed_author_diversity_max' => [1, 10],
+                'feed_allocation_ranking_pct' => [10, 100],
+                'feed_allocation_fresh_pct' => [0, 80],
+                'feed_allocation_discovery_pct' => [0, 50],
+                'feed_ad_spacing_posts' => [3, 20],
+                'trending_per_user_contribution_cap' => [1, 100],
+                'trending_view_engagement_ratio' => [0, 5_000],
+            ];
+
+            $boundedFloatKeys = [
+                'trending_weight_human_view' => [0.0, 5.0],
+                'trending_weight_reaction' => [0.0, 20.0],
+                'trending_weight_comment' => [0.0, 30.0],
+                'trending_weight_bookmark' => [0.0, 30.0],
+                'trending_weight_share' => [0.0, 30.0],
+                'trending_decay_base_hours' => [1.0, 168.0],
+                'trending_decay_exponent' => [0.1, 4.0],
             ];
 
             if ($key === 'feature_require_email_verification' && app()->isProduction()) {
@@ -350,6 +466,9 @@ class SystemSettingService
                     : (isset($boundedIntegerKeys[$key])
                         ? (string) max($boundedIntegerKeys[$key][0], min($boundedIntegerKeys[$key][1], (int) $rawValue))
                         : (string) max(0, (int) $rawValue)),
+                'float' => isset($boundedFloatKeys[$key])
+                    ? (string) round(max($boundedFloatKeys[$key][0], min($boundedFloatKeys[$key][1], (float) $rawValue)), 4)
+                    : (string) round((float) $rawValue, 4),
                 'json' => json_encode($rawValue) ?: '[]',
                 default => trim((string) $rawValue),
             };
@@ -401,6 +520,7 @@ class SystemSettingService
         return match ($type) {
             'boolean' => $value === '1' || strtolower($value) === 'true',
             'integer' => (int) $value,
+            'float' => (float) $value,
             'json' => json_decode($value, true) ?? [],
             default => $value,
         };

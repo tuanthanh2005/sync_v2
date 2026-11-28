@@ -27,6 +27,7 @@ use App\Services\Monetization\PlatformCapabilityService;
 use App\Services\Policy\FooterMenuService;
 use App\Services\Social\HashtagService;
 use App\Services\Social\SearchService;
+use App\Services\Social\TrustLevelResolver;
 use App\Services\System\LanguageService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\Request;
@@ -162,6 +163,7 @@ class HandleInertiaRequests extends Middleware
                         'message' => $user->isRestrictedFrom('message'),
                         'advertise' => $user->isRestrictedFrom('advertise'),
                     ],
+                    'posting_limits' => app(TrustLevelResolver::class)->limitsFor($user),
                     'can' => [
                         'accessAdmin' => Gate::forUser($user)->allows('access-admin'),
                         'accessModeration' => Gate::forUser($user)->allows('access-moderation') || $user->hasPermission('moderation.view'),
@@ -187,6 +189,8 @@ class HandleInertiaRequests extends Middleware
                         'manageBoosts' => $user->hasPermission('boosts.view') || $user->hasPermission('ads.view'),
                         'manageAdSense' => $user->hasPermission('adsense.manage') || $user->hasPermission('monetization.manage'),
                         'manageSettings' => $user->hasPermission('settings.view'),
+                        'viewPostFeedSettings' => $user->hasPermission('posts.settings.view') || $user->hasPermission('feed.settings.view') || $user->hasPermission('spam_events.view') || $user->hasPermission('settings.view'),
+                        'managePostFeedSettings' => $user->hasPermission('posts.settings.manage') || $user->hasPermission('feed.settings.manage') || $user->hasPermission('settings.update'),
                         'manageLanguages' => $user->hasPermission('languages.view'),
                         'manageNotifications' => $user->hasPermission('notifications.view'),
                         'viewSecurity' => $user->hasPermission('security.view'),

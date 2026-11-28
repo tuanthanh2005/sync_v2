@@ -379,6 +379,11 @@ class CommunityService
         $postsQuery = Post::query()
             ->where('community_id', $community->id)
             ->where('moderation_status', ModerationStatus::Approved->value)
+            ->where('is_spam', false)
+            ->where(static function (Builder $statusQuery): void {
+                $statusQuery->where('lifecycle_status', 'published')
+                    ->orWhereNull('lifecycle_status');
+            })
             ->whereHas('author', static function (Builder $authorQuery): void {
                 $authorQuery->where('status', UserStatus::Active->value);
             })
@@ -386,6 +391,7 @@ class CommunityService
                 'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
+                'hashtags:id,name,slug',
                 'media',
                 'poll.options',
             ]);
@@ -405,7 +411,7 @@ class CommunityService
         $postsQuery->orderByDesc('is_pinned');
 
         if ($sort === 'trending') {
-            $postsQuery->orderByDesc('reactions_count')->orderByDesc('comments_count')->orderByDesc('published_at');
+            $postsQuery->orderByDesc('trending_score')->orderByDesc('published_at')->orderByDesc('id');
         } else {
             $postsQuery->orderByDesc('published_at')->orderByDesc('id');
         }

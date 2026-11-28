@@ -125,11 +125,31 @@ const { mobileComposerOpen, mobileComposerNonce, closeMobileComposer } =
     useMobileComposer();
 
 const maxPostLength = computed<number>(
-    () => page.props.systemSettings?.limits?.postMaxLength ?? 3000,
+    () =>
+        page.props.auth.user?.posting_limits?.max_post_length ??
+        page.props.systemSettings?.limits?.postMaxLength ??
+        3000,
 );
 const maxPostImages = computed<number>(
-    () => page.props.systemSettings?.limits?.postMaxImages ?? 4,
+    () =>
+        page.props.auth.user?.posting_limits?.max_images_per_post ??
+        page.props.systemSettings?.limits?.postMaxImages ??
+        4,
 );
+
+function generateIdempotencyKey(): string {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+
+    return `post-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+const idempotencyKey = ref<string>(generateIdempotencyKey());
+const rateLimitWarning = ref<string | null>(null);
+const retryCountdownSeconds = ref<number>(0);
+let retryCountdownTimer: ReturnType<typeof setInterval> | null = null;
+let stopHttpExceptionListener: (() => void) | null = null;
 
 const draftStorageKey = computed(
     () => `syncviet_post_draft_${props.communityId ?? 'feed'}`,
@@ -499,6 +519,29 @@ function cancelActiveUpload(): void {
     appToast.info(t('upload.uploadCancelled'));
 }
 
+function clearRateLimitBanner(): void {
+    rateLimitWarning.value = null;
+    retryCountdownSeconds.value = 0;
+    if (retryCountdownTimer !== null) {
+        clearInterval(retryCountdownTimer);
+        retryCountdownTimer = null;
+    }
+}
+
+function startRateLimitCountdown(seconds: number, message: string): void {
+    clearRateLimitBanner();
+    rateLimitWarning.value = message;
+    retryCountdownSeconds.value = Math.max(1, seconds);
+
+    retryCountdownTimer = setInterval(() => {
+        if (retryCountdownSeconds.value <= 1) {
+            clearRateLimitBanner();
+        } else {
+            retryCountdownSeconds.value -= 1;
+        }
+    }, 1000);
+}
+
 function resetComposer(): void {
     form.reset();
     form.category = props.defaultCategory;
@@ -508,6 +551,8 @@ function resetComposer(): void {
     form.poll_options = ['', ''];
     form.clearErrors();
     clearStoredDraft();
+    clearRateLimitBanner();
+    idempotencyKey.value = generateIdempotencyKey();
     showImages.value = false;
     showPoll.value = false;
     showLink.value = false;
@@ -522,6 +567,42 @@ function submitPost(): void {
         return;
     }
 
+    if (!idempotencyKey.value) {
+        idempotencyKey.value = generateIdempotencyKey();
+    }
+
+    clearRateLimitBanner();
+
+    if (stopHttpExceptionListener !== null) {
+        stopHttpExceptionListener();
+        stopHttpExceptionListener = null;
+    }
+
+    stopHttpExceptionListener = router.on('httpException', (event) => {
+        const detail = (event as CustomEvent).detail as {
+            response?: {
+                status?: number;
+                headers?: Record<string, string>;
+                data?: { message?: string; retry_after?: number };
+            };
+        };
+        if (detail?.response?.status === 429) {
+            const retryAfter = Number(
+                detail.response.data?.retry_after ??
+                    detail.response.headers?.['retry-after'] ??
+                    15,
+            );
+            const msg =
+                detail.response.data?.message ||
+                t('home.composer.rateLimitNotice');
+            startRateLimitCountdown(
+                Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : 15,
+                msg,
+            );
+            idempotencyKey.value = generateIdempotencyKey();
+        }
+    });
+
     form.transform((data) => {
         const cleanedOptions = showPoll.value
             ? data.poll_options.map((opt) => opt.trim()).filter(Boolean)
@@ -533,6 +614,7 @@ function submitPost(): void {
             community_id: props.communityId ?? null,
             category: data.category,
             visibility: data.visibility,
+            idempotency_key: idempotencyKey.value,
             link_url:
                 showLink.value && data.link_url.trim() !== ''
                     ? data.link_url.trim()
@@ -554,6 +636,16 @@ function submitPost(): void {
         preserveState: true,
         onSuccess: () => {
             resetComposer();
+        },
+        onError: () => {
+            // Preserve typed draft and regenerate a fresh idempotency key in case the user edits their post before retrying.
+            idempotencyKey.value = generateIdempotencyKey();
+        },
+        onFinish: () => {
+            if (stopHttpExceptionListener !== null) {
+                stopHttpExceptionListener();
+                stopHttpExceptionListener = null;
+            }
         },
     });
 }
@@ -635,6 +727,11 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     flushPendingDraftSave();
+    clearRateLimitBanner();
+    if (stopHttpExceptionListener !== null) {
+        stopHttpExceptionListener();
+        stopHttpExceptionListener = null;
+    }
     if (typeof window !== 'undefined') {
         if (resizeRafId !== null) {
             window.cancelAnimationFrame(resizeRafId);
@@ -905,6 +1002,20 @@ onBeforeUnmount(() => {
                                             />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Inline Rate Limit Notice (preserves full typed draft & attachments) -->
+                            <div
+                                v-if="rateLimitWarning"
+                                role="alert"
+                                class="flex items-start justify-between gap-2 rounded-xl border border-warning/40 bg-warning/10 px-3.5 py-2.5 text-xs text-foreground"
+                            >
+                                <div class="space-y-0.5">
+                                    <p class="font-semibold">{{ rateLimitWarning }}</p>
+                                    <p v-if="retryCountdownSeconds > 0" class="text-[11px] text-muted-foreground tabular-nums">
+                                        {{ t('home.composer.retryInSeconds', { seconds: retryCountdownSeconds }) }}
+                                    </p>
                                 </div>
                             </div>
 

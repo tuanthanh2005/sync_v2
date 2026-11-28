@@ -624,9 +624,13 @@ export type PublicFeedPost = {
     visibility: 'public' | 'community' | 'private';
     is_pinned: boolean;
     moderation_status: string;
+    lifecycle_status?: string;
+    moderation_reason?: string | null;
+    spam_risk_score?: number | null;
     reactions_count: number;
     reaction_summary?: Partial<Record<'like' | 'love' | 'insightful', number>>;
     comments_count: number;
+    bookmarks_count?: number;
     shares_count: number;
     views_count?: number;
     organic_views_count?: number;
@@ -634,6 +638,8 @@ export type PublicFeedPost = {
     unique_viewers_count?: number;
     view_analytics?: PostViewAnalytics | null;
     published_at: string | null;
+    edited_at?: string | null;
+    edit_count?: number;
     content_origin?: string;
     is_ai_assisted?: boolean;
     viewer_reaction: 'like' | 'love' | 'insightful' | null;

@@ -2,8 +2,11 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\AccountType;
 use App\Enums\CommunityRole;
 use App\Enums\ModerationStatus;
+use App\Enums\PostLifecycleStatus;
+use App\Enums\UserStatus;
 use App\Models\BlockedKeyword;
 use App\Models\Comment;
 use App\Models\Community;
@@ -13,11 +16,14 @@ use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\PostPoll;
 use App\Models\User;
+use App\Notifications\SocialActivityNotification;
 use App\Services\Media\SafeImageUploadService;
 use App\Services\Moderation\ContentFilterService;
+use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
 use App\Services\Social\HashtagService;
 use App\Services\Social\PostService;
+use App\Services\Social\TrendingRankingService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -64,6 +70,10 @@ class AdminContentService
         match ($filter) {
             'hidden' => $query->where('moderation_status', ModerationStatus::Hidden->value),
             'pending' => $query->where('moderation_status', ModerationStatus::Pending->value),
+            'rejected' => $query->where(static function (Builder $rq): void {
+                $rq->where('moderation_status', ModerationStatus::Rejected->value)
+                    ->orWhere('lifecycle_status', PostLifecycleStatus::Rejected->value);
+            }),
             'spam' => $query->where('is_spam', true),
             'sponsored' => $query->whereHas('adCampaigns'),
             'deleted' => $query->onlyTrashed(),
@@ -82,7 +92,9 @@ class AdminContentService
                     'category' => $p->category->value,
                     'visibility' => $p->visibility->value,
                     'moderation_status' => $p->moderation_status->value,
+                    'lifecycle_status' => $p->lifecycle_status->value,
                     'moderation_reason' => $p->moderation_reason,
+                    'spam_risk_score' => (int) ($p->spam_risk_score ?? 0),
                     'is_pinned' => $p->is_pinned,
                     'comments_locked' => $p->comments_locked,
                     'content_warning' => $p->content_warning,
@@ -135,19 +147,40 @@ class AdminContentService
                 'hide' => (function () use ($actor, $post, $cleanReason): void {
                     $post->forceFill([
                         'moderation_status' => ModerationStatus::Hidden,
+                        'lifecycle_status' => PostLifecycleStatus::Hidden,
                         'moderation_reason' => $cleanReason,
                         'moderated_by' => $actor->id,
                         'moderated_at' => now(),
+                        'trending_score' => 0,
+                        'trending_raw_score' => 0,
+                        'needs_rerank' => false,
                     ])->save();
                     $this->postService->stopCampaignsForPost($post, __('Promoted post was hidden by moderation; remaining ad budget refunded.'));
                 })(),
-                'restore_visibility', 'approve' => $post->forceFill([
-                    'moderation_status' => ModerationStatus::Approved,
-                    'moderation_reason' => $cleanReason,
-                    'is_spam' => false,
-                    'moderated_by' => $actor->id,
-                    'moderated_at' => now(),
-                ])->save(),
+                'reject' => (function () use ($actor, $post, $cleanReason): void {
+                    $post->forceFill([
+                        'moderation_status' => ModerationStatus::Rejected,
+                        'lifecycle_status' => PostLifecycleStatus::Rejected,
+                        'moderation_reason' => $cleanReason,
+                        'moderated_by' => $actor->id,
+                        'moderated_at' => now(),
+                        'trending_score' => 0,
+                        'trending_raw_score' => 0,
+                        'needs_rerank' => false,
+                    ])->save();
+                    $this->postService->stopCampaignsForPost($post, __('Promoted post was rejected by moderation; remaining ad budget refunded.'));
+                })(),
+                'restore_visibility', 'approve' => (function () use ($actor, $post): void {
+                    $post->forceFill([
+                        'moderation_status' => ModerationStatus::Approved,
+                        'lifecycle_status' => PostLifecycleStatus::Published,
+                        'moderation_reason' => null,
+                        'is_spam' => false,
+                        'moderated_by' => $actor->id,
+                        'moderated_at' => now(),
+                        'needs_rerank' => true,
+                    ])->save();
+                })(),
                 'lock_comments' => $post->forceFill(['comments_locked' => true])->save(),
                 'unlock_comments' => $post->forceFill(['comments_locked' => false])->save(),
                 'pin' => $post->forceFill(['is_pinned' => true])->save(),
@@ -157,20 +190,48 @@ class AdminContentService
                     $post->forceFill([
                         'is_spam' => true,
                         'moderation_status' => ModerationStatus::Hidden,
+                        'lifecycle_status' => PostLifecycleStatus::Rejected,
                         'moderation_reason' => $cleanReason,
                         'moderated_by' => $actor->id,
                         'moderated_at' => now(),
+                        'trending_score' => 0,
+                        'trending_raw_score' => 0,
+                        'needs_rerank' => false,
                     ])->save();
                     $this->postService->stopCampaignsForPost($post, __('Promoted post flagged as spam; remaining ad budget refunded.'));
                 })(),
                 'soft_delete' => (function () use ($actor, $post, $cleanReason): void {
-                    $post->forceFill(['moderation_reason' => $cleanReason, 'moderated_by' => $actor->id, 'moderated_at' => now()])->save();
+                    $post->forceFill([
+                        'lifecycle_status' => PostLifecycleStatus::Deleted,
+                        'moderation_reason' => $cleanReason,
+                        'moderated_by' => $actor->id,
+                        'moderated_at' => now(),
+                        'trending_score' => 0,
+                        'trending_raw_score' => 0,
+                        'needs_rerank' => false,
+                    ])->save();
                     $this->postService->stopCampaignsForPost($post, __('Promoted post removed by moderation; remaining ad budget refunded.'));
                     $post->delete();
                 })(),
-                'restore_deleted' => $post->restore(),
+                'restore_deleted' => (function () use ($post): void {
+                    $post->restore();
+                    $restoredLifecycle = match ($post->moderation_status) {
+                        ModerationStatus::Approved => PostLifecycleStatus::Published,
+                        ModerationStatus::Pending => PostLifecycleStatus::PendingReview,
+                        ModerationStatus::Rejected, ModerationStatus::Removed => PostLifecycleStatus::Rejected,
+                        ModerationStatus::Hidden => PostLifecycleStatus::Hidden,
+                    };
+                    $post->forceFill([
+                        'lifecycle_status' => $restoredLifecycle,
+                        'needs_rerank' => $post->moderation_status === ModerationStatus::Approved,
+                    ])->save();
+                })(),
                 default => throw ValidationException::withMessages(['action' => [__('Unsupported moderation action.')]]),
             };
+
+            if ($post->moderation_status === ModerationStatus::Approved) {
+                app(TrendingRankingService::class)->recalculatePost($post, false);
+            }
 
             $this->auditLogger->log(
                 "admin.post.{$action}",
@@ -179,6 +240,43 @@ class AdminContentService
                 $actor,
             );
         });
+
+        if (in_array($action, ['approve', 'restore_visibility', 'reject', 'hide'], true) && $post->author !== null && $post->author->id !== $actor->id) {
+            try {
+                $notifKey = match ($action) {
+                    'reject' => 'moderation.post_rejected',
+                    'hide' => 'moderation.post_hidden',
+                    default => 'moderation.post_approved',
+                };
+                $titleEn = match ($action) {
+                    'reject' => 'Your post did not meet community guidelines: :reason',
+                    'hide' => 'Your post was hidden by moderation: :reason',
+                    default => 'Your post has been approved and published.',
+                };
+                $titleVi = match ($action) {
+                    'reject' => 'Bài viết của bạn không đạt tiêu chuẩn cộng đồng: '.$cleanReason,
+                    'hide' => 'Bài viết của bạn đã bị ẩn bởi kiểm duyệt: '.$cleanReason,
+                    default => 'Bài viết của bạn đã được duyệt và hiển thị công khai.',
+                };
+
+                app(NotificationService::class)->notifyIfAllowed(
+                    $post->author,
+                    $actor,
+                    new SocialActivityNotification(
+                        eventKey: $notifKey,
+                        titleVi: $titleVi,
+                        titleEn: __($titleEn, ['reason' => $cleanReason]),
+                        url: route('posts.show', $post, false),
+                        actorName: $actor->name,
+                        actorUsername: $actor->username,
+                        titleKey: $titleEn,
+                        titleParams: ['reason' => $cleanReason],
+                    ),
+                );
+            } catch (\Throwable) {
+                // Never break moderation commit if notification dispatch fails.
+            }
+        }
     }
 
     /**
@@ -628,6 +726,20 @@ class AdminContentService
                 ->where('post_id', $post->id)
                 ->where('moderation_status', ModerationStatus::Approved->value)
                 ->count();
+
+            $post->valid_comments_count = Comment::query()
+                ->where('post_id', $post->id)
+                ->where('user_id', '!=', $post->user_id)
+                ->where('moderation_status', ModerationStatus::Approved->value)
+                ->where('is_spam', false)
+                ->whereHas('author', static function ($query): void {
+                    $query->where('account_type', AccountType::Human->value)
+                        ->where('is_test_account', false)
+                        ->where('status', UserStatus::Active->value);
+                })
+                ->count();
+
+            $post->needs_rerank = true;
             $post->save();
         }
     }

@@ -6,6 +6,7 @@ use App\Enums\AdCampaignStatus;
 use App\Enums\CreditEntryType;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
+use App\Enums\PostLifecycleStatus;
 use App\Enums\PostVisibility;
 use App\Enums\ReactionType;
 use App\Enums\SeoEntityType;
@@ -21,16 +22,19 @@ use App\Models\PostPoll;
 use App\Models\PostPollOption;
 use App\Models\PostPollVote;
 use App\Models\PostReaction;
+use App\Models\PostShare;
 use App\Models\User;
 use App\Notifications\SocialActivityNotification;
 use App\Services\Billing\WalletService;
 use App\Services\Media\SafeImageUploadService;
-use App\Services\Moderation\ContentFilterService;
+use App\Services\Moderation\AntiSpamEngine;
+use App\Services\Moderation\DuplicateDetectionService;
 use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class PostService
@@ -42,12 +46,12 @@ class PostService
         private readonly NotificationService $notificationService,
         private readonly AuditLogger $auditLogger,
         private readonly SystemSettingService $settings,
-        private readonly ContentFilterService $contentFilter,
         private readonly WalletService $walletService,
     ) {}
 
     /**
-     * Create a new post with optional images, link preview, poll, community placement, and hashtags.
+     * Create a new post through the unified SysNoxis publishing pipeline
+     * (eligibility, trust-tier limits, idempotency, rate limit, anti-spam, moderation, media, ranking).
      *
      * @param  array{
      *     title?: string|null,
@@ -59,7 +63,10 @@ class PostService
      *     image_alts?: list<string|null>|null,
      *     poll_question?: string|null,
      *     poll_options?: list<string>|null,
-     *     poll_duration_hours?: int|null
+     *     poll_duration_hours?: int|null,
+     *     idempotency_key?: string|null,
+     *     ip_address?: string|null,
+     *     language_code?: string|null
      * }  $data
      * @param  list<UploadedFile>  $images
      */
@@ -83,18 +90,35 @@ class PostService
             ]);
         }
 
-        $maxLength = max(100, (int) $this->settings->get('content_post_max_length', 3000));
-        if (mb_strlen(trim($data['content'])) > $maxLength) {
+        $trustResolver = app(TrustLevelResolver::class);
+        $duplicateDetector = app(DuplicateDetectionService::class);
+        $rateLimiter = app(PostingRateLimitService::class);
+        $idempotencyService = app(PostIdempotencyService::class);
+        $antiSpam = app(AntiSpamEngine::class);
+        $rankingService = app(TrendingRankingService::class);
+
+        $limits = $trustResolver->limitsFor($author);
+        $cleanContent = $duplicateDetector->stripInvisibleOnly($data['content']);
+
+        if ($cleanContent === '') {
+            throw ValidationException::withMessages([
+                'content' => [__('Post content cannot be empty.')],
+            ]);
+        }
+
+        $maxLength = max(100, (int) $limits['max_post_length']);
+        if (mb_strlen($cleanContent) > $maxLength) {
             throw ValidationException::withMessages([
                 'content' => [__('Post content exceeds the maximum allowed length of :max characters.', ['max' => $maxLength])],
             ]);
         }
 
-        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
-        $filteredTitle = isset($data['title']) && trim($data['title']) !== ''
-            ? $this->contentFilter->assertAllowedOrMask(trim($data['title']), 'title')
-            : null;
-        $filterCheck = $this->contentFilter->evaluate(trim($data['content']).' '.(string) ($filteredTitle ?? ''));
+        $maxImages = max(1, min(10, (int) $limits['max_images_per_post']));
+        if (count($images) > $maxImages) {
+            throw ValidationException::withMessages([
+                'images' => [__('You can attach up to :max images per post at your current trust tier.', ['max' => $maxImages])],
+            ]);
+        }
 
         $community = null;
 
@@ -127,41 +151,93 @@ class PostService
             }
         }
 
-        $linkUrl = isset($data['link_url']) && trim($data['link_url']) !== ''
-            ? trim($data['link_url'])
+        $linkUrl = isset($data['link_url']) && trim((string) $data['link_url']) !== ''
+            ? trim((string) $data['link_url'])
             : null;
 
-        $linkMeta = null;
-
-        if ($linkUrl !== null) {
-            if (! $this->linkPreviewService->isSafePublicUrl($linkUrl)) {
-                throw ValidationException::withMessages([
-                    'link_url' => [__('The provided link URL is blocked or invalid.')],
-                ]);
-            }
-
-            $linkMeta = $this->linkPreviewService->fetch($linkUrl);
+        if ($linkUrl !== null && ! $this->linkPreviewService->isSafePublicUrl($linkUrl)) {
+            throw ValidationException::withMessages([
+                'link_url' => [__('The provided link URL is blocked or invalid.')],
+            ]);
         }
 
-        $maxImages = max(1, min(10, (int) $this->settings->get('content_post_max_images', 4)));
+        $imageSignatures = [];
+        foreach ($images as $imageFile) {
+            $imageSignatures[] = sprintf('%s:%d', $imageFile->getClientOriginalName(), (int) $imageFile->getSize());
+        }
+
+        $payloadHash = PostIdempotencyService::payloadHash(
+            title: isset($data['title']) ? (string) $data['title'] : null,
+            content: $cleanContent,
+            communityId: $community?->id,
+            category: isset($data['category']) ? (string) $data['category'] : null,
+            visibility: isset($data['visibility']) ? (string) $data['visibility'] : null,
+            linkUrl: $linkUrl,
+            imageSignatures: $imageSignatures,
+            pollQuestion: isset($data['poll_question']) ? (string) $data['poll_question'] : null,
+        );
+
+        $idempotency = $idempotencyService->acquireOrResolve(
+            user: $author,
+            action: 'post.create',
+            rawKey: isset($data['idempotency_key']) ? (string) $data['idempotency_key'] : null,
+            payloadHash: $payloadHash,
+        );
+
+        if ($idempotency['existing_post'] !== null) {
+            return $idempotency['existing_post'];
+        }
+
+        $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : request()->ip();
         $imageAlts = $data['image_alts'] ?? [];
         $storedImages = [];
 
         try {
+            $rateLimiter->assertCanCreatePost($author, $ipAddress);
+
+            $evaluation = $antiSpam->evaluatePost(
+                author: $author,
+                payload: [
+                    'title' => isset($data['title']) ? (string) $data['title'] : null,
+                    'content' => $cleanContent,
+                    'community_id' => $community?->id,
+                    'link_url' => $linkUrl,
+                    'ip_address' => $ipAddress,
+                ],
+                actionContext: 'post.create',
+            );
+
+            $linkMeta = $linkUrl !== null ? $this->linkPreviewService->fetch($linkUrl) : null;
+
             foreach (array_slice($images, 0, $maxImages) as $image) {
                 $storedImages[] = $this->imageUploadService->storeImage($image, 'posts', 'post', 'images', true);
             }
 
-            $post = DB::transaction(function () use ($author, $data, $community, $linkUrl, $linkMeta, $storedImages, $imageAlts, $filteredContent, $filteredTitle, $filterCheck): Post {
+            $post = DB::transaction(function () use (
+                $author,
+                $data,
+                $community,
+                $linkUrl,
+                $linkMeta,
+                $storedImages,
+                $imageAlts,
+                $evaluation,
+                $rateLimiter,
+                $ipAddress,
+            ): Post {
                 $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? PostCategory::General;
                 $visibility = $community !== null
                     ? ($community->visibility === 'private' ? PostVisibility::Community : PostVisibility::Public)
                     : (PostVisibility::tryFrom((string) ($data['visibility'] ?? '')) ?? PostVisibility::Public);
 
+                $languageCode = isset($data['language_code']) && trim($data['language_code']) !== ''
+                    ? trim($data['language_code'])
+                    : $author->preferredLocale();
+
                 $post = new Post([
                     'category' => $category->value,
-                    'title' => $filteredTitle,
-                    'content' => $filteredContent,
+                    'title' => $evaluation['filtered_title'],
+                    'content' => $evaluation['filtered_content'],
                     'link_url' => $linkUrl,
                     'link_meta' => $linkMeta,
                     'visibility' => $visibility->value,
@@ -169,11 +245,18 @@ class PostService
                 ]);
                 $post->user_id = $author->id;
                 $post->community_id = $community?->id;
-                $post->moderation_status = $filterCheck['flagged'] ? ModerationStatus::Pending : ModerationStatus::Approved;
+                $post->language_code = mb_substr($languageCode, 0, 12);
+                $post->moderation_status = $evaluation['moderation_status'];
+                $post->lifecycle_status = $evaluation['lifecycle_status'];
+                $post->moderation_reason = $evaluation['moderation_reason'];
+                $post->is_spam = $evaluation['risk_level'] === 'violation';
+                $post->spam_risk_score = $evaluation['risk_score'];
+                $post->content_fingerprint = $evaluation['content_fingerprint'];
+                $post->link_fingerprint = $evaluation['link_fingerprint'];
                 $post->save();
 
                 foreach ($storedImages as $index => $mediaInfo) {
-                    $rawAlt = isset($imageAlts[$index]) ? trim($imageAlts[$index]) : '';
+                    $rawAlt = isset($imageAlts[$index]) ? trim((string) $imageAlts[$index]) : '';
                     $media = new PostMedia([
                         'disk' => $mediaInfo['disk'],
                         'path' => $mediaInfo['path'],
@@ -189,7 +272,7 @@ class PostService
                     $media->save();
                 }
 
-                $pollQuestion = isset($data['poll_question']) ? trim($data['poll_question']) : '';
+                $pollQuestion = isset($data['poll_question']) ? trim((string) $data['poll_question']) : '';
                 $pollOptions = array_values(array_filter(
                     array_map(static fn (string $opt): string => trim($opt), $data['poll_options'] ?? []),
                     static fn (string $opt): bool => $opt !== '',
@@ -219,7 +302,7 @@ class PostService
 
                 $this->hashtagService->syncForPost($post);
 
-                if ($community !== null) {
+                if ($community !== null && $post->moderation_status === ModerationStatus::Approved) {
                     $community->increment('posts_count');
                     CommunityMember::query()
                         ->where('community_id', $community->id)
@@ -227,9 +310,17 @@ class PostService
                         ->increment('points', 5);
                 }
 
+                if (! $author->isAiAgent()) {
+                    $rateLimiter->recordUsage($author, 'post', $post->id, $ipAddress);
+                }
+
                 return $post;
             });
+
+            $idempotencyService->markCompleted($idempotency['record'], $post->id);
         } catch (\Throwable $exception) {
+            $idempotencyService->markFailed($idempotency['record']);
+
             foreach ($storedImages as $mediaInfo) {
                 $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['path']);
                 $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['thumbnail_path']);
@@ -238,56 +329,147 @@ class PostService
             throw $exception;
         }
 
+        $antiSpam->logPostEvaluationIfNotable($author, $post, $evaluation, 'post.create', $ipAddress);
+
+        if ($post->moderation_status === ModerationStatus::Approved) {
+            $rankingService->recalculatePost($post);
+        }
+
         $this->auditLogger->log(
             action: 'post.created',
             subject: $post,
-            metadata: ['visibility' => $post->visibility->value, 'category' => $post->category->value],
+            metadata: [
+                'visibility' => $post->visibility->value,
+                'category' => $post->category->value,
+                'moderation_status' => $post->moderation_status->value,
+                'spam_risk_score' => $post->spam_risk_score,
+            ],
             actor: $author,
         );
 
-        DB::afterCommit(static function () use ($post): void {
-            ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
-        });
+        if ($post->moderation_status === ModerationStatus::Approved && $post->visibility === PostVisibility::Public) {
+            DB::afterCommit(static function () use ($post): void {
+                ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
+            });
+        }
 
         return $post->load(['author.profile', 'community', 'hashtags', 'media', 'poll.options']);
     }
 
     /**
-     * @param  array{title?: string|null, content: string, category?: string|null}  $data
+     * Update an existing post while preserving published_at & historical engagement,
+     * incrementing edit_count, and re-running Anti-Spam & Moderation safeguards.
+     *
+     * @param  array{title?: string|null, content: string, category?: string|null, ip_address?: string|null}  $data
      */
     public function update(User $actor, Post $post, array $data): Post
     {
-        $filteredContent = $this->contentFilter->assertAllowedOrMask(trim($data['content']), 'content');
-        $filteredTitle = isset($data['title']) && trim($data['title']) !== ''
-            ? $this->contentFilter->assertAllowedOrMask(trim($data['title']), 'title')
-            : null;
+        $policyConfig = app(PostingPolicyConfigService::class);
+        $trustResolver = app(TrustLevelResolver::class);
+        $duplicateDetector = app(DuplicateDetectionService::class);
+        $rateLimiter = app(PostingRateLimitService::class);
+        $antiSpam = app(AntiSpamEngine::class);
+        $rankingService = app(TrendingRankingService::class);
+
+        $ipAddress = isset($data['ip_address']) ? $data['ip_address'] : request()->ip();
+        $editWindowMinutes = $policyConfig->editWindowMinutes();
+
+        if ($editWindowMinutes > 0 && ! $actor->isStaff()) {
+            $anchor = $post->published_at ?? $post->created_at ?? now();
+            if ($anchor->diffInMinutes(now()) > $editWindowMinutes) {
+                throw ValidationException::withMessages([
+                    'content' => [__('The editing window for this post (:minutes minutes) has closed.', ['minutes' => $editWindowMinutes])],
+                ]);
+            }
+        }
+
+        $rateLimiter->assertCanEditPost($actor, $ipAddress);
+
+        $cleanContent = $duplicateDetector->stripInvisibleOnly($data['content']);
+        if ($cleanContent === '') {
+            throw ValidationException::withMessages([
+                'content' => [__('Post content cannot be empty.')],
+            ]);
+        }
+
+        $maxLength = max(100, (int) $trustResolver->limitsFor($actor)['max_post_length']);
+        if (mb_strlen($cleanContent) > $maxLength) {
+            throw ValidationException::withMessages([
+                'content' => [__('Post content exceeds the maximum allowed length of :max characters.', ['max' => $maxLength])],
+            ]);
+        }
+
+        $evaluation = $antiSpam->evaluatePost(
+            author: $actor,
+            payload: [
+                'title' => isset($data['title']) ? (string) $data['title'] : null,
+                'content' => $cleanContent,
+                'community_id' => $post->community_id,
+                'link_url' => $post->link_url,
+                'ip_address' => $ipAddress,
+            ],
+            actionContext: 'post.edit',
+            ignorePostId: $post->id,
+        );
+
         $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? $post->category;
 
-        PostEditHistory::query()->create([
-            'post_id' => $post->id,
-            'editor_id' => $actor->id,
-            'previous_title' => $post->title,
-            'previous_content' => $post->content,
-            'created_at' => now(),
-        ]);
+        DB::transaction(function () use ($actor, $post, $category, $evaluation, $rateLimiter, $ipAddress): void {
+            $editHistory = new PostEditHistory([
+                'previous_title' => $post->title,
+                'previous_content' => $post->content,
+            ]);
+            $editHistory->post_id = $post->id;
+            $editHistory->editor_id = $actor->id;
+            $editHistory->created_at = now();
+            $editHistory->save();
 
-        $post->forceFill([
-            'title' => $filteredTitle,
-            'content' => $filteredContent,
-            'category' => $category->value,
-        ])->save();
+            $post->forceFill([
+                'title' => $evaluation['filtered_title'],
+                'content' => $evaluation['filtered_content'],
+                'category' => $category->value,
+                'edited_at' => now(),
+                'edit_count' => (int) $post->edit_count + 1,
+                'moderation_status' => $evaluation['moderation_status'],
+                'lifecycle_status' => $evaluation['lifecycle_status'],
+                'moderation_reason' => $evaluation['moderation_reason'],
+                'spam_risk_score' => $evaluation['risk_score'],
+                'content_fingerprint' => $evaluation['content_fingerprint'],
+                'link_fingerprint' => $evaluation['link_fingerprint'],
+                'needs_rerank' => $evaluation['moderation_status'] === ModerationStatus::Approved,
+            ])->save();
+
+            if ($evaluation['moderation_status'] !== ModerationStatus::Approved) {
+                $this->stopCampaignsForPost($post, __('Promoted post entered moderation review after editing; remaining budget refunded.'));
+            }
+
+            if (! $actor->isAiAgent()) {
+                $rateLimiter->recordUsage($actor, 'edit', $post->id, $ipAddress);
+            }
+        });
 
         $this->hashtagService->syncForPost($post);
+        $antiSpam->logPostEvaluationIfNotable($actor, $post, $evaluation, 'post.edit', $ipAddress);
+
+        if ($post->moderation_status !== ModerationStatus::Approved) {
+            $rankingService->recalculatePost($post);
+        }
 
         $this->auditLogger->log(
             action: 'post.updated',
             subject: $post,
+            metadata: [
+                'edit_count' => (int) $post->edit_count,
+                'moderation_status' => $post->moderation_status->value,
+            ],
             actor: $actor,
         );
 
-        DB::afterCommit(static function () use ($post): void {
-            ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
-        });
+        if ($post->moderation_status === ModerationStatus::Approved && $post->visibility === PostVisibility::Public) {
+            DB::afterCommit(static function () use ($post): void {
+                ProcessSeoEntityJob::dispatch(SeoEntityType::Post->value, $post->id);
+            });
+        }
 
         return $post->fresh(['author.profile', 'community', 'hashtags', 'media', 'poll.options']) ?? $post;
     }
@@ -328,11 +510,19 @@ class PostService
         $communityId = $post->community_id;
 
         DB::transaction(function () use ($post, $communityId): void {
+            $wasApproved = $post->moderation_status === ModerationStatus::Approved;
             $this->stopCampaignsForPost($post, __('Promoted post was deleted; remaining ad budget refunded.'));
+
+            $post->forceFill([
+                'lifecycle_status' => PostLifecycleStatus::Deleted,
+                'trending_score' => 0,
+                'trending_raw_score' => 0,
+                'needs_rerank' => false,
+            ])->saveQuietly();
 
             $post->delete();
 
-            if ($communityId !== null) {
+            if ($communityId !== null && $wasApproved) {
                 /** @var Community|null $community */
                 $community = Community::query()->whereKey($communityId)->lockForUpdate()->first();
 
@@ -349,6 +539,10 @@ class PostService
 
         foreach ($mediaItems as $media) {
             $this->imageUploadService->deleteIfExists($media->disk, $media->path);
+            $thumbPath = preg_replace('/\/([^\/]+)$/', '/thumbs/$1', $media->path);
+            if (is_string($thumbPath) && $thumbPath !== $media->path) {
+                $this->imageUploadService->deleteIfExists($media->disk, $thumbPath);
+            }
         }
 
         $this->auditLogger->log(
@@ -363,7 +557,7 @@ class PostService
     }
 
     /**
-     * Toggle or update a user's reaction on a post atomically.
+     * Toggle or update a user's reaction on a post atomically while updating organic valid signals.
      *
      * @return array{active: bool, type: string|null, reactions_count: int}
      */
@@ -374,7 +568,10 @@ class PostService
                 'type' => [__('Reactions are currently disabled.')],
             ]);
         }
-        $result = DB::transaction(function () use ($user, $post, $type): array {
+
+        $rankingService = app(TrendingRankingService::class);
+
+        $result = DB::transaction(function () use ($user, $post, $type, $rankingService): array {
             /** @var Post $lockedPost */
             $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
 
@@ -385,11 +582,13 @@ class PostService
 
             $active = true;
             $resultingType = $type->value;
+            $signalDelta = 0;
 
             if ($existing !== null && $existing->type === $type) {
                 $existing->delete();
                 $active = false;
                 $resultingType = null;
+                $signalDelta = -1;
             } elseif ($existing !== null) {
                 $existing->type = $type;
                 $existing->save();
@@ -399,10 +598,23 @@ class PostService
                     'user_id' => $user->id,
                     'type' => $type->value,
                 ]);
+                $signalDelta = 1;
             }
 
             $count = PostReaction::query()->where('post_id', $lockedPost->id)->count();
             $lockedPost->reactions_count = $count;
+
+            if ($signalDelta !== 0 && $rankingService->isEligibleOrganicActor($user, $lockedPost->user_id)) {
+                if ($signalDelta > 0 && $rankingService->canUserContributeRankingSignal($user)) {
+                    $lockedPost->valid_reactions_count = (int) $lockedPost->valid_reactions_count + 1;
+                    $rankingService->recordRankingSignal($user, $lockedPost->id);
+                    $lockedPost->needs_rerank = true;
+                } elseif ($signalDelta < 0) {
+                    $lockedPost->valid_reactions_count = max(0, (int) $lockedPost->valid_reactions_count - 1);
+                    $lockedPost->needs_rerank = true;
+                }
+            }
+
             $lockedPost->save();
 
             return [
@@ -438,28 +650,53 @@ class PostService
     }
 
     /**
-     * @return array{bookmarked: bool}
+     * @return array{bookmarked: bool, bookmarks_count: int}
      */
     public function toggleBookmark(User $user, Post $post): array
     {
-        return DB::transaction(function () use ($user, $post): array {
+        $rankingService = app(TrendingRankingService::class);
+
+        return DB::transaction(function () use ($user, $post, $rankingService): array {
+            /** @var Post $lockedPost */
+            $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
+
             $existing = Bookmark::query()
-                ->where('post_id', $post->id)
+                ->where('post_id', $lockedPost->id)
                 ->where('user_id', $user->id)
                 ->first();
 
+            $bookmarked = true;
+
             if ($existing !== null) {
                 $existing->delete();
-
-                return ['bookmarked' => false];
+                $bookmarked = false;
+            } else {
+                Bookmark::query()->create([
+                    'post_id' => $lockedPost->id,
+                    'user_id' => $user->id,
+                ]);
             }
 
-            Bookmark::query()->create([
-                'post_id' => $post->id,
-                'user_id' => $user->id,
-            ]);
+            $totalBookmarks = Bookmark::query()->where('post_id', $lockedPost->id)->count();
+            $lockedPost->bookmarks_count = $totalBookmarks;
 
-            return ['bookmarked' => true];
+            if ($rankingService->isEligibleOrganicActor($user, $lockedPost->user_id)) {
+                if ($bookmarked && $rankingService->canUserContributeRankingSignal($user)) {
+                    $lockedPost->valid_bookmarks_count = (int) $lockedPost->valid_bookmarks_count + 1;
+                    $rankingService->recordRankingSignal($user, $lockedPost->id);
+                    $lockedPost->needs_rerank = true;
+                } elseif (! $bookmarked) {
+                    $lockedPost->valid_bookmarks_count = max(0, (int) $lockedPost->valid_bookmarks_count - 1);
+                    $lockedPost->needs_rerank = true;
+                }
+            }
+
+            $lockedPost->save();
+
+            return [
+                'bookmarked' => $bookmarked,
+                'bookmarks_count' => $totalBookmarks,
+            ];
         });
     }
 
@@ -548,15 +785,60 @@ class PostService
         });
     }
 
-    public function incrementShare(Post $post): int
-    {
-        return DB::transaction(function () use ($post): int {
+    public function incrementShare(
+        Post $post,
+        ?User $actor = null,
+        ?string $actorHash = null,
+        string $channel = 'copy_link',
+    ): int {
+        $rankingService = app(TrendingRankingService::class);
+        $secret = (string) config('app.key', 'syncviet');
+        $resolvedHash = is_string($actorHash) && trim($actorHash) !== ''
+            ? trim($actorHash)
+            : ($actor !== null
+                ? hash_hmac('sha256', 'share_user:'.$actor->id, $secret)
+                : hash_hmac('sha256', 'share_anon:'.Str::random(16), $secret));
+
+        $cleanChannel = in_array($channel, ['copy_link', 'native', 'internal'], true) ? $channel : 'copy_link';
+
+        return DB::transaction(function () use ($post, $actor, $resolvedHash, $cleanChannel, $rankingService): int {
             /** @var Post $locked */
             $locked = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
-            $locked->shares_count = $locked->shares_count + 1;
+
+            $alreadyShared = PostShare::query()
+                ->where('post_id', $locked->id)
+                ->where('actor_hash', $resolvedHash)
+                ->exists();
+
+            if ($alreadyShared) {
+                return (int) $locked->shares_count;
+            }
+
+            $isValid = $actor === null
+                || ($rankingService->isEligibleOrganicActor($actor, $locked->user_id) && $rankingService->canUserContributeRankingSignal($actor));
+
+            PostShare::query()->create([
+                'post_id' => $locked->id,
+                'user_id' => $actor?->id,
+                'actor_hash' => $resolvedHash,
+                'share_channel' => $cleanChannel,
+                'is_valid' => $isValid,
+                'created_at' => now(),
+            ]);
+
+            $locked->shares_count = (int) $locked->shares_count + 1;
+
+            if ($isValid) {
+                $locked->valid_shares_count = (int) $locked->valid_shares_count + 1;
+                if ($actor !== null) {
+                    $rankingService->recordRankingSignal($actor, $locked->id);
+                }
+                $locked->needs_rerank = true;
+            }
+
             $locked->save();
 
-            return $locked->shares_count;
+            return (int) $locked->shares_count;
         });
     }
 }

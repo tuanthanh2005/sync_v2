@@ -46,9 +46,10 @@ export function initializeFlashToast(): void {
     });
 
     router.on('httpException', (event) => {
-        const status = (event as CustomEvent).detail?.response?.status as
-            | number
+        const response = (event as CustomEvent).detail?.response as
+            | { status?: number; data?: { message?: string; errors?: Record<string, string[]> } }
             | undefined;
+        const status = response?.status;
 
         if (status === 413) {
             event.preventDefault();
@@ -58,7 +59,17 @@ export function initializeFlashToast(): void {
         } else if (status === 403) {
             appToast.error(String(i18n.global.t('toast.forbidden')));
         } else if (status === 429) {
-            appToast.warning(String(i18n.global.t('toast.rateLimited')));
+            event.preventDefault();
+            const firstErr = response?.data?.errors
+                ? Object.values(response.data.errors).flat().find(Boolean)
+                : undefined;
+            const specificMessage =
+                typeof response?.data?.message === 'string' && response.data.message.trim() !== ''
+                    ? response.data.message
+                    : firstErr;
+            appToast.warning(
+                specificMessage || String(i18n.global.t('toast.rateLimited')),
+            );
         } else if (status === 419) {
             appToast.warning(String(i18n.global.t('toast.sessionExpired')));
         } else if (status && status >= 500) {

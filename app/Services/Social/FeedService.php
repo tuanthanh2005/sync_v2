@@ -5,10 +5,12 @@ namespace App\Services\Social;
 use App\Enums\AdCampaignStatus;
 use App\Enums\ModerationStatus;
 use App\Enums\PostCategory;
+use App\Enums\PostLifecycleStatus;
 use App\Enums\PostVisibility;
 use App\Enums\UserStatus;
 use App\Models\AdCampaign;
 use App\Models\Bookmark;
+use App\Models\Follow;
 use App\Models\Hashtag;
 use App\Models\Post;
 use App\Models\PostMedia;
@@ -18,6 +20,7 @@ use App\Models\PostPollVote;
 use App\Models\PostReaction;
 use App\Models\User;
 use App\Models\UserBlock;
+use App\Models\UserHiddenPost;
 use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -36,18 +39,39 @@ class FeedService
      */
     public function publicFeed(?User $viewer, string $tab = 'trending', ?string $cursor = null, int $perPage = 10): array
     {
+        $policyConfig = app(PostingPolicyConfigService::class);
+        $perPage = max(1, min(30, $perPage > 0 ? $perPage : $policyConfig->feedPageSize()));
+
+        if ($tab === 'recommended' && $policyConfig->recommendedFeedEnabled()) {
+            return app(RecommendedFeedService::class)->buildFeed($this, $viewer, $cursor, $perPage);
+        }
+
+        if ($tab === 'following' && $viewer === null) {
+            return [
+                'data' => [],
+                'next_cursor' => null,
+                'has_more' => false,
+            ];
+        }
+
         $query = $this->baseVisibleQuery($viewer);
 
         if (in_array($tab, array_map(static fn (PostCategory $c): string => $c->value, PostCategory::cases()), true)) {
             $query->where('category', $tab)
                 ->orderByDesc('published_at')
                 ->orderByDesc('id');
-        } elseif ($tab === 'latest') {
+        } elseif ($tab === 'following') {
+            $query->whereIn(
+                'user_id',
+                Follow::query()->where('follower_id', $viewer->id)->select('following_id'),
+            )
+                ->orderByDesc('published_at')
+                ->orderByDesc('id');
+        } elseif ($tab === 'latest' || ! $policyConfig->trendingFeedEnabled()) {
             $query->orderByDesc('published_at')
                 ->orderByDesc('id');
         } else {
-            $query->orderByDesc('reactions_count')
-                ->orderByDesc('comments_count')
+            $query->orderByDesc('trending_score')
                 ->orderByDesc('published_at')
                 ->orderByDesc('id');
         }
@@ -63,7 +87,7 @@ class FeedService
     }
 
     /**
-     * Build base visible public post query excluding blocked and inactive accounts.
+     * Build base visible public post query excluding blocked, hidden, and inactive accounts.
      *
      * @return Builder<Post>
      */
@@ -88,6 +112,15 @@ class FeedService
 
             if ($blockedIds !== []) {
                 $query->whereNotIn('user_id', $blockedIds);
+            }
+
+            $hiddenPostIds = UserHiddenPost::query()
+                ->where('user_id', $viewer->id)
+                ->pluck('post_id')
+                ->all();
+
+            if ($hiddenPostIds !== []) {
+                $query->whereNotIn('id', $hiddenPostIds);
             }
         }
 
@@ -261,6 +294,9 @@ class FeedService
             }
         }
 
+        $isOwnerOrStaff = $viewer !== null && ($viewer->id === $post->user_id || $viewer->isStaff());
+        $lifecycleStatus = $post->lifecycle_status->value;
+
         return [
             'id' => $post->id,
             'category' => $post->category->value,
@@ -272,15 +308,19 @@ class FeedService
             'visibility' => $post->visibility->value,
             'is_pinned' => $post->is_pinned,
             'moderation_status' => $post->moderation_status->value,
+            'lifecycle_status' => $lifecycleStatus,
+            'moderation_reason' => $isOwnerOrStaff ? $post->moderation_reason : null,
+            'spam_risk_score' => $isOwnerOrStaff ? (int) ($post->spam_risk_score ?? 0) : null,
             'reactions_count' => $post->reactions_count,
             'reaction_summary' => $reactionSummary ?? [],
             'comments_count' => $post->comments_count,
+            'bookmarks_count' => (int) ($post->bookmarks_count ?? 0),
             'shares_count' => $post->shares_count,
             'views_count' => (int) ($post->views_count ?? 0),
             'organic_views_count' => (int) ($post->organic_views_count ?? 0),
             'promoted_views_count' => (int) ($post->promoted_views_count ?? 0),
             'unique_viewers_count' => (int) ($post->unique_viewers_count ?? 0),
-            'view_analytics' => $viewer !== null && ($viewer->id === $post->user_id || $viewer->isStaff())
+            'view_analytics' => $isOwnerOrStaff
                 ? [
                     'total_views' => (int) ($post->views_count ?? 0),
                     'human_views' => (int) ($post->human_views_count ?? 0),
@@ -295,6 +335,8 @@ class FeedService
                 ]
                 : null,
             'published_at' => ($post->published_at ?? $post->created_at)?->toIso8601String(),
+            'edited_at' => $post->edited_at?->toIso8601String(),
+            'edit_count' => (int) ($post->edit_count ?? 0),
             'content_origin' => $post->content_origin->value,
             'is_ai_assisted' => (bool) $post->is_ai_assisted,
             'viewer_reaction' => $viewerReaction,
@@ -306,7 +348,8 @@ class FeedService
                 && ! $viewer->isRestrictedFrom('advertise')
                 && $viewer->id === $post->user_id
                 && $post->visibility === PostVisibility::Public
-                && $post->moderation_status === ModerationStatus::Approved,
+                && $post->moderation_status === ModerationStatus::Approved
+                && $lifecycleStatus === PostLifecycleStatus::Published->value,
             'author' => $author === null ? null : [
                 'id' => $author->id,
                 'name' => $author->name,
@@ -401,7 +444,12 @@ class FeedService
 
     public function canViewerSeePost(Post $post, ?User $viewer): bool
     {
-        if ($post->moderation_status !== ModerationStatus::Approved) {
+        if (
+            $post->trashed()
+            || $post->is_spam
+            || $post->moderation_status !== ModerationStatus::Approved
+            || ($post->lifecycle_status !== null && $post->lifecycle_status !== PostLifecycleStatus::Published)
+        ) {
             return $viewer !== null && ($viewer->id === $post->user_id || $viewer->isStaff());
         }
 

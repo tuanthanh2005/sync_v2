@@ -8,6 +8,7 @@ use App\Services\Monetization\AdSenseConfigService;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Seo\SeoMetadataService;
 use App\Services\Social\FeedService;
+use App\Services\Social\PostingPolicyConfigService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,6 +19,7 @@ class HomeController extends Controller
 {
     public function __construct(
         private readonly FeedService $feedService,
+        private readonly PostingPolicyConfigService $policyConfig,
         private readonly AdDeliveryService $adDeliveryService,
         private readonly BannerAdvertisingService $bannerService,
         private readonly AdSenseConfigService $adSenseService,
@@ -29,8 +31,9 @@ class HomeController extends Controller
      */
     public function index(Request $request): Response
     {
-        $tab = $request->string('tab', 'trending')->toString();
-        $feed = $this->feedService->publicFeed($request->user(), $tab);
+        $tab = $this->sanitizeFeedTab($request->string('tab', 'trending')->toString(), $request->user() !== null);
+        $perPage = $this->policyConfig->feedPageSize();
+        $feed = $this->feedService->publicFeed($request->user(), $tab, null, $perPage);
         $sponsoredPost = $this->adDeliveryService->pickSponsoredPostForFeed($request->user(), $request);
         $banners = $this->bannerService->activeBannersForSlots(
             ['desktop_feed_top', 'mobile_after_composer', 'mobile_in_feed'],
@@ -57,6 +60,10 @@ class HomeController extends Controller
             'hasMore' => $feed['has_more'],
             'activeTab' => $tab,
             'categories' => PostCategory::options(),
+            'feedConfig' => [
+                'enable_trending' => $this->policyConfig->trendingFeedEnabled(),
+                'enable_recommended' => $this->policyConfig->recommendedFeedEnabled(),
+            ],
         ])->withViewData([
             'seo' => $seo,
             'seoSsr' => [
@@ -78,15 +85,41 @@ class HomeController extends Controller
      */
     public function more(Request $request): JsonResponse
     {
-        $tab = $request->string('tab', 'trending')->toString();
+        $tab = $this->sanitizeFeedTab($request->string('tab', 'trending')->toString(), $request->user() !== null);
         $cursor = $request->string('cursor')->toString();
+        $perPage = $this->policyConfig->feedPageSize();
 
         $feed = $this->feedService->publicFeed(
             $request->user(),
             $tab,
             $cursor !== '' ? $cursor : null,
+            $perPage,
         );
 
         return response()->json($feed);
+    }
+
+    private function sanitizeFeedTab(string $rawTab, bool $isAuthenticated): string
+    {
+        $allowed = array_merge(
+            ['trending', 'latest', 'recommended', 'following'],
+            array_map(static fn (PostCategory $c): string => $c->value, PostCategory::cases()),
+        );
+
+        $tab = in_array($rawTab, $allowed, true) ? $rawTab : 'trending';
+
+        if ($tab === 'following' && ! $isAuthenticated) {
+            return 'trending';
+        }
+
+        if ($tab === 'recommended' && ! $this->policyConfig->recommendedFeedEnabled()) {
+            return 'trending';
+        }
+
+        if ($tab === 'trending' && ! $this->policyConfig->trendingFeedEnabled()) {
+            return 'latest';
+        }
+
+        return $tab;
     }
 }

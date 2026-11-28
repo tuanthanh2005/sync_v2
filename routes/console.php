@@ -5,6 +5,9 @@ use App\Enums\UserStatus;
 use App\Jobs\Ai\GenerateAiContentJob;
 use App\Models\AdminNotification;
 use App\Models\AiContentPlan;
+use App\Models\PostIdempotency;
+use App\Models\PublishingQuotaEvent;
+use App\Models\SpamEvent;
 use App\Models\User;
 use App\Models\UserSanction;
 use App\Notifications\SocialActivityNotification;
@@ -15,6 +18,7 @@ use App\Services\Auth\PendingRegistrationService;
 use App\Services\Growth\GrowthAnalyticsService;
 use App\Services\Growth\ReferralService;
 use App\Services\Growth\RetentionAndDigestService;
+use App\Services\Media\OrphanMediaCleanupService;
 use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
@@ -32,6 +36,7 @@ use App\Services\Seo\SeoConfigService;
 use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
 use App\Services\Social\PostViewTrackingService;
+use App\Services\Social\TrendingRankingService;
 use App\Services\System\LanguageService;
 use App\Services\System\SystemSettingService;
 use Database\Seeders\AiContentCenterSeeder;
@@ -742,14 +747,69 @@ Artisan::command(
     },
 )->purpose('Safely synchronize platform branding from SyncViet to SysNoxis in .env and system catalog tables without touching user content or audit logs');
 
+Artisan::command(
+    'app:feed:recalculate-trending {--batch=250 : Maximum number of candidate posts to recalculate per run}',
+    function (): int {
+        $batch = max(20, min(1000, (int) $this->option('batch')));
+        $result = app(TrendingRankingService::class)->recalculateCandidateWindow($batch);
+        $this->line(json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}');
+
+        return 0;
+    },
+)->purpose('Recalculate organic Trending Scores for recent and updated posts using time decay and anti-manipulation caps');
+
+Artisan::command(
+    'app:media:cleanup-orphans {--hours=24 : Minimum file age in hours before unreferenced media files are pruned}',
+    function (): int {
+        $hours = max(0, min(720, (int) $this->option('hours')));
+        $result = app(OrphanMediaCleanupService::class)->pruneOrphanPostMedia($hours);
+        $this->line(json_encode($result, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}');
+
+        return 0;
+    },
+)->purpose('Remove orphaned uploaded post images that have no database reference past the safety grace window');
+
+Artisan::command(
+    'app:publishing:cleanup-ephemeral {--days=30 : Retain spam telemetry events for N days}',
+    function (): int {
+        $days = max(7, min(365, (int) $this->option('days')));
+
+        $deletedIdempotencies = PostIdempotency::query()
+            ->where('expires_at', '<', now())
+            ->limit(2000)
+            ->delete();
+
+        $deletedQuotas = PublishingQuotaEvent::query()
+            ->where('created_at', '<', now()->subDays(7))
+            ->limit(5000)
+            ->delete();
+
+        $deletedSpam = SpamEvent::query()
+            ->where('created_at', '<', now()->subDays($days))
+            ->limit(2000)
+            ->delete();
+
+        $this->line(json_encode([
+            'deleted_idempotencies' => $deletedIdempotencies,
+            'deleted_quotas' => $deletedQuotas,
+            'deleted_spam_events' => $deletedSpam,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}');
+
+        return 0;
+    },
+)->purpose('Prune expired idempotency locks and historical publishing quota / spam telemetry in bounded Hostinger-safe batches');
+
 Schedule::command('app:auth:cleanup-pending')->hourly()->withoutOverlapping();
 
 Schedule::command('app:sanctions:expire')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('app:feed:recalculate-trending')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:monetization:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:notifications:dispatch')->everyMinute()->withoutOverlapping();
 Schedule::command('app:seo:sync')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:seo:inspect')->hourly()->withoutOverlapping();
 Schedule::command('app:seo:analytics')->dailyAt('03:15')->withoutOverlapping();
+Schedule::command('app:media:cleanup-orphans')->dailyAt('03:30')->withoutOverlapping();
+Schedule::command('app:publishing:cleanup-ephemeral')->dailyAt('03:45')->withoutOverlapping();
 Schedule::command('app:seo:audit')->weeklyOn(1, '04:00')->withoutOverlapping();
 Schedule::command('app:ai:publish-scheduled')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('app:ai:run-plans')->hourly()->withoutOverlapping();

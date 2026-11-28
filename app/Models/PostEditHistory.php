@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $editor_id
  * @property string|null $previous_title
  * @property string $previous_content
- * @property Carbon $created_at
+ * @property CarbonInterface $created_at
  */
 #[Fillable(['previous_title', 'previous_content'])]
 class PostEditHistory extends Model

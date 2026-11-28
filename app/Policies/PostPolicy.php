@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Enums\CommunityRole;
 use App\Enums\ModerationStatus;
+use App\Enums\PostLifecycleStatus;
 use App\Enums\PostVisibility;
 use App\Models\Community;
 use App\Models\CommunityMember;
@@ -19,7 +20,11 @@ class PostPolicy
             return true;
         }
 
-        if ($post->moderation_status !== ModerationStatus::Approved) {
+        if (
+            $post->is_spam
+            || $post->moderation_status !== ModerationStatus::Approved
+            || ($post->lifecycle_status !== null && $post->lifecycle_status !== PostLifecycleStatus::Published)
+        ) {
             return $user !== null && $post->user_id === $user->id;
         }
 

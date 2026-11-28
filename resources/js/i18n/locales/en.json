@@ -122,7 +122,9 @@
                 "business": "Business",
                 "finance": "Earning",
                 "qa": "Q&A",
-                "marketplace": "Marketplace"
+                "marketplace": "Marketplace",
+                "recommended": "For You",
+                "following": "Following"
             },
             "newPostsAvailable": "New posts available"
         },
@@ -152,7 +154,9 @@
             "addPoll": "Poll",
             "discardDraftConfirm": "Discard",
             "discardDraftDesc": "Your unsaved text, photos, or poll options will be cleared.",
-            "discardDraftTitle": "Discard post draft?"
+            "discardDraftTitle": "Discard post draft?",
+            "rateLimitNotice": "You are posting too quickly right now. Your draft is preserved safely below.",
+            "retryInSeconds": "You can retry in {seconds}s."
         },
         "empty": {
             "title": "Explore the {brand} community",
@@ -217,6 +221,14 @@
             "invalidViews": "Invalid / Filtered Views",
             "legacyViews": "Legacy / Uncategorized",
             "aiSeparationNotice": "Total views include verified AI activity for transparency. AI views are strictly excluded from unique human viewers, DAU/MAU, organic human reach, and paid ad impressions."
+        },
+        "editedBadge": "Edited",
+        "hideFromFeed": "Hide from my feed",
+        "moderationBanner": {
+            "pendingTitle": "Pending moderation review — visible only to you and staff",
+            "rejectedTitle": "Rejected by moderation — hidden from public feeds",
+            "hiddenTitle": "Hidden by moderation — only visible to you and staff",
+            "appealLink": "Submit appeal"
         }
     },
     "profile": {
@@ -722,7 +734,8 @@
             "aiAssist": "Translation & Assist",
             "growthOverview": "Growth Overview",
             "growthReferrals": "Referrals & Fraud",
-            "growthCampaigns": "Campaigns & Badges"
+            "growthCampaigns": "Campaigns & Badges",
+            "postFeedSettings": "Post & Feed Settings"
         },
         "common": {
             "search": "Search...",
@@ -756,7 +769,8 @@
             "yes": "Yes",
             "no": "No",
             "enabled": "Enabled",
-            "disabled": "Disabled"
+            "disabled": "Disabled",
+            "saveChanges": "Save changes"
         },
         "dashboard": {
             "title": "Platform Operations Dashboard",
@@ -1312,7 +1326,9 @@
                 "toggle_verified": "Toggle Verified",
                 "transfer_owner": "Transfer Ownership",
                 "unlock_comments": "Unlock Comments",
-                "unpin": "Unpin"
+                "unpin": "Unpin",
+                "approve": "Approve post",
+                "reject": "Reject post"
             },
             "badgeClosedJoins": "Closed Joins",
             "badgeContentWarning": "Content warning: {label}",
@@ -1351,7 +1367,11 @@
             "systemActor": "system",
             "transferOwnerUsernameLabel": "New owner username ({'@'}username)",
             "unknownAuthor": "unknown",
-            "usernamePlaceholder": "username"
+            "usernamePlaceholder": "username",
+            "postFilters": {
+                "rejected": "Rejected"
+            },
+            "riskScoreBadge": "Risk: {score}/100"
         },
         "financeExtra": {
             "colAmount": "Amount",
@@ -2129,6 +2149,135 @@
             "translationSummaryLabel": "Translated summary",
             "translationTitleLabel": "Translated title",
             "uploadAndInsert": "Upload & insert"
+        },
+        "postFeed": {
+            "title": "Post Publishing, Anti-Spam & Feed Ranking Settings",
+            "subtitle": "Configure trust-tier quotas, spam detection thresholds, feed distribution weights, and run pure ranking simulations.",
+            "resetAll": "Reset all to defaults",
+            "resetSection": "Reset section",
+            "resetConfirmTitle": "Restore default policy settings?",
+            "resetConfirmDesc": "Selected rules will revert to SysNoxis baseline values and an audit log entry will be recorded.",
+            "resetConfirmButton": "Restore defaults",
+            "simulatorError": "Unable to compute ranking simulation. Check numeric inputs.",
+            "stats": {
+                "published24h": "Published (24h)",
+                "pendingReview": "Pending review",
+                "rateLimited24h": "Rate limited (24h)",
+                "duplicatesBlocked24h": "Duplicates caught (24h)"
+            },
+            "tabs": {
+                "publishing": "Quotas & Limits",
+                "antispam": "Anti-Spam",
+                "moderation": "Moderation",
+                "feed": "Feed & Diversity",
+                "trending": "Trending Weights",
+                "simulator": "Ranking Simulator",
+                "telemetry": "Spam Logs & Audit"
+            },
+            "publishing": {
+                "title": "Trust-Tier Publishing Quotas & Safeguards",
+                "subtitle": "New accounts remain inside starter guardrails during their safety window even with Premium.",
+                "enablePosting": "Enable public and community post creation",
+                "maxPostLength": "Max post length (chars)",
+                "maxCommentLength": "Max comment length (chars)",
+                "editsPerDay": "Max edits per 24h",
+                "newMemberAgeDays": "New member window (days)",
+                "tier": "Trust Tier",
+                "posts24h": "Posts / 24h",
+                "posts60m": "Posts / 60m",
+                "minInterval": "Min interval (sec)",
+                "comments24h": "Comments / 24h",
+                "maxImages": "Max images / post",
+                "tiers": {
+                    "new": "New Member",
+                    "standard": "Standard Member",
+                    "premium": "Premium Member"
+                }
+            },
+            "antispam": {
+                "title": "Anti-Spam & Duplicate Detection Rules",
+                "subtitle": "Score rapid bursts, exact/near-duplicate content, excessive links, mentions, and hashtags.",
+                "enableAntiSpam": "Enable Anti-Spam Risk Engine",
+                "enableDuplicate": "Enable Duplicate & Similarity Guard",
+                "duplicateWindow": "Duplicate window (hours)",
+                "similarityThreshold": "Near-duplicate threshold (%)",
+                "mediumThreshold": "Medium risk threshold",
+                "highThreshold": "High risk threshold (Pending Review)",
+                "violationThreshold": "Violation threshold (Auto Reject)",
+                "maxLinks": "Soft limit links / post",
+                "maxMentions": "Soft limit mentions / post",
+                "maxHashtags": "Soft limit #hashtags / post"
+            },
+            "moderation": {
+                "title": "Moderation Workflow & Automation Policy",
+                "subtitle": "Control when risky submissions enter Pending Review and how suspicious links or violations are handled.",
+                "riskBasedEnabled": "Enable risk-based auto Pending Review",
+                "requireManualAll": "Require manual review for all member posts",
+                "aiAssistEnabled": "Enable optional AI moderation assistance",
+                "reviewThreshold": "Moderation review threshold score",
+                "suspiciousLinkAction": "Suspicious / shortened link action",
+                "violationAction": "High-severity violation action",
+                "actions": {
+                    "allow": "Allow (Score only)",
+                    "flag": "Flag & review",
+                    "pendingReview": "Send to Pending Review",
+                    "reject": "Reject automatically"
+                }
+            },
+            "feed": {
+                "title": "Feed Ranking, Diversity & Fair Cold-Start Distribution",
+                "subtitle": "Manage tabs, diversity caps, candidate horizon, and the 70/20/10 organic slot balance.",
+                "enableTrending": "Enable Trending Feed tab",
+                "enableRecommended": "Enable Recommended Feed tab",
+                "enableFreshDiscovery": "Enable Fresh & Cold-Start Discovery slots",
+                "categoryDiversity": "Enforce category diversity between consecutive posts",
+                "candidateWindowHours": "Trending candidate window (hours)",
+                "refreshIntervalMinutes": "Score refresh interval (min)",
+                "pageSize": "Posts per feed page",
+                "authorDiversityMax": "Max posts per author in page slice",
+                "adSpacing": "Sponsored post spacing (posts)",
+                "allocationRankingPct": "Ranked quality share (%)",
+                "allocationFreshPct": "Fresh posts share (%)",
+                "allocationDiscoveryPct": "Discovery & diversity share (%)",
+                "allocationSummary": "Combined mix sum: {sum}% (normalized proportionally when mixing the Recommended stream)."
+            },
+            "trending": {
+                "title": "Organic Trending Score Formula & Anti-Manipulation",
+                "subtitle": "RawScore = (Vh·wv + Rv·wr + Cv·wc + Bv·wb + Sv·ws) / (1 + AgeHours/base)^exp. Sponsored & AI signals are excluded.",
+                "weightHumanView": "Weight: Organic human views",
+                "weightReaction": "Weight: Valid reactions",
+                "weightComment": "Weight: Valid comments",
+                "weightBookmark": "Weight: Valid bookmarks",
+                "weightShare": "Weight: Valid shares",
+                "decayBaseHours": "Time decay base (hours)",
+                "decayExponent": "Time decay exponent",
+                "perUserCap": "Max ranking signals / user / 24h",
+                "viewEngagementRatio": "Abnormal view dampening ratio"
+            },
+            "simulator": {
+                "title": "Trending Score Simulator (Side-Effect Free)",
+                "subtitle": "Test your current weights and decay curve with hypothetical metrics without altering any real post or database row.",
+                "humanViews": "Organic views",
+                "reactions": "Reactions",
+                "comments": "Comments",
+                "bookmarks": "Bookmarks",
+                "shares": "Shares",
+                "ageHours": "Age (hours)",
+                "runButton": "Calculate Score",
+                "trendingScore": "Trending Score",
+                "rawScore": "Raw Engagement Score",
+                "decayFactor": "Time Decay Divisor",
+                "effectiveViews": "Effective Views",
+                "dampened": "Dampened"
+            },
+            "telemetry": {
+                "title": "Anti-Spam Events & Policy Audit History",
+                "subtitle": "Inspect triggered rate limits, duplicate blocks, high-risk reviews, and staff updates.",
+                "auditLogs": "Recent Settings & Moderation Audit Log",
+                "riskMedium": "Medium risk",
+                "riskHigh": "High risk",
+                "riskViolation": "Violation"
+            }
         }
     },
     "common": {

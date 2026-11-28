@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Social;
 
+use App\Enums\ModerationStatus;
 use App\Enums\SeoEntityType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Social\LinkPreviewRequest;
@@ -193,13 +194,30 @@ class PostController extends Controller
          * } $validated
          */
         $validated = $request->validated();
+        $idempotencyKey = $request->header('X-Idempotency-Key');
+        if (is_string($idempotencyKey) && trim($idempotencyKey) !== '') {
+            $validated['idempotency_key'] = trim($idempotencyKey);
+        }
+        $validated['ip_address'] = $request->ip();
 
-        $this->postService->create($user, $validated, array_values($uploadedImages));
+        $post = $this->postService->create($user, $validated, array_values($uploadedImages));
 
-        Inertia::flash('toast', [
-            'type' => 'success',
-            'message' => __('Your post has been published.'),
-        ]);
+        if ($post->moderation_status === ModerationStatus::Pending) {
+            Inertia::flash('toast', [
+                'type' => 'warning',
+                'message' => __('Your post has been submitted and is currently under moderation review before appearing publicly.'),
+            ]);
+        } elseif ($post->moderation_status === ModerationStatus::Rejected) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('Your post could not be published because it violates community guidelines.'),
+            ]);
+        } else {
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => __('Your post has been published.'),
+            ]);
+        }
 
         return back();
     }
@@ -213,13 +231,21 @@ class PostController extends Controller
 
         /** @var array{title?: string|null, content: string, category?: string|null} $validated */
         $validated = $request->validated();
+        $validated['ip_address'] = $request->ip();
 
-        $this->postService->update($user, $post, $validated);
+        $updated = $this->postService->update($user, $post, $validated);
 
-        Inertia::flash('toast', [
-            'type' => 'success',
-            'message' => __('Post updated.'),
-        ]);
+        if ($updated->moderation_status === ModerationStatus::Pending) {
+            Inertia::flash('toast', [
+                'type' => 'warning',
+                'message' => __('Your edited post has been submitted for moderation review.'),
+            ]);
+        } else {
+            Inertia::flash('toast', [
+                'type' => 'success',
+                'message' => __('Post updated.'),
+            ]);
+        }
 
         return back();
     }

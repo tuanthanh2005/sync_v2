@@ -40,7 +40,7 @@ class ContentModerationController extends Controller
         $post = Post::query()->withTrashed()->findOrFail($postId);
 
         $validated = $request->validate([
-            'action' => ['required', 'string', 'in:hide,restore_visibility,approve,lock_comments,unlock_comments,pin,unpin,content_warning,mark_spam,soft_delete,restore_deleted'],
+            'action' => ['required', 'string', 'in:hide,restore_visibility,approve,reject,lock_comments,unlock_comments,pin,unpin,content_warning,mark_spam,soft_delete,restore_deleted'],
             'reason' => ['required', 'string', 'min:3', 'max:500'],
             'content_warning' => ['nullable', 'string', 'max:160'],
         ]);
