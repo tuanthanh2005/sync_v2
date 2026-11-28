@@ -276,7 +276,7 @@ function submitProfileDetails(): void {
 
             <div class="px-4 pb-5 sm:px-6 lg:pb-6">
                 <div
-                    class="-mt-10 flex items-end justify-between gap-3 sm:-mt-12"
+                    class="-mt-10 flex items-start justify-between gap-3 sm:-mt-12 lg:items-end"
                 >
                     <div class="relative shrink-0">
                         <Avatar
@@ -307,7 +307,7 @@ function submitProfileDetails(): void {
 
                     <TooltipProvider :delay-duration="250">
                         <div
-                            class="flex shrink-0 flex-wrap items-center justify-end gap-2"
+                            class="flex shrink-0 flex-wrap items-center justify-end gap-2 pt-12 sm:pt-14 lg:pt-2"
                         >
                             <Tooltip>
                                 <TooltipTrigger as-child>
