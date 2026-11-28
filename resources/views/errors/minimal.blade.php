@@ -1,9 +1,26 @@
+@php
+    $assetVersion = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
+    $brandName = (string) config('app.name', 'SysNoxis');
+    $customFavicon = null;
+    try {
+        $branding = app(\App\Services\System\SystemSettingService::class)->brandingPayload();
+        $customFavicon = $branding['faviconUrl'];
+    } catch (\Throwable) {
+        // Keep default brand assets if settings table is unavailable.
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ (($isRtl ?? false) || app()->getLocale() === 'ar') ? 'rtl' : 'ltr' }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title') — {{ config('app.name', 'SysNoxis') }}</title>
+        <title>@yield('title') — {{ $brandName }}</title>
+        @if (! empty($customFavicon))
+            <link rel="icon" href="{{ $customFavicon }}">
+        @else
+            <link rel="icon" href="/favicon.svg?v={{ $assetVersion }}" type="image/svg+xml">
+            <link rel="icon" href="/favicon.ico?v={{ $assetVersion }}" sizes="any">
+        @endif
         <script>
             (function () {
                 var saved = null;
@@ -80,6 +97,29 @@
                 padding: 2rem;
                 text-align: center;
             }
+            .brand-lockup {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.625rem;
+                margin-bottom: 1.25rem;
+                text-decoration: none;
+                color: var(--text);
+            }
+            .brand-icon {
+                width: 2.25rem;
+                height: 2.25rem;
+                border-radius: 0.5rem;
+                background-color: var(--primary-soft);
+                color: var(--primary);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .brand-name {
+                font-size: 1rem;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
             .code-badge {
                 display: inline-flex;
                 align-items: center;
@@ -148,7 +188,16 @@
     </head>
     <body>
         <main class="card" role="main">
-            <div class="code-badge">@yield('code')</div>
+            <a href="{{ url('/') }}" class="brand-lockup">
+                <span class="brand-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 40 40" fill="none">
+                        <path d="M33 5H15A8 8 0 0 0 15 21H17.2L22.6 15.6H15A2.6 2.6 0 0 1 15 10.4H27.6Z" fill="currentColor" />
+                        <path d="M7 35H25A8 8 0 0 0 25 19H22.8L17.4 24.4H25A2.6 2.6 0 0 1 25 29.6H12.4Z" fill="currentColor" />
+                    </svg>
+                </span>
+                <span class="brand-name">{{ $brandName }}</span>
+            </a>
+            <div><div class="code-badge">@yield('code')</div></div>
             <h1>@yield('heading')</h1>
             <p>@yield('message')</p>
             <div class="actions">

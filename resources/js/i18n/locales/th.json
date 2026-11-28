@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "ชุมชนสังคมออนไลน์ระดับโลก"
+        "tagline": "เชื่อมต่อไร้พรมแดน"
     },
     "nav": {
         "home": "ฟีดข่าว",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "นับยอดเข้าชมเมื่อผู้เขียนดูโพสต์ของตนเอง (แนะนำ: ปิด)",
                 "views_bot_filtering": "กรองบอตค้นหา คำขอ prefetch และทราฟฟิกบอตอัตโนมัติที่ไม่ถูกต้อง",
                 "views_retention_days": "จำนวนวันที่เก็บข้อมูลดิบกันซ้ำก่อนลบอัตโนมัติโดยยังคงยอดรวมทั้งหมดไว้ (ค่าเริ่มต้น: 30, ช่วง: 7–180)"
+            },
+            "brandingDefaultActive": "ค่าเริ่มต้น SysNoxis",
+            "brandingCustomActive": "ใช้งานแบบกำหนดเอง",
+            "brandingLabels": {
+                "logo_light_path": "โลโก้ (โหมดสว่าง)",
+                "logo_dark_path": "โลโก้ (โหมดมืด)",
+                "favicon_path": "ไอคอนเบราว์เซอร์ (Favicon)",
+                "og_image_path": "ภาพเริ่มต้นสำหรับการแชร์โซเชียล (OG)"
             }
         },
         "notifications": {

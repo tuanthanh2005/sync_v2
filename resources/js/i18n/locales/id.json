@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Komunitas Sosial Global"
+        "tagline": "Terhubung Melampaui Batas."
     },
     "nav": {
         "home": "Beranda",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Hitung saat penulis melihat postingannya sendiri (disarankan: Nonaktif).",
                 "views_bot_filtering": "Filter perayap mesin pencari, permintaan prefetch, dan trafik bot otomatis yang tidak valid.",
                 "views_retention_days": "Jumlah hari penyimpanan event deduplikasi mentah sebelum pembersihan otomatis tanpa mengurangi total (bawaan: 30, rentang: 7–180)."
+            },
+            "brandingDefaultActive": "Default SysNoxis",
+            "brandingCustomActive": "Kustom Aktif",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Mode Terang)",
+                "logo_dark_path": "Logo (Mode Gelap)",
+                "favicon_path": "Favicon Browser",
+                "og_image_path": "Gambar Default Berbagi Sosial (OG)"
             }
         },
         "notifications": {

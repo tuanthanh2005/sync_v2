@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Globale soziale Community"
+        "tagline": "Verbinde dich über Grenzen hinaus."
     },
     "nav": {
         "home": "Startseite",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Aufrufe zählen, wenn Autoren ihren eigenen Beitrag ansehen (empfohlen: Deaktiviert).",
                 "views_bot_filtering": "Suchmaschinen-Crawler, Prefetch-Anfragen und ungültigen Bot-Traffic herausfiltern.",
                 "views_retention_days": "Aufbewahrungstage für Roh-Deduplizierungsereignisse vor automatischer Bereinigung bei Erhalt der Gesamtzähler (Standard: 30, Bereich: 7–180)."
+            },
+            "brandingDefaultActive": "SysNoxis-Standard",
+            "brandingCustomActive": "Benutzerdefiniert aktiv",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Heller Modus)",
+                "logo_dark_path": "Logo (Dunkler Modus)",
+                "favicon_path": "Browser-Favicon",
+                "og_image_path": "Standardbild für Social Sharing (OG)"
             }
         },
         "notifications": {

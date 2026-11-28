@@ -10,7 +10,6 @@ use App\Services\Security\AuditLogger;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,18 +25,25 @@ class SystemSettingsController extends Controller
     public function index(): Response
     {
         $settings = $this->settingService->all();
-        $disk = (string) config('syncviet.media_disk', 'public');
-        $brandingUrls = [];
-
-        foreach (['logo_light_path', 'logo_dark_path', 'favicon_path', 'og_image_path'] as $key) {
-            $path = is_string($settings[$key] ?? null) ? trim($settings[$key]) : '';
-            $brandingUrls[$key] = $path !== '' ? Storage::disk($disk)->url($path) : null;
-        }
+        $branding = $this->settingService->brandingPayload();
+        $brandingUrls = [
+            'logo_light_path' => $branding['logoLightUrl'],
+            'logo_dark_path' => $branding['logoDarkUrl'],
+            'favicon_path' => $branding['faviconUrl'],
+            'og_image_path' => $branding['ogImageUrl'],
+        ];
+        $defaultBrandingUrls = [
+            'logo_light_path' => $branding['defaults']['logoLight'],
+            'logo_dark_path' => $branding['defaults']['logoDark'],
+            'favicon_path' => $branding['defaults']['faviconSvg'],
+            'og_image_path' => $branding['defaults']['ogImage'],
+        ];
 
         return Inertia::render('admin/Settings/Index', [
             'settings' => $settings,
             'schema' => SystemSettingService::defaults(),
             'brandingUrls' => $brandingUrls,
+            'defaultBrandingUrls' => $defaultBrandingUrls,
             'uploadRuntime' => $this->imageUploadService->runtimeLimits(),
         ]);
     }

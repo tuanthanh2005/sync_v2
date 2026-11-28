@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Comunidade social global"
+        "tagline": "Conecte-se além das fronteiras."
     },
     "nav": {
         "home": "Início",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Contabilizar quando o autor visualiza a própria publicação (recomendado: Desativado).",
                 "views_bot_filtering": "Filtrar rastreadores de busca, solicitações de pré-carregamento e tráfego inválido de bots.",
                 "views_retention_days": "Dias para manter registros brutos de deduplicação antes da limpeza automática preservando os totais (padrão: 30, intervalo: 7–180)."
+            },
+            "brandingDefaultActive": "Padrão SysNoxis",
+            "brandingCustomActive": "Personalizado ativo",
+            "brandingLabels": {
+                "logo_light_path": "Logotipo (Modo claro)",
+                "logo_dark_path": "Logotipo (Modo escuro)",
+                "favicon_path": "Favicon do navegador",
+                "og_image_path": "Imagem padrão para compartilhamento social (OG)"
             }
         },
         "notifications": {

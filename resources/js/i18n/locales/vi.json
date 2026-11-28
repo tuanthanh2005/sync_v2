@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Cộng đồng kết nối toàn cầu"
+        "tagline": "Kết nối vượt mọi biên giới."
     },
     "nav": {
         "home": "Bảng tin",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Tính lượt xem khi tác giả tự xem bài viết của chính mình (khuyến nghị: Tắt).",
                 "views_bot_filtering": "Lọc Googlebot, trình thu thập dữ liệu tìm kiếm, prefetch và lưu lượng bot không hợp lệ.",
                 "views_retention_days": "Số ngày lưu trữ log chống trùng thô trước khi tự động dọn dẹp mà vẫn giữ nguyên tổng lượt xem (mặc định: 30, giới hạn: 7–180)."
+            },
+            "brandingDefaultActive": "Mặc định SysNoxis",
+            "brandingCustomActive": "Đang dùng tùy chỉnh",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Chế độ sáng)",
+                "logo_dark_path": "Logo (Chế độ tối)",
+                "favicon_path": "Favicon trình duyệt",
+                "og_image_path": "Ảnh chia sẻ mạng xã hội mặc định (OG)"
             }
         },
         "notifications": {

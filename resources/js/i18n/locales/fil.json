@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Pandaigdigang Komunidad na Panlipunan"
+        "tagline": "Kumonekta Lampas sa mga Hangganan."
     },
     "nav": {
         "home": "Daloy",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Bilangin kapag tiningnan ng may-akda ang sarili niyang post (inirerekomenda: Naka-off).",
                 "views_bot_filtering": "I-filter ang mga search crawler, prefetch request, at di-wastong automated bot traffic.",
                 "views_retention_days": "Mga araw upang panatilihin ang raw deduplication log bago awtomatikong linisin habang pinapanatili ang kabuuang bilang (default: 30, saklaw: 7–180)."
+            },
+            "brandingDefaultActive": "Default ng SysNoxis",
+            "brandingCustomActive": "Aktibo ang Custom",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Light Mode)",
+                "logo_dark_path": "Logo (Dark Mode)",
+                "favicon_path": "Favicon ng Browser",
+                "og_image_path": "Default na Larawan para sa Social Sharing (OG)"
             }
         },
         "notifications": {

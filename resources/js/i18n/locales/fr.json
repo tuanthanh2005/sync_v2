@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Communauté sociale mondiale"
+        "tagline": "Connectez-vous au-delà des frontières."
     },
     "nav": {
         "home": "Fil d'actualité",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Compter les vues lorsque l’auteur consulte sa propre publication (recommandé : Désactivé).",
                 "views_bot_filtering": "Filtrer les robots d’indexation, les requêtes de préchargement et le trafic automatisé invalide.",
                 "views_retention_days": "Jours de conservation des événements bruts avant purge automatique tout en préservant les totaux (par défaut : 30, plage : 7–180)."
+            },
+            "brandingDefaultActive": "Par défaut SysNoxis",
+            "brandingCustomActive": "Personnalisé actif",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Mode clair)",
+                "logo_dark_path": "Logo (Mode sombre)",
+                "favicon_path": "Favicon du navigateur",
+                "og_image_path": "Image par défaut de partage social (OG)"
             }
         },
         "notifications": {

@@ -2,14 +2,19 @@
     $ga4 = ['enabled' => false, 'measurement_id' => null, 'require_consent' => true];
     $googleMetaToken = null;
     $bingMetaToken = '';
+    $brandVersion = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
+    $customFaviconUrl = null;
     try {
         $seoConfig = app(\App\Services\Seo\SeoConfigService::class);
         $googleVerify = app(\App\Services\Seo\GoogleSiteVerificationService::class);
         $ga4 = $seoConfig->ga4PublicConfig();
         $googleMetaToken = $googleVerify->activeMetaToken();
         $bingMetaToken = trim($seoConfig->string('bing_meta_verification', ''));
+        $branding = app(\App\Services\System\SystemSettingService::class)->brandingPayload();
+        $brandVersion = $branding['version'];
+        $customFaviconUrl = $branding['faviconUrl'];
     } catch (\Throwable) {
-        // Never break rendering if SEO tables are not yet migrated during deployment.
+        // Never break rendering if SEO or settings tables are not yet migrated during deployment.
     }
     $seoData = is_array($seo ?? null) ? $seo : [];
     $canonicalUrl = $seoData['canonical'] ?? $seoData['url'] ?? null;
@@ -92,9 +97,16 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @if (! empty($customFaviconUrl))
+            <link rel="icon" href="{{ $customFaviconUrl }}">
+            <link rel="apple-touch-icon" href="{{ $customFaviconUrl }}">
+        @else
+            <link rel="icon" href="/favicon.svg?v={{ $brandVersion }}" type="image/svg+xml">
+            <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png?v={{ $brandVersion }}">
+            <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png?v={{ $brandVersion }}">
+            <link rel="icon" href="/favicon.ico?v={{ $brandVersion }}" sizes="any">
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v={{ $brandVersion }}">
+        @endif
 
         @fonts
 

@@ -7,6 +7,17 @@
             content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
         <meta name="theme-color" content="#4F46E5" />
+        <link
+            rel="icon"
+            href="/favicon.svg?v=sysnoxis-2"
+            type="image/svg+xml"
+        />
+        <link rel="icon" href="/favicon.ico?v=sysnoxis-2" sizes="any" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png?v=sysnoxis-2"
+        />
         <title>SysNoxis — Offline</title>
         <style>
             :root {
@@ -61,6 +72,17 @@
                 padding: 28px 24px;
                 text-align: center;
             }
+            .brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 18px;
+            }
+            .brand-name {
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
             .badge {
                 width: 56px;
                 height: 56px;
@@ -100,6 +122,26 @@
     </head>
     <body>
         <main class="card" role="main">
+            <div class="brand">
+                <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                    style="color: var(--primary)"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M33 5H15A8 8 0 0 0 15 21H17.2L22.6 15.6H15A2.6 2.6 0 0 1 15 10.4H27.6Z"
+                        fill="currentColor"
+                    />
+                    <path
+                        d="M7 35H25A8 8 0 0 0 25 19H22.8L17.4 24.4H25A2.6 2.6 0 0 1 25 29.6H12.4Z"
+                        fill="currentColor"
+                    />
+                </svg>
+                <span class="brand-name">SysNoxis</span>
+            </div>
             <div class="badge" aria-hidden="true">
                 <svg
                     width="28"

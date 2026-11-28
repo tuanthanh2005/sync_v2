@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 56" fill="none" role="img" aria-label="SysNoxis — Connect Beyond Borders.">
+  <g transform="translate(4 8)">
+    <path d="M33 5H15A8 8 0 0 0 15 21H17.2L22.6 15.6H15A2.6 2.6 0 0 1 15 10.4H27.6Z" fill="#818CF8"/>
+    <path d="M7 35H25A8 8 0 0 0 25 19H22.8L17.4 24.4H25A2.6 2.6 0 0 1 25 29.6H12.4Z" fill="#818CF8"/>
+  </g>
+  <text x="56" y="29" fill="#F1F5F9" font-family="'Be Vietnam Pro', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="24" font-weight="700" letter-spacing="-0.03em">SysNoxis</text>
+  <text x="56" y="45" fill="#94A3B8" font-family="'Be Vietnam Pro', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="11.5" font-weight="500" letter-spacing="0.01em">Connect Beyond Borders.</text>
+</svg>

@@ -101,18 +101,23 @@ class SeoPublicController extends Controller
     public function defaultOgImage(): Response
     {
         $brand = htmlspecialchars((string) config('app.name', 'SysNoxis'), ENT_XML1 | ENT_QUOTES, 'UTF-8');
+        $slogan = htmlspecialchars((string) config('syncviet.branding.default_slogan', 'Connect Beyond Borders.'), ENT_XML1 | ENT_QUOTES, 'UTF-8');
         $svg = <<<SVG
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#0B0F17"/>
   <rect x="64" y="64" width="1072" height="502" rx="32" fill="#161B26" stroke="#273244" stroke-width="2"/>
-  <rect x="120" y="136" width="76" height="76" rx="20" fill="#4F46E5"/>
-  <path d="M144 176l12 12 24-26" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="224" y="188" fill="#F1F5F9" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="54" font-weight="700">{$brand}</text>
-  <text x="120" y="295" fill="#F1F5F9" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="44" font-weight="700">Global Community &amp; Multilingual Discussions</text>
-  <text x="120" y="360" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="28">Connect, discover insights, and grow communities across 15 languages.</text>
-  <rect x="120" y="438" width="230" height="48" rx="24" fill="#25264A"/>
-  <text x="150" y="470" fill="#818CF8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="20" font-weight="600">15 Languages · Global</text>
+  <rect x="120" y="132" width="84" height="84" rx="20" fill="#4F46E5"/>
+  <g transform="translate(131 143) scale(1.55)">
+    <path d="M33 5H15A8 8 0 0 0 15 21H17.2L22.6 15.6H15A2.6 2.6 0 0 1 15 10.4H27.6Z" fill="#FFFFFF"/>
+    <path d="M7 35H25A8 8 0 0 0 25 19H22.8L17.4 24.4H25A2.6 2.6 0 0 1 25 29.6H12.4Z" fill="#FFFFFF"/>
+  </g>
+  <text x="232" y="180" fill="#F1F5F9" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="52" font-weight="700" letter-spacing="-0.02em">{$brand}</text>
+  <text x="232" y="214" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="22" font-weight="500">{$slogan}</text>
+  <text x="120" y="316" fill="#F1F5F9" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="42" font-weight="700">Global Community &amp; Multilingual Discussions</text>
+  <text x="120" y="376" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="26">Discover ideas, share stories, and build communities across 15 languages.</text>
+  <rect x="120" y="446" width="248" height="48" rx="24" fill="#25264A"/>
+  <text x="150" y="478" fill="#818CF8" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="20" font-weight="600">sysnoxis.com · Global</text>
 </svg>
 SVG;
 

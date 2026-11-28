@@ -40,6 +40,27 @@ export type AdminPendingCounts = {
     fraud_reviews?: number;
 };
 
+export type BrandingPublicConfig = {
+    version: string;
+    logoLightUrl: string | null;
+    logoDarkUrl: string | null;
+    faviconUrl: string | null;
+    ogImageUrl: string | null;
+    defaults: {
+        iconLight: string;
+        iconDark: string;
+        logoLight: string;
+        logoDark: string;
+        faviconSvg: string;
+        faviconIco: string;
+        favicon16: string;
+        favicon32: string;
+        appleTouchIcon: string;
+        pwa192: string;
+        ogImage: string;
+    };
+};
+
 export type SystemSettingsPublic = {
     siteName: string;
     siteSlogan: string;
@@ -48,6 +69,7 @@ export type SystemSettingsPublic = {
     defaultTheme: string;
     maintenanceEnabled: boolean;
     maintenanceMessage: string;
+    branding?: BrandingPublicConfig;
     features: Record<string, boolean>;
     limits: {
         postMaxLength: number;

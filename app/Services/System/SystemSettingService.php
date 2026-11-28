@@ -8,6 +8,7 @@ use App\Services\Media\SafeImageUploadService;
 use App\Services\Security\AuditLogger;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class SystemSettingService
 {
@@ -24,7 +25,7 @@ class SystemSettingService
         return [
             // General & Branding
             'site_name' => ['group' => 'general', 'type' => 'string', 'value' => config('app.name', 'SysNoxis'), 'is_public' => true],
-            'site_slogan' => ['group' => 'general', 'type' => 'string', 'value' => 'Global Social Community', 'is_public' => true],
+            'site_slogan' => ['group' => 'general', 'type' => 'string', 'value' => (string) config('syncviet.branding.default_slogan', 'Connect Beyond Borders.'), 'is_public' => true],
             'site_description' => ['group' => 'general', 'type' => 'string', 'value' => 'Connect without boundaries. Discover ideas, share stories, and build trusted communities.', 'is_public' => true],
             'contact_email' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
             'support_contact_info' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
@@ -179,6 +180,58 @@ class SystemSettingService
     }
 
     /**
+     * Centralized brand identity payload with Admin overrides and versioned SysNoxis defaults.
+     *
+     * @return array{
+     *     version: string,
+     *     logoLightUrl: string|null,
+     *     logoDarkUrl: string|null,
+     *     faviconUrl: string|null,
+     *     ogImageUrl: string|null,
+     *     defaults: array{
+     *         iconLight: string,
+     *         iconDark: string,
+     *         logoLight: string,
+     *         logoDark: string,
+     *         faviconSvg: string,
+     *         faviconIco: string,
+     *         favicon16: string,
+     *         favicon32: string,
+     *         appleTouchIcon: string,
+     *         pwa192: string,
+     *         ogImage: string
+     *     }
+     * }
+     */
+    public function brandingPayload(): array
+    {
+        $all = $this->all();
+        $version = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
+        $v = '?v='.rawurlencode($version);
+
+        return [
+            'version' => $version,
+            'logoLightUrl' => $this->resolveBrandingAssetUrl((string) ($all['logo_light_path'] ?? '')),
+            'logoDarkUrl' => $this->resolveBrandingAssetUrl((string) ($all['logo_dark_path'] ?? '')),
+            'faviconUrl' => $this->resolveBrandingAssetUrl((string) ($all['favicon_path'] ?? '')),
+            'ogImageUrl' => $this->resolveBrandingAssetUrl((string) ($all['og_image_path'] ?? '')),
+            'defaults' => [
+                'iconLight' => (string) config('syncviet.branding.assets.icon_light', '/brand/sysnoxis-icon.svg').$v,
+                'iconDark' => (string) config('syncviet.branding.assets.icon_dark', '/brand/sysnoxis-icon-dark.svg').$v,
+                'logoLight' => (string) config('syncviet.branding.assets.logo_light', '/brand/sysnoxis-logo-light.svg').$v,
+                'logoDark' => (string) config('syncviet.branding.assets.logo_dark', '/brand/sysnoxis-logo-dark.svg').$v,
+                'faviconSvg' => (string) config('syncviet.branding.assets.favicon_svg', '/favicon.svg').$v,
+                'faviconIco' => (string) config('syncviet.branding.assets.favicon_ico', '/favicon.ico').$v,
+                'favicon16' => (string) config('syncviet.branding.assets.favicon_16', '/icons/favicon-16x16.png').$v,
+                'favicon32' => (string) config('syncviet.branding.assets.favicon_32', '/icons/favicon-32x32.png').$v,
+                'appleTouchIcon' => (string) config('syncviet.branding.assets.apple_touch_icon', '/apple-touch-icon.png').$v,
+                'pwa192' => (string) config('syncviet.branding.assets.pwa_192', '/icons/icon-192.png').$v,
+                'ogImage' => (string) config('syncviet.branding.assets.og_default', '/og-default.svg').$v,
+            ],
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function publicPayload(): array
@@ -193,6 +246,7 @@ class SystemSettingService
             'defaultTheme' => (string) $all['default_theme'],
             'maintenanceEnabled' => (bool) $all['maintenance_enabled'],
             'maintenanceMessage' => (string) $all['maintenance_message'],
+            'branding' => $this->brandingPayload(),
             'features' => [
                 'registration' => (bool) $all['feature_registration'],
                 'googleLogin' => (bool) $all['feature_google_login'],
@@ -324,6 +378,18 @@ class SystemSettingService
     {
         $this->memoizedAll = null;
         Cache::forget(self::CACHE_KEY);
+    }
+
+    private function resolveBrandingAssetUrl(string $path): ?string
+    {
+        $clean = trim($path);
+        if ($clean === '') {
+            return null;
+        }
+
+        $disk = (string) config('syncviet.media_disk', 'public');
+
+        return Storage::disk($disk)->url($clean);
     }
 
     private static function castValue(?string $value, string $type): mixed

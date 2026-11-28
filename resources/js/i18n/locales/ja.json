@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "グローバル・ソーシャルコミュニティ"
+        "tagline": "国境を越えてつながる。"
     },
     "nav": {
         "home": "フィード",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "投稿者自身による閲覧をカウントします（推奨: 無効）。",
                 "views_bot_filtering": "検索エンジンクローラー、プリフェッチ、無効なボットトラフィックを除外します。",
                 "views_retention_days": "合計カウンターを保持したまま生の重複除外イベントを自動削除するまでの保持日数（デフォルト: 30、範囲: 7〜180）。"
+            },
+            "brandingDefaultActive": "SysNoxis デフォルト",
+            "brandingCustomActive": "カスタム適用中",
+            "brandingLabels": {
+                "logo_light_path": "ロゴ（ライトモード）",
+                "logo_dark_path": "ロゴ（ダークモード）",
+                "favicon_path": "ブラウザファビコン",
+                "og_image_path": "SNS共有デフォルト画像（OG）"
             }
         },
         "notifications": {

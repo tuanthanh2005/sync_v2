@@ -37,6 +37,7 @@ const props = defineProps<{
         { group: string; type: string; value: unknown; is_public: boolean }
     >;
     brandingUrls?: Record<string, string | null>;
+    defaultBrandingUrls?: Record<string, string>;
     uploadRuntime?: UploadRuntimeInfo;
 }>();
 
@@ -226,11 +227,65 @@ function removeBrandingAsset(assetKey: string): void {
                 <div
                     v-for="assetKey in BRANDING_ASSET_KEYS"
                     :key="assetKey"
-                    class="space-y-2 rounded-xl border border-border/70 bg-muted/15 p-3.5"
+                    class="space-y-2.5 rounded-xl border border-border/70 bg-muted/15 p-3.5"
                 >
-                    <p class="font-mono text-xs font-semibold text-foreground">
-                        {{ assetKey }}
-                    </p>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-foreground">
+                                {{
+                                    t(
+                                        `admin.settings.brandingLabels.${assetKey}`,
+                                    )
+                                }}
+                            </p>
+                            <p
+                                class="font-mono text-[11px] text-muted-foreground"
+                            >
+                                {{ assetKey }}
+                            </p>
+                        </div>
+                        <span
+                            :class="[
+                                'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
+                                brandingUrls?.[assetKey]
+                                    ? 'bg-primary-soft text-primary'
+                                    : 'bg-muted text-muted-foreground',
+                            ]"
+                        >
+                            {{
+                                brandingUrls?.[assetKey]
+                                    ? t('admin.settings.brandingCustomActive')
+                                    : t('admin.settings.brandingDefaultActive')
+                            }}
+                        </span>
+                    </div>
+                    <div
+                        v-if="
+                            !brandingUrls?.[assetKey] &&
+                            defaultBrandingUrls?.[assetKey]
+                        "
+                        :class="[
+                            'flex h-20 items-center justify-center rounded-lg border border-border/70 px-4',
+                            assetKey === 'logo_dark_path' ||
+                            assetKey === 'og_image_path'
+                                ? 'bg-[#0B0F17]'
+                                : 'bg-[#FFFFFF]',
+                        ]"
+                    >
+                        <img
+                            :src="defaultBrandingUrls[assetKey]"
+                            :alt="
+                                t(`admin.settings.brandingLabels.${assetKey}`)
+                            "
+                            :class="
+                                assetKey === 'favicon_path'
+                                    ? 'size-10 object-contain'
+                                    : assetKey === 'og_image_path'
+                                      ? 'h-16 w-auto rounded object-contain'
+                                      : 'h-9 w-auto max-w-full object-contain'
+                            "
+                        />
+                    </div>
                     <ImageUploader
                         :model-value="brandingFiles[assetKey]"
                         :existing-url="brandingUrls?.[assetKey] ?? null"

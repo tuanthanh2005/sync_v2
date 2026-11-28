@@ -5,6 +5,7 @@ namespace App\Services\Seo;
 use App\Models\SeoSetting;
 use App\Models\User;
 use App\Services\System\LanguageService;
+use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Schema;
@@ -215,13 +216,27 @@ class SeoConfigService
 
     public function defaultOgImageUrl(): string
     {
+        try {
+            $customOg = app(SystemSettingService::class)->brandingPayload()['ogImageUrl'];
+            if (is_string($customOg) && $customOg !== '') {
+                return str_starts_with($customOg, 'https://') || str_starts_with($customOg, 'http://')
+                    ? $customOg
+                    : $this->canonicalBaseUrl().'/'.ltrim($customOg, '/');
+            }
+        } catch (\Throwable) {
+            // Fall through to SEO config default when system_settings is unavailable.
+        }
+
         $path = $this->string('default_og_image', (string) config('syncviet.seo.default_og_image', '/og-default.svg'));
 
         if (str_starts_with($path, 'https://') || str_starts_with($path, 'http://')) {
             return $path;
         }
 
-        return $this->canonicalBaseUrl().'/'.ltrim($path, '/');
+        $version = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
+        $suffix = ($path === '/og-default.svg' && $version !== '') ? '?v='.rawurlencode($version) : '';
+
+        return $this->canonicalBaseUrl().'/'.ltrim($path, '/').$suffix;
     }
 
     public function sitemapShardSize(): int

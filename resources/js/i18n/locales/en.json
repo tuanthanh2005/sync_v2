@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Global Social Community"
+        "tagline": "Connect Beyond Borders."
     },
     "nav": {
         "home": "Feed",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Count when an author views their own post (recommended: Disabled).",
                 "views_bot_filtering": "Filter search engine crawlers, prefetch requests, and invalid automated bot traffic.",
                 "views_retention_days": "Days to retain raw deduplication events before automatic pruning while keeping total counters (default: 30, range: 7–180)."
+            },
+            "brandingDefaultActive": "SysNoxis Default",
+            "brandingCustomActive": "Custom Active",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Light Mode)",
+                "logo_dark_path": "Logo (Dark Mode)",
+                "favicon_path": "Browser Favicon",
+                "og_image_path": "Social Sharing Default Image (OG)"
             }
         },
         "notifications": {

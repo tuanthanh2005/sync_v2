@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "Küresel Sosyal Topluluk"
+        "tagline": "Sınırların Ötesinde Bağlan."
     },
     "nav": {
         "home": "Akış",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "Yazarın kendi gönderisini görüntülemesini say (önerilen: Kapalı).",
                 "views_bot_filtering": "Arama motoru tarayıcılarını, ön yükleme isteklerini ve geçersiz bot trafiğini filtrele.",
                 "views_retention_days": "Toplam sayaçları koruyarak otomatik temizlemeden önce ham tekilleştirme kayıtlarını saklama günü (varsayılan: 30, aralık: 7–180)."
+            },
+            "brandingDefaultActive": "SysNoxis Varsayılanı",
+            "brandingCustomActive": "Özel Aktif",
+            "brandingLabels": {
+                "logo_light_path": "Logo (Açık Mod)",
+                "logo_dark_path": "Logo (Koyu Mod)",
+                "favicon_path": "Tarayıcı Simgesi (Favicon)",
+                "og_image_path": "Varsayılan Sosyal Paylaşım Görseli (OG)"
             }
         },
         "notifications": {

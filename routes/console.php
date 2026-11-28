@@ -634,6 +634,17 @@ Artisan::command(
             $updatedKeys = [];
             foreach ($rows as $row) {
                 $val = is_string($row->value) ? $row->value : '';
+                if ($row->key === 'site_slogan' && trim($val) === 'Global Social Community') {
+                    $updatedKeys[] = $row->key;
+                    if (! $dryRun) {
+                        DB::table('system_settings')->where('id', $row->id)->update([
+                            'value' => (string) config('syncviet.branding.default_slogan', 'Connect Beyond Borders.'),
+                            'updated_at' => now(),
+                        ]);
+                    }
+
+                    continue;
+                }
                 if (str_contains($val, 'SyncViet')) {
                     $next = str_replace('SyncViet', 'SysNoxis', $val);
                     $updatedKeys[] = $row->key;
@@ -643,6 +654,10 @@ Artisan::command(
                 }
             }
             $summary['db_updated']['system_settings'] = $updatedKeys;
+            $summary['custom_branding_assets'] = DB::table('system_settings')
+                ->whereIn('key', ['logo_light_path', 'logo_dark_path', 'favicon_path', 'og_image_path'])
+                ->pluck('value', 'key')
+                ->all();
         }
 
         if (Schema::hasTable('seo_settings')) {

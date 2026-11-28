@@ -1,6 +1,6 @@
 {
     "brand": {
-        "tagline": "全球社交社区"
+        "tagline": "跨越边界，连接世界。"
     },
     "nav": {
         "home": "动态",
@@ -1008,6 +1008,14 @@
                 "views_track_author_self": "统计作者浏览自己帖子的次数（建议：关闭）。",
                 "views_bot_filtering": "过滤搜索引擎爬虫、预抓取请求和无效自动化机器人流量。",
                 "views_retention_days": "在保留总计数的前提下自动清理原始去重日志前的保留天数（默认：30，范围：7–180）。"
+            },
+            "brandingDefaultActive": "SysNoxis 默认",
+            "brandingCustomActive": "已启用自定义",
+            "brandingLabels": {
+                "logo_light_path": "标志（浅色模式）",
+                "logo_dark_path": "标志（深色模式）",
+                "favicon_path": "浏览器图标 (Favicon)",
+                "og_image_path": "社交分享默认图片 (OG)"
             }
         },
         "notifications": {

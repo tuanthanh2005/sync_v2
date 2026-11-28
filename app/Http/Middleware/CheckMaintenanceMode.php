@@ -39,9 +39,12 @@ class CheckMaintenanceMode
             'SysNoxis is undergoing scheduled maintenance. Please check back shortly.',
         );
 
-        return response($message, 503, [
+        if ($request->expectsJson()) {
+            return response()->json(['message' => $message], 503, ['Retry-After' => '300']);
+        }
+
+        return response()->view('errors.503', ['maintenanceMessage' => $message], 503, [
             'Retry-After' => '300',
-            'Content-Type' => 'text/plain; charset=UTF-8',
         ]);
     }
 }

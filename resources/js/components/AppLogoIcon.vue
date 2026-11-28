@@ -22,20 +22,12 @@ defineProps<Props>();
         aria-hidden="true"
     >
         <path
-            d="M20 9.5L10.5 27.5M20 9.5L29.5 27.5M10.5 27.5H29.5"
-            stroke="currentColor"
-            stroke-width="3.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        />
-        <circle cx="20" cy="9.5" r="4.5" fill="currentColor" />
-        <circle cx="10.5" cy="27.5" r="4.5" fill="currentColor" />
-        <circle
-            cx="29.5"
-            cy="27.5"
-            r="4.5"
+            d="M33 5H15A8 8 0 0 0 15 21H17.2L22.6 15.6H15A2.6 2.6 0 0 1 15 10.4H27.6Z"
             fill="currentColor"
-            fill-opacity="0.72"
+        />
+        <path
+            d="M7 35H25A8 8 0 0 0 25 19H22.8L17.4 24.4H25A2.6 2.6 0 0 1 25 29.6H12.4Z"
+            fill="currentColor"
         />
     </svg>
 </template>

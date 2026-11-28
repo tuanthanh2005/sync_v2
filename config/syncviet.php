@@ -23,6 +23,36 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Centralized Brand Identity & Asset Versioning (SysNoxis)
+    |--------------------------------------------------------------------------
+    */
+    'branding' => [
+        'asset_version' => 'sysnoxis-2',
+        'default_slogan' => 'Connect Beyond Borders.',
+        'assets' => [
+            'icon_light' => '/brand/sysnoxis-icon.svg',
+            'icon_dark' => '/brand/sysnoxis-icon-dark.svg',
+            'icon_mono' => '/brand/sysnoxis-icon-mono.svg',
+            'icon_transparent' => '/brand/sysnoxis-icon-transparent.svg',
+            'logo_light' => '/brand/sysnoxis-logo-light.svg',
+            'logo_dark' => '/brand/sysnoxis-logo-dark.svg',
+            'logo_mono' => '/brand/sysnoxis-logo-mono.svg',
+            'brand_light' => '/brand/sysnoxis-brand-light.svg',
+            'brand_dark' => '/brand/sysnoxis-brand-dark.svg',
+            'favicon_svg' => '/favicon.svg',
+            'favicon_ico' => '/favicon.ico',
+            'favicon_16' => '/icons/favicon-16x16.png',
+            'favicon_32' => '/icons/favicon-32x32.png',
+            'apple_touch_icon' => '/apple-touch-icon.png',
+            'pwa_192' => '/icons/icon-192.png',
+            'pwa_512' => '/icons/icon-512.png',
+            'pwa_maskable_512' => '/icons/icon-maskable-512.png',
+            'og_default' => '/og-default.svg',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Media Storage Disk Abstraction (local, public, or s3 / Cloudflare R2)
     |--------------------------------------------------------------------------
     */

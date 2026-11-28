@@ -1,12 +1,13 @@
-const STATIC_CACHE = 'syncviet-static-v2';
+const STATIC_CACHE = 'syncviet-static-v3';
 const OFFLINE_URL = '/offline.html';
+const BRAND_VERSION = 'sysnoxis-2';
 
 const PRECACHE_ASSETS = [
     OFFLINE_URL,
     '/manifest.webmanifest',
-    '/favicon.svg',
-    '/icons/icon-192.png',
-    '/icons/icon-512.png',
+    `/favicon.svg?v=${BRAND_VERSION}`,
+    `/icons/icon-192.png?v=${BRAND_VERSION}`,
+    `/icons/icon-512.png?v=${BRAND_VERSION}`,
 ];
 
 // Sensitive routes and prefixes that MUST NEVER be cached by the Service Worker
@@ -41,6 +42,7 @@ function isCacheableStaticAsset(url) {
 
     return (
         path.startsWith('/build/') ||
+        path.startsWith('/brand/') ||
         path.startsWith('/icons/') ||
         path === '/manifest.webmanifest' ||
         path === '/favicon.ico' ||
