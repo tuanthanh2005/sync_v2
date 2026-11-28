@@ -30,7 +30,19 @@
         "searchPlaceholder": "ابحث في المنشورات والمجتمعات والأشخاص...",
         "explore": "استكشاف",
         "createPostShort": "نشر",
-        "referral": "ادعُ واربح"
+        "referral": "ادعُ واربح",
+        "createPost": "إنشاء منشور",
+        "brandPremium": "{brand} Premium",
+        "more": "المزيد",
+        "advertisingCenter": "مركز الإعلانات",
+        "advertisingOverview": "نظرة عامة",
+        "settingsPrivacy": "الإعدادات والخصوصية",
+        "helpSupport": "المساعدة والدعم",
+        "language": "اللغة",
+        "reportIssue": "الإبلاغ عن مشكلة",
+        "contactSupport": "التواصل مع الدعم",
+        "viewPublicProfile": "الملف العام",
+        "appearanceLanguage": "المظهر واللغة"
     },
     "theme": {
         "light": "فاتح",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "توسيع الوصول وزيادة التفاعل",
         "rightPromoBullet2": "استهداف الجماهير المهتمة بالموضوع",
         "rightPromoBullet3": "تحكم مرن في الميزانية بعملة VND",
-        "rightPromoCta": "إضافة ميزانية إعلانية"
+        "rightPromoCta": "إضافة ميزانية إعلانية",
+        "notableAccounts": "حسابات مميزة",
+        "discoverSyncViet": "اكتشف {brand}",
+        "discoverDescription": "استكشف النقاشات والمواضيع النشطة والمجتمعات المناسبة لاهتماماتك.",
+        "exploreNow": "استكشف الآن"
     },
     "auth": {
         "headline": "تواصل مع مجتمعات عالمية في مساحة منفتحة وموثوقة.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "اختر كيفية ظهور SyncViet على هذا الجهاز.",
             "headingTitle": "سمة العرض",
             "pageTitle": "إعدادات المظهر",
-            "srHeading": "إعدادات المظهر"
+            "srHeading": "إعدادات المظهر",
+            "languageHeading": "لغة العرض",
+            "languageDescription": "اختر لغة الواجهة المفضلة لديك عبر جميع أجهزتك."
         },
         "deleteAccount": {
             "confirmButton": "حذف الحساب نهائيًا",

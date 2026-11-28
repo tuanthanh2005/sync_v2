@@ -398,9 +398,22 @@ export type MonetizationQuickShared = {
     maxPendingOrders: number;
 };
 
+export type SidebarNotableAccount = {
+    id: number;
+    name: string;
+    username: string;
+    headline: string | null;
+    avatar: string | null;
+    is_verified: boolean;
+    is_premium: boolean;
+    is_ai_agent: boolean;
+    followers_count: number;
+};
+
 export type SidebarHighlights = {
     trendingHashtags: HashtagItem[];
     featuredCommunities: CommunitySummary[];
+    notableAccounts?: SidebarNotableAccount[];
     banner?: ActiveBannerDisplay | null;
 };
 

@@ -475,6 +475,85 @@ class SearchService
     }
 
     /**
+     * Retrieve lightweight real notable accounts for the Right Sidebar (cached, zero fake data).
+     *
+     * @return list<array{
+     *     id: int,
+     *     name: string,
+     *     username: string,
+     *     headline: string|null,
+     *     avatar: string|null,
+     *     is_verified: bool,
+     *     is_premium: bool,
+     *     is_ai_agent: bool,
+     *     followers_count: int
+     * }>
+     */
+    public function sidebarNotableAccounts(?User $viewer, int $limit = 3): array
+    {
+        /** @var list<array{
+         *     id: int,
+         *     name: string,
+         *     username: string,
+         *     headline: string|null,
+         *     avatar: string|null,
+         *     is_verified: bool,
+         *     is_premium: bool,
+         *     is_ai_agent: bool,
+         *     followers_count: int
+         * }> $cached */
+        $cached = Cache::remember('syncviet.sidebar.notable_accounts.v1', now()->addMinutes(3), static function (): array {
+            $users = User::query()
+                ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
+                ->where('users.status', UserStatus::Active->value)
+                ->whereNotNull('users.email_verified_at')
+                ->whereHas('profile')
+                ->leftJoin('profiles', 'profiles.user_id', '=', 'users.id')
+                ->orderByDesc('profiles.followers_count')
+                ->orderByDesc('users.id')
+                ->select(
+                    'users.id',
+                    'users.name',
+                    'users.username',
+                    'users.avatar_url',
+                    'users.status',
+                    'users.premium_until',
+                    'users.premium_suspended_at',
+                    'users.account_type',
+                )
+                ->limit(10)
+                ->get();
+
+            return array_values($users->map(static fn (User $user): array => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username,
+                'headline' => $user->profile?->headline,
+                'avatar' => $user->avatarUrl(),
+                'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
+                'is_premium' => $user->isPremium(),
+                'is_ai_agent' => $user->isAiAgent(),
+                'followers_count' => $user->profile !== null ? $user->profile->followers_count : 0,
+            ])->all());
+        });
+
+        if ($cached === []) {
+            return [];
+        }
+
+        $excluded = $viewer !== null
+            ? array_flip([$viewer->id, ...$this->feedService->mutualBlockedUserIds($viewer)])
+            : [];
+
+        $filtered = array_values(array_filter(
+            $cached,
+            static fn (array $item): bool => ! isset($excluded[$item['id']]),
+        ));
+
+        return array_slice($filtered, 0, max(1, $limit));
+    }
+
+    /**
      * Build escaped LIKE patterns supporting Unicode and unaccented Vietnamese (`d` <-> `đ`).
      *
      * @return list<string>

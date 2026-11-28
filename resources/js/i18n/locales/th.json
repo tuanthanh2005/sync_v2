@@ -30,7 +30,19 @@
         "searchPlaceholder": "ค้นหาโพสต์ ชุมชน ผู้คน...",
         "explore": "สำรวจ",
         "createPostShort": "โพสต์",
-        "referral": "ชวนเพื่อนรับสิทธิ์"
+        "referral": "ชวนเพื่อนรับสิทธิ์",
+        "createPost": "สร้างโพสต์",
+        "brandPremium": "{brand} Premium",
+        "more": "เพิ่มเติม",
+        "advertisingCenter": "ศูนย์โฆษณา",
+        "advertisingOverview": "ภาพรวม",
+        "settingsPrivacy": "การตั้งค่าและความเป็นส่วนตัว",
+        "helpSupport": "ความช่วยเหลือและการสนับสนุน",
+        "language": "ภาษา",
+        "reportIssue": "รายงานปัญหา",
+        "contactSupport": "ติดต่อฝ่ายสนับสนุน",
+        "viewPublicProfile": "โปรไฟล์สาธารณะ",
+        "appearanceLanguage": "ธีมและภาษา"
     },
     "theme": {
         "light": "สว่าง",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "เพิ่มการเข้าถึงและการมีส่วนร่วม",
         "rightPromoBullet2": "กำหนดกลุ่มเป้าหมายตามหัวข้อที่เกี่ยวข้อง",
         "rightPromoBullet3": "ควบคุมงบประมาณ VND ได้อย่างยืดหยุ่น",
-        "rightPromoCta": "เพิ่มงบโฆษณา"
+        "rightPromoCta": "เพิ่มงบโฆษณา",
+        "notableAccounts": "บัญชีที่น่าสนใจ",
+        "discoverSyncViet": "สำรวจ {brand}",
+        "discoverDescription": "ค้นพบการสนทนา หัวข้อยอดนิยม และชุมชนที่ตรงกับความสนใจของคุณ",
+        "exploreNow": "สำรวจเลย"
     },
     "auth": {
         "headline": "เชื่อมต่อกับชุมชนทั่วโลกในพื้นที่ที่เปิดกว้างและน่าเชื่อถือ",
@@ -2565,7 +2581,9 @@
             "headingDescription": "เลือกวิธีแสดงผล SyncViet บนอุปกรณ์นี้",
             "headingTitle": "ธีมการแสดงผล",
             "pageTitle": "การตั้งค่าการแสดงผล",
-            "srHeading": "การตั้งค่าการแสดงผล"
+            "srHeading": "การตั้งค่าการแสดงผล",
+            "languageHeading": "ภาษาที่แสดง",
+            "languageDescription": "เลือกภาษาอินเทอร์เฟซที่คุณต้องการสำหรับทุกอุปกรณ์"
         },
         "deleteAccount": {
             "confirmButton": "ลบบัญชีอย่างถาวร",

@@ -30,7 +30,19 @@
         "searchPlaceholder": "Pesquisar publicações, comunidades, pessoas...",
         "explore": "Explorar",
         "createPostShort": "Publicar",
-        "referral": "Convidar e Ganhar"
+        "referral": "Convidar e Ganhar",
+        "createPost": "Criar publicação",
+        "brandPremium": "{brand} Premium",
+        "more": "Mais",
+        "advertisingCenter": "Central de anúncios",
+        "advertisingOverview": "Visão geral",
+        "settingsPrivacy": "Configurações e privacidade",
+        "helpSupport": "Ajuda e suporte",
+        "language": "Idioma",
+        "reportIssue": "Relatar um problema",
+        "contactSupport": "Contatar suporte",
+        "viewPublicProfile": "Perfil público",
+        "appearanceLanguage": "Aparência e idioma"
     },
     "theme": {
         "light": "Claro",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Aumente alcance e engajamento",
         "rightPromoBullet2": "Segmente públicos por tópicos relevantes",
         "rightPromoBullet3": "Controle flexível de orçamento em VND",
-        "rightPromoCta": "Adicionar orçamento de anúncios"
+        "rightPromoCta": "Adicionar orçamento de anúncios",
+        "notableAccounts": "Contas em destaque",
+        "discoverSyncViet": "Descubra {brand}",
+        "discoverDescription": "Explore discussões, tópicos ativos e comunidades alinhadas aos seus interesses.",
+        "exploreNow": "Explorar agora"
     },
     "auth": {
         "headline": "Conecte-se com comunidades globais em um espaço aberto e confiável.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Escolha como o SyncViet aparece neste dispositivo.",
             "headingTitle": "Tema de exibição",
             "pageTitle": "Configurações de aparência",
-            "srHeading": "Configurações de aparência"
+            "srHeading": "Configurações de aparência",
+            "languageHeading": "Idioma de exibição",
+            "languageDescription": "Escolha seu idioma de interface preferido em todos os dispositivos."
         },
         "deleteAccount": {
             "confirmButton": "Excluir conta permanentemente",

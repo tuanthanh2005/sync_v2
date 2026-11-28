@@ -155,7 +155,7 @@ const mobileItems = computed<BottomNavEntry[]>(() => {
     <nav
         v-show="!isKeyboardOpen"
         :aria-label="t('nav.mobileNavLabel')"
-        class="safe-pb fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/98 select-none lg:hidden"
+        class="safe-pb fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/98 select-none md:hidden"
     >
         <div
             class="mx-auto grid max-w-lg px-1"

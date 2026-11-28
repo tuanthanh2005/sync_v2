@@ -30,7 +30,19 @@
         "searchPlaceholder": "搜索帖子、社区、用户...",
         "explore": "探索",
         "createPostShort": "发布",
-        "referral": "邀请好友"
+        "referral": "邀请好友",
+        "createPost": "发布帖子",
+        "brandPremium": "{brand} Premium",
+        "more": "更多",
+        "advertisingCenter": "广告中心",
+        "advertisingOverview": "概览",
+        "settingsPrivacy": "设置与隐私",
+        "helpSupport": "帮助与支持",
+        "language": "语言",
+        "reportIssue": "报告问题",
+        "contactSupport": "联系支持",
+        "viewPublicProfile": "公开主页",
+        "appearanceLanguage": "外观与语言"
     },
     "theme": {
         "light": "浅色",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "扩大覆盖面与互动量",
         "rightPromoBullet2": "定向匹配相关主题受众",
         "rightPromoBullet3": "灵活掌控 VND 预算",
-        "rightPromoCta": "充值广告预算"
+        "rightPromoCta": "充值广告预算",
+        "notableAccounts": "推荐账号",
+        "discoverSyncViet": "探索 {brand}",
+        "discoverDescription": "发现符合你兴趣的热门讨论、活跃话题和优质社区。",
+        "exploreNow": "立即探索"
     },
     "auth": {
         "headline": "在开放、可信赖的空间里连接全球社区。",
@@ -2565,7 +2581,9 @@
             "headingDescription": "选择 SyncViet 在此设备上的显示外观。",
             "headingTitle": "显示主题",
             "pageTitle": "外观设置",
-            "srHeading": "外观设置"
+            "srHeading": "外观设置",
+            "languageHeading": "显示语言",
+            "languageDescription": "选择你在所有设备上偏好的界面语言。"
         },
         "deleteAccount": {
             "confirmButton": "永久删除账号",

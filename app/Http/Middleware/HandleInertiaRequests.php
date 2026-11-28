@@ -26,6 +26,7 @@ use App\Services\Monetization\MonetizationPaymentService;
 use App\Services\Monetization\PlatformCapabilityService;
 use App\Services\Policy\FooterMenuService;
 use App\Services\Social\HashtagService;
+use App\Services\Social\SearchService;
 use App\Services\System\LanguageService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ class HandleInertiaRequests extends Middleware
     public function __construct(
         private readonly FooterMenuService $footerMenuService,
         private readonly HashtagService $hashtagService,
+        private readonly SearchService $searchService,
         private readonly CommunityService $communityService,
         private readonly MessagingService $messagingService,
         private readonly LanguageService $languageService,
@@ -114,6 +116,7 @@ class HandleInertiaRequests extends Middleware
             'sidebarHighlights' => [
                 'trendingHashtags' => $this->hashtagService->trending(5),
                 'featuredCommunities' => $this->communityService->featuredForSidebar($user, 3),
+                'notableAccounts' => $isAdminOrSensitive ? [] : $this->searchService->sidebarNotableAccounts($user, 3),
                 'banner' => $sidebarBanners['desktop_sidebar_right'] ?? $sidebarBanners['desktop_sidebar_premium'],
             ],
             'monetizationQuick' => $user === null ? null : [

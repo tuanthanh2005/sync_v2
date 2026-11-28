@@ -30,7 +30,19 @@
         "searchPlaceholder": "Beiträge, Communitys, Personen suchen...",
         "explore": "Entdecken",
         "createPostShort": "Beitrag",
-        "referral": "Einladen & Verdienen"
+        "referral": "Einladen & Verdienen",
+        "createPost": "Beitrag erstellen",
+        "brandPremium": "{brand} Premium",
+        "more": "Mehr",
+        "advertisingCenter": "Werbecenter",
+        "advertisingOverview": "Übersicht",
+        "settingsPrivacy": "Einstellungen & Datenschutz",
+        "helpSupport": "Hilfe & Support",
+        "language": "Sprache",
+        "reportIssue": "Problem melden",
+        "contactSupport": "Support kontaktieren",
+        "viewPublicProfile": "Öffentliches Profil",
+        "appearanceLanguage": "Darstellung & Sprache"
     },
     "theme": {
         "light": "Hell",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Reichweite und Interaktion steigern",
         "rightPromoBullet2": "Relevante Themen-Zielgruppen ansprechen",
         "rightPromoBullet3": "Flexible VND-Budgetkontrolle",
-        "rightPromoCta": "Werbebudget aufladen"
+        "rightPromoCta": "Werbebudget aufladen",
+        "notableAccounts": "Empfohlene Konten",
+        "discoverSyncViet": "{brand} entdecken",
+        "discoverDescription": "Entdecke Diskussionen, aktive Themen und Communitys passend zu deinen Interessen.",
+        "exploreNow": "Jetzt entdecken"
     },
     "auth": {
         "headline": "Vernetzen Sie sich mit globalen Communitys in einem offenen und vertrauenswürdigen Raum.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Wählen Sie aus, wie SyncViet auf diesem Gerät dargestellt wird.",
             "headingTitle": "Anzeigedesign",
             "pageTitle": "Darstellungseinstellungen",
-            "srHeading": "Darstellungseinstellungen"
+            "srHeading": "Darstellungseinstellungen",
+            "languageHeading": "Anzeigesprache",
+            "languageDescription": "Wähle deine bevorzugte Oberflächensprache für alle Geräte."
         },
         "deleteAccount": {
             "confirmButton": "Konto dauerhaft löschen",

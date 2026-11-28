@@ -30,7 +30,19 @@
         "searchPlaceholder": "投稿、コミュニティ、ユーザーを検索...",
         "explore": "探索",
         "createPostShort": "投稿",
-        "referral": "友達を招待"
+        "referral": "友達を招待",
+        "createPost": "投稿を作成",
+        "brandPremium": "{brand} Premium",
+        "more": "もっと見る",
+        "advertisingCenter": "広告センター",
+        "advertisingOverview": "概要",
+        "settingsPrivacy": "設定とプライバシー",
+        "helpSupport": "ヘルプとサポート",
+        "language": "言語",
+        "reportIssue": "問題を報告",
+        "contactSupport": "サポートに問い合わせ",
+        "viewPublicProfile": "公開プロフィール",
+        "appearanceLanguage": "外観と言語"
     },
     "theme": {
         "light": "ライト",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "リーチとエンゲージメントを拡大",
         "rightPromoBullet2": "関連トピックの興味層に配信",
         "rightPromoBullet3": "柔軟なVND予算コントロール",
-        "rightPromoCta": "広告予算をチャージ"
+        "rightPromoCta": "広告予算をチャージ",
+        "notableAccounts": "注目のアカウント",
+        "discoverSyncViet": "{brand} を見つける",
+        "discoverDescription": "興味に合ったディスカッション、注目のトピック、コミュニティを探しましょう。",
+        "exploreNow": "今すぐ探す"
     },
     "auth": {
         "headline": "オープンで信頼できる空間で、世界中のコミュニティとつながろう。",
@@ -2565,7 +2581,9 @@
             "headingDescription": "この端末でのSyncVietの表示テーマを選択します。",
             "headingTitle": "表示テーマ",
             "pageTitle": "外観設定",
-            "srHeading": "外観設定"
+            "srHeading": "外観設定",
+            "languageHeading": "表示言語",
+            "languageDescription": "すべてのデバイスで使用するインターフェース言語を選択します。"
         },
         "deleteAccount": {
             "confirmButton": "アカウントを完全に削除",

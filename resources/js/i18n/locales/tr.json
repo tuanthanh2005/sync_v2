@@ -30,7 +30,19 @@
         "searchPlaceholder": "Gönderi, topluluk veya kişi ara...",
         "explore": "Keşfet",
         "createPostShort": "Paylaş",
-        "referral": "Davet Et ve Kazan"
+        "referral": "Davet Et ve Kazan",
+        "createPost": "Gönderi Oluştur",
+        "brandPremium": "{brand} Premium",
+        "more": "Daha Fazla",
+        "advertisingCenter": "Reklam Merkezi",
+        "advertisingOverview": "Genel Bakış",
+        "settingsPrivacy": "Ayarlar ve Gizlilik",
+        "helpSupport": "Yardım ve Destek",
+        "language": "Dil",
+        "reportIssue": "Sorun Bildir",
+        "contactSupport": "Destek ile İletişime Geç",
+        "viewPublicProfile": "Herkese Açık Profil",
+        "appearanceLanguage": "Görünüm ve Dil"
     },
     "theme": {
         "light": "Açık",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Erişimi ve etkileşimi artırın",
         "rightPromoBullet2": "İlgili konu kitlelerini hedefleyin",
         "rightPromoBullet3": "Esnek VND bütçe kontrolü",
-        "rightPromoCta": "Reklam bütçesi ekle"
+        "rightPromoCta": "Reklam bütçesi ekle",
+        "notableAccounts": "Öne Çıkan Hesaplar",
+        "discoverSyncViet": "{brand} Keşfet",
+        "discoverDescription": "İlgi alanlarınıza uygun tartışmaları, aktif konuları ve toplulukları keşfedin.",
+        "exploreNow": "Şimdi keşfet"
     },
     "auth": {
         "headline": "Açık ve güvenilir bir alanda küresel topluluklarla bağlanın.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "SyncViet'in bu cihazda nasıl görüneceğini seçin.",
             "headingTitle": "Görünüm Teması",
             "pageTitle": "Görünüm Ayarları",
-            "srHeading": "Görünüm Ayarları"
+            "srHeading": "Görünüm Ayarları",
+            "languageHeading": "Görüntüleme Dili",
+            "languageDescription": "Tüm cihazlarınızda tercih ettiğiniz arayüz dilini seçin."
         },
         "deleteAccount": {
             "confirmButton": "Hesabı kalıcı olarak sil",

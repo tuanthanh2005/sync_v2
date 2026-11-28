@@ -30,7 +30,19 @@
         "searchPlaceholder": "Rechercher des publications, communautés, personnes...",
         "explore": "Explorer",
         "createPostShort": "Publier",
-        "referral": "Parrainer"
+        "referral": "Parrainer",
+        "createPost": "Créer une publication",
+        "brandPremium": "{brand} Premium",
+        "more": "Plus",
+        "advertisingCenter": "Centre publicitaire",
+        "advertisingOverview": "Aperçu",
+        "settingsPrivacy": "Paramètres et confidentialité",
+        "helpSupport": "Aide et assistance",
+        "language": "Langue",
+        "reportIssue": "Signaler un problème",
+        "contactSupport": "Contacter le support",
+        "viewPublicProfile": "Profil public",
+        "appearanceLanguage": "Apparence et langue"
     },
     "theme": {
         "light": "Clair",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Développez votre portée et votre engagement",
         "rightPromoBullet2": "Ciblez des audiences par thématiques pertinentes",
         "rightPromoBullet3": "Gestion flexible du budget en VND",
-        "rightPromoCta": "Ajouter un budget publicitaire"
+        "rightPromoCta": "Ajouter un budget publicitaire",
+        "notableAccounts": "Comptes remarquables",
+        "discoverSyncViet": "Découvrir {brand}",
+        "discoverDescription": "Explorez des discussions, des sujets actifs et des communautés adaptés à vos centres d’intérêt.",
+        "exploreNow": "Explorer maintenant"
     },
     "auth": {
         "headline": "Rejoignez des communautés mondiales dans un espace ouvert et de confiance.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Choisissez l'apparence de SyncViet sur cet appareil.",
             "headingTitle": "Thème d'affichage",
             "pageTitle": "Paramètres d'apparence",
-            "srHeading": "Paramètres d'apparence"
+            "srHeading": "Paramètres d'apparence",
+            "languageHeading": "Langue d’affichage",
+            "languageDescription": "Choisissez votre langue d’interface préférée sur tous vos appareils."
         },
         "deleteAccount": {
             "confirmButton": "Supprimer définitivement le compte",

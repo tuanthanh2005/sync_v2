@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
+import {
+    Bell,
+    Palette,
+    Settings,
+    ShieldCheck,
+    User as UserIcon,
+} from '@lucide/vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue';
 import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import Heading from '@/components/Heading.vue';
@@ -10,6 +18,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
+import { index as notificationsIndex } from '@/routes/notifications';
 import { edit as editProfile } from '@/routes/profile';
 import { edit as editSecurity } from '@/routes/security';
 import type { NavItem } from '@/types';
@@ -23,14 +32,27 @@ const sidebarNavItems = computed<NavItem[]>(() => [
     {
         title: t('nav.profile'),
         href: editProfile(),
+        icon: Settings,
+    },
+    {
+        title: t('nav.viewPublicProfile'),
+        href: ProfileViewController.me.url(),
+        icon: UserIcon,
     },
     {
         title: t('nav.security'),
         href: editSecurity(),
+        icon: ShieldCheck,
     },
     {
-        title: t('nav.appearance'),
+        title: t('nav.appearanceLanguage'),
         href: editAppearance(),
+        icon: Palette,
+    },
+    {
+        title: t('nav.notifications'),
+        href: notificationsIndex(),
+        icon: Bell,
     },
 ]);
 
@@ -45,9 +67,9 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
         />
 
         <div class="flex flex-col gap-6 md:flex-row md:gap-8">
-            <aside class="w-full md:w-48 md:shrink-0">
+            <aside class="w-full md:w-52 md:shrink-0">
                 <nav
-                    class="flex flex-row gap-1 overflow-x-auto md:flex-col"
+                    class="no-scrollbar flex flex-row gap-1 overflow-x-auto md:flex-col"
                     :aria-label="t('settings.layout.navAriaLabel')"
                 >
                     <Button
@@ -55,9 +77,9 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
                         :key="toUrl(item.href)"
                         variant="ghost"
                         :class="[
-                            'justify-start rounded-lg md:w-full',
+                            'min-h-10 shrink-0 justify-start gap-2.5 rounded-xl px-3 text-sm md:w-full',
                             {
-                                'bg-accent text-accent-foreground':
+                                'bg-primary-soft font-semibold text-accent-foreground':
                                     isCurrentOrParentUrl(item.href),
                             },
                         ]"
@@ -67,9 +89,14 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
                             <component
                                 v-if="item.icon"
                                 :is="item.icon"
-                                class="size-4"
+                                :class="[
+                                    'size-4 shrink-0',
+                                    isCurrentOrParentUrl(item.href)
+                                        ? 'text-primary'
+                                        : 'text-muted-foreground',
+                                ]"
                             />
-                            {{ item.title }}
+                            <span class="truncate">{{ item.title }}</span>
                         </Link>
                     </Button>
                 </nav>

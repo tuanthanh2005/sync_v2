@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
 import {
-    ArrowRight,
+    BadgeCheck,
     Bell,
-    CheckCircle2,
     ChevronDown,
     Compass,
     Crown,
@@ -12,35 +11,42 @@ import {
     Home,
     Image as ImageIcon,
     LayoutGrid,
-    Megaphone,
+    LogIn,
     Menu,
     MessageSquare,
     Palette,
+    PenSquare,
     ReceiptText,
     Search,
+    Settings,
     Shield,
     ShieldCheck,
     Sparkles,
     TrendingUp,
     Trophy,
     User as UserIcon,
+    UserPlus,
     Users,
     Wallet as WalletIcon,
     Zap,
 } from '@lucide/vue';
+import type { Component } from 'vue';
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
+import AiBadge from '@/components/ai/AiBadge.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue';
 import MobileBottomNav from '@/components/common/MobileBottomNav.vue';
 import NetworkStatusBanner from '@/components/common/NetworkStatusBanner.vue';
+import SidebarMoreMenu from '@/components/common/SidebarMoreMenu.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
 import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import MiniFooter from '@/components/footer/MiniFooter.vue';
+import AdvertisingCenterNav from '@/components/monetization/AdvertisingCenterNav.vue';
 import BannerSlot from '@/components/monetization/BannerSlot.vue';
 import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -59,29 +65,36 @@ import {
     SheetTrigger,
 } from '@/components/ui/sheet';
 import { Toaster } from '@/components/ui/sonner';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { useInitials } from '@/composables/useInitials';
+import { useMobileComposer } from '@/composables/useMobileComposer';
 import { useCompactScrollHeader } from '@/composables/useMobileViewport';
 import { usePwa } from '@/composables/usePwa';
 import { formatVnd } from '@/lib/currency';
 import { toUrl } from '@/lib/utils';
 import { dashboard, home, login, register } from '@/routes';
+import { premium as accountPremiumRoute } from '@/routes/account';
 import { overview as adminOverview } from '@/routes/admin';
-import { index as adsIndex } from '@/routes/ads';
 import { edit as editAppearance } from '@/routes/appearance';
 import { index as communitiesIndex } from '@/routes/communities';
 import { index as messagesIndex } from '@/routes/messages';
 import {
+    advertising as advertisingRoute,
     banner as bannerRoute,
     boost as boostRoute,
     premium as premiumRoute,
-    services as servicesRoute,
 } from '@/routes/monetization';
 import { index as notificationsIndex } from '@/routes/notifications';
 import { index as paymentsIndex } from '@/routes/payments';
+import { edit as editProfile } from '@/routes/profile';
 import { index as referralIndex } from '@/routes/referral';
-import { premium as accountPremiumRoute } from '@/routes/account';
 import { edit as editSecurity } from '@/routes/security';
 import { index as walletIndex } from '@/routes/wallet';
 import type {
@@ -90,6 +103,7 @@ import type {
     CommunityMemberItem,
     HashtagItem,
     NavItem,
+    SidebarNotableAccount,
 } from '@/types';
 
 type Props = {
@@ -98,10 +112,13 @@ type Props = {
 };
 
 type SidebarNavItem = NavItem & {
+    id: string;
+    icon: Component;
     badgeText?: string;
+    exact?: boolean;
 };
 
-type SidebarGroup = {
+type MobileDrawerSection = {
     id: string;
     label: string;
     items: SidebarNavItem[];
@@ -118,7 +135,11 @@ const page = usePage();
 const user = computed(() => page.props.auth.user);
 const footer = computed(() => page.props.footer);
 const brandName = computed(() => page.props.name);
+const isRtl = computed(() => Boolean(page.props.isRtl));
 const sidebarHighlights = computed(() => page.props.sidebarHighlights);
+const notableAccounts = computed<SidebarNotableAccount[]>(
+    () => sidebarHighlights.value?.notableAccounts ?? [],
+);
 const unreadNotificationsCount = computed(
     () => page.props.unreadNotificationsCount ?? 0,
 );
@@ -126,12 +147,15 @@ const unreadMessagesCount = computed(() => page.props.unreadMessagesCount ?? 0);
 const walletBalance = computed(() => page.props.walletBalance ?? 0);
 
 const isCommunityPage = computed(() => page.component === 'communities/Show');
-/**
- * Wide 2-column service mode (no Right Sidebar) for Premium, Advertising,
- * Banner, Boost, Advertising Balance, and Payment History. Resolved dynamically
- * on the persistent ConnectHubLayout instance so Header & Left Sidebar never
- * unmount or flash across Inertia page navigations.
- */
+const isAdvertisingCenterPage = computed(
+    () =>
+        page.component === 'monetization/Advertising' ||
+        page.component === 'monetization/BoostPost' ||
+        page.component === 'monetization/BannerAds' ||
+        page.component === 'monetization/Payments' ||
+        page.component === 'Wallet' ||
+        page.component === 'Ads',
+);
 const isWideServiceLayout = computed(
     () =>
         props.hideRightSidebar ||
@@ -140,9 +164,13 @@ const isWideServiceLayout = computed(
         page.component === 'Wallet' ||
         page.component === 'Ads',
 );
-const isAdsOrWalletPage = computed(
-    () => page.component === 'Ads' || page.component === 'Wallet',
+const isMoreMenuRouteActive = computed(
+    () =>
+        isAdvertisingCenterPage.value ||
+        page.component.startsWith('settings/') ||
+        page.component === 'monetization/Services',
 );
+
 const activeCommunity = computed(
     () => (page.props.community as CommunityDetail | undefined) ?? undefined,
 );
@@ -153,13 +181,44 @@ const communityHashtags = computed(
     () => (page.props.trending_hashtags as HashtagItem[] | undefined) ?? [],
 );
 
+const hasGlobalRightSidebarData = computed(
+    () =>
+        sidebarHighlights.value.trendingHashtags.length > 0 ||
+        sidebarHighlights.value.featuredCommunities.length > 0 ||
+        notableAccounts.value.length > 0 ||
+        Boolean(sidebarHighlights.value.banner),
+);
+
 const mobileMenuOpen = ref(false);
+const mobileExpandedSection = ref<string | null>(null);
 const headerSearch = ref('');
 let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
 const { isCurrentUrl, isCurrentOrParentUrl } = useCurrentUrl();
 const { getInitials } = useInitials();
 const { headerHidden } = useCompactScrollHeader();
 const { canInstallApp, promptInstallApp } = usePwa();
+const { openMobileComposer } = useMobileComposer();
+
+function handleCreatePostClick(): void {
+    if (!user.value) {
+        router.visit(login());
+
+        return;
+    }
+
+    if (page.component === 'Welcome' || page.component === 'communities/Show') {
+        openMobileComposer();
+
+        return;
+    }
+
+    router.visit(home(), {
+        onFinish: () => {
+            openMobileComposer();
+        },
+    });
+}
 
 function handleHeaderSearchInput(): void {
     if (searchDebounceTimer !== null) {
@@ -205,173 +264,214 @@ function toggleFeaturedCommunityJoin(slug: string): void {
     );
 }
 
+function toggleMobileSection(sectionId: string): void {
+    mobileExpandedSection.value =
+        mobileExpandedSection.value === sectionId ? null : sectionId;
+}
+
 onBeforeUnmount(() => {
     if (searchDebounceTimer !== null) {
         clearTimeout(searchDebounceTimer);
     }
 });
 
-const sidebarGroups = computed<SidebarGroup[]>(() => {
-    if (!user.value) {
-        const guestGroups: SidebarGroup[] = [
-            {
-                id: 'discover',
-                label: t('monetization.sidebar.discover'),
-                items: [
-                    { title: t('nav.home'), href: home(), icon: Home },
-                    {
-                        title: t('monetization.sidebar.explore'),
-                        href: SearchController.url(),
-                        icon: Compass,
-                    },
-                    {
-                        title: t('nav.communities'),
-                        href: communitiesIndex(),
-                        icon: Users,
-                    },
-                ],
-            },
-            {
-                id: 'services',
-                label: t('monetization.sidebar.services'),
-                items: [
-                    {
-                        title: t('monetization.services.pageTitle'),
-                        href: servicesRoute(),
-                        icon: Sparkles,
-                    },
-                    {
-                        title: 'SyncViet Premium',
-                        href: premiumRoute(),
-                        icon: Crown,
-                    },
-                    {
-                        title: t('monetization.services.boostTitle'),
-                        href: boostRoute(),
-                        icon: Zap,
-                    },
-                    {
-                        title: t('monetization.services.bannerTitle'),
-                        href: bannerRoute(),
-                        icon: ImageIcon,
-                    },
-                ],
-            },
-        ];
+/**
+ * Primary social navigation items (strictly concise: 5 for members, 3 for guests).
+ */
+const primaryNavItems = computed<SidebarNavItem[]>(() => {
+    const base: SidebarNavItem[] = [
+        {
+            id: 'home',
+            title: t('nav.home'),
+            href: home(),
+            icon: Home,
+            exact: true,
+        },
+        {
+            id: 'explore',
+            title: t('nav.explore'),
+            href: SearchController.url(),
+            icon: Compass,
+        },
+        {
+            id: 'communities',
+            title: t('nav.communities'),
+            href: communitiesIndex(),
+            icon: Users,
+        },
+    ];
 
-        return guestGroups;
+    if (user.value) {
+        base.push(
+            {
+                id: 'profile',
+                title: t('nav.publicProfile'),
+                href: ProfileViewController.me.url(),
+                icon: UserIcon,
+            },
+            {
+                id: 'workspace',
+                title: t('nav.dashboard'),
+                href: dashboard(),
+                icon: LayoutGrid,
+            },
+        );
     }
 
-    const groups: SidebarGroup[] = [
+    return base;
+});
+
+/**
+ * Secondary items below subtle divider (Premium + Referral; More Menu sits immediately after).
+ */
+const secondaryNavItems = computed<SidebarNavItem[]>(() => {
+    const items: SidebarNavItem[] = [
         {
-            id: 'discover',
-            label: t('monetization.sidebar.discover'),
-            items: [
-                { title: t('nav.home'), href: home(), icon: Home },
-                {
-                    title: t('monetization.sidebar.explore'),
-                    href: SearchController.url(),
-                    icon: Compass,
-                },
-                {
-                    title: t('nav.communities'),
-                    href: communitiesIndex(),
-                    icon: Users,
-                },
-                ...(!user.value.is_ai_agent
-                    ? [
-                          {
-                              title: t('nav.referral'),
-                              href: referralIndex(),
-                              icon: Gift,
-                          },
-                      ]
-                    : []),
-            ],
+            id: 'premium',
+            title: t('nav.brandPremium', { brand: brandName.value }),
+            href: user.value?.is_premium
+                ? accountPremiumRoute()
+                : premiumRoute(),
+            icon: Crown,
+        },
+    ];
+
+    if (user.value && !user.value.is_ai_agent) {
+        items.push({
+            id: 'referral',
+            title: t('nav.referral'),
+            href: referralIndex(),
+            icon: Gift,
+        });
+    }
+
+    return items;
+});
+
+/**
+ * Mobile Drawer quick social shortcuts (complements the 5-tab MobileBottomNav).
+ */
+const mobileQuickItems = computed<SidebarNavItem[]>(() => {
+    const items: SidebarNavItem[] = [];
+
+    if (user.value) {
+        items.push({
+            id: 'workspace',
+            title: t('nav.dashboard'),
+            href: dashboard(),
+            icon: LayoutGrid,
+        });
+    }
+
+    items.push({
+        id: 'premium',
+        title: t('nav.brandPremium', { brand: brandName.value }),
+        href: user.value?.is_premium ? accountPremiumRoute() : premiumRoute(),
+        icon: Crown,
+    });
+
+    if (user.value && !user.value.is_ai_agent) {
+        items.push({
+            id: 'referral',
+            title: t('nav.referral'),
+            href: referralIndex(),
+            icon: Gift,
+        });
+    }
+
+    return items;
+});
+
+/**
+ * Mobile Drawer collapsible feature sections (Advertising Center, Settings & Privacy).
+ */
+const mobileCollapsibleSections = computed<MobileDrawerSection[]>(() => {
+    const adsItems: SidebarNavItem[] = [
+        {
+            id: 'ad-overview',
+            title: t('nav.advertisingOverview'),
+            href: advertisingRoute(),
+            icon: Sparkles,
+            exact: true,
         },
         {
-            id: 'services',
-            label: t('monetization.sidebar.services'),
-            items: [
-                {
-                    title: 'SyncViet Premium',
-                    href: user.value.is_premium
-                        ? accountPremiumRoute()
-                        : premiumRoute(),
-                    icon: Crown,
-                },
-                {
-                    title: t('monetization.services.boostTitle'),
-                    href: boostRoute(),
-                    icon: Zap,
-                },
-                {
-                    title: t('monetization.services.bannerTitle'),
-                    href: bannerRoute(),
-                    icon: ImageIcon,
-                },
-                {
-                    title: t('monetization.wallet.title'),
-                    href: walletIndex(),
-                    icon: WalletIcon,
-                    badgeText: formatVnd(walletBalance.value, lang.value),
-                },
-                {
-                    title: t('monetization.payments.title'),
-                    href: paymentsIndex(),
-                    icon: ReceiptText,
-                },
-            ],
+            id: 'ad-boost',
+            title: t('monetization.services.boostTitle'),
+            href: boostRoute(),
+            icon: Zap,
         },
         {
-            id: 'account',
-            label: t('monetization.sidebar.account'),
+            id: 'ad-banner',
+            title: t('monetization.services.bannerTitle'),
+            href: bannerRoute(),
+            icon: ImageIcon,
+        },
+    ];
+
+    if (user.value) {
+        adsItems.push(
+            {
+                id: 'ad-wallet',
+                title: t('monetization.wallet.title'),
+                href: walletIndex(),
+                icon: WalletIcon,
+                badgeText: formatVnd(walletBalance.value, lang.value),
+            },
+            {
+                id: 'ad-payments',
+                title: t('monetization.payments.title'),
+                href: paymentsIndex(),
+                icon: ReceiptText,
+            },
+        );
+    }
+
+    const sections: MobileDrawerSection[] = [
+        {
+            id: 'ads',
+            label: t('nav.advertisingCenter'),
+            items: adsItems,
+        },
+    ];
+
+    if (user.value) {
+        sections.push({
+            id: 'settings',
+            label: t('nav.settingsPrivacy'),
             items: [
                 {
-                    title: t('nav.publicProfile'),
-                    href: ProfileViewController.me.url(),
-                    icon: UserIcon,
+                    id: 'settings-profile',
+                    title: t('nav.profile'),
+                    href: editProfile(),
+                    icon: Settings,
                 },
                 {
-                    title: t('nav.dashboard'),
-                    href: dashboard(),
-                    icon: LayoutGrid,
-                },
-                {
+                    id: 'settings-security',
                     title: t('nav.security'),
                     href: editSecurity(),
                     icon: ShieldCheck,
                 },
                 {
-                    title: t('nav.appearance'),
+                    id: 'settings-appearance',
+                    title: t('nav.appearanceLanguage'),
                     href: editAppearance(),
                     icon: Palette,
-                },
-            ],
-        },
-    ];
-
-    if (user.value.can?.accessAdmin) {
-        groups.push({
-            id: 'admin',
-            label: t('monetization.sidebar.admin'),
-            items: [
-                {
-                    title: t('nav.adminOverview'),
-                    href: adminOverview(),
-                    icon: Shield,
                 },
             ],
         });
     }
 
-    return groups;
+    return sections;
 });
 
-function isItemActive(item: NavItem): boolean {
+function isItemActive(item: SidebarNavItem): boolean {
     const targetUrl = toUrl(item.href);
 
-    if (targetUrl === toUrl(home()) || targetUrl === toUrl(adminOverview())) {
+    if (
+        item.exact ||
+        targetUrl === toUrl(home()) ||
+        targetUrl === toUrl(adminOverview())
+    ) {
         return isCurrentUrl(targetUrl);
     }
 
@@ -400,7 +500,7 @@ function isItemActive(item: NavItem): boolean {
             :class="[
                 'safe-pt sticky top-0 z-40 border-b border-border bg-card/98 transition-transform duration-150',
                 headerHidden && !mobileMenuOpen
-                    ? '-translate-y-full lg:translate-y-0'
+                    ? '-translate-y-full md:translate-y-0'
                     : 'translate-y-0',
             ]"
         >
@@ -413,8 +513,9 @@ function isItemActive(item: NavItem): boolean {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                class="size-11 shrink-0 rounded-xl lg:hidden"
+                                class="size-11 shrink-0 rounded-xl md:hidden"
                                 :aria-label="t('nav.openMobileMenu')"
+                                data-test="mobile-drawer-trigger"
                             >
                                 <Menu class="size-5" />
                             </Button>
@@ -427,7 +528,7 @@ function isItemActive(item: NavItem): boolean {
                                 class="sv-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain"
                             >
                                 <SheetHeader
-                                    class="border-b border-border px-5 py-4 text-left"
+                                    class="border-b border-border px-5 py-4 text-start"
                                 >
                                     <SheetTitle>
                                         <AppLogo />
@@ -436,39 +537,32 @@ function isItemActive(item: NavItem): boolean {
                                         {{ brandName }}
                                     </SheetDescription>
                                 </SheetHeader>
+
                                 <nav
                                     :aria-label="t('nav.mobileNavLabel')"
-                                    class="flex flex-col gap-4 p-3"
+                                    class="flex flex-col gap-2 p-3"
                                 >
-                                    <div
-                                        v-for="group in sidebarGroups"
-                                        :key="group.id"
-                                        class="space-y-1"
-                                    >
-                                        <p
-                                            class="px-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
-                                        >
-                                            {{ group.label }}
-                                        </p>
+                                    <!-- Quick Shortcuts -->
+                                    <div class="space-y-1">
                                         <Link
-                                            v-for="item in group.items"
-                                            :key="item.title"
+                                            v-for="item in mobileQuickItems"
+                                            :key="item.id"
                                             :href="item.href"
                                             @click="mobileMenuOpen = false"
                                             :class="[
                                                 'flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors',
                                                 isItemActive(item)
-                                                    ? 'bg-primary-soft text-accent-foreground'
-                                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                                    ? 'bg-primary-soft font-semibold text-accent-foreground'
+                                                    : 'text-foreground/85 hover:bg-surface-hover hover:text-foreground',
                                             ]"
                                         >
                                             <component
                                                 :is="item.icon"
                                                 :class="[
-                                                    'size-4.5 shrink-0',
+                                                    'size-5 shrink-0',
                                                     isItemActive(item)
                                                         ? 'text-primary'
-                                                        : '',
+                                                        : 'text-muted-foreground',
                                                 ]"
                                                 aria-hidden="true"
                                             />
@@ -476,13 +570,141 @@ function isItemActive(item: NavItem): boolean {
                                                 class="min-w-0 flex-1 truncate"
                                                 >{{ item.title }}</span
                                             >
-                                            <span
-                                                v-if="item.badgeText"
-                                                class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-accent-foreground"
-                                            >
-                                                {{ item.badgeText }}
-                                            </span>
                                         </Link>
+                                    </div>
+
+                                    <div
+                                        class="my-1 border-t border-border/70"
+                                    />
+
+                                    <!-- Collapsible Feature Groups -->
+                                    <div
+                                        v-for="section in mobileCollapsibleSections"
+                                        :key="section.id"
+                                        class="space-y-1"
+                                    >
+                                        <button
+                                            type="button"
+                                            :aria-expanded="
+                                                mobileExpandedSection ===
+                                                section.id
+                                            "
+                                            class="flex min-h-11 w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-start text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
+                                            @click="
+                                                toggleMobileSection(section.id)
+                                            "
+                                        >
+                                            <span class="truncate">{{
+                                                section.label
+                                            }}</span>
+                                            <ChevronDown
+                                                :class="[
+                                                    'size-4 shrink-0 text-muted-foreground transition-transform duration-150',
+                                                    mobileExpandedSection ===
+                                                    section.id
+                                                        ? 'rotate-180'
+                                                        : '',
+                                                ]"
+                                                aria-hidden="true"
+                                            />
+                                        </button>
+
+                                        <div
+                                            v-show="
+                                                mobileExpandedSection ===
+                                                section.id
+                                            "
+                                            class="space-y-0.5 ps-2"
+                                        >
+                                            <Link
+                                                v-for="item in section.items"
+                                                :key="item.id"
+                                                :href="item.href"
+                                                @click="mobileMenuOpen = false"
+                                                :class="[
+                                                    'flex min-h-10 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+                                                    isItemActive(item)
+                                                        ? 'bg-primary-soft text-accent-foreground'
+                                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
+                                                ]"
+                                            >
+                                                <component
+                                                    :is="item.icon"
+                                                    :class="[
+                                                        'size-4.5 shrink-0',
+                                                        isItemActive(item)
+                                                            ? 'text-primary'
+                                                            : '',
+                                                    ]"
+                                                    aria-hidden="true"
+                                                />
+                                                <span
+                                                    class="min-w-0 flex-1 truncate"
+                                                    >{{ item.title }}</span
+                                                >
+                                                <span
+                                                    v-if="item.badgeText"
+                                                    class="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-semibold text-foreground tabular-nums"
+                                                >
+                                                    {{ item.badgeText }}
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    <!-- Admin Entry (Authorized Only) -->
+                                    <template
+                                        v-if="user && user.can?.accessAdmin"
+                                    >
+                                        <div
+                                            class="my-1 border-t border-border/70"
+                                        />
+                                        <Link
+                                            :href="adminOverview()"
+                                            @click="mobileMenuOpen = false"
+                                            class="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
+                                        >
+                                            <Shield
+                                                class="size-5 shrink-0 text-primary"
+                                                aria-hidden="true"
+                                            />
+                                            <span
+                                                class="min-w-0 flex-1 truncate"
+                                                >{{
+                                                    t('nav.adminOverview')
+                                                }}</span
+                                            >
+                                        </Link>
+                                    </template>
+
+                                    <!-- Guest Auth Buttons in Drawer -->
+                                    <div
+                                        v-if="!user"
+                                        class="mt-2 grid grid-cols-2 gap-2 border-t border-border/70 pt-3"
+                                    >
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            class="min-h-10 rounded-xl"
+                                            as-child
+                                        >
+                                            <Link
+                                                :href="login()"
+                                                @click="mobileMenuOpen = false"
+                                                >{{ t('nav.login') }}</Link
+                                            >
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            class="min-h-10 rounded-xl"
+                                            as-child
+                                        >
+                                            <Link
+                                                :href="register()"
+                                                @click="mobileMenuOpen = false"
+                                                >{{ t('nav.register') }}</Link
+                                            >
+                                        </Button>
                                     </div>
                                 </nav>
 
@@ -542,7 +764,7 @@ function isItemActive(item: NavItem): boolean {
 
                     <div
                         v-if="breadcrumbs.length > 0"
-                        class="hidden border-l border-border pl-4 md:block"
+                        class="hidden border-s border-border ps-4 lg:block"
                     >
                         <Breadcrumbs :breadcrumbs="breadcrumbs" />
                     </div>
@@ -597,7 +819,7 @@ function isItemActive(item: NavItem): boolean {
                                 />
                                 <span
                                     v-if="unreadNotificationsCount > 0"
-                                    class="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
+                                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
                                 >
                                     {{
                                         unreadNotificationsCount > 99
@@ -622,7 +844,7 @@ function isItemActive(item: NavItem): boolean {
                                 />
                                 <span
                                     v-if="unreadMessagesCount > 0"
-                                    class="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
+                                    class="absolute end-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
                                 >
                                     {{
                                         unreadMessagesCount > 99
@@ -646,7 +868,7 @@ function isItemActive(item: NavItem): boolean {
                             <DropdownMenuTrigger as-child>
                                 <Button
                                     variant="ghost"
-                                    class="h-10 gap-1.5 rounded-full px-1.5 hover:bg-surface-hover sm:gap-2 sm:px-2 sm:pr-3"
+                                    class="h-10 gap-1.5 rounded-full px-1.5 hover:bg-surface-hover sm:gap-2 sm:px-2 sm:pe-3"
                                     data-test="user-menu-trigger"
                                 >
                                     <Avatar class="size-8 rounded-full">
@@ -661,7 +883,7 @@ function isItemActive(item: NavItem): boolean {
                                             {{ getInitials(user.name) }}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div class="hidden text-left sm:block">
+                                    <div class="hidden text-start sm:block">
                                         <p
                                             class="flex max-w-36 items-center gap-1 truncate text-xs leading-tight font-semibold"
                                         >
@@ -719,164 +941,235 @@ function isItemActive(item: NavItem): boolean {
 
         <NetworkStatusBanner />
 
-        <!-- Desktop 3-Column Shell / Mobile 1-Column Full-Width Shell -->
+        <!-- Responsive 3-Column Desktop / Icon-Rail Tablet / 1-Column Mobile Shell -->
         <div
-            class="mx-auto flex w-full max-w-[1360px] items-start gap-6 px-2.5 py-4 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-4 sm:py-6 lg:px-6 lg:pb-10"
+            class="mx-auto flex w-full max-w-[1360px] items-start gap-4 px-2.5 py-4 pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:px-4 sm:py-6 md:gap-5 md:pb-10 lg:gap-6 lg:px-6"
         >
-            <!-- Left Sidebar (~240px) -->
+            <!-- Left Sidebar: Compact Icon Rail on Tablet (72px), Clean Social Nav on Desktop (260px) -->
             <aside
                 :aria-label="t('accessibility.mainNavigation')"
-                class="sticky top-22 hidden w-[240px] shrink-0 space-y-4 lg:block"
+                class="sv-scrollbar sticky top-22 hidden max-h-[calc(100dvh-6rem)] shrink-0 space-y-3 overflow-y-auto md:block md:w-[72px] lg:w-[260px]"
+                data-test="main-sidebar"
             >
-                <div class="rounded-xl border border-border bg-card p-3">
-                    <nav class="space-y-4">
-                        <div
-                            v-for="group in sidebarGroups"
-                            :key="group.id"
-                            class="space-y-1"
-                        >
-                            <p
-                                class="px-3 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase"
-                            >
-                                {{ group.label }}
-                            </p>
-                            <Link
-                                v-for="item in group.items"
-                                :key="item.title"
-                                :href="item.href"
-                                :class="[
-                                    'flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors',
-                                    isItemActive(item)
-                                        ? 'bg-primary-soft text-accent-foreground'
-                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                ]"
-                            >
-                                <component
-                                    :is="item.icon"
-                                    :class="[
-                                        'size-4 shrink-0',
-                                        isItemActive(item)
-                                            ? 'text-primary'
-                                            : '',
-                                    ]"
-                                    aria-hidden="true"
-                                />
-                                <span class="min-w-0 flex-1 truncate">{{
-                                    item.title
-                                }}</span>
-                                <span
-                                    v-if="item.badgeText"
-                                    class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-accent-foreground"
+                <div class="rounded-2xl border border-border bg-card p-2.5">
+                    <TooltipProvider :delay-duration="250">
+                        <!-- Primary Create Post CTA (Reuses Existing Create Post Modal) -->
+                        <div v-if="user" class="mb-2.5">
+                            <Tooltip>
+                                <TooltipTrigger as-child>
+                                    <Button
+                                        type="button"
+                                        data-test="sidebar-create-post"
+                                        :aria-label="t('nav.createPost')"
+                                        class="h-11 w-full justify-center gap-2.5 rounded-xl px-0 text-sm font-semibold lg:px-4"
+                                        @click="handleCreatePostClick"
+                                    >
+                                        <PenSquare
+                                            class="size-5 shrink-0"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="hidden truncate lg:inline">
+                                            {{ t('nav.createPost') }}
+                                        </span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                    :side="isRtl ? 'left' : 'right'"
+                                    class="lg:hidden"
                                 >
-                                    {{ item.badgeText }}
-                                </span>
-                            </Link>
+                                    {{ t('nav.createPost') }}
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
-                    </nav>
-                </div>
 
-                <!-- Left Sidebar Guide / Tablet Promo Card (avoids duplicating Right Sidebar card on xl+) -->
-                <div
-                    v-if="!isWideServiceLayout && isAdsOrWalletPage"
-                    class="rounded-xl border border-border bg-card p-4 text-center"
-                >
-                    <div
-                        class="mx-auto flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary"
-                    >
-                        <Megaphone class="size-5" aria-hidden="true" />
-                    </div>
-                    <h2 class="mt-2.5 text-xs font-bold text-foreground">
-                        {{ t('sidebar.adsGuideCardTitle') }}
-                    </h2>
-                    <p
-                        class="mt-1.5 text-[11px] leading-relaxed text-muted-foreground"
-                    >
-                        {{ t('sidebar.adsGuideCardDesc') }}
-                    </p>
-                    <Button size="sm" class="mt-3.5 w-full rounded-lg" as-child>
-                        <Link :href="walletIndex()">
-                            <span>{{ t('sidebar.adsGuideCardCta') }}</span>
-                            <ArrowRight class="size-3.5" />
-                        </Link>
-                    </Button>
-                    <ul
-                        class="mt-3.5 space-y-1.5 text-left text-[11px] text-muted-foreground"
-                    >
-                        <li class="flex items-center gap-1.5">
-                            <CheckCircle2
-                                class="size-3.5 shrink-0 text-primary"
+                        <!-- Primary Social Navigation (5 Auth / 3 Guest) -->
+                        <nav class="space-y-1">
+                            <Tooltip
+                                v-for="item in primaryNavItems"
+                                :key="item.id"
+                            >
+                                <TooltipTrigger as-child>
+                                    <Link
+                                        :href="item.href"
+                                        :aria-label="item.title"
+                                        :aria-current="
+                                            isItemActive(item)
+                                                ? 'page'
+                                                : undefined
+                                        "
+                                        :class="[
+                                            'flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:justify-center md:px-0 lg:justify-start lg:px-3',
+                                            isItemActive(item)
+                                                ? 'bg-primary-soft font-semibold text-accent-foreground'
+                                                : 'text-foreground/85 hover:bg-surface-hover hover:text-foreground',
+                                        ]"
+                                    >
+                                        <component
+                                            :is="item.icon"
+                                            :class="[
+                                                'size-5 shrink-0',
+                                                isItemActive(item)
+                                                    ? 'text-primary'
+                                                    : 'text-muted-foreground',
+                                            ]"
+                                            aria-hidden="true"
+                                        />
+                                        <span
+                                            class="hidden min-w-0 flex-1 truncate lg:inline"
+                                            >{{ item.title }}</span
+                                        >
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                    :side="isRtl ? 'left' : 'right'"
+                                    class="lg:hidden"
+                                >
+                                    {{ item.title }}
+                                </TooltipContent>
+                            </Tooltip>
+
+                            <!-- Subtle Single Divider -->
+                            <div
+                                class="my-2 border-t border-border/70"
+                                role="separator"
                             />
-                            <span>{{ t('sidebar.adsBullet1') }}</span>
-                        </li>
-                        <li class="flex items-center gap-1.5">
-                            <CheckCircle2
-                                class="size-3.5 shrink-0 text-primary"
+
+                            <!-- Secondary Items: Premium, Invite & Earn, More Menu -->
+                            <Tooltip
+                                v-for="item in secondaryNavItems"
+                                :key="item.id"
+                            >
+                                <TooltipTrigger as-child>
+                                    <Link
+                                        :href="item.href"
+                                        :aria-label="item.title"
+                                        :aria-current="
+                                            isItemActive(item)
+                                                ? 'page'
+                                                : undefined
+                                        "
+                                        :class="[
+                                            'flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:justify-center md:px-0 lg:justify-start lg:px-3',
+                                            isItemActive(item)
+                                                ? 'bg-primary-soft font-semibold text-accent-foreground'
+                                                : 'text-foreground/85 hover:bg-surface-hover hover:text-foreground',
+                                        ]"
+                                    >
+                                        <component
+                                            :is="item.icon"
+                                            :class="[
+                                                'size-5 shrink-0',
+                                                isItemActive(item)
+                                                    ? 'text-primary'
+                                                    : 'text-muted-foreground',
+                                            ]"
+                                            aria-hidden="true"
+                                        />
+                                        <span
+                                            class="hidden min-w-0 flex-1 truncate lg:inline"
+                                            >{{ item.title }}</span
+                                        >
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                    :side="isRtl ? 'left' : 'right'"
+                                    class="lg:hidden"
+                                >
+                                    {{ item.title }}
+                                </TooltipContent>
+                            </Tooltip>
+
+                            <SidebarMoreMenu :active="isMoreMenuRouteActive" />
+                        </nav>
+
+                        <!-- Guest Auth Actions (Clean, Focused) -->
+                        <template v-if="!user">
+                            <div
+                                class="my-2.5 border-t border-border/70"
+                                role="separator"
                             />
-                            <span>{{ t('sidebar.adsBullet2') }}</span>
-                        </li>
-                        <li class="flex items-center gap-1.5">
-                            <CheckCircle2
-                                class="size-3.5 shrink-0 text-primary"
-                            />
-                            <span>{{ t('sidebar.adsBullet3') }}</span>
-                        </li>
-                    </ul>
+                            <div class="hidden space-y-2 lg:block">
+                                <Button
+                                    variant="outline"
+                                    class="h-10 w-full justify-center gap-2 rounded-xl text-sm font-medium"
+                                    as-child
+                                >
+                                    <Link :href="login()">
+                                        <LogIn
+                                            class="size-4 shrink-0"
+                                            aria-hidden="true"
+                                        />
+                                        <span>{{ t('nav.login') }}</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    class="h-10 w-full justify-center gap-2 rounded-xl text-sm font-semibold"
+                                    as-child
+                                >
+                                    <Link :href="register()">
+                                        <UserPlus
+                                            class="size-4 shrink-0"
+                                            aria-hidden="true"
+                                        />
+                                        <span>{{ t('nav.register') }}</span>
+                                    </Link>
+                                </Button>
+                            </div>
+                            <div class="flex flex-col gap-1.5 lg:hidden">
+                                <Tooltip>
+                                    <TooltipTrigger as-child>
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            class="size-11 w-full rounded-xl"
+                                            :aria-label="t('nav.login')"
+                                            as-child
+                                        >
+                                            <Link :href="login()">
+                                                <LogIn
+                                                    class="size-5"
+                                                    aria-hidden="true"
+                                                />
+                                            </Link>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        :side="isRtl ? 'left' : 'right'"
+                                    >
+                                        {{ t('nav.login') }}
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger as-child>
+                                        <Button
+                                            size="icon"
+                                            class="size-11 w-full rounded-xl"
+                                            :aria-label="t('nav.register')"
+                                            as-child
+                                        >
+                                            <Link :href="register()">
+                                                <UserPlus
+                                                    class="size-5"
+                                                    aria-hidden="true"
+                                                />
+                                            </Link>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        :side="isRtl ? 'left' : 'right'"
+                                    >
+                                        {{ t('nav.register') }}
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
+                        </template>
+                    </TooltipProvider>
                 </div>
 
-                <div
-                    v-else-if="
-                        !isWideServiceLayout && (!isCommunityPage || !user)
-                    "
-                    class="rounded-xl border border-border bg-card p-4 text-center xl:hidden"
-                >
-                    <div
-                        class="mx-auto flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary"
-                    >
-                        <Megaphone class="size-5" aria-hidden="true" />
-                    </div>
-                    <h2 class="mt-2.5 text-xs font-bold text-foreground">
-                        {{ t('sidebar.promoteCardTitle') }}
-                    </h2>
-                    <p
-                        class="mt-1.5 text-[11px] leading-relaxed text-muted-foreground"
-                    >
-                        {{
-                            user
-                                ? t('sidebar.promoteCardDesc')
-                                : t('sidebar.guestSummary')
-                        }}
-                    </p>
-                    <Button size="sm" class="mt-3.5 w-full rounded-lg" as-child>
-                        <Link :href="user ? adsIndex() : register()">
-                            <span>{{
-                                user
-                                    ? t('sidebar.promoteCardCta')
-                                    : t('sidebar.createAccount')
-                            }}</span>
-                            <ArrowRight class="size-3.5" />
-                        </Link>
-                    </Button>
+                <!-- Compact Footer below Left Sidebar on wide Service Layout pages (Desktop only) -->
+                <div v-if="isWideServiceLayout" class="hidden lg:block">
+                    <MiniFooter />
                 </div>
-
-                <div
-                    v-if="user && !user.two_factor_enabled"
-                    class="rounded-xl border border-warning/30 bg-card p-3.5"
-                >
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        class="w-full rounded-lg text-[11px]"
-                        as-child
-                    >
-                        <Link :href="editSecurity()">
-                            <ShieldCheck class="size-3.5 text-warning" />
-                            <span>{{ t('sidebar.enable2fa') }}</span>
-                        </Link>
-                    </Button>
-                </div>
-
-                <!-- Compact Footer below Left Sidebar on wide Service Layout pages -->
-                <MiniFooter v-if="isWideServiceLayout" />
             </aside>
 
             <!-- Main Content Column (760px on 3-column Feed / 1060px on 2-column Service mode) -->
@@ -887,18 +1180,23 @@ function isItemActive(item: NavItem): boolean {
                     isWideServiceLayout ? 'max-w-[1060px]' : 'max-w-[760px]',
                 ]"
             >
+                <AdvertisingCenterNav v-if="isAdvertisingCenterPage" />
                 <slot />
             </main>
 
-            <!-- Right Sidebar (~320px) + MiniFooter (hidden on Service Layout pages) -->
+            <!-- Right Sidebar (~320px): Real Social Signals Only, Zero Empty Card Stacks -->
             <aside
                 v-if="!isWideServiceLayout"
                 :aria-label="t('accessibility.supplementaryInfo')"
                 class="sticky top-22 hidden w-[320px] shrink-0 space-y-4 xl:block"
+                data-test="right-sidebar"
             >
-                <!-- Community Context Right Sidebar (Mockup 2) -->
+                <!-- Community Context Right Sidebar -->
                 <template v-if="isCommunityPage && activeCommunity">
-                    <div class="rounded-xl border border-border bg-card p-5">
+                    <div
+                        v-if="activeCommunity.rules.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
                         <h2
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
                         >
@@ -909,7 +1207,6 @@ function isItemActive(item: NavItem): boolean {
                             <span>{{ t('communities.rulesTitle') }}</span>
                         </h2>
                         <ol
-                            v-if="activeCommunity.rules.length > 0"
                             class="mt-3 space-y-2.5 text-xs text-muted-foreground"
                         >
                             <li
@@ -927,9 +1224,6 @@ function isItemActive(item: NavItem): boolean {
                                 <span class="leading-relaxed">{{ rule }}</span>
                             </li>
                         </ol>
-                        <p v-else class="mt-2 text-xs text-muted-foreground">
-                            {{ t('communities.noRules') }}
-                        </p>
                         <Link
                             :href="
                                 CommunityController.show.url(
@@ -943,7 +1237,10 @@ function isItemActive(item: NavItem): boolean {
                         </Link>
                     </div>
 
-                    <div class="rounded-xl border border-border bg-card p-5">
+                    <div
+                        v-if="communityLeaderboard.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
                         <h2
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
                         >
@@ -953,10 +1250,7 @@ function isItemActive(item: NavItem): boolean {
                             />
                             <span>{{ t('communities.leaderboardTitle') }}</span>
                         </h2>
-                        <div
-                            v-if="communityLeaderboard.length > 0"
-                            class="mt-3 space-y-2.5"
-                        >
+                        <div class="mt-3 space-y-2.5">
                             <Link
                                 v-for="(
                                     member, idx
@@ -1016,7 +1310,7 @@ function isItemActive(item: NavItem): boolean {
                                     </div>
                                 </div>
                                 <span
-                                    class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-accent-foreground"
+                                    class="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-accent-foreground tabular-nums"
                                 >
                                     {{
                                         t('communities.points', {
@@ -1026,9 +1320,6 @@ function isItemActive(item: NavItem): boolean {
                                 </span>
                             </Link>
                         </div>
-                        <p v-else class="mt-2 text-xs text-muted-foreground">
-                            {{ t('communities.noLeaderboard') }}
-                        </p>
                         <Link
                             :href="
                                 CommunityController.show.url(
@@ -1045,7 +1336,8 @@ function isItemActive(item: NavItem): boolean {
                     </div>
 
                     <div
-                        class="rounded-xl border border-border bg-card p-5 shadow-xs"
+                        v-if="communityHashtags.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
                     >
                         <h2
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
@@ -1058,10 +1350,7 @@ function isItemActive(item: NavItem): boolean {
                                 t('communities.trendingHashtagsTitle')
                             }}</span>
                         </h2>
-                        <div
-                            v-if="communityHashtags.length > 0"
-                            class="mt-3 space-y-2"
-                        >
+                        <div class="mt-3 space-y-2">
                             <Link
                                 v-for="tag in communityHashtags"
                                 :key="tag.id"
@@ -1075,7 +1364,9 @@ function isItemActive(item: NavItem): boolean {
                                 <span class="font-semibold text-primary">
                                     #{{ tag.name }}
                                 </span>
-                                <span class="text-muted-foreground">
+                                <span
+                                    class="text-muted-foreground tabular-nums"
+                                >
                                     {{
                                         t('sidebar.postsCountShort', {
                                             count: tag.posts_count,
@@ -1084,9 +1375,6 @@ function isItemActive(item: NavItem): boolean {
                                 </span>
                             </Link>
                         </div>
-                        <p v-else class="mt-2 text-xs text-muted-foreground">
-                            {{ t('communities.noHashtags') }}
-                        </p>
                         <Link
                             :href="
                                 CommunityController.show.url(
@@ -1099,40 +1387,15 @@ function isItemActive(item: NavItem): boolean {
                             <span>{{ t('sidebar.seeMoreHashtags') }} →</span>
                         </Link>
                     </div>
-
-                    <div
-                        class="rounded-xl border border-border bg-card p-5 text-center"
-                    >
-                        <h2 class="text-sm font-bold text-foreground">
-                            {{ t('sidebar.hotTopicsTitle') }}
-                        </h2>
-                        <p
-                            class="mt-1.5 text-xs leading-relaxed text-muted-foreground"
-                        >
-                            {{ t('sidebar.hotTopicsDesc') }}
-                        </p>
-                        <Button
-                            size="sm"
-                            class="mt-4 w-full rounded-lg"
-                            as-child
-                        >
-                            <Link
-                                :href="
-                                    CommunityController.show.url(
-                                        activeCommunity.slug,
-                                        { query: { tab: 'topics' } },
-                                    )
-                                "
-                            >
-                                {{ t('sidebar.hotTopicsCta') }} →
-                            </Link>
-                        </Button>
-                    </div>
                 </template>
 
-                <!-- Global Feed Right Sidebar (Mockup 1 & 4) -->
+                <!-- Global Feed Right Sidebar: Prioritize Genuine Data, Hide Empty Cards -->
                 <template v-else>
-                    <div class="rounded-xl border border-border bg-card p-5">
+                    <!-- Trending Hashtags (Only rendered when real hashtags exist) -->
+                    <div
+                        v-if="sidebarHighlights.trendingHashtags.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
                         <h2
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
                         >
@@ -1142,10 +1405,7 @@ function isItemActive(item: NavItem): boolean {
                             />
                             <span>{{ t('sidebar.trendingHashtags') }}</span>
                         </h2>
-                        <div
-                            v-if="sidebarHighlights.trendingHashtags.length > 0"
-                            class="mt-3 space-y-2.5"
-                        >
+                        <div class="mt-3 space-y-2.5">
                             <Link
                                 v-for="tag in sidebarHighlights.trendingHashtags"
                                 :key="tag.id"
@@ -1159,7 +1419,9 @@ function isItemActive(item: NavItem): boolean {
                                 <span class="font-semibold text-primary">
                                     #{{ tag.name }}
                                 </span>
-                                <span class="text-muted-foreground">
+                                <span
+                                    class="text-muted-foreground tabular-nums"
+                                >
                                     {{
                                         t('sidebar.postsCountShort', {
                                             count: tag.posts_count,
@@ -1174,15 +1436,13 @@ function isItemActive(item: NavItem): boolean {
                                 <span>{{ t('sidebar.seeMore') }} →</span>
                             </Link>
                         </div>
-                        <p
-                            v-else
-                            class="mt-2 text-xs leading-relaxed text-muted-foreground"
-                        >
-                            {{ t('sidebar.topicsEmpty') }}
-                        </p>
                     </div>
 
-                    <div class="rounded-xl border border-border bg-card p-5">
+                    <!-- Suggested Communities (Only rendered when real communities exist) -->
+                    <div
+                        v-if="sidebarHighlights.featuredCommunities.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
                         <h2
                             class="flex items-center gap-2 text-sm font-semibold text-foreground"
                         >
@@ -1192,12 +1452,7 @@ function isItemActive(item: NavItem): boolean {
                             />
                             <span>{{ t('sidebar.featuredCommunities') }}</span>
                         </h2>
-                        <div
-                            v-if="
-                                sidebarHighlights.featuredCommunities.length > 0
-                            "
-                            class="mt-3 space-y-3"
-                        >
+                        <div class="mt-3 space-y-3">
                             <div
                                 v-for="community in sidebarHighlights.featuredCommunities"
                                 :key="community.id"
@@ -1274,82 +1529,130 @@ function isItemActive(item: NavItem): boolean {
                                 >
                             </Link>
                         </div>
-                        <template v-else>
-                            <p
-                                class="mt-2 text-xs leading-relaxed text-muted-foreground"
+                    </div>
+
+                    <!-- Notable Accounts (Real verified active accounts only) -->
+                    <div
+                        v-if="notableAccounts.length > 0"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
+                        <h2
+                            class="flex items-center gap-2 text-sm font-semibold text-foreground"
+                        >
+                            <Sparkles
+                                class="size-4 text-primary"
+                                aria-hidden="true"
+                            />
+                            <span>{{ t('sidebar.notableAccounts') }}</span>
+                        </h2>
+                        <div class="mt-3 space-y-2.5">
+                            <Link
+                                v-for="account in notableAccounts"
+                                :key="account.id"
+                                :href="
+                                    ProfileViewController.show.url(
+                                        account.username,
+                                    )
+                                "
+                                class="-mx-1.5 flex items-center gap-2.5 rounded-xl p-1.5 transition-colors hover:bg-surface-hover"
                             >
-                                {{ t('sidebar.communitiesDescription') }}
-                            </p>
+                                <Avatar class="size-9 shrink-0 rounded-full">
+                                    <AvatarImage
+                                        v-if="account.avatar"
+                                        :src="account.avatar"
+                                        :alt="account.name"
+                                    />
+                                    <AvatarFallback
+                                        class="bg-primary-soft text-xs font-semibold text-accent-foreground"
+                                    >
+                                        {{ getInitials(account.name) }}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div class="min-w-0 flex-1">
+                                    <p
+                                        class="flex items-center gap-1 truncate text-xs font-semibold text-foreground"
+                                    >
+                                        <span class="truncate">{{
+                                            account.name
+                                        }}</span>
+                                        <BadgeCheck
+                                            v-if="account.is_verified"
+                                            class="size-3.5 shrink-0 text-primary"
+                                            aria-hidden="true"
+                                        />
+                                        <PremiumBadge
+                                            v-if="account.is_premium"
+                                            size="sm"
+                                        />
+                                        <AiBadge
+                                            v-if="account.is_ai_agent"
+                                            size="sm"
+                                        />
+                                    </p>
+                                    <p
+                                        class="truncate text-[11px] text-muted-foreground"
+                                    >
+                                        {{
+                                            account.headline ||
+                                            `@${account.username}`
+                                        }}
+                                    </p>
+                                </div>
+                            </Link>
+                            <Link
+                                :href="SearchController.url()"
+                                class="inline-flex items-center gap-1 pt-1 text-xs font-medium text-primary hover:underline"
+                            >
+                                <span>{{ t('sidebar.seeMore') }} →</span>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <!-- Single Clean Discovery Card ONLY when no real trending/community/account data exists -->
+                    <div
+                        v-if="!hasGlobalRightSidebarData"
+                        class="rounded-2xl border border-border bg-card p-5"
+                    >
+                        <h2
+                            class="flex items-center gap-2 text-sm font-semibold text-foreground"
+                        >
+                            <Compass
+                                class="size-4 text-primary"
+                                aria-hidden="true"
+                            />
+                            <span>{{
+                                t('sidebar.discoverSyncViet', {
+                                    brand: brandName,
+                                })
+                            }}</span>
+                        </h2>
+                        <p
+                            class="mt-2 text-xs leading-relaxed text-muted-foreground"
+                        >
+                            {{ t('sidebar.discoverDescription') }}
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-2">
                             <Button
                                 size="sm"
                                 variant="outline"
-                                class="mt-4 w-full rounded-lg"
+                                class="rounded-lg text-xs"
+                                as-child
+                            >
+                                <Link :href="SearchController.url()">
+                                    {{ t('sidebar.exploreNow') }}
+                                </Link>
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                class="rounded-lg text-xs"
                                 as-child
                             >
                                 <Link :href="communitiesIndex()">
-                                    {{ t('sidebar.seeMoreCommunities') }}
+                                    {{ t('nav.communities') }}
                                 </Link>
                             </Button>
-                        </template>
-                    </div>
-
-                    <!-- Global Right Sidebar Ads CTA Card (Mockup 1 & 4) -->
-                    <div class="rounded-xl border border-border bg-card p-5">
-                        <div class="text-center">
-                            <div
-                                class="mx-auto flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary"
-                            >
-                                <TrendingUp class="size-5" aria-hidden="true" />
-                            </div>
-                            <h2
-                                class="mt-2.5 text-sm font-bold text-foreground"
-                            >
-                                {{ t('sidebar.rightPromoTitle') }}
-                            </h2>
-                            <p
-                                class="mt-1.5 text-xs leading-relaxed text-muted-foreground"
-                            >
-                                {{ t('sidebar.rightPromoDesc') }}
-                            </p>
                         </div>
-                        <ul
-                            class="mt-3.5 space-y-2 text-xs text-muted-foreground"
-                        >
-                            <li class="flex items-center gap-2">
-                                <CheckCircle2
-                                    class="size-4 shrink-0 text-primary"
-                                />
-                                <span>{{
-                                    t('sidebar.rightPromoBullet1')
-                                }}</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <CheckCircle2
-                                    class="size-4 shrink-0 text-primary"
-                                />
-                                <span>{{
-                                    t('sidebar.rightPromoBullet2')
-                                }}</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <CheckCircle2
-                                    class="size-4 shrink-0 text-primary"
-                                />
-                                <span>{{
-                                    t('sidebar.rightPromoBullet3')
-                                }}</span>
-                            </li>
-                        </ul>
-                        <Button
-                            size="sm"
-                            class="mt-4 w-full rounded-lg"
-                            as-child
-                        >
-                            <Link :href="user ? walletIndex() : register()">
-                                <span>{{ t('sidebar.rightPromoCta') }}</span>
-                                <ArrowRight class="size-3.5" />
-                            </Link>
-                        </Button>
                     </div>
                 </template>
 

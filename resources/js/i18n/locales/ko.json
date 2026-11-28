@@ -30,7 +30,19 @@
         "searchPlaceholder": "게시물, 커뮤니티, 사용자 검색...",
         "explore": "탐색",
         "createPostShort": "작성",
-        "referral": "친구 초대"
+        "referral": "친구 초대",
+        "createPost": "게시물 작성",
+        "brandPremium": "{brand} Premium",
+        "more": "더 보기",
+        "advertisingCenter": "광고 센터",
+        "advertisingOverview": "개요",
+        "settingsPrivacy": "설정 및 개인정보",
+        "helpSupport": "도움말 및 지원",
+        "language": "언어",
+        "reportIssue": "문제 신고",
+        "contactSupport": "지원팀 문의",
+        "viewPublicProfile": "공개 프로필",
+        "appearanceLanguage": "테마 및 언어"
     },
     "theme": {
         "light": "라이트",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "도달 범위와 참여도 확대",
         "rightPromoBullet2": "관련 주제 관심 오디언스 타겟팅",
         "rightPromoBullet3": "유연한 VND 예산 관리",
-        "rightPromoCta": "광고 예산 충전"
+        "rightPromoCta": "광고 예산 충전",
+        "notableAccounts": "주목할 만한 계정",
+        "discoverSyncViet": "{brand} 둘러보기",
+        "discoverDescription": "관심사에 맞는 토론, 인기 주제 및 커뮤니티를 탐색해 보세요.",
+        "exploreNow": "지금 탐색하기"
     },
     "auth": {
         "headline": "열려 있고 신뢰할 수 있는 공간에서 전 세계 커뮤니티와 소통하세요.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "이 기기에서 SyncViet을 표시할 방식을 선택하세요.",
             "headingTitle": "화면 테마",
             "pageTitle": "화면 테마 설정",
-            "srHeading": "화면 테마 설정"
+            "srHeading": "화면 테마 설정",
+            "languageHeading": "표시 언어",
+            "languageDescription": "모든 기기에서 사용할 인터페이스 언어를 선택하세요."
         },
         "deleteAccount": {
             "confirmButton": "계정 영구 삭제",

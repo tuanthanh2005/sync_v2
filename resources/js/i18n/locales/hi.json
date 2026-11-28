@@ -30,7 +30,19 @@
         "searchPlaceholder": "पोस्ट, समुदाय, लोग खोजें...",
         "explore": "खोजें",
         "createPostShort": "पोस्ट",
-        "referral": "आमंत्रित करें"
+        "referral": "आमंत्रित करें",
+        "createPost": "पोस्ट बनाएं",
+        "brandPremium": "{brand} Premium",
+        "more": "और देखें",
+        "advertisingCenter": "विज्ञापन केंद्र",
+        "advertisingOverview": "अवलोकन",
+        "settingsPrivacy": "सेटिंग्स और गोपनीयता",
+        "helpSupport": "सहायता और समर्थन",
+        "language": "भाषा",
+        "reportIssue": "समस्या की रिपोर्ट करें",
+        "contactSupport": "सहायता से संपर्क करें",
+        "viewPublicProfile": "सार्वजनिक प्रोफ़ाइल",
+        "appearanceLanguage": "दिखावट और भाषा"
     },
     "theme": {
         "light": "हल्का",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "पहुंच और सहभागिता बढ़ाएं",
         "rightPromoBullet2": "संबंधित विषय के दर्शकों को लक्षित करें",
         "rightPromoBullet3": "लचीला VND बजट नियंत्रण",
-        "rightPromoCta": "विज्ञापन बजट जोड़ें"
+        "rightPromoCta": "विज्ञापन बजट जोड़ें",
+        "notableAccounts": "प्रमुख खाते",
+        "discoverSyncViet": "{brand} खोजें",
+        "discoverDescription": "अपनी रुचियों के अनुरूप चर्चाओं, सक्रिय विषयों और समुदायों का अन्वेषण करें।",
+        "exploreNow": "अभी खोजें"
     },
     "auth": {
         "headline": "एक खुले और विश्वसनीय स्थान पर वैश्विक समुदायों से जुड़ें।",
@@ -2565,7 +2581,9 @@
             "headingDescription": "चुनें कि इस डिवाइस पर SyncViet कैसा दिखाई दे।",
             "headingTitle": "प्रदर्शन थीम",
             "pageTitle": "दिखावट सेटिंग्स",
-            "srHeading": "दिखावट सेटिंग्स"
+            "srHeading": "दिखावट सेटिंग्स",
+            "languageHeading": "प्रदर्शन भाषा",
+            "languageDescription": "सभी डिवाइसों पर अपनी पसंदीदा इंटरफ़ेस भाषा चुनें।"
         },
         "deleteAccount": {
             "confirmButton": "खाता स्थायी रूप से हटाएं",

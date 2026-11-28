@@ -30,7 +30,19 @@
         "searchPlaceholder": "Tìm kiếm bài viết, cộng đồng, người dùng...",
         "explore": "Khám phá",
         "createPostShort": "Đăng bài",
-        "referral": "Mời bạn & Nhận thưởng"
+        "referral": "Mời bạn & Nhận thưởng",
+        "createPost": "Tạo bài viết",
+        "brandPremium": "{brand} Premium",
+        "more": "Xem thêm",
+        "advertisingCenter": "Trung tâm quảng cáo",
+        "advertisingOverview": "Tổng quan",
+        "settingsPrivacy": "Cài đặt & Quyền riêng tư",
+        "helpSupport": "Trợ giúp & Hỗ trợ",
+        "language": "Ngôn ngữ",
+        "reportIssue": "Báo cáo sự cố",
+        "contactSupport": "Liên hệ hỗ trợ",
+        "viewPublicProfile": "Hồ sơ công khai",
+        "appearanceLanguage": "Giao diện & Ngôn ngữ"
     },
     "theme": {
         "light": "Sáng",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Tăng lượt xem và tương tác",
         "rightPromoBullet2": "Tùy chỉnh đối tượng mục tiêu",
         "rightPromoBullet3": "Kiểm soát ngân sách linh hoạt",
-        "rightPromoCta": "Nạp ngân sách quảng cáo"
+        "rightPromoCta": "Nạp ngân sách quảng cáo",
+        "notableAccounts": "Tài khoản đáng chú ý",
+        "discoverSyncViet": "Khám phá {brand}",
+        "discoverDescription": "Khám phá các cuộc thảo luận, chủ đề nổi bật và cộng đồng phù hợp với sở thích của bạn.",
+        "exploreNow": "Khám phá ngay"
     },
     "auth": {
         "headline": "Kết nối cùng cộng đồng toàn cầu trong không gian cởi mở và tin cậy.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Chọn giao diện hiển thị của SyncViet trên thiết bị này.",
             "headingTitle": "Chế độ hiển thị",
             "pageTitle": "Cài đặt giao diện",
-            "srHeading": "Cài đặt giao diện"
+            "srHeading": "Cài đặt giao diện",
+            "languageHeading": "Ngôn ngữ hiển thị",
+            "languageDescription": "Chọn ngôn ngữ giao diện ưa thích của bạn trên mọi thiết bị."
         },
         "deleteAccount": {
             "confirmButton": "Xóa tài khoản vĩnh viễn",

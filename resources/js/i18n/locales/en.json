@@ -30,7 +30,19 @@
         "searchPlaceholder": "Search posts, communities, people...",
         "explore": "Explore",
         "createPostShort": "Post",
-        "referral": "Invite & Earn"
+        "referral": "Invite & Earn",
+        "createPost": "Create Post",
+        "brandPremium": "{brand} Premium",
+        "more": "More",
+        "advertisingCenter": "Advertising Center",
+        "advertisingOverview": "Overview",
+        "settingsPrivacy": "Settings & Privacy",
+        "helpSupport": "Help & Support",
+        "language": "Language",
+        "reportIssue": "Report a Problem",
+        "contactSupport": "Contact Support",
+        "viewPublicProfile": "Public Profile",
+        "appearanceLanguage": "Appearance & Language"
     },
     "theme": {
         "light": "Light",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Grow reach and engagement",
         "rightPromoBullet2": "Target relevant topic audiences",
         "rightPromoBullet3": "Flexible VND budget controls",
-        "rightPromoCta": "Add ad budget"
+        "rightPromoCta": "Add ad budget",
+        "notableAccounts": "Notable Accounts",
+        "discoverSyncViet": "Discover {brand}",
+        "discoverDescription": "Explore discussions, active topics, and communities tailored to your interests.",
+        "exploreNow": "Explore now"
     },
     "auth": {
         "headline": "Connect with global communities in an open and trusted space.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Choose how SyncViet looks on this device.",
             "headingTitle": "Display Theme",
             "pageTitle": "Appearance Settings",
-            "srHeading": "Appearance Settings"
+            "srHeading": "Appearance Settings",
+            "languageHeading": "Display Language",
+            "languageDescription": "Choose your preferred interface language across all devices."
         },
         "deleteAccount": {
             "confirmButton": "Permanently delete account",

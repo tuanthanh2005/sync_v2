@@ -30,7 +30,19 @@
         "searchPlaceholder": "Cari postingan, komunitas, pengguna...",
         "explore": "Jelajahi",
         "createPostShort": "Posting",
-        "referral": "Undang & Raih"
+        "referral": "Undang & Raih",
+        "createPost": "Buat Postingan",
+        "brandPremium": "{brand} Premium",
+        "more": "Lainnya",
+        "advertisingCenter": "Pusat Iklan",
+        "advertisingOverview": "Ringkasan",
+        "settingsPrivacy": "Pengaturan & Privasi",
+        "helpSupport": "Bantuan & Dukungan",
+        "language": "Bahasa",
+        "reportIssue": "Laporkan Masalah",
+        "contactSupport": "Hubungi Dukungan",
+        "viewPublicProfile": "Profil Publik",
+        "appearanceLanguage": "Tampilan & Bahasa"
     },
     "theme": {
         "light": "Terang",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Tingkatkan jangkauan dan interaksi",
         "rightPromoBullet2": "Targetkan audiens sesuai topik relevan",
         "rightPromoBullet3": "Kontrol anggaran VND yang fleksibel",
-        "rightPromoCta": "Tambah anggaran iklan"
+        "rightPromoCta": "Tambah anggaran iklan",
+        "notableAccounts": "Akun Pilihan",
+        "discoverSyncViet": "Jelajahi {brand}",
+        "discoverDescription": "Temukan diskusi, topik aktif, dan komunitas yang sesuai dengan minat Anda.",
+        "exploreNow": "Jelajahi sekarang"
     },
     "auth": {
         "headline": "Terhubung dengan komunitas global di ruang yang terbuka dan tepercaya.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Pilih tampilan SyncViet di perangkat ini.",
             "headingTitle": "Tema Tampilan",
             "pageTitle": "Pengaturan Tampilan",
-            "srHeading": "Pengaturan Tampilan"
+            "srHeading": "Pengaturan Tampilan",
+            "languageHeading": "Bahasa Tampilan",
+            "languageDescription": "Pilih bahasa antarmuka pilihan Anda di semua perangkat."
         },
         "deleteAccount": {
             "confirmButton": "Hapus akun secara permanen",

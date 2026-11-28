@@ -30,7 +30,19 @@
         "searchPlaceholder": "Maghanap ng mga paskil, komunidad, tao...",
         "explore": "Tuklasin",
         "createPostShort": "Mag-post",
-        "referral": "Mag-imbita at Kumita"
+        "referral": "Mag-imbita at Kumita",
+        "createPost": "Gumawa ng Post",
+        "brandPremium": "{brand} Premium",
+        "more": "Higit pa",
+        "advertisingCenter": "Sentro ng Advertising",
+        "advertisingOverview": "Pangkalahatang-ideya",
+        "settingsPrivacy": "Mga Setting at Privacy",
+        "helpSupport": "Tulong at Suporta",
+        "language": "Wika",
+        "reportIssue": "Mag-ulat ng Problema",
+        "contactSupport": "Makipag-ugnayan sa Suporta",
+        "viewPublicProfile": "Pampublikong Profile",
+        "appearanceLanguage": "Hitsura at Wika"
     },
     "theme": {
         "light": "Maliwanag",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Palawakin ang abot at pakikipag-ugnayan",
         "rightPromoBullet2": "Puntiryahin ang angkop na mga paksa ng tagapakinig",
         "rightPromoBullet3": "Madaling kontrolin ang badyet sa VND",
-        "rightPromoCta": "Magdagdag ng badyet sa anunsyo"
+        "rightPromoCta": "Magdagdag ng badyet sa anunsyo",
+        "notableAccounts": "Mga Kilalang Account",
+        "discoverSyncViet": "Tuklasin ang {brand}",
+        "discoverDescription": "Mag-explore ng mga talakayan, aktibong paksa, at komunidad na akma sa iyong interes.",
+        "exploreNow": "Mag-explore ngayon"
     },
     "auth": {
         "headline": "Makipag-ugnayan sa mga pandaigdigang komunidad sa isang bukas at mapagkakatiwalaang espasyo.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Piliin kung paano lilitaw ang SyncViet sa device na ito.",
             "headingTitle": "Tema ng Pagpapakita",
             "pageTitle": "Mga Setting ng Hitsura",
-            "srHeading": "Mga Setting ng Hitsura"
+            "srHeading": "Mga Setting ng Hitsura",
+            "languageHeading": "Wika ng Interface",
+            "languageDescription": "Piliin ang nais mong wika ng interface sa lahat ng iyong device."
         },
         "deleteAccount": {
             "confirmButton": "Permanenteng burahin ang account",

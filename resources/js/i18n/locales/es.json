@@ -30,7 +30,19 @@
         "searchPlaceholder": "Buscar publicaciones, comunidades, personas...",
         "explore": "Explorar",
         "createPostShort": "Publicar",
-        "referral": "Invitar y Ganar"
+        "referral": "Invitar y Ganar",
+        "createPost": "Crear publicación",
+        "brandPremium": "{brand} Premium",
+        "more": "Más",
+        "advertisingCenter": "Centro de publicidad",
+        "advertisingOverview": "Resumen",
+        "settingsPrivacy": "Configuración y privacidad",
+        "helpSupport": "Ayuda y soporte",
+        "language": "Idioma",
+        "reportIssue": "Informar de un problema",
+        "contactSupport": "Contactar con soporte",
+        "viewPublicProfile": "Perfil público",
+        "appearanceLanguage": "Apariencia e idioma"
     },
     "theme": {
         "light": "Claro",
@@ -308,7 +320,11 @@
         "rightPromoBullet1": "Aumenta el alcance y la interacción",
         "rightPromoBullet2": "Segmenta audiencias por temas relevantes",
         "rightPromoBullet3": "Control flexible de presupuesto en VND",
-        "rightPromoCta": "Añadir presupuesto publicitario"
+        "rightPromoCta": "Añadir presupuesto publicitario",
+        "notableAccounts": "Cuentas destacadas",
+        "discoverSyncViet": "Descubre {brand}",
+        "discoverDescription": "Explora debates, temas activos y comunidades adaptadas a tus intereses.",
+        "exploreNow": "Explorar ahora"
     },
     "auth": {
         "headline": "Conéctate con comunidades globales en un espacio abierto y confiable.",
@@ -2565,7 +2581,9 @@
             "headingDescription": "Elige cómo se ve SyncViet en este dispositivo.",
             "headingTitle": "Tema de visualización",
             "pageTitle": "Configuración de apariencia",
-            "srHeading": "Configuración de apariencia"
+            "srHeading": "Configuración de apariencia",
+            "languageHeading": "Idioma de visualización",
+            "languageDescription": "Elige tu idioma de interfaz preferido en todos los dispositivos."
         },
         "deleteAccount": {
             "confirmButton": "Eliminar cuenta permanentemente",
