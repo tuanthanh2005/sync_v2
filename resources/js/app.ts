@@ -12,12 +12,33 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { trackGa4PageView } from '@/lib/analytics';
 import { initializeFlashToast } from '@/lib/flashToast';
 
-const appName = import.meta.env.VITE_APP_NAME || 'SysNoxis';
+let appName = import.meta.env.VITE_APP_NAME || 'SysNoxis';
+
+function syncRuntimeBrand(props: Record<string, unknown> | undefined): void {
+    if (!props) {
+        return;
+    }
+
+    const systemSettings = props.systemSettings as
+        | Record<string, unknown>
+        | undefined;
+    const runtimeName =
+        (typeof systemSettings?.siteName === 'string' &&
+            systemSettings.siteName.trim()) ||
+        (typeof props.name === 'string' && props.name.trim()) ||
+        '';
+
+    if (runtimeName) {
+        appName = runtimeName;
+    }
+}
 
 function syncPageLocale(props: Record<string, unknown> | undefined): void {
     if (!props) {
         return;
     }
+
+    syncRuntimeBrand(props);
 
     void syncI18nLocale(
         props.locale as string | undefined,
