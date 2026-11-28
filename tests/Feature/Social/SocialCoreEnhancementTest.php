@@ -252,11 +252,132 @@ test('image validator tolerates host finfo quirks and MIME aliases while rejecti
             }
         };
         expect($videoMismatchService->validateUploadedFile($pngUpload, 'post'))->not->toBeNull();
+
+        foreach (['image/apng', 'image/vnd.mozilla.apng', 'image/x-citrix-png'] as $pngAliasFinfo) {
+            $apngService = new class($pngAliasFinfo) extends SafeImageUploadService
+            {
+                public function __construct(private readonly string $forcedFinfo) {}
+
+                protected function detectFinfoMimeType(string $realPath): ?string
+                {
+                    return $this->forcedFinfo;
+                }
+            };
+            expect($apngService->validateUploadedFile($pngUpload, 'post'))->toBeNull();
+        }
     } finally {
         @unlink((string) $pngPath);
         @unlink((string) $webpAsPngPath);
         @unlink((string) $gifAsPngPath);
         @unlink((string) $polyglotPath);
+    }
+});
+
+test('real PNG, JPG, WebP uploads with transparent alpha, metadata chunks, uppercase extensions, Unicode names, and Premium 8-image quota succeed cleanly while invalid edits preserve existing media', function (): void {
+    Storage::fake('public');
+    config()->set('syncviet.media_disk', 'public');
+
+    $premiumUser = User::factory()->create([
+        'premium_until' => now()->addMonth(),
+        'created_at' => now()->subDays(30),
+    ]);
+
+    $realPng = base_path('public/og-default.png');
+    $realIcon = base_path('public/icons/icon-512.png');
+    expect(file_exists($realPng))->toBeTrue()
+        ->and(file_exists($realIcon))->toBeTrue();
+
+    $alphaPngPath = tempnam(sys_get_temp_dir(), 'svalpha_');
+    $webpPath = tempnam(sys_get_temp_dir(), 'svwbp2_');
+    $jpgPath = tempnam(sys_get_temp_dir(), 'svjpg2_');
+    expect($alphaPngPath)->not->toBeFalse()
+        ->and($webpPath)->not->toBeFalse()
+        ->and($jpgPath)->not->toBeFalse();
+
+    try {
+        $alpha = imagecreatetruecolor(240, 160);
+        imagealphablending($alpha, false);
+        imagesavealpha($alpha, true);
+        $clear = imagecolorallocatealpha($alpha, 0, 0, 0, 127);
+        imagefilledrectangle($alpha, 0, 0, 240, 160, $clear);
+        $accent = imagecolorallocate($alpha, 79, 70, 229);
+        imagefilledrectangle($alpha, 20, 20, 220, 140, $accent);
+        imagepng($alpha, (string) $alphaPngPath);
+        imagejpeg($alpha, (string) $jpgPath, 88);
+        if (function_exists('imagewebp')) {
+            imagewebp($alpha, (string) $webpPath, 85);
+        } else {
+            imagepng($alpha, (string) $webpPath);
+        }
+        imagedestroy($alpha);
+
+        // Create post using 6 images (tests Premium Trust Tier > 4 default cap + Unicode/space/uppercase names + empty client MIME)
+        $uploads = [
+            new UploadedFile($realPng, 'kết nối ảnh.PNG', '', null, true),
+            new UploadedFile($realIcon, '测试图片 01.png', 'application/octet-stream', null, true),
+            new UploadedFile((string) $alphaPngPath, 'transparent banner.png', 'image/png', null, true),
+            new UploadedFile((string) $jpgPath, 'CAMERA SHOT.JPEG', 'image/pjpeg', null, true),
+            new UploadedFile((string) $webpPath, 'ket-noi.png', 'image/webp', null, true),
+            new UploadedFile((string) $webpPath, 'banner.WEBP', '', null, true),
+        ];
+
+        $this->actingAs($premiumUser)
+            ->post(route('posts.store'), [
+                'title' => 'Multi-format real image upload verification',
+                'content' => 'Testing real PNG, JPG, JPEG, WebP and Unicode filenames #SysNoxis',
+                'category' => PostCategory::Technology->value,
+                'visibility' => PostVisibility::Public->value,
+                'images' => $uploads,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $post = Post::query()->with('media')->where('user_id', $premiumUser->id)->latest('id')->firstOrFail();
+        expect($post->media)->toHaveCount(6);
+        foreach ($post->media as $mediaItem) {
+            Storage::disk('public')->assertExists($mediaItem->path);
+        }
+
+        // Editing content without re-uploading images preserves all 6 existing images.
+        $existingPayload = $post->media->map(static fn ($m): array => [
+            'id' => $m->id,
+            'alt_text' => 'Kept image #'.$m->id,
+        ])->values()->all();
+
+        $this->actingAs($premiumUser)
+            ->post(route('posts.update', $post), [
+                '_method' => 'patch',
+                'content' => 'Updated text while preserving all 6 existing images.',
+                'category' => PostCategory::Technology->value,
+                'visibility' => PostVisibility::Public->value,
+                'media_synced' => '1',
+                'existing_media' => $existingPayload,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasNoErrors();
+
+        $post->refresh()->load('media');
+        expect($post->media)->toHaveCount(6);
+
+        // Failed validation with disguised file during Edit preserves existing media cleanly.
+        $badDisguised = UploadedFile::fake()->createWithContent('bad-file.png', '<'.'?php echo "spoof"; ?'.'>');
+        $this->actingAs($premiumUser)
+            ->from(route('posts.show', $post))
+            ->post(route('posts.update', $post), [
+                '_method' => 'patch',
+                'content' => 'Should fail without touching existing media.',
+                'media_synced' => '1',
+                'existing_media' => array_slice($existingPayload, 0, 2),
+                'images' => [$badDisguised],
+            ])
+            ->assertSessionHasErrors('images.0');
+
+        $post->refresh()->load('media');
+        expect($post->media)->toHaveCount(6);
+    } finally {
+        @unlink((string) $alphaPngPath);
+        @unlink((string) $webpPath);
+        @unlink((string) $jpgPath);
     }
 });
 

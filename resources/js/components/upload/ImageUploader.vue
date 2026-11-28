@@ -15,6 +15,7 @@ import {
     IMAGE_ACCEPT_ATTR,
     MAX_IMAGE_BYTES,
     MAX_POST_REQUEST_BYTES,
+    inspectImageFileContent,
     resolveMaxBytes,
     validateImageBatch,
     validateImageFile,
@@ -80,6 +81,8 @@ const replaceIndex = ref<number | null>(null);
 const isDragging = ref(false);
 const localError = ref<string | null>(null);
 const previewUrls = ref<string[]>([]);
+let isUnmounted = false;
+let validationNonce = 0;
 
 const effectiveMaxBytes = computed<number>(() => {
     if (props.maxBytes !== undefined) {
@@ -161,12 +164,25 @@ function triggerReplace(index: number): void {
     replaceInputRef.value?.click();
 }
 
-function handleIncomingFiles(rawList: FileList | File[] | null): void {
+function reportError(message: string): void {
+    localError.value = message;
+    appToast.error(message);
+    emit('error', message);
+}
+
+function clearError(): void {
+    localError.value = null;
+}
+
+async function handleIncomingFiles(
+    rawList: FileList | File[] | null,
+): Promise<void> {
     if (!rawList || rawList.length === 0) {
         return;
     }
 
     const incoming = Array.from(rawList);
+    const currentNonce = ++validationNonce;
     localError.value = null;
 
     if (!props.multiple) {
@@ -176,9 +192,17 @@ function handleIncomingFiles(rawList: FileList | File[] | null): void {
         });
 
         if (!check.valid && check.error) {
-            localError.value = check.error;
-            appToast.error(check.error);
-            emit('error', check.error);
+            reportError(check.error);
+            return;
+        }
+
+        const contentCheck = await inspectImageFileContent(candidate);
+        if (isUnmounted || currentNonce !== validationNonce) {
+            return;
+        }
+
+        if (!contentCheck.valid && contentCheck.error) {
+            reportError(contentCheck.error);
             return;
         }
 
@@ -196,17 +220,33 @@ function handleIncomingFiles(rawList: FileList | File[] | null): void {
         },
     );
 
-    if (errors.length > 0) {
-        localError.value = errors[0];
-        appToast.error(errors[0]);
-        emit('error', errors[0]);
+    const verifiedFiles: File[] = [];
+    const combinedErrors = [...errors];
+
+    for (const candidate of accepted) {
+        const contentCheck = await inspectImageFileContent(candidate);
+        if (isUnmounted || currentNonce !== validationNonce) {
+            return;
+        }
+
+        if (!contentCheck.valid && contentCheck.error) {
+            combinedErrors.push(contentCheck.error);
+            continue;
+        }
+
+        verifiedFiles.push(candidate);
     }
 
-    if (accepted.length > 0) {
-        const nextFiles = [...selectedFiles.value, ...accepted];
+    const uniqueErrors = Array.from(new Set(combinedErrors));
+    if (uniqueErrors.length > 0) {
+        reportError(uniqueErrors[0]);
+    }
+
+    if (verifiedFiles.length > 0) {
+        const nextFiles = [...selectedFiles.value, ...verifiedFiles];
         const nextAlts = [
             ...props.alts.slice(0, selectedFiles.value.length),
-            ...accepted.map(() => ''),
+            ...verifiedFiles.map(() => ''),
         ];
         emit('update:modelValue', nextFiles);
         if (props.allowAltText) {
@@ -217,30 +257,68 @@ function handleIncomingFiles(rawList: FileList | File[] | null): void {
 
 function onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    handleIncomingFiles(input.files);
+    void handleIncomingFiles(input.files);
     input.value = '';
 }
 
-function onReplaceChange(event: Event): void {
+async function onReplaceChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = '';
 
-    if (!file || replaceIndex.value === null) {
-        replaceIndex.value = null;
+    const targetIndex = replaceIndex.value;
+    replaceIndex.value = null;
+
+    if (!file || targetIndex === null) {
         return;
     }
 
+    if (
+        props.multiple &&
+        (targetIndex < 0 || targetIndex >= selectedFiles.value.length)
+    ) {
+        return;
+    }
+
+    const currentNonce = ++validationNonce;
     localError.value = null;
+
     const check = validateImageFile(file, {
         maxBytes: effectiveMaxBytes.value,
     });
 
     if (!check.valid && check.error) {
-        localError.value = check.error;
-        appToast.error(check.error);
-        emit('error', check.error);
-        replaceIndex.value = null;
+        reportError(check.error);
+        return;
+    }
+
+    if (props.multiple) {
+        const otherFilesBytes = selectedFiles.value.reduce(
+            (sum, currentFile, idx) =>
+                idx === targetIndex ? sum : sum + currentFile.size,
+            0,
+        );
+        if (otherFilesBytes + file.size >= effectiveMaxRequestBytes.value) {
+            reportError(
+                String(
+                    t('upload.errors.totalSizeExceeded', {
+                        max: Math.round(
+                            effectiveMaxRequestBytes.value / 1_000_000,
+                        ),
+                    }),
+                ),
+            );
+            return;
+        }
+    }
+
+    const contentCheck = await inspectImageFileContent(file);
+    if (isUnmounted || currentNonce !== validationNonce) {
+        return;
+    }
+
+    if (!contentCheck.valid && contentCheck.error) {
+        reportError(contentCheck.error);
         return;
     }
 
@@ -248,11 +326,9 @@ function onReplaceChange(event: Event): void {
         emit('update:modelValue', file);
     } else {
         const next = [...selectedFiles.value];
-        next[replaceIndex.value] = file;
+        next[targetIndex] = file;
         emit('update:modelValue', next);
     }
-
-    replaceIndex.value = null;
 }
 
 function removeAt(index: number): void {
@@ -325,7 +401,7 @@ function onDrop(event: DragEvent): void {
         return;
     }
 
-    handleIncomingFiles(event.dataTransfer?.files ?? null);
+    void handleIncomingFiles(event.dataTransfer?.files ?? null);
 }
 
 function onZoneKeydown(event: KeyboardEvent): void {
@@ -336,12 +412,13 @@ function onZoneKeydown(event: KeyboardEvent): void {
 }
 
 onBeforeUnmount(() => {
+    isUnmounted = true;
     for (const url of previewUrls.value) {
         URL.revokeObjectURL(url);
     }
 });
 
-defineExpose({ openPicker });
+defineExpose({ openPicker, clearError });
 </script>
 
 <template>

@@ -14,13 +14,37 @@ export const ALLOWED_IMAGE_MIMES = [
 const ALLOWED_IMAGE_MIME_ALIASES = new Set<string>([
     ...ALLOWED_IMAGE_MIMES,
     'image/jpg',
+    'image/jpe',
+    'image/pjpe',
     'image/pjpeg',
+    'image/jfif',
+    'image/x-citrix-jpeg',
     'image/x-png',
+    'image/apng',
+    'image/vnd.mozilla.apng',
+    'image/x-citrix-png',
     'image/x-webp',
 ]);
-const GENERIC_BINARY_MIMES = new Set<string>([
-    'application/octet-stream',
-    'binary/octet-stream',
+const DISALLOWED_CONCRETE_MIMES = new Set<string>([
+    'image/gif',
+    'image/svg+xml',
+    'image/bmp',
+    'image/x-ms-bmp',
+    'image/tiff',
+    'image/x-icon',
+    'image/vnd.microsoft.icon',
+    'image/avif',
+    'image/heic',
+    'image/heif',
+    'application/pdf',
+    'application/zip',
+    'application/x-zip-compressed',
+    'application/x-rar-compressed',
+    'application/x-7z-compressed',
+    'application/x-gzip',
+    'application/x-tar',
+    'application/x-msdownload',
+    'application/x-executable',
 ]);
 export const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'] as const;
 export const IMAGE_ACCEPT_ATTR =
@@ -69,11 +93,44 @@ export function resolveMaxBytes(configuredBytes?: number): number {
     return MAX_IMAGE_BYTES;
 }
 
+export function isConcreteDisallowedMime(mime: string): boolean {
+    if (!mime || ALLOWED_IMAGE_MIME_ALIASES.has(mime)) {
+        return false;
+    }
+
+    if (
+        DISALLOWED_CONCRETE_MIMES.has(mime) ||
+        mime.startsWith('image/') ||
+        mime.startsWith('video/') ||
+        mime.startsWith('audio/') ||
+        mime.startsWith('text/')
+    ) {
+        return true;
+    }
+
+    return (
+        mime.includes('php') ||
+        mime.includes('html') ||
+        mime.includes('xml') ||
+        mime.includes('javascript') ||
+        mime.includes('ecmascript') ||
+        mime.includes('executable')
+    );
+}
+
 export function validateImageFile(
     file: File,
     options: ImageValidationOptions = {},
 ): ImageValidationResult {
     const t = i18n.global.t;
+    if (!(file instanceof Blob)) {
+        return {
+            valid: false,
+            code: 'empty',
+            error: String(t('upload.errors.failed')),
+        };
+    }
+
     const maxBytes = resolveMaxBytes(options.maxBytes);
     const maxMb = Math.max(1, Math.round(maxBytes / 1_000_000));
 
@@ -114,7 +171,6 @@ export function validateImageFile(
     }
 
     const mimeAllowed = mime !== '' && ALLOWED_IMAGE_MIME_ALIASES.has(mime);
-    const mimeIsGenericBinary = mime !== '' && GENERIC_BINARY_MIMES.has(mime);
     const extAllowed =
         ext !== '' &&
         (ALLOWED_IMAGE_EXTENSIONS as readonly string[]).includes(ext);
@@ -127,7 +183,7 @@ export function validateImageFile(
         };
     }
 
-    if (mime !== '' && !mimeAllowed && !(mimeIsGenericBinary && extAllowed)) {
+    if (ext !== '' && !extAllowed) {
         return {
             valid: false,
             code: 'unsupported_format',
@@ -135,11 +191,172 @@ export function validateImageFile(
         };
     }
 
-    if (ext !== '' && !extAllowed) {
+    if (mime !== '' && !mimeAllowed) {
+        if (!extAllowed || isConcreteDisallowedMime(mime)) {
+            return {
+                valid: false,
+                code: 'unsupported_format',
+                error: String(t('upload.errors.unsupportedFormat')),
+            };
+        }
+    }
+
+    return { valid: true };
+}
+
+function detectMagicSignatureFromBytes(
+    bytes: Uint8Array,
+): (typeof ALLOWED_IMAGE_MIMES)[number] | null {
+    if (
+        bytes.length >= 3 &&
+        bytes[0] === 0xff &&
+        bytes[1] === 0xd8 &&
+        bytes[2] === 0xff
+    ) {
+        return 'image/jpeg';
+    }
+
+    if (
+        bytes.length >= 8 &&
+        bytes[0] === 0x89 &&
+        bytes[1] === 0x50 &&
+        bytes[2] === 0x4e &&
+        bytes[3] === 0x47 &&
+        bytes[4] === 0x0d &&
+        bytes[5] === 0x0a &&
+        bytes[6] === 0x1a &&
+        bytes[7] === 0x0a
+    ) {
+        return 'image/png';
+    }
+
+    if (
+        bytes.length >= 12 &&
+        bytes[0] === 0x52 &&
+        bytes[1] === 0x49 &&
+        bytes[2] === 0x46 &&
+        bytes[3] === 0x46 &&
+        bytes[8] === 0x57 &&
+        bytes[9] === 0x45 &&
+        bytes[10] === 0x42 &&
+        bytes[11] === 0x50
+    ) {
+        return 'image/webp';
+    }
+
+    return null;
+}
+
+function containsDisguisedPayloadInBytes(bytes: Uint8Array): boolean {
+    if (bytes.length === 0) {
+        return false;
+    }
+
+    let text = '';
+    for (let i = 0; i < bytes.length; i++) {
+        text += String.fromCharCode(bytes[i]);
+    }
+    const lower = text.toLowerCase();
+
+    return (
+        lower.includes('<?php') ||
+        lower.includes('<script') ||
+        lower.includes('<svg') ||
+        lower.includes('<!doctype html') ||
+        lower.trimStart().startsWith('<?xml')
+    );
+}
+
+async function canBrowserDecodeImage(file: File): Promise<boolean> {
+    if (typeof window === 'undefined') {
+        return true;
+    }
+
+    if (typeof createImageBitmap === 'function') {
+        try {
+            const bitmap = await createImageBitmap(file);
+            const valid = bitmap.width > 0 && bitmap.height > 0;
+            bitmap.close();
+            if (valid) {
+                return true;
+            }
+        } catch {
+            // Fall back to HTMLImageElement check below.
+        }
+    }
+
+    if (
+        typeof Image === 'undefined' ||
+        typeof URL === 'undefined' ||
+        typeof URL.createObjectURL !== 'function'
+    ) {
+        return true;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    try {
+        return await new Promise<boolean>((resolve) => {
+            const img = new Image();
+            img.decoding = 'async';
+            img.onload = () =>
+                resolve(img.naturalWidth > 0 && img.naturalHeight > 0);
+            img.onerror = () => resolve(false);
+            img.src = objectUrl;
+        });
+    } finally {
+        URL.revokeObjectURL(objectUrl);
+    }
+}
+
+/**
+ * Inspect actual leading bytes (magic signature + executable/SVG trap) and browser decoding
+ * so inaccurate/empty browser `file.type` never falsely blocks real JPG/PNG/WebP images, while
+ * disguised scripts/SVG/corrupt files are caught cleanly before upload.
+ */
+export async function inspectImageFileContent(
+    file: File,
+): Promise<ImageValidationResult> {
+    const t = i18n.global.t;
+
+    if (!(file instanceof Blob) || file.size <= 0) {
         return {
             valid: false,
-            code: 'unsupported_format',
-            error: String(t('upload.errors.unsupportedFormat')),
+            code: 'empty',
+            error: String(t('upload.errors.failed')),
+        };
+    }
+
+    if (typeof file.slice === 'function') {
+        try {
+            const buffer = await file.slice(0, 512).arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+
+            if (containsDisguisedPayloadInBytes(bytes)) {
+                return {
+                    valid: false,
+                    code: 'unsupported_format',
+                    error: String(t('upload.errors.unsupportedFormat')),
+                };
+            }
+
+            if (detectMagicSignatureFromBytes(bytes) === null) {
+                return {
+                    valid: false,
+                    code: 'unsupported_format',
+                    error: String(t('upload.errors.unsupportedFormat')),
+                };
+            }
+        } catch {
+            // If FileReader/slice fails unexpectedly, defer cleanly to decode + backend validation.
+        }
+    }
+
+    const decoded = await canBrowserDecodeImage(file);
+    if (!decoded) {
+        return {
+            valid: false,
+            code: 'empty',
+            error: String(t('upload.errors.failed')),
         };
     }
 

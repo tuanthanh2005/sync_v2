@@ -36,9 +36,16 @@ class SafeImageUploadService
     private const ALLOWED_MIME_ALIASES = [
         'image/jpeg' => 'image/jpeg',
         'image/jpg' => 'image/jpeg',
+        'image/jpe' => 'image/jpeg',
+        'image/pjpe' => 'image/jpeg',
         'image/pjpeg' => 'image/jpeg',
+        'image/jfif' => 'image/jpeg',
+        'image/x-citrix-jpeg' => 'image/jpeg',
         'image/png' => 'image/png',
         'image/x-png' => 'image/png',
+        'image/apng' => 'image/png',
+        'image/vnd.mozilla.apng' => 'image/png',
+        'image/x-citrix-png' => 'image/png',
         'image/webp' => 'image/webp',
         'image/x-webp' => 'image/webp',
     ];
@@ -53,6 +60,7 @@ class SafeImageUploadService
         'application/octet-stream',
         'binary/octet-stream',
         'application/unknown',
+        'application/x-unknown',
     ];
 
     /**
@@ -477,7 +485,7 @@ class SafeImageUploadService
         }
 
         $isRiffAliasForWebp = $signatureMime === 'image/webp'
-            && in_array($rawFinfoMime, ['audio/x-riff', 'application/x-riff', 'video/x-msvideo'], true);
+            && in_array($rawFinfoMime, ['audio/x-riff', 'application/x-riff', 'video/x-msvideo', 'image/riff', 'image/x-riff'], true);
 
         if ($isRiffAliasForWebp || in_array($rawFinfoMime, self::GENERIC_BINARY_MIMES, true)) {
             return null;
@@ -545,14 +553,23 @@ class SafeImageUploadService
         ?string $imageInfoMime,
     ): void {
         try {
-            Log::warning('Image upload rejected by SafeImageUploadService', [
+            $realPath = $file->getRealPath();
+            $phpMime = is_string($realPath) && $realPath !== '' && is_file($realPath)
+                ? @mime_content_type($realPath)
+                : null;
+
+            Log::error('Image upload rejected by SafeImageUploadService', [
                 'reason' => $reason,
                 'context' => $context,
+                'sapi' => PHP_SAPI,
+                'is_valid' => $file->isValid(),
+                'upload_error' => $file->getError(),
                 'client_extension' => strtolower(trim($file->getClientOriginalExtension())),
                 'client_mime' => strtolower(trim((string) $file->getClientMimeType())),
                 'size_bytes' => $file->getSize(),
                 'signature_mime' => $signatureMime,
                 'finfo_mime' => $finfoMime,
+                'php_mime' => is_string($phpMime) ? $phpMime : null,
                 'imageinfo_mime' => $imageInfoMime,
                 'header_hex' => $header !== '' ? bin2hex(substr($header, 0, 16)) : '',
             ]);

@@ -66,7 +66,13 @@ class PostStoreRequest extends FormRequest
                     return;
                 }
 
-                $maxImages = max(1, min(10, (int) app(SystemSettingService::class)->get('content_post_max_images', 4)));
+                $user = $this->user();
+                $limits = $user !== null
+                    ? app(TrustLevelResolver::class)->limitsFor($user)
+                    : null;
+                $maxImages = $limits !== null
+                    ? max(1, min(10, (int) $limits['max_images_per_post']))
+                    : max(1, min(10, (int) app(SystemSettingService::class)->get('content_post_max_images', 4)));
                 if (count($images) > $maxImages) {
                     $validator->errors()->add('images', __('You have exceeded the maximum number of :max images allowed.', ['max' => $maxImages]));
 

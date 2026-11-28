@@ -466,9 +466,39 @@ function unbindViewportListeners(): void {
     mobileViewportStyle.value = undefined;
 }
 
+const imageUploadError = computed<string | null>(() => {
+    if (form.errors.images) {
+        return form.errors.images;
+    }
+
+    const errors = form.errors as Record<string, string | undefined>;
+    for (const [key, value] of Object.entries(errors)) {
+        if (
+            key.startsWith('images.') &&
+            typeof value === 'string' &&
+            value.trim() !== ''
+        ) {
+            return value;
+        }
+    }
+
+    return null;
+});
+
+function clearImageErrors(): void {
+    const imageErrorKeys = Object.keys(form.errors).filter(
+        (key) => key === 'images' || key.startsWith('images.'),
+    );
+
+    if (imageErrorKeys.length > 0) {
+        form.clearErrors(...(imageErrorKeys as (keyof typeof form.errors)[]));
+    }
+}
+
 function loadCreateDraft(): void {
     form.reset();
     form.clearErrors();
+    imageUploaderRef.value?.clearError();
     form.title = '';
     form.content = '';
     form.category = composerDefaultCategory.value || 'general';
@@ -540,6 +570,7 @@ function hydrateEditState(): void {
     }
 
     form.clearErrors();
+    imageUploaderRef.value?.clearError();
     form.title = post.title ?? '';
     form.content = post.content ?? '';
     form.category = post.category || 'general';
@@ -724,6 +755,8 @@ function handleModalOpenChange(nextOpen: boolean): void {
 
 function closeWithoutSaving(): void {
     discardDialogOpen.value = false;
+    clearImageErrors();
+    imageUploaderRef.value?.clearError();
     closeComposerModal();
 }
 
@@ -732,6 +765,7 @@ function confirmDiscardChanges(): void {
     if (isEditMode.value) {
         form.reset();
         form.clearErrors();
+        imageUploaderRef.value?.clearError();
         existingMedia.value = [];
         editSnapshot.value = null;
         linkPreview.value = null;
@@ -798,6 +832,7 @@ function moveExistingMedia(index: number, direction: -1 | 1): void {
 
 function removeExistingMedia(index: number): void {
     existingMedia.value = existingMedia.value.filter((_, idx) => idx !== index);
+    clearImageErrors();
 }
 
 function togglePoll(): void {
@@ -857,6 +892,8 @@ function fetchPreview(): void {
 
 function resetCreateComposer(): void {
     form.reset();
+    form.clearErrors();
+    imageUploaderRef.value?.clearError();
     form.category = composerDefaultCategory.value || 'general';
     form.visibility = 'public';
     form.poll_options = ['', ''];
@@ -1574,18 +1611,14 @@ onBeforeUnmount(() => {
                                     :progress="
                                         form.progress?.percentage ?? null
                                     "
-                                    :external-error="
-                                        form.errors.images ||
-                                        (form.errors as Record<string, string>)[
-                                            'images.0'
-                                        ] ||
-                                        null
-                                    "
+                                    :external-error="imageUploadError"
                                     @update:model-value="
-                                        (val) =>
-                                            (form.images = Array.isArray(val)
+                                        (val) => {
+                                            form.images = Array.isArray(val)
                                                 ? val
-                                                : [])
+                                                : [];
+                                            clearImageErrors();
+                                        }
                                     "
                                     @update:alts="
                                         (val) => (form.image_alts = val)
