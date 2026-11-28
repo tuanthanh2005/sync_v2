@@ -42,7 +42,8 @@
         "reportIssue": "Relatar um problema",
         "contactSupport": "Contatar suporte",
         "viewPublicProfile": "Perfil público",
-        "appearanceLanguage": "Aparência e idioma"
+        "appearanceLanguage": "Aparência e idioma",
+        "back": "Voltar"
     },
     "theme": {
         "light": "Claro",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "Explore a comunidade {brand}",
             "description": "Novas histórias e ideias frescas estão esperando por você."
+        },
+        "guestWelcome": {
+            "title": "Boas-vindas à {brand}",
+            "subtitle": "Conecte-se, compartilhe e descubra com uma comunidade global.",
+            "cta": "Participar grátis"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Imagem de capa (JPG, PNG, WebP)",
         "save": "Salvar perfil",
         "noPosts": "Ainda não há publicações públicas.",
-        "noBookmarks": "Você ainda não salvou nenhuma publicação."
+        "noBookmarks": "Você ainda não salvou nenhuma publicação.",
+        "share": "Compartilhar perfil",
+        "shareCopied": "Link do perfil copiado para a área de transferência."
     },
     "search": {
         "title": "Pesquisar",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Mín. caracteres na publicação para indexar",
             "minTopicPosts": "Mín. publicações por cluster de tópico",
             "dailyGscInspectionQuota": "Limite diário de cota de inspeção GSC",
-            "saveSeoEngineSettings": "Salvar configurações do motor SEO"
+            "saveSeoEngineSettings": "Salvar configurações do motor SEO",
+            "socialSharingTitle": "Compartilhamento social multilíngue e metadados Open Graph",
+            "socialSharingDesc": "Configure títulos e descrições Open Graph por idioma e visualize cartões reais sem expor publicações privadas.",
+            "socialPreviewTester": "Testador de pré-visualização de links sociais",
+            "previewPageType": "Tipo de página",
+            "pageTypeHome": "Feed inicial",
+            "pageTypePost": "Publicação pública",
+            "pageTypeCommunity": "Comunidade pública",
+            "pageTypeProfile": "Perfil do membro",
+            "pageTypePremium": "Página Premium",
+            "pageTypeReferral": "Página de indicação",
+            "previewEntity": "Registro de destino",
+            "previewLatestPublic": "Usar amostra pública recente",
+            "runSocialPreview": "Gerar pré-visualização",
+            "previewFailed": "Não foi possível gerar a pré-visualização social.",
+            "privacyProtected": "Privacidade protegida (oculto)",
+            "twitterHandleLabel": "Perfil oficial no X / Twitter (opcional)",
+            "saveSocialSharing": "Salvar metadados sociais",
+            "shareUrlLabel": "URL de compartilhamento",
+            "metaOgTypeLabel": "Tipo OG:",
+            "metaTwitterCardLabel": "Cartão X:",
+            "metaRobotsLabel": "Diretiva Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "Publicação #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "Usuário"
         },
         "next": "Próximo",
-        "previous": "Anterior"
+        "previous": "Anterior",
+        "loading": "Carregando..."
     },
     "pwa": {
         "installApp": "Instalar aplicativo SysNoxis"

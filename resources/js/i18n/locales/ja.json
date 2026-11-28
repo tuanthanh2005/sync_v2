@@ -42,7 +42,8 @@
         "reportIssue": "問題を報告",
         "contactSupport": "サポートに問い合わせ",
         "viewPublicProfile": "公開プロフィール",
-        "appearanceLanguage": "外観と言語"
+        "appearanceLanguage": "外観と言語",
+        "back": "戻る"
     },
     "theme": {
         "light": "ライト",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "{brand}コミュニティを探索しよう",
             "description": "新しいストーリーやアイデアがあなたを待っています。"
+        },
+        "guestWelcome": {
+            "title": "{brand}へようこそ",
+            "subtitle": "世界中のコミュニティとつながり、語り合い、発見しよう。",
+            "cta": "無料で参加"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "カバー画像 (JPG, PNG, WebP)",
         "save": "プロフィールを保存",
         "noPosts": "公開されている投稿はまだありません。",
-        "noBookmarks": "保存した投稿はまだありません。"
+        "noBookmarks": "保存した投稿はまだありません。",
+        "share": "プロフィールを共有",
+        "shareCopied": "プロフィールリンクをコピーしました。"
     },
     "search": {
         "title": "検索",
@@ -1712,7 +1720,28 @@
             "minPostChars": "インデックス対象の最小文字数",
             "minTopicPosts": "トピッククラスターあたりの最小投稿数",
             "dailyGscInspectionQuota": "日次GSC URL検査クォータ上限",
-            "saveSeoEngineSettings": "SEOエンジン設定を保存"
+            "saveSeoEngineSettings": "SEOエンジン設定を保存",
+            "socialSharingTitle": "多言語ソーシャル共有と Open Graph メタデータ",
+            "socialSharingDesc": "各言語のホームページ用 Open Graph タイトル・説明を設定し、非公開投稿を漏らさずプレビュー確認できます。",
+            "socialPreviewTester": "SNS リンクプレビューテスター",
+            "previewPageType": "ページ種別",
+            "pageTypeHome": "ホームフィード",
+            "pageTypePost": "公開投稿",
+            "pageTypeCommunity": "公開コミュニティ",
+            "pageTypeProfile": "メンバープロフィール",
+            "pageTypePremium": "プレミアムページ",
+            "pageTypeReferral": "紹介ランディング",
+            "previewEntity": "対象データ",
+            "previewLatestPublic": "最新の公開サンプルを使用",
+            "runSocialPreview": "プレビュー生成",
+            "previewFailed": "ソーシャルカードのプレビューを生成できませんでした。",
+            "privacyProtected": "プライバシー保護済み（非公開）",
+            "twitterHandleLabel": "公式 X / Twitter ハンドル（任意）",
+            "saveSocialSharing": "ソーシャルメタデータを保存",
+            "shareUrlLabel": "共有 URL",
+            "metaOgTypeLabel": "OG タイプ:",
+            "metaTwitterCardLabel": "X カード:",
+            "metaRobotsLabel": "Robots 設定:"
         },
         "usersExtra": {
             "commentPostMeta": "投稿 #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "ユーザー"
         },
         "next": "次へ",
-        "previous": "前へ"
+        "previous": "前へ",
+        "loading": "読み込み中..."
     },
     "pwa": {
         "installApp": "SysNoxisアプリをインストール"

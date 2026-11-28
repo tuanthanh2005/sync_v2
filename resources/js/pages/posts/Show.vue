@@ -160,7 +160,12 @@ function executeDeleteComment(): void {
             </Button>
         </div>
 
-        <PostCard :post="post" :truncate="false" view-source="detail" />
+        <PostCard
+            :post="post"
+            :truncate="false"
+            view-source="detail"
+            :share-alternates="seoLanguage?.alternates ?? []"
+        />
 
         <!-- Post View Analytics Breakdown (Author & Staff Only, Zero Viewer PII) -->
         <section

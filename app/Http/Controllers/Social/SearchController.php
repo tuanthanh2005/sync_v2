@@ -22,6 +22,11 @@ class SearchController extends Controller
         private readonly SeoMetadataService $seoMetadata,
     ) {}
 
+    public function localized(SearchRequest $request, string $locale): Response
+    {
+        return $this($request);
+    }
+
     public function __invoke(SearchRequest $request): Response
     {
         $query = $request->string('q')->toString();

@@ -42,7 +42,8 @@
         "reportIssue": "报告问题",
         "contactSupport": "联系支持",
         "viewPublicProfile": "公开主页",
-        "appearanceLanguage": "外观与语言"
+        "appearanceLanguage": "外观与语言",
+        "back": "返回"
     },
     "theme": {
         "light": "浅色",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "探索 {brand} 社区",
             "description": "精彩的故事与全新的创意正在等待您的发现。"
+        },
+        "guestWelcome": {
+            "title": "欢迎来到 {brand}",
+            "subtitle": "与全球社区连接交流、分享故事并发现更多灵感。",
+            "cta": "免费加入"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "封面图 (JPG, PNG, WebP)",
         "save": "保存资料",
         "noPosts": "暂无公开帖子。",
-        "noBookmarks": "您还没有收藏任何帖子。"
+        "noBookmarks": "您还没有收藏任何帖子。",
+        "share": "分享主页",
+        "shareCopied": "个人主页链接已复制到剪贴板。"
     },
     "search": {
         "title": "搜索",
@@ -1712,7 +1720,28 @@
             "minPostChars": "允许索引的最小帖子字符数",
             "minTopicPosts": "每个话题集群的最小帖子数",
             "dailyGscInspectionQuota": "每日 GSC URL 检查配额上限",
-            "saveSeoEngineSettings": "保存 SEO 引擎设置"
+            "saveSeoEngineSettings": "保存 SEO 引擎设置",
+            "socialSharingTitle": "多语言社交分享与 Open Graph 元数据",
+            "socialSharingDesc": "按语言配置首页 Open Graph 标题和描述，并在不泄露私密内容的情况下测试真实分享卡片预览。",
+            "socialPreviewTester": "社交链接预览测试工具",
+            "previewPageType": "页面类型",
+            "pageTypeHome": "首页信息流",
+            "pageTypePost": "公开帖子",
+            "pageTypeCommunity": "公开社区",
+            "pageTypeProfile": "成员主页",
+            "pageTypePremium": "Premium 页面",
+            "pageTypeReferral": "邀请落地页",
+            "previewEntity": "目标记录",
+            "previewLatestPublic": "使用最新公开示例",
+            "runSocialPreview": "生成预览",
+            "previewFailed": "无法生成社交卡片预览。",
+            "privacyProtected": "已隐私脱敏保护",
+            "twitterHandleLabel": "官方 X / Twitter 账号（可选）",
+            "saveSocialSharing": "保存社交元数据",
+            "shareUrlLabel": "分享链接地址",
+            "metaOgTypeLabel": "OG 类型:",
+            "metaTwitterCardLabel": "X 卡片:",
+            "metaRobotsLabel": "Robots 规则:"
         },
         "usersExtra": {
             "commentPostMeta": "帖子 #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "用户"
         },
         "next": "下一个",
-        "previous": "上一个"
+        "previous": "上一个",
+        "loading": "正在加载..."
     },
     "pwa": {
         "installApp": "安装 SysNoxis 应用"

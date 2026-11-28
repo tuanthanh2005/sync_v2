@@ -42,7 +42,8 @@
         "reportIssue": "문제 신고",
         "contactSupport": "지원팀 문의",
         "viewPublicProfile": "공개 프로필",
-        "appearanceLanguage": "테마 및 언어"
+        "appearanceLanguage": "테마 및 언어",
+        "back": "뒤로"
     },
     "theme": {
         "light": "라이트",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "{brand} 커뮤니티를 둘러보세요",
             "description": "새로운 이야기와 신선한 아이디어가 기다리고 있습니다."
+        },
+        "guestWelcome": {
+            "title": "{brand}에 오신 것을 환영합니다",
+            "subtitle": "전 세계 커뮤니티와 연결하고 공유하며 새로운 이야기를 만나보세요.",
+            "cta": "무료로 가입하기"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "커버 이미지 (JPG, PNG, WebP)",
         "save": "프로필 저장",
         "noPosts": "아직 공개 게시물이 없습니다.",
-        "noBookmarks": "아직 저장한 게시물이 없습니다."
+        "noBookmarks": "아직 저장한 게시물이 없습니다.",
+        "share": "프로필 공유",
+        "shareCopied": "프로필 링크가 클립보드에 복사되었습니다."
     },
     "search": {
         "title": "검색",
@@ -1712,7 +1720,28 @@
             "minPostChars": "색인 최소 글자 수",
             "minTopicPosts": "토픽 클러스터당 최소 게시물 수",
             "dailyGscInspectionQuota": "일일 GSC 검사 할당량 한도",
-            "saveSeoEngineSettings": "SEO 엔진 설정 저장"
+            "saveSeoEngineSettings": "SEO 엔진 설정 저장",
+            "socialSharingTitle": "다국어 소셜 공유 및 Open Graph 메타데이터",
+            "socialSharingDesc": "언어별 홈페이지 Open Graph 제목/설명을 설정하고 비공개 게시물 노출 없이 실제 링크 카드를 미리 확인하세요.",
+            "socialPreviewTester": "소셜 링크 미리보기 테스터",
+            "previewPageType": "페이지 유형",
+            "pageTypeHome": "홈 피드",
+            "pageTypePost": "공개 게시물",
+            "pageTypeCommunity": "공개 커뮤니티",
+            "pageTypeProfile": "회원 프로필",
+            "pageTypePremium": "프리미엄 페이지",
+            "pageTypeReferral": "초대 랜딩 페이지",
+            "previewEntity": "대상 항목",
+            "previewLatestPublic": "최신 공개 샘플 사용",
+            "runSocialPreview": "미리보기 생성",
+            "previewFailed": "소셜 카드 미리보기를 생성할 수 없습니다.",
+            "privacyProtected": "개인정보 보호됨(가려짐)",
+            "twitterHandleLabel": "공식 X / Twitter 계정(선택 사항)",
+            "saveSocialSharing": "소셜 메타데이터 저장",
+            "shareUrlLabel": "공유 URL",
+            "metaOgTypeLabel": "OG 유형:",
+            "metaTwitterCardLabel": "X 카드:",
+            "metaRobotsLabel": "Robots 설정:"
         },
         "usersExtra": {
             "commentPostMeta": "게시물 #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "사용자"
         },
         "next": "다음",
-        "previous": "이전"
+        "previous": "이전",
+        "loading": "불러오는 중..."
     },
     "pwa": {
         "installApp": "SysNoxis 앱 설치"

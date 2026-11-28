@@ -29,18 +29,25 @@ class CommunityController extends Controller
         private readonly OrganicGrowthService $organicGrowth,
     ) {}
 
-    public function index(Request $request): Response
+    public function indexLocalized(Request $request, string $locale): Response
+    {
+        return $this->index($request, $locale);
+    }
+
+    public function index(Request $request, ?string $locale = null): Response
     {
         $filter = $request->string('filter', 'all')->toString();
         $search = $request->string('q')->toString();
+        $activeLocale = $locale ?: app()->getLocale();
         $payload = $this->communityService->directoryPayload($request->user(), $filter, $search);
 
+        $staticPath = $locale !== null && $locale !== 'en' ? '/'.$locale.'/communities' : '/communities';
         $seo = $this->seoMetadata->forStaticPage(
-            '/communities',
-            'Communities | '.config('app.name', 'SysNoxis'),
-            'Discover active global communities and topic hubs on '.config('app.name', 'SysNoxis').'.',
+            $staticPath,
+            __('Communities | :site', ['site' => config('app.name', 'SysNoxis')], $activeLocale),
+            __('Discover active global communities and topic hubs on :site.', ['site' => config('app.name', 'SysNoxis')], $activeLocale),
             $search === '',
-            app()->getLocale(),
+            $activeLocale,
         );
 
         $ssrLinks = array_map(
@@ -61,10 +68,10 @@ class CommunityController extends Controller
 
     public function showLocalized(Request $request, string $locale, Community $community): Response
     {
-        return $this->show($request, $community);
+        return $this->show($request, $community, $locale);
     }
 
-    public function show(Request $request, Community $community): Response
+    public function show(Request $request, Community $community, ?string $routeLocale = null): Response
     {
         Gate::authorize('view', $community);
 
@@ -72,7 +79,7 @@ class CommunityController extends Controller
         $category = $request->string('category', 'all')->toString();
         $sort = $request->string('sort', 'latest')->toString();
         $showPayload = $this->communityService->showPayload($community, $request->user(), $tab, $category, $sort);
-        $seo = $this->seoMetadata->forCommunity($community, app()->getLocale());
+        $seo = $this->seoMetadata->forCommunity($community, $routeLocale ?: app()->getLocale(), $routeLocale !== null);
 
         $ssrPosts = array_map(static fn (array $p): array => [
             'title' => (string) ($p['title'] ?: Str::limit(strip_tags((string) ($p['content'] ?? '')), 80)),

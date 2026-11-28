@@ -18,7 +18,13 @@
     }
     $seoData = is_array($seo ?? null) ? $seo : [];
     $canonicalUrl = $seoData['canonical'] ?? $seoData['url'] ?? null;
+    $ogUrl = $seoData['url'] ?? $canonicalUrl;
     $robotsDirective = $seoData['robots'] ?? (! empty($seoData['noindex']) ? 'noindex, nofollow' : null);
+    $resolvedOgTitle = $seoData['og_title'] ?? $seoData['title'] ?? config('app.name', 'SysNoxis');
+    $resolvedOgDescription = $seoData['og_description'] ?? $seoData['description'] ?? '';
+    $resolvedOgImage = $seoData['og_image'] ?? null;
+    $resolvedOgLocale = $seoData['og_locale'] ?? str_replace('-', '_', app()->getLocale());
+    $resolvedOgLocaleAlternates = is_array($seoData['og_locale_alternates'] ?? null) ? $seoData['og_locale_alternates'] : [];
     $hreflangList = [];
     if (! empty($seoData['hreflang']) && is_array($seoData['hreflang'])) {
         $hreflangList = $seoData['hreflang'];
@@ -116,23 +122,54 @@
             @if (! empty($robotsDirective))
                 <meta name="robots" content="{{ $robotsDirective }}">
             @endif
-            @if (! empty($seoData['description']))
-                <meta name="description" content="{{ $seoData['description'] }}">
-                <meta property="og:title" content="{{ $seoData['og_title'] ?? $seoData['title'] ?? config('app.name') }}">
-                <meta property="og:description" content="{{ $seoData['og_description'] ?? $seoData['description'] }}">
-                <meta property="og:type" content="{{ $seoData['og_type'] ?? $seoData['type'] ?? 'website' }}">
-                <meta property="og:site_name" content="{{ config('app.name', 'SysNoxis') }}">
-                @if (! empty($seoData['og_locale']))
-                    <meta property="og:locale" content="{{ $seoData['og_locale'] }}">
-                @endif
-                @if (! empty($seoData['og_image']))
-                    <meta property="og:image" content="{{ $seoData['og_image'] }}">
-                    <meta name="twitter:image" content="{{ $seoData['og_image'] }}">
-                @endif
-                <meta name="twitter:card" content="{{ $seoData['twitter_card'] ?? 'summary_large_image' }}">
-                <meta name="twitter:title" content="{{ $seoData['og_title'] ?? $seoData['title'] ?? config('app.name') }}">
-                <meta name="twitter:description" content="{{ $seoData['og_description'] ?? $seoData['description'] }}">
+            @if ($resolvedOgDescription !== '')
+                <meta name="description" content="{{ $resolvedOgDescription }}">
             @endif
+            <meta property="og:title" content="{{ $resolvedOgTitle }}">
+            @if ($resolvedOgDescription !== '')
+                <meta property="og:description" content="{{ $resolvedOgDescription }}">
+                <meta name="twitter:description" content="{{ $resolvedOgDescription }}">
+            @endif
+            <meta property="og:type" content="{{ $seoData['og_type'] ?? $seoData['type'] ?? 'website' }}">
+            <meta property="og:site_name" content="{{ config('app.name', 'SysNoxis') }}">
+            @if (! empty($resolvedOgLocale))
+                <meta property="og:locale" content="{{ $resolvedOgLocale }}">
+            @endif
+            @foreach ($resolvedOgLocaleAlternates as $altOgLocale)
+                @if (is_string($altOgLocale) && $altOgLocale !== '')
+                    <meta property="og:locale:alternate" content="{{ $altOgLocale }}">
+                @endif
+            @endforeach
+            @if (! empty($ogUrl))
+                <meta property="og:url" content="{{ $ogUrl }}">
+            @endif
+            @if (! empty($resolvedOgImage))
+                <meta property="og:image" content="{{ $resolvedOgImage }}">
+                @if (! empty($seoData['og_image_secure_url']))
+                    <meta property="og:image:secure_url" content="{{ $seoData['og_image_secure_url'] }}">
+                @endif
+                @if (! empty($seoData['og_image_type']))
+                    <meta property="og:image:type" content="{{ $seoData['og_image_type'] }}">
+                @endif
+                @if (! empty($seoData['og_image_width']))
+                    <meta property="og:image:width" content="{{ $seoData['og_image_width'] }}">
+                @endif
+                @if (! empty($seoData['og_image_height']))
+                    <meta property="og:image:height" content="{{ $seoData['og_image_height'] }}">
+                @endif
+                @if (! empty($seoData['og_image_alt']))
+                    <meta property="og:image:alt" content="{{ $seoData['og_image_alt'] }}">
+                @endif
+                <meta name="twitter:image" content="{{ $resolvedOgImage }}">
+                @if (! empty($seoData['twitter_image_alt']))
+                    <meta name="twitter:image:alt" content="{{ $seoData['twitter_image_alt'] }}">
+                @endif
+            @endif
+            <meta name="twitter:card" content="{{ $seoData['twitter_card'] ?? 'summary_large_image' }}">
+            @if (! empty($seoData['twitter_site']))
+                <meta name="twitter:site" content="{{ $seoData['twitter_site'] }}">
+            @endif
+            <meta name="twitter:title" content="{{ $resolvedOgTitle }}">
             @if (! empty($seoData['published_time']))
                 <meta property="article:published_time" content="{{ $seoData['published_time'] }}">
             @endif
@@ -141,7 +178,6 @@
             @endif
             @if (! empty($canonicalUrl))
                 <link rel="canonical" href="{{ $canonicalUrl }}">
-                <meta property="og:url" content="{{ $canonicalUrl }}">
             @endif
             @foreach ($hreflangList as $hl)
                 @if (! empty($hl['hreflang']) && ! empty($hl['href']))

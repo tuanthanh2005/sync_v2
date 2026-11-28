@@ -171,6 +171,7 @@ Route::get('/sitemap-{shard}.xml', [SeoPublicController::class, 'sitemapShard'])
     ->where('shard', '[a-zA-Z0-9_-]+')
     ->name('seo.sitemap.shard');
 Route::get('/og-default.svg', [SeoPublicController::class, 'defaultOgImage'])->name('seo.og-default');
+Route::get('/og-default.png', [SeoPublicController::class, 'defaultOgImagePng'])->name('seo.og-default-png');
 Route::get('/google{token}.html', [SeoPublicController::class, 'googleVerificationFile'])
     ->where('token', '[a-zA-Z0-9_-]{8,80}')
     ->name('seo.google-verification');
@@ -187,6 +188,10 @@ Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.sho
 Route::prefix('{locale}')
     ->where(['locale' => $seoLocaleRegex])
     ->group(function (): void {
+        Route::get('/', [HomeController::class, 'localized'])->name('home.localized');
+        Route::get('/search', [SearchController::class, 'localized'])
+            ->middleware('throttle:60,1')
+            ->name('search.localized');
         Route::get('/posts/{postId}-{slug}', [PostController::class, 'showLocalized'])
             ->whereNumber('postId')
             ->where('slug', '[a-zA-Z0-9_-]+')
@@ -194,10 +199,19 @@ Route::prefix('{locale}')
         Route::get('/posts/{postId}', [PostController::class, 'showLocalized'])
             ->whereNumber('postId')
             ->name('posts.localized');
+        Route::get('/u/{user:username}', [ProfileViewController::class, 'showLocalized'])
+            ->name('users.localized.show');
         Route::get('/topics', [TopicController::class, 'index'])->name('topics.localized.index');
         Route::get('/topics/{slug}', [TopicController::class, 'show'])->name('topics.localized.show');
+        Route::get('/communities', [CommunityController::class, 'indexLocalized'])->name('communities.localized.index');
         Route::get('/communities/{community:slug}', [CommunityController::class, 'showLocalized'])->name('communities.localized.show');
         Route::get('/policies/{policyPage:slug}', [PolicyPageController::class, 'showLocalized'])->name('policies.localized.show');
+        Route::get('/services', [ServicesCenterController::class, 'indexLocalized'])->name('monetization.localized.services');
+        Route::get('/premium', [ServicesCenterController::class, 'premiumLocalized'])->name('monetization.localized.premium');
+        Route::get('/r/{code}', [ReferralController::class, 'visitLocalized'])
+            ->where('code', '[A-Za-z0-9_-]{4,24}')
+            ->middleware('throttle:60,1')
+            ->name('referral.localized.visit');
     });
 
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
@@ -683,6 +697,12 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
                 Route::post('/templates', [SeoInternationalAndAuditController::class, 'updateTemplates'])
                     ->middleware('permission:seo.manage')
                     ->name('templates.update');
+                Route::post('/social-sharing', [SeoInternationalAndAuditController::class, 'updateSocialSharing'])
+                    ->middleware('permission:seo.manage')
+                    ->name('social-sharing.update');
+                Route::post('/social-preview', [SeoInternationalAndAuditController::class, 'previewSocialCard'])
+                    ->middleware('permission:seo.view')
+                    ->name('social-preview');
 
                 Route::get('/audit', [SeoInternationalAndAuditController::class, 'audit'])
                     ->middleware('permission:seo.view')

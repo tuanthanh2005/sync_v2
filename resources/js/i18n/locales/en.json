@@ -42,7 +42,8 @@
         "reportIssue": "Report a Problem",
         "contactSupport": "Contact Support",
         "viewPublicProfile": "Public Profile",
-        "appearanceLanguage": "Appearance & Language"
+        "appearanceLanguage": "Appearance & Language",
+        "back": "Back"
     },
     "theme": {
         "light": "Light",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "Explore the {brand} community",
             "description": "New stories and fresh ideas are waiting for you."
+        },
+        "guestWelcome": {
+            "title": "Welcome to {brand}",
+            "subtitle": "Connect, share, and discover with a global community.",
+            "cta": "Join for free"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Cover image (JPG, PNG, WebP)",
         "save": "Save profile",
         "noPosts": "No public posts yet.",
-        "noBookmarks": "You have not saved any posts yet."
+        "noBookmarks": "You have not saved any posts yet.",
+        "share": "Share profile",
+        "shareCopied": "Profile link copied to clipboard."
     },
     "search": {
         "title": "Search",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Min Post Characters for Index",
             "minTopicPosts": "Min Posts per Topic Cluster",
             "dailyGscInspectionQuota": "Daily GSC Inspection Quota Limit",
-            "saveSeoEngineSettings": "Save SEO Engine Settings"
+            "saveSeoEngineSettings": "Save SEO Engine Settings",
+            "socialSharingTitle": "Multilingual Social Sharing & Open Graph Metadata",
+            "socialSharingDesc": "Configure per-locale homepage Open Graph titles/descriptions and preview live crawler cards without leaking private posts.",
+            "socialPreviewTester": "Social Link Preview Tester",
+            "previewPageType": "Page type",
+            "pageTypeHome": "Home Feed",
+            "pageTypePost": "Public Post",
+            "pageTypeCommunity": "Public Community",
+            "pageTypeProfile": "Member Profile",
+            "pageTypePremium": "Premium Page",
+            "pageTypeReferral": "Referral Landing",
+            "previewEntity": "Target record",
+            "previewLatestPublic": "Use latest public sample",
+            "runSocialPreview": "Generate Preview",
+            "previewFailed": "Unable to generate social card preview.",
+            "privacyProtected": "Privacy Protected (Redacted)",
+            "twitterHandleLabel": "Official X / Twitter handle (optional)",
+            "saveSocialSharing": "Save Social Metadata",
+            "shareUrlLabel": "Resolved Share URL",
+            "metaOgTypeLabel": "OG Type:",
+            "metaTwitterCardLabel": "X Card:",
+            "metaRobotsLabel": "Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "Post #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "User"
         },
         "next": "Next",
-        "previous": "Previous"
+        "previous": "Previous",
+        "loading": "Loading..."
     },
     "pwa": {
         "installApp": "Install SysNoxis App"

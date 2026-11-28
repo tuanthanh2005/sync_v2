@@ -42,7 +42,8 @@
         "reportIssue": "Laporkan Masalah",
         "contactSupport": "Hubungi Dukungan",
         "viewPublicProfile": "Profil Publik",
-        "appearanceLanguage": "Tampilan & Bahasa"
+        "appearanceLanguage": "Tampilan & Bahasa",
+        "back": "Kembali"
     },
     "theme": {
         "light": "Terang",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "Jelajahi komunitas {brand}",
             "description": "Cerita baru dan ide segar menanti Anda."
+        },
+        "guestWelcome": {
+            "title": "Selamat datang di {brand}",
+            "subtitle": "Terhubung, berbagi, dan temukan ide bersama komunitas global.",
+            "cta": "Gabung gratis"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Gambar sampul (JPG, PNG, WebP)",
         "save": "Simpan profil",
         "noPosts": "Belum ada postingan publik.",
-        "noBookmarks": "Anda belum menyimpan postingan apa pun."
+        "noBookmarks": "Anda belum menyimpan postingan apa pun.",
+        "share": "Bagikan profil",
+        "shareCopied": "Tautan profil disalin ke papan klip."
     },
     "search": {
         "title": "Pencarian",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Karakter Minimal Postingan untuk Indeks",
             "minTopicPosts": "Postingan Minimal per Klaster Topik",
             "dailyGscInspectionQuota": "Batas Kuota Inspeksi GSC Harian",
-            "saveSeoEngineSettings": "Simpan Pengaturan Mesin SEO"
+            "saveSeoEngineSettings": "Simpan Pengaturan Mesin SEO",
+            "socialSharingTitle": "Berbagi Sosial Multibahasa & Metadata Open Graph",
+            "socialSharingDesc": "Atur judul dan deskripsi Open Graph beranda per bahasa serta pratinjau kartu crawler nyata tanpa membocorkan konten privat.",
+            "socialPreviewTester": "Penguji Pratinjau Tautan Sosial",
+            "previewPageType": "Jenis halaman",
+            "pageTypeHome": "Beranda",
+            "pageTypePost": "Postingan publik",
+            "pageTypeCommunity": "Komunitas publik",
+            "pageTypeProfile": "Profil anggota",
+            "pageTypePremium": "Halaman Premium",
+            "pageTypeReferral": "Halaman referral",
+            "previewEntity": "Data target",
+            "previewLatestPublic": "Gunakan sampel publik terbaru",
+            "runSocialPreview": "Buat Pratinjau",
+            "previewFailed": "Tidak dapat membuat pratinjau kartu sosial.",
+            "privacyProtected": "Privasi Dilindungi (Disamarkan)",
+            "twitterHandleLabel": "Akun resmi X / Twitter (opsional)",
+            "saveSocialSharing": "Simpan Metadata Sosial",
+            "shareUrlLabel": "URL Berbagi",
+            "metaOgTypeLabel": "Tipe OG:",
+            "metaTwitterCardLabel": "Kartu X:",
+            "metaRobotsLabel": "Arahan Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "Postingan #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "Pengguna"
         },
         "next": "Berikutnya",
-        "previous": "Sebelumnya"
+        "previous": "Sebelumnya",
+        "loading": "Memuat..."
     },
     "pwa": {
         "installApp": "Pasang Aplikasi SysNoxis"

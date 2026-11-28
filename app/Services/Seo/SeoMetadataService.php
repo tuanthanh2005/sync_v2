@@ -2,6 +2,8 @@
 
 namespace App\Services\Seo;
 
+use App\Enums\ModerationStatus;
+use App\Enums\PostVisibility;
 use App\Enums\SeoEntityType;
 use App\Models\Community;
 use App\Models\Hashtag;
@@ -10,6 +12,7 @@ use App\Models\Post;
 use App\Models\SeoContentTranslation;
 use App\Models\SeoMetadata;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class SeoMetadataService
@@ -25,52 +28,111 @@ class SeoMetadataService
     /**
      * @return array<string, mixed>
      */
-    public function forHome(?string $locale = null): array
+    public function forHome(?string $locale = null, ?string $requestPath = null): array
     {
         $lang = $locale ?: app()->getLocale();
-        $siteName = (string) config('app.name', 'SysNoxis');
-        $canonical = $this->config->canonicalBaseUrl().'/';
-        $override = $this->findOverride(SeoEntityType::Page->value, null, $lang, '/');
+        $base = $this->config->canonicalBaseUrl();
+        $normalizedPath = $this->canonicalUrls->normalizePath($requestPath ?? '/');
+        $isLocalizedSubpath = $normalizedPath === '/'.$lang && $lang !== $this->config->defaultLocale();
 
-        $title = $override?->title ?: $this->renderTemplate(
-            $this->config->string('title_template_home', '{site} — Global Community & Discussions'),
-            ['site' => $siteName],
-        );
-        $description = $override?->description ?: $this->renderTemplate(
-            $this->config->string('description_template_home', 'Join {site} to discover multilingual discussions, global communities, and real-time insights across 15 languages.'),
-            ['site' => $siteName],
-        );
+        $canonical = $isLocalizedSubpath ? $base.'/'.$lang : $base.'/';
+        $ogUrl = $isLocalizedSubpath ? $canonical : ($lang !== $this->config->defaultLocale() && $normalizedPath === '/' ? $base.'/'.$lang : $base.'/');
+        $cacheKey = 'sysnoxis.seo.home.v2.'.$lang.'.'.md5($canonical.'|'.$ogUrl).'.'.$this->config->cacheVersionToken();
 
-        return $this->assemble([
-            'title' => $title,
-            'description' => $description,
-            'canonical' => $override?->canonical_url ?: $canonical,
-            'robots' => $override?->robots ?: ($this->config->isIndexingAllowed() ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'),
-            'og_type' => 'website',
-            'og_image' => $override?->og_image ?: $this->config->defaultOgImageUrl(),
-            'locale' => $lang,
-            'hreflang' => [],
-            'schema' => [
-                $this->structuredData->organization(),
-                $this->structuredData->webSite($lang),
-            ],
-        ]);
+        /** @var array<string, mixed> */
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($lang, $canonical, $ogUrl): array {
+            $override = $this->findOverride(SeoEntityType::Page->value, null, $lang, parse_url($canonical, PHP_URL_PATH) ?: '/');
+            $homeCopy = $this->config->homeSeoCopy($lang);
+
+            $title = $override?->title ?: $homeCopy['title'];
+            $description = $override?->description ?: $homeCopy['description'];
+            $defaultOg = $this->config->defaultOgImageMetadata();
+
+            $hreflang = [];
+            foreach ($this->config->enabledLocales() as $code) {
+                $hreflang[] = [
+                    'hreflang' => $code,
+                    'href' => $code === $this->config->defaultLocale() ? $this->config->canonicalBaseUrl().'/' : $this->config->canonicalBaseUrl().'/'.$code,
+                ];
+            }
+            $hreflang[] = ['hreflang' => 'x-default', 'href' => $this->config->canonicalBaseUrl().'/'];
+
+            return $this->assemble([
+                'title' => $title,
+                'description' => $description,
+                'url' => $override?->canonical_url ?: $ogUrl,
+                'canonical' => $override?->canonical_url ?: $canonical,
+                'robots' => $override?->robots ?: ($this->config->isIndexingAllowed() ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'),
+                'og_type' => 'website',
+                'og_image' => $override?->og_image ?: $defaultOg['url'],
+                'og_image_type' => $override?->og_image ? null : $defaultOg['type'],
+                'og_image_width' => $override?->og_image ? null : $defaultOg['width'],
+                'og_image_height' => $override?->og_image ? null : $defaultOg['height'],
+                'locale' => $lang,
+                'hreflang' => $hreflang,
+                'schema' => [
+                    $this->structuredData->organization(),
+                    $this->structuredData->webSite($lang),
+                ],
+            ]);
+        });
     }
 
     /**
      * @return array<string, mixed>
      */
-    public function forPost(Post $post, ?string $locale = null, ?SeoContentTranslation $translation = null): array
-    {
+    public function forPost(
+        Post $post,
+        ?string $locale = null,
+        ?SeoContentTranslation $translation = null,
+        bool $untranslatedShareLocale = false,
+    ): array {
         $post->loadMissing(['author', 'community', 'media']);
-        $lang = $locale ?: ($translation?->target_locale ?: ($post->language_code ?: $this->config->defaultLocale()));
+        $postLanguage = $post->language_code ?: $this->config->defaultLocale();
+        $lang = $locale ?: ($translation?->target_locale ?: $postLanguage);
         $siteName = (string) config('app.name', 'SysNoxis');
+        $defaultOg = $this->config->defaultOgImageMetadata();
+
+        $isPubliclyShareable = $post->deleted_at === null
+            && $post->visibility === PostVisibility::Public
+            && $post->moderation_status === ModerationStatus::Approved
+            && ! $post->is_spam
+            && $post->published_at !== null
+            && $post->author !== null
+            && $post->author->isActive()
+            && ($post->community === null || ($post->community->visibility === 'public' && $post->community->status === 'active'));
+
+        // Strictly prevent exposing private, pending, hidden, spam, deleted, or closed-community content to OG tags.
+        if (! $isPubliclyShareable) {
+            return $this->assemble([
+                'title' => __('Content unavailable | :site', ['site' => $siteName], $lang),
+                'description' => __('Sign in or visit :site to explore public discussions and community conversations.', ['site' => $siteName], $lang),
+                'url' => $this->config->canonicalBaseUrl().'/',
+                'canonical' => $this->config->canonicalBaseUrl().'/',
+                'robots' => 'noindex, nofollow',
+                'og_type' => 'website',
+                'og_image' => $defaultOg['url'],
+                'og_image_type' => $defaultOg['type'],
+                'og_image_width' => $defaultOg['width'],
+                'og_image_height' => $defaultOg['height'],
+                'locale' => $lang,
+                'hreflang' => [],
+                'schema' => [],
+                'eligibility' => 'excluded',
+                'exclusion_reason' => 'private_or_restricted_post',
+            ]);
+        }
 
         $eval = $translation !== null
             ? $this->qualityGate->evaluateTranslation($translation, $post)
             : $this->qualityGate->evaluatePost($post);
 
-        $canonical = $this->canonicalUrls->postCanonicalUrl($post, $lang, $translation);
+        $canonicalLocale = $translation !== null ? $translation->target_locale : $postLanguage;
+        $canonical = $this->canonicalUrls->postCanonicalUrl($post, $canonicalLocale, $translation);
+        $ogUrl = ($untranslatedShareLocale && $lang !== $canonicalLocale)
+            ? $this->config->canonicalBaseUrl().'/posts/'.$post->id.'?lang='.rawurlencode($lang)
+            : $canonical;
+
         $override = $this->findOverride(SeoEntityType::Post->value, $post->id, $lang);
 
         $rawTitle = $translation !== null && is_string($translation->translated_title) && trim($translation->translated_title) !== ''
@@ -94,21 +156,28 @@ class SeoMetadataService
         $mediaUrl = $firstMedia !== null ? $firstMedia->url() : '';
         $ogImage = $override?->og_image ?: ($mediaUrl !== ''
             ? (str_starts_with($mediaUrl, 'http') ? $mediaUrl : $this->canonicalUrls->absoluteUrl($mediaUrl))
-            : $this->config->defaultOgImageUrl());
+            : $defaultOg['url']);
+
+        $useDefaultMeta = $override?->og_image === null && $mediaUrl === '';
 
         return $this->assemble([
             'title' => $title,
             'description' => $description,
+            'url' => $override?->canonical_url ?: $ogUrl,
             'canonical' => $override?->canonical_url ?: $canonical,
-            'robots' => $override?->robots ?: $eval['robots'],
+            'robots' => $override?->robots ?: ($untranslatedShareLocale ? 'noindex, follow' : $eval['robots']),
             'og_type' => 'article',
             'og_image' => $ogImage,
+            'og_image_type' => $useDefaultMeta ? $defaultOg['type'] : ($firstMedia?->mime_type ?: null),
+            'og_image_width' => $useDefaultMeta ? $defaultOg['width'] : ($firstMedia?->width ?: null),
+            'og_image_height' => $useDefaultMeta ? $defaultOg['height'] : ($firstMedia?->height ?: null),
+            'og_image_alt' => $title,
             'locale' => $lang,
             'published_time' => ($post->published_at ?? $post->created_at)?->toIso8601String(),
             'modified_time' => ($translation !== null ? $translation->updated_at : ($post->updated_at ?? $post->created_at))?->toIso8601String(),
-            'author_name' => $post->author?->name,
+            'author_name' => $post->author->name,
             'hreflang' => $this->hreflang->forPost($post),
-            'schema' => $this->structuredData->forPost($post, $override?->canonical_url ?: $canonical, $lang, $translation),
+            'schema' => $this->structuredData->forPost($post, $override?->canonical_url ?: $canonical, $canonicalLocale, $translation),
             'eligibility' => $eval['eligibility']->value,
             'exclusion_reason' => $eval['reason'],
         ]);
@@ -117,31 +186,62 @@ class SeoMetadataService
     /**
      * @return array<string, mixed>
      */
-    public function forCommunity(Community $community, ?string $locale = null): array
+    public function forCommunity(Community $community, ?string $locale = null, bool $isLocalizedRoute = false): array
     {
         $lang = $locale ?: ($community->language_code ?: $this->config->defaultLocale());
         $siteName = (string) config('app.name', 'SysNoxis');
+        $defaultOg = $this->config->defaultOgImageMetadata();
+
+        if ($community->visibility !== 'public' || $community->status !== 'active') {
+            return $this->assemble([
+                'title' => __('Private Community | :site', ['site' => $siteName], $lang),
+                'description' => __('Sign in or visit :site to explore public discussions and community conversations.', ['site' => $siteName], $lang),
+                'url' => $this->config->canonicalBaseUrl().'/communities',
+                'canonical' => $this->config->canonicalBaseUrl().'/communities',
+                'robots' => 'noindex, nofollow',
+                'og_type' => 'website',
+                'og_image' => $defaultOg['url'],
+                'og_image_type' => $defaultOg['type'],
+                'og_image_width' => $defaultOg['width'],
+                'og_image_height' => $defaultOg['height'],
+                'locale' => $lang,
+                'hreflang' => [],
+                'schema' => [],
+            ]);
+        }
+
         $eval = $this->qualityGate->evaluateCommunity($community);
         $canonical = $this->canonicalUrls->communityCanonicalUrl($community);
+        $ogUrl = $isLocalizedRoute && $lang !== $this->config->defaultLocale()
+            ? $this->canonicalUrls->communityCanonicalUrl($community, $lang)
+            : $canonical;
         $override = $this->findOverride(SeoEntityType::Community->value, $community->id, $lang);
 
         $title = $override?->title ?: $this->renderTemplate(
             $this->config->string('title_template_community', '{name} Community | {site}'),
             ['name' => $community->name, 'site' => $siteName],
         );
+        $fallbackDesc = __('Explore :name discussions and members on :site.', ['name' => $community->name, 'site' => $siteName], $lang);
         $description = $override?->description ?: Str::limit(
-            trim(strip_tags((string) ($community->description ?: "Explore {$community->name} discussions and members on {$siteName}."))),
+            trim(strip_tags((string) ($community->description ?: $fallbackDesc))),
             160,
         );
         $cover = $community->coverUrl() ?? $community->avatarUrl();
+        $ogImage = $override?->og_image ?: ($cover !== null ? (str_starts_with($cover, 'http') ? $cover : $this->canonicalUrls->absoluteUrl($cover)) : $defaultOg['url']);
+        $useDefaultMeta = $override?->og_image === null && $cover === null;
 
         return $this->assemble([
             'title' => $title,
             'description' => $description,
+            'url' => $override?->canonical_url ?: $ogUrl,
             'canonical' => $override?->canonical_url ?: $canonical,
             'robots' => $override?->robots ?: $eval['robots'],
             'og_type' => 'website',
-            'og_image' => $override?->og_image ?: ($cover !== null ? (str_starts_with($cover, 'http') ? $cover : $this->canonicalUrls->absoluteUrl($cover)) : $this->config->defaultOgImageUrl()),
+            'og_image' => $ogImage,
+            'og_image_type' => $useDefaultMeta ? $defaultOg['type'] : null,
+            'og_image_width' => $useDefaultMeta ? $defaultOg['width'] : null,
+            'og_image_height' => $useDefaultMeta ? $defaultOg['height'] : null,
+            'og_image_alt' => $title,
             'locale' => $lang,
             'hreflang' => $this->hreflang->forCommunity($community),
             'schema' => $this->structuredData->forCommunity($community, $canonical, $lang),
@@ -151,30 +251,61 @@ class SeoMetadataService
     /**
      * @return array<string, mixed>
      */
-    public function forProfile(User $user, ?string $locale = null): array
+    public function forProfile(User $user, ?string $locale = null, bool $isLocalizedRoute = false): array
     {
         $lang = $locale ?: app()->getLocale();
         $siteName = (string) config('app.name', 'SysNoxis');
+        $defaultOg = $this->config->defaultOgImageMetadata();
+
+        if (! $user->isActive() || ! $user->hasVerifiedEmail()) {
+            return $this->assemble([
+                'title' => $siteName,
+                'description' => __('Sign in or visit :site to explore public discussions and community conversations.', ['site' => $siteName], $lang),
+                'url' => $this->config->canonicalBaseUrl().'/',
+                'canonical' => $this->config->canonicalBaseUrl().'/',
+                'robots' => 'noindex, nofollow',
+                'og_type' => 'website',
+                'og_image' => $defaultOg['url'],
+                'og_image_type' => $defaultOg['type'],
+                'og_image_width' => $defaultOg['width'],
+                'og_image_height' => $defaultOg['height'],
+                'locale' => $lang,
+                'hreflang' => [],
+                'schema' => [],
+            ]);
+        }
+
         $eval = $this->qualityGate->evaluateProfile($user);
         $canonical = $this->canonicalUrls->profileCanonicalUrl($user);
+        $ogUrl = $isLocalizedRoute && $lang !== $this->config->defaultLocale()
+            ? $this->config->canonicalBaseUrl().'/'.$lang.'/u/'.rawurlencode($user->username)
+            : $canonical;
         $override = $this->findOverride(SeoEntityType::Profile->value, $user->id, $lang);
 
         $title = $override?->title ?: $this->renderTemplate(
             $this->config->string('title_template_profile', '{name} (@{username}) | {site}'),
             ['name' => $user->name, 'username' => $user->username, 'site' => $siteName],
         );
+        $fallbackBio = __(':name (:handle) on :site.', ['name' => $user->name, 'handle' => '@'.$user->username, 'site' => $siteName], $lang);
         $bio = $user->profile !== null && is_string($user->profile->bio) && trim($user->profile->bio) !== ''
             ? trim(strip_tags($user->profile->bio))
-            : "{$user->name} (@{$user->username}) on {$siteName}.";
+            : $fallbackBio;
         $avatar = $user->avatarUrl();
+        $ogImage = $override?->og_image ?: ($avatar !== null ? (str_starts_with($avatar, 'http') ? $avatar : $this->canonicalUrls->absoluteUrl($avatar)) : $defaultOg['url']);
+        $useDefaultMeta = $override?->og_image === null && $avatar === null;
 
         return $this->assemble([
             'title' => $title,
             'description' => $override?->description ?: Str::limit($bio, 160),
+            'url' => $override?->canonical_url ?: $ogUrl,
             'canonical' => $override?->canonical_url ?: $canonical,
             'robots' => $override?->robots ?: $eval['robots'],
             'og_type' => 'profile',
-            'og_image' => $override?->og_image ?: ($avatar !== null ? (str_starts_with($avatar, 'http') ? $avatar : $this->canonicalUrls->absoluteUrl($avatar)) : $this->config->defaultOgImageUrl()),
+            'og_image' => $ogImage,
+            'og_image_type' => $useDefaultMeta ? $defaultOg['type'] : null,
+            'og_image_width' => $useDefaultMeta ? $defaultOg['width'] : null,
+            'og_image_height' => $useDefaultMeta ? $defaultOg['height'] : null,
+            'og_image_alt' => $title,
             'locale' => $lang,
             'hreflang' => [],
             'schema' => $this->structuredData->forProfile($user, $canonical, $lang),
@@ -273,14 +404,19 @@ class SeoMetadataService
         $robots = ($indexable && $this->config->isIndexingAllowed())
             ? 'index, follow, max-image-preview:large'
             : 'noindex, nofollow';
+        $defaultOg = $this->config->defaultOgImageMetadata();
 
         return $this->assemble([
             'title' => $title,
             'description' => Str::limit($description, 160),
+            'url' => $canonical,
             'canonical' => $canonical,
             'robots' => $robots,
             'og_type' => 'website',
-            'og_image' => $this->config->defaultOgImageUrl(),
+            'og_image' => $defaultOg['url'],
+            'og_image_type' => $defaultOg['type'],
+            'og_image_width' => $defaultOg['width'],
+            'og_image_height' => $defaultOg['height'],
             'locale' => $lang,
             'hreflang' => [],
             'schema' => [
@@ -297,30 +433,132 @@ class SeoMetadataService
     }
 
     /**
+     * Localized Open Graph + SEO metadata for SysNoxis Premium across all 15 locales.
+     *
+     * @return array<string, mixed>
+     */
+    public function forPremium(?string $locale = null, bool $isLocalizedRoute = false): array
+    {
+        $lang = $locale ?: app()->getLocale();
+        $siteName = (string) config('app.name', 'SysNoxis');
+        $canonical = $this->canonicalUrls->absoluteUrl('/premium');
+        $ogUrl = $isLocalizedRoute && $lang !== $this->config->defaultLocale()
+            ? $this->canonicalUrls->absoluteUrl('/'.$lang.'/premium')
+            : $canonical;
+        $defaultOg = $this->config->defaultOgImageMetadata();
+
+        $title = __('SysNoxis Premium | :site', ['site' => $siteName], $lang);
+        $description = __('Upgrade to :site Premium for a blue member badge, reduced ads, and creator analytics.', ['site' => $siteName], $lang);
+
+        $hreflang = [];
+        foreach ($this->config->enabledLocales() as $code) {
+            $hreflang[] = [
+                'hreflang' => $code,
+                'href' => $code === $this->config->defaultLocale()
+                    ? $canonical
+                    : $this->canonicalUrls->absoluteUrl('/'.$code.'/premium'),
+            ];
+        }
+        $hreflang[] = ['hreflang' => 'x-default', 'href' => $canonical];
+
+        return $this->assemble([
+            'title' => $title,
+            'description' => Str::limit($description, 160),
+            'url' => $ogUrl,
+            'canonical' => $canonical,
+            'robots' => $this->config->isIndexingAllowed() ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
+            'og_type' => 'website',
+            'og_image' => $defaultOg['url'],
+            'og_image_type' => $defaultOg['type'],
+            'og_image_width' => $defaultOg['width'],
+            'og_image_height' => $defaultOg['height'],
+            'locale' => $lang,
+            'hreflang' => $hreflang,
+            'schema' => [
+                [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'Product',
+                    'name' => $siteName.' Premium',
+                    'description' => $description,
+                    'brand' => ['@type' => 'Brand', 'name' => $siteName],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Localized Open Graph metadata for Referral / Registration invitation links.
+     *
+     * @return array<string, mixed>
+     */
+    public function forRegisterLanding(?string $locale = null): array
+    {
+        $lang = $locale ?: app()->getLocale();
+        $siteName = (string) config('app.name', 'SysNoxis');
+        $defaultOg = $this->config->defaultOgImageMetadata();
+        $url = $lang !== $this->config->defaultLocale()
+            ? $this->canonicalUrls->absoluteUrl('/register').'?lang='.rawurlencode($lang)
+            : $this->canonicalUrls->absoluteUrl('/register');
+
+        return $this->assemble([
+            'title' => __('Join :site', ['site' => $siteName], $lang),
+            'description' => __('Create your free account on :site to connect, share ideas, and join global communities.', ['site' => $siteName], $lang),
+            'url' => $url,
+            'canonical' => $this->canonicalUrls->absoluteUrl('/register'),
+            'robots' => 'noindex, nofollow',
+            'og_type' => 'website',
+            'og_image' => $defaultOg['url'],
+            'og_image_type' => $defaultOg['type'],
+            'og_image_width' => $defaultOg['width'],
+            'og_image_height' => $defaultOg['height'],
+            'locale' => $lang,
+            'hreflang' => [],
+            'schema' => [],
+        ]);
+    }
+
+    /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function assemble(array $data): array
     {
-        $title = Str::limit(trim((string) ($data['title'] ?? config('app.name', 'SysNoxis'))), 110, '');
+        $siteName = (string) config('app.name', 'SysNoxis');
+        $title = Str::limit(trim((string) ($data['title'] ?? $siteName)), 110, '');
         $description = Str::limit(trim((string) ($data['description'] ?? '')), 170, '');
         $canonical = (string) ($data['canonical'] ?? $this->config->canonicalBaseUrl().'/');
+        $url = (string) ($data['url'] ?? $canonical);
         $robots = (string) ($data['robots'] ?? 'noindex, nofollow');
-        $ogImage = (string) ($data['og_image'] ?? $this->config->defaultOgImageUrl());
+        $defaultOg = $this->config->defaultOgImageMetadata();
+        $ogImage = trim((string) ($data['og_image'] ?? $defaultOg['url']));
+        if ($ogImage === '') {
+            $ogImage = $defaultOg['url'];
+        }
         $locale = (string) ($data['locale'] ?? 'en');
+        $ogLocale = $this->config->ogLocaleCode($locale);
+        $ogImageSecure = str_starts_with($ogImage, 'https://') ? $ogImage : null;
+        $ogImageAlt = Str::limit(trim((string) ($data['og_image_alt'] ?? $title ?: $siteName)), 140, '');
 
         return [
             'title' => $title,
             'description' => $description,
-            'url' => $canonical,
+            'url' => $url,
             'canonical' => $canonical,
             'robots' => $robots,
             'og_type' => (string) ($data['og_type'] ?? 'website'),
             'og_title' => $title,
             'og_description' => $description,
             'og_image' => $ogImage,
-            'og_locale' => str_replace('-', '_', $locale),
+            'og_image_secure_url' => $ogImageSecure,
+            'og_image_type' => $data['og_image_type'] ?? null,
+            'og_image_width' => $data['og_image_width'] ?? null,
+            'og_image_height' => $data['og_image_height'] ?? null,
+            'og_image_alt' => $ogImageAlt,
+            'og_locale' => $ogLocale,
+            'og_locale_alternates' => $this->config->ogLocaleAlternates($locale),
             'twitter_card' => 'summary_large_image',
+            'twitter_site' => $this->config->twitterSiteHandle(),
+            'twitter_image_alt' => $ogImageAlt,
             'published_time' => $data['published_time'] ?? null,
             'modified_time' => $data['modified_time'] ?? null,
             'author_name' => $data['author_name'] ?? null,

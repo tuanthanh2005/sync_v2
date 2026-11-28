@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
 import {
+    ArrowLeft,
     Bell,
     ChevronDown,
     Compass,
@@ -73,6 +74,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { useInitials } from '@/composables/useInitials';
 import { useMobileComposer } from '@/composables/useMobileComposer';
+import { useMobileNavigation } from '@/composables/useMobileNavigation';
 import { useCompactScrollHeader } from '@/composables/useMobileViewport';
 import { usePwa } from '@/composables/usePwa';
 import { formatVnd } from '@/lib/currency';
@@ -197,6 +199,7 @@ const { getInitials } = useInitials();
 const { headerHidden } = useCompactScrollHeader();
 const { canInstallApp, promptInstallApp } = usePwa();
 const { openMobileComposer } = useMobileComposer();
+const { isRootMobileRoute, goBack: goMobileBack } = useMobileNavigation();
 
 function handleCreatePostClick(): void {
     if (!user.value) {
@@ -506,8 +509,20 @@ function isItemActive(item: SidebarNavItem): boolean {
                 class="mx-auto flex h-14 max-w-[1360px] items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4 lg:px-6"
             >
                 <div class="flex min-w-0 items-center gap-1.5 sm:gap-3">
+                    <Button
+                        v-if="!isRootMobileRoute"
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        class="size-11 shrink-0 rounded-xl md:hidden"
+                        :aria-label="t('nav.back')"
+                        data-test="mobile-header-back"
+                        @click="goMobileBack"
+                    >
+                        <ArrowLeft class="size-5 rtl:rotate-180" />
+                    </Button>
                     <Sheet v-model:open="mobileMenuOpen">
-                        <SheetTrigger as-child>
+                        <SheetTrigger v-if="isRootMobileRoute" as-child>
                             <Button
                                 variant="ghost"
                                 size="icon"

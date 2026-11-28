@@ -31,7 +31,12 @@ class ProfileViewController extends Controller
         return to_route('users.show', ['user' => $user->username]);
     }
 
-    public function show(Request $request, User $user): Response
+    public function showLocalized(Request $request, string $locale, User $user): Response
+    {
+        return $this->show($request, $user, $locale);
+    }
+
+    public function show(Request $request, User $user, ?string $routeLocale = null): Response
     {
         $viewer = $request->user();
 
@@ -41,7 +46,7 @@ class ProfileViewController extends Controller
 
         $tab = $request->string('tab', 'posts')->toString();
         $payload = $this->profileService->profilePayload($user, $viewer, $tab);
-        $seo = $this->seoMetadata->forProfile($user, app()->getLocale());
+        $seo = $this->seoMetadata->forProfile($user, $routeLocale ?: app()->getLocale(), $routeLocale !== null);
 
         $ssrPosts = array_map(static fn (array $p): array => [
             'title' => (string) ($p['title'] ?: Str::limit(strip_tags((string) ($p['content'] ?? '')), 80)),

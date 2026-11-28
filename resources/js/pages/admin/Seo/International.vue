@@ -1,12 +1,42 @@
 <script setup lang="ts">
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { CheckCircle2, Globe2, Languages, ShieldAlert } from '@lucide/vue';
+import {
+    CheckCircle2,
+    Copy,
+    Eye,
+    Globe2,
+    Languages,
+    Share2,
+    ShieldAlert,
+} from '@lucide/vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import SeoInternationalAndAuditController from '@/actions/App/Http/Controllers/Admin/Seo/SeoInternationalAndAuditController';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { copyToClipboard } from '@/lib/share';
+import { appToast } from '@/lib/toast';
+
+type SocialPreviewResult = {
+    share_url: string;
+    canonical: string;
+    robots: string;
+    og_title: string;
+    og_description: string;
+    og_type: string;
+    og_url: string;
+    og_site_name: string;
+    og_locale: string;
+    og_image: string;
+    og_image_type: string | null;
+    og_image_width: number | null;
+    og_image_height: number | null;
+    twitter_card: string;
+    twitter_site: string | null;
+    privacy_redacted: boolean;
+};
 
 const props = defineProps<{
     languages: Array<{
@@ -56,6 +86,32 @@ const props = defineProps<{
         title_template_topic: string;
         description_template_home: string;
     };
+    socialSharing: {
+        twitter_site_handle: string;
+        default_og_image: {
+            url: string;
+            secure_url: string | null;
+            type: string;
+            width: number | null;
+            height: number | null;
+        };
+        locales: Array<{
+            code: string;
+            native_name: string;
+            og_locale: string;
+            custom_title: string;
+            custom_description: string;
+            default_title: string;
+            default_description: string;
+            resolved_title: string;
+            resolved_description: string;
+        }>;
+        preview_entities: {
+            posts: Array<{ id: number; label: string }>;
+            communities: Array<{ id: number; label: string }>;
+            profiles: Array<{ id: number; label: string }>;
+        };
+    };
 }>();
 
 const { t } = useI18n();
@@ -103,6 +159,123 @@ function saveTemplates(): void {
     tplForm.post(SeoInternationalAndAuditController.updateTemplates.url(), {
         preserveScroll: true,
     });
+}
+
+const socialForm = useForm({
+    twitter_site_handle: props.socialSharing.twitter_site_handle ?? '',
+    home_overrides: props.socialSharing.locales.map((item) => ({
+        code: item.code,
+        native_name: item.native_name,
+        default_title: item.default_title,
+        default_description: item.default_description,
+        title: item.custom_title,
+        description: item.custom_description,
+    })),
+});
+
+function saveSocialSharing(): void {
+    socialForm
+        .transform((data) => ({
+            twitter_site_handle: data.twitter_site_handle,
+            home_overrides: data.home_overrides.map((row) => ({
+                code: row.code,
+                title: row.title,
+                description: row.description,
+            })),
+        }))
+        .post(SeoInternationalAndAuditController.updateSocialSharing.url(), {
+            preserveScroll: true,
+        });
+}
+
+const previewLocale = ref<string>('en');
+const previewPageType = ref<
+    'home' | 'post' | 'community' | 'profile' | 'premium' | 'register'
+>('home');
+const previewEntityId = ref<number | null>(null);
+const previewLoading = ref(false);
+const previewError = ref<string | null>(null);
+const previewResult = ref<SocialPreviewResult | null>(null);
+
+const selectableEntities = computed<Array<{ id: number; label: string }>>(
+    () => {
+        if (previewPageType.value === 'post') {
+            return props.socialSharing.preview_entities.posts;
+        }
+        if (previewPageType.value === 'community') {
+            return props.socialSharing.preview_entities.communities;
+        }
+        if (previewPageType.value === 'profile') {
+            return props.socialSharing.preview_entities.profiles;
+        }
+        return [];
+    },
+);
+
+function readXsrfToken(): string | null {
+    if (typeof document === 'undefined') {
+        return null;
+    }
+
+    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+async function runSocialPreview(): Promise<void> {
+    previewLoading.value = true;
+    previewError.value = null;
+
+    try {
+        const xsrf = readXsrfToken();
+        const response = await fetch(
+            SeoInternationalAndAuditController.previewSocialCard.url(),
+            {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...(xsrf ? { 'X-XSRF-TOKEN': xsrf } : {}),
+                },
+                body: JSON.stringify({
+                    page_type: previewPageType.value,
+                    locale: previewLocale.value,
+                    entity_id:
+                        selectableEntities.value.length > 0
+                            ? previewEntityId.value
+                            : null,
+                }),
+            },
+        );
+
+        const data = (await response.json()) as
+            | SocialPreviewResult
+            | { error?: string };
+
+        if (!response.ok || !('og_title' in data)) {
+            previewError.value =
+                ('error' in data && data.error) ||
+                t('admin.seoCenter.previewFailed');
+            return;
+        }
+
+        previewResult.value = data;
+    } catch {
+        previewError.value = t('admin.seoCenter.previewFailed');
+    } finally {
+        previewLoading.value = false;
+    }
+}
+
+async function copyPreviewUrl(): Promise<void> {
+    if (!previewResult.value?.share_url) {
+        return;
+    }
+    const ok = await copyToClipboard(previewResult.value.share_url);
+    if (ok) {
+        appToast.success(t('post.shareCopied'));
+    }
 }
 </script>
 
@@ -424,6 +597,279 @@ function saveTemplates(): void {
                         }}</Button
                     >
                 </div>
+            </form>
+        </section>
+
+        <!-- Multilingual Social Sharing Defaults & Internal Open Graph Tester -->
+        <section
+            class="space-y-5 rounded-xl border border-border bg-card p-5 shadow-xs"
+        >
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h2
+                        class="flex items-center gap-2 text-sm font-semibold text-foreground"
+                    >
+                        <Share2 class="size-4 text-primary" />
+                        <span>{{
+                            t('admin.seoCenter.socialSharingTitle')
+                        }}</span>
+                    </h2>
+                    <p class="mt-1 text-xs text-muted-foreground">
+                        {{ t('admin.seoCenter.socialSharingDesc') }}
+                    </p>
+                </div>
+                <Badge variant="outline" class="font-mono text-[11px]">
+                    {{ socialSharing.default_og_image.type }}
+                    <span
+                        v-if="
+                            socialSharing.default_og_image.width &&
+                            socialSharing.default_og_image.height
+                        "
+                    >
+                        · {{ socialSharing.default_og_image.width }}×{{
+                            socialSharing.default_og_image.height
+                        }}
+                    </span>
+                </Badge>
+            </div>
+
+            <!-- Interactive Social Card Preview Tester -->
+            <div
+                class="space-y-4 rounded-xl border border-border bg-muted/25 p-4"
+            >
+                <div class="flex items-center gap-2 text-xs font-semibold">
+                    <Eye class="size-4 text-primary" />
+                    <span>{{ t('admin.seoCenter.socialPreviewTester') }}</span>
+                </div>
+
+                <div class="grid gap-3 md:grid-cols-4">
+                    <div class="space-y-1">
+                        <Label for="preview-page-type">{{
+                            t('admin.seoCenter.previewPageType')
+                        }}</Label>
+                        <select
+                            id="preview-page-type"
+                            v-model="previewPageType"
+                            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-xs"
+                            @change="previewEntityId = null"
+                        >
+                            <option value="home">
+                                {{ t('admin.seoCenter.pageTypeHome') }}
+                            </option>
+                            <option value="post">
+                                {{ t('admin.seoCenter.pageTypePost') }}
+                            </option>
+                            <option value="community">
+                                {{ t('admin.seoCenter.pageTypeCommunity') }}
+                            </option>
+                            <option value="profile">
+                                {{ t('admin.seoCenter.pageTypeProfile') }}
+                            </option>
+                            <option value="premium">
+                                {{ t('admin.seoCenter.pageTypePremium') }}
+                            </option>
+                            <option value="register">
+                                {{ t('admin.seoCenter.pageTypeReferral') }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-1">
+                        <Label for="preview-locale">{{
+                            t('admin.seoCenter.targetLocale')
+                        }}</Label>
+                        <select
+                            id="preview-locale"
+                            v-model="previewLocale"
+                            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-xs"
+                        >
+                            <option
+                                v-for="lang in languages"
+                                :key="lang.code"
+                                :value="lang.code"
+                            >
+                                {{ lang.code }} · {{ lang.native_name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div
+                        v-if="selectableEntities.length > 0"
+                        class="space-y-1 md:col-span-2"
+                    >
+                        <Label for="preview-entity">{{
+                            t('admin.seoCenter.previewEntity')
+                        }}</Label>
+                        <select
+                            id="preview-entity"
+                            v-model="previewEntityId"
+                            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-xs"
+                        >
+                            <option :value="null">
+                                {{ t('admin.seoCenter.previewLatestPublic') }}
+                            </option>
+                            <option
+                                v-for="item in selectableEntities"
+                                :key="item.id"
+                                :value="item.id"
+                            >
+                                {{ item.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <Button
+                        type="button"
+                        size="sm"
+                        :disabled="previewLoading"
+                        @click="runSocialPreview"
+                    >
+                        {{
+                            previewLoading
+                                ? t('common.loading')
+                                : t('admin.seoCenter.runSocialPreview')
+                        }}
+                    </Button>
+                    <p
+                        v-if="previewError"
+                        class="text-xs font-medium text-destructive"
+                    >
+                        {{ previewError }}
+                    </p>
+                </div>
+
+                <div
+                    v-if="previewResult"
+                    class="grid gap-4 rounded-xl border border-border bg-card p-4 lg:grid-cols-2"
+                >
+                    <div
+                        class="overflow-hidden rounded-xl border border-border bg-muted/20"
+                    >
+                        <img
+                            :src="previewResult.og_image"
+                            :alt="previewResult.og_title"
+                            class="aspect-[1200/630] w-full bg-background object-cover"
+                        />
+                        <div class="space-y-1 border-t border-border p-3">
+                            <p
+                                class="truncate text-[11px] font-medium text-muted-foreground uppercase"
+                            >
+                                {{ previewResult.og_site_name }} ·
+                                {{ previewResult.og_locale }}
+                            </p>
+                            <p class="truncate text-sm font-semibold">
+                                {{ previewResult.og_title }}
+                            </p>
+                            <p
+                                class="line-clamp-2 text-xs text-muted-foreground"
+                            >
+                                {{ previewResult.og_description }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="font-semibold text-muted-foreground">{{
+                                t('admin.seoCenter.shareUrlLabel')
+                            }}</span>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                class="h-7 gap-1 px-2 text-[11px]"
+                                @click="copyPreviewUrl"
+                            >
+                                <Copy class="size-3" />
+                                <span>{{ t('growth.referral.copyLink') }}</span>
+                            </Button>
+                        </div>
+                        <p
+                            class="rounded-md bg-muted px-2.5 py-1.5 font-mono text-[11px] break-all"
+                        >
+                            {{ previewResult.share_url }}
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+                            <div>
+                                <span class="text-muted-foreground">{{
+                                    t('admin.seoCenter.metaOgTypeLabel')
+                                }}</span>
+                                <span class="ms-1 font-mono">{{
+                                    previewResult.og_type
+                                }}</span>
+                            </div>
+                            <div>
+                                <span class="text-muted-foreground">{{
+                                    t('admin.seoCenter.metaTwitterCardLabel')
+                                }}</span>
+                                <span class="ms-1 font-mono">{{
+                                    previewResult.twitter_card
+                                }}</span>
+                            </div>
+                            <div>
+                                <span class="text-muted-foreground">{{
+                                    t('admin.seoCenter.metaRobotsLabel')
+                                }}</span>
+                                <span class="ms-1 font-mono">{{
+                                    previewResult.robots
+                                }}</span>
+                            </div>
+                            <div v-if="previewResult.privacy_redacted">
+                                <Badge variant="secondary">{{
+                                    t('admin.seoCenter.privacyProtected')
+                                }}</Badge>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Per-Locale Homepage Social Metadata & X Handle -->
+            <form @submit.prevent="saveSocialSharing" class="space-y-4">
+                <div class="max-w-xs space-y-1">
+                    <Label for="twitter-site-handle">{{
+                        t('admin.seoCenter.twitterHandleLabel')
+                    }}</Label>
+                    <Input
+                        id="twitter-site-handle"
+                        v-model="socialForm.twitter_site_handle"
+                        placeholder="@sysnoxis"
+                    />
+                </div>
+
+                <div class="grid gap-3 md:grid-cols-2">
+                    <div
+                        v-for="row in socialForm.home_overrides"
+                        :key="row.code"
+                        class="space-y-2 rounded-lg border border-border/80 bg-muted/15 p-3"
+                    >
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold">
+                                {{ row.code }} · {{ row.native_name }}
+                            </span>
+                        </div>
+                        <Input
+                            v-model="row.title"
+                            :placeholder="row.default_title"
+                            class="h-8 text-xs"
+                        />
+                        <Input
+                            v-model="row.description"
+                            :placeholder="row.default_description"
+                            class="h-8 text-xs"
+                        />
+                    </div>
+                </div>
+
+                <Button
+                    type="submit"
+                    size="sm"
+                    :disabled="socialForm.processing"
+                >
+                    {{ t('admin.seoCenter.saveSocialSharing') }}
+                </Button>
             </form>
         </section>
     </div>

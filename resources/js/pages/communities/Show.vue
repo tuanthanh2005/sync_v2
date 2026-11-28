@@ -16,7 +16,10 @@ import {
 } from '@lucide/vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { appToast } from '@/lib/toast';
+import {
+    buildLocalizedCommunityShareUrl,
+    shareOrCopyLink,
+} from '@/lib/share';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import EmptyState from '@/components/common/EmptyState.vue';
@@ -42,6 +45,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useInitials } from '@/composables/useInitials';
+import { appToast } from '@/lib/toast';
 import { login } from '@/routes';
 import type {
     ActiveBannerDisplay,
@@ -65,7 +69,7 @@ const props = defineProps<{
     banners?: Record<string, ActiveBannerDisplay | null>;
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const { getInitials } = useInitials();
@@ -123,15 +127,20 @@ function toggleJoin(): void {
 }
 
 async function shareCommunity(): Promise<void> {
-    const url = `${window.location.origin}${CommunityController.show.url(props.community.slug)}`;
+    const url = buildLocalizedCommunityShareUrl(
+        props.community.slug,
+        locale.value,
+        page.props.canonicalOrigin,
+    );
 
-    try {
-        await navigator.clipboard.writeText(url);
-    } catch {
-        // Ignore clipboard errors gracefully
-    }
-
-    appToast.success(t('post.shareCopied'));
+    await shareOrCopyLink({
+        url,
+        title: props.community.name,
+        copiedMessage: t('post.shareCopied'),
+        failedMessage: t('common.copyFailed'),
+        preferNativeShare:
+            typeof window !== 'undefined' && window.innerWidth < 768,
+    });
 }
 
 function submitEdit(): void {

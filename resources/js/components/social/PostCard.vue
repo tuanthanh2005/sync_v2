@@ -45,6 +45,10 @@ import {
     formatDateTime,
     formatNumber,
 } from '@/lib/formatters';
+import {
+    buildLocalizedPostShareUrl,
+    shareOrCopyLink,
+} from '@/lib/share';
 import { appToast } from '@/lib/toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -77,6 +81,7 @@ const props = withDefaults(
         canPin?: boolean;
         communitySlug?: string | null;
         viewSource?: PostViewSource;
+        shareAlternates?: Array<{ hreflang: string; href: string }>;
     }>(),
     {
         truncate: true,
@@ -84,6 +89,7 @@ const props = withDefaults(
         canPin: false,
         communitySlug: null,
         viewSource: 'feed',
+        shareAlternates: () => [],
     },
 );
 
@@ -324,15 +330,30 @@ function hideFromMyFeed(): void {
 }
 
 async function handleShare(): Promise<void> {
-    const absoluteUrl = `${window.location.origin}${PostController.show.url(props.post.id)}`;
+    const shareUrl = buildLocalizedPostShareUrl(
+        {
+            postId: props.post.id,
+            slug: props.post.slug,
+            languageCode: props.post.language_code,
+            alternates: props.shareAlternates,
+            currentLocale: locale.value,
+        },
+        page.props.canonicalOrigin,
+    );
 
-    try {
-        await navigator.clipboard.writeText(absoluteUrl);
-    } catch {
-        // Fallback silently if clipboard access is unavailable
-    }
+    const shareTitle =
+        props.post.title?.trim() ||
+        props.post.author?.name ||
+        String(page.props.name || 'SysNoxis');
 
-    appToast.success(t('post.shareCopied'));
+    await shareOrCopyLink({
+        url: shareUrl,
+        title: shareTitle,
+        copiedMessage: t('post.shareCopied'),
+        failedMessage: t('common.copyFailed'),
+        preferNativeShare:
+            typeof window !== 'undefined' && window.innerWidth < 768,
+    });
 
     if (user.value) {
         router.post(

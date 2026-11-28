@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Seo;
 
 use App\Http\Controllers\Controller;
+use App\Models\Community;
 use App\Models\Hashtag;
 use App\Models\Language;
 use App\Models\Post;
@@ -11,13 +12,19 @@ use App\Models\SeoAuditRun;
 use App\Models\SeoContentTranslation;
 use App\Models\SeoJobHistory;
 use App\Models\SeoRecommendation;
+use App\Models\User;
+use App\Services\Seo\CanonicalUrlService;
 use App\Services\Seo\ContentTranslationService;
 use App\Services\Seo\HreflangService;
 use App\Services\Seo\KeywordIntelligenceService;
 use App\Services\Seo\SeoAuditService;
 use App\Services\Seo\SeoConfigService;
+use App\Services\Seo\SeoMetadataService;
+use App\Services\System\LanguageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,6 +36,8 @@ class SeoInternationalAndAuditController extends Controller
         private readonly HreflangService $hreflang,
         private readonly SeoAuditService $auditService,
         private readonly KeywordIntelligenceService $keywordIntelligence,
+        private readonly SeoMetadataService $seoMetadata,
+        private readonly CanonicalUrlService $canonicalUrls,
     ) {}
 
     public function international(): Response
@@ -76,6 +85,50 @@ class SeoInternationalAndAuditController extends Controller
             ->all();
 
         $hreflangCheck = $this->hreflang->validateAll();
+        $localizedHomeDefaults = SeoConfigService::localizedHomeDefaults();
+        $siteName = (string) config('app.name', 'SysNoxis');
+
+        $localeHomeSettings = $languages->map(function (Language $lang) use ($localizedHomeDefaults, $siteName): array {
+            $fallback = $localizedHomeDefaults[$lang->code] ?? $localizedHomeDefaults['en'];
+            $computed = $this->config->homeSeoCopy($lang->code);
+
+            return [
+                'code' => $lang->code,
+                'native_name' => $lang->native_name,
+                'og_locale' => $this->config->ogLocaleCode($lang->code),
+                'custom_title' => $this->config->string('home_title_'.$lang->code, ''),
+                'custom_description' => $this->config->string('home_description_'.$lang->code, ''),
+                'default_title' => str_replace('{site}', $siteName, $fallback['title']),
+                'default_description' => str_replace('{site}', $siteName, $fallback['description']),
+                'resolved_title' => $computed['title'],
+                'resolved_description' => $computed['description'],
+            ];
+        })->values()->all();
+
+        $previewCommunities = Community::query()
+            ->where('visibility', 'public')
+            ->where('status', 'active')
+            ->orderByDesc('members_count')
+            ->limit(15)
+            ->get(['id', 'name', 'slug'])
+            ->map(static fn (Community $c): array => [
+                'id' => $c->id,
+                'label' => $c->name.' (/communities/'.$c->slug.')',
+            ])
+            ->values()
+            ->all();
+
+        $previewProfiles = User::query()
+            ->whereNotNull('email_verified_at')
+            ->orderByDesc('followers_count')
+            ->limit(15)
+            ->get(['id', 'name', 'username'])
+            ->map(static fn (User $u): array => [
+                'id' => $u->id,
+                'label' => $u->name.' (@'.$u->username.')',
+            ])
+            ->values()
+            ->all();
 
         return Inertia::render('admin/Seo/International', [
             'languages' => $languages,
@@ -89,6 +142,16 @@ class SeoInternationalAndAuditController extends Controller
                 'title_template_profile' => $this->config->string('title_template_profile', '{name} (@{username}) | {site}'),
                 'title_template_topic' => $this->config->string('title_template_topic', '#{topic} Discussions & Insights | {site}'),
                 'description_template_home' => $this->config->string('description_template_home', ''),
+            ],
+            'socialSharing' => [
+                'twitter_site_handle' => $this->config->twitterSiteHandle() ?? '',
+                'default_og_image' => $this->config->defaultOgImageMetadata(),
+                'locales' => $localeHomeSettings,
+                'preview_entities' => [
+                    'posts' => array_map(static fn (array $p): array => ['id' => $p['id'], 'label' => $p['title']], array_slice($candidatePosts, 0, 15)),
+                    'communities' => $previewCommunities,
+                    'profiles' => $previewProfiles,
+                ],
             ],
         ]);
     }
@@ -347,5 +410,138 @@ class SeoInternationalAndAuditController extends Controller
         Inertia::flash('toast', ['type' => 'success', 'message' => __('SEO Engine settings saved.')]);
 
         return back();
+    }
+
+    public function updateSocialSharing(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        abort_if($user === null, 403);
+
+        $validated = $request->validate([
+            'twitter_site_handle' => ['nullable', 'string', 'max:20', 'regex:/^(@?[A-Za-z0-9_]{1,15})?$/'],
+            'home_overrides' => ['required', 'array'],
+            'home_overrides.*.code' => ['required', 'string', Rule::in(LanguageService::allCodes())],
+            'home_overrides.*.title' => ['nullable', 'string', 'max:140'],
+            'home_overrides.*.description' => ['nullable', 'string', 'max:240'],
+        ]);
+
+        $rawHandle = trim((string) ($validated['twitter_site_handle'] ?? ''));
+        $normalizedHandle = $rawHandle === '' ? '' : (str_starts_with($rawHandle, '@') ? $rawHandle : '@'.$rawHandle);
+        $this->config->set('twitter_site_handle', $normalizedHandle, 'social_sharing', 'string', false, $user);
+
+        /** @var array<int, array{code: string, title?: string|null, description?: string|null}> $overrides */
+        $overrides = $validated['home_overrides'];
+
+        foreach ($overrides as $entry) {
+            $code = (string) $entry['code'];
+            $cleanTitle = trim(strip_tags((string) ($entry['title'] ?? '')));
+            $cleanDesc = trim(strip_tags((string) ($entry['description'] ?? '')));
+            $this->config->set('home_title_'.$code, $cleanTitle, 'social_sharing', 'string', false, $user);
+            $this->config->set('home_description_'.$code, $cleanDesc, 'social_sharing', 'string', false, $user);
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Social sharing and Open Graph metadata updated.')]);
+
+        return back();
+    }
+
+    /**
+     * Internal real-data Open Graph & Twitter card tester (zero external HTTP requests).
+     */
+    public function previewSocialCard(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'page_type' => ['required', 'string', Rule::in(['home', 'post', 'community', 'profile', 'premium', 'register'])],
+            'locale' => ['required', 'string', Rule::in(LanguageService::allCodes())],
+            'entity_id' => ['nullable', 'integer', 'min:1'],
+        ]);
+
+        $pageType = (string) $validated['page_type'];
+        $locale = (string) $validated['locale'];
+        $entityId = isset($validated['entity_id']) ? (int) $validated['entity_id'] : null;
+        $base = $this->config->canonicalBaseUrl();
+
+        $seo = null;
+        $shareUrl = $locale === 'en' ? $base.'/' : $base.'/'.$locale;
+
+        if ($pageType === 'home') {
+            $requestPath = $locale === 'en' ? '/' : '/'.$locale;
+            $seo = $this->seoMetadata->forHome($locale, $requestPath);
+            $shareUrl = $seo['url'];
+        } elseif ($pageType === 'premium') {
+            $seo = $this->seoMetadata->forPremium($locale, $locale !== 'en');
+            $shareUrl = $locale === 'en' ? $base.'/premium' : $base.'/'.$locale.'/premium';
+        } elseif ($pageType === 'register') {
+            $seo = $this->seoMetadata->forRegisterLanding($locale);
+            $shareUrl = $locale === 'en' ? $base.'/r/SV-PREVIEW' : $base.'/'.$locale.'/r/SV-PREVIEW';
+        } elseif ($pageType === 'post') {
+            $post = $entityId !== null
+                ? Post::withTrashed()->find($entityId)
+                : Post::query()->publicVisible()->latest('id')->first();
+
+            if ($post === null) {
+                return response()->json(['error' => __('No matching post found for preview.')], 404);
+            }
+
+            $translation = $locale !== ($post->language_code ?: 'en')
+                ? SeoContentTranslation::query()
+                    ->where('entity_type', 'post')
+                    ->where('entity_id', $post->id)
+                    ->where('target_locale', $locale)
+                    ->publishedApproved()
+                    ->first()
+                : null;
+
+            $untranslated = $translation === null && $locale !== ($post->language_code ?: 'en');
+            $seo = $this->seoMetadata->forPost($post, $locale, $translation, $untranslated);
+            $shareUrl = $untranslated
+                ? $base.'/posts/'.$post->id.'?lang='.rawurlencode($locale)
+                : $this->canonicalUrls->postCanonicalUrl($post, $locale, $translation);
+        } elseif ($pageType === 'community') {
+            $community = $entityId !== null
+                ? Community::query()->find($entityId)
+                : Community::query()->where('visibility', 'public')->where('status', 'active')->first();
+
+            if ($community === null) {
+                return response()->json(['error' => __('No matching community found for preview.')], 404);
+            }
+
+            $seo = $this->seoMetadata->forCommunity($community, $locale, $locale !== 'en');
+            $shareUrl = $locale === 'en'
+                ? $base.'/communities/'.$community->slug
+                : $base.'/'.$locale.'/communities/'.$community->slug;
+        } elseif ($pageType === 'profile') {
+            $profileUser = $entityId !== null
+                ? User::query()->find($entityId)
+                : User::query()->whereNotNull('email_verified_at')->first();
+
+            if ($profileUser === null) {
+                return response()->json(['error' => __('No matching profile found for preview.')], 404);
+            }
+
+            $seo = $this->seoMetadata->forProfile($profileUser, $locale, $locale !== 'en');
+            $shareUrl = $locale === 'en'
+                ? $base.'/u/'.rawurlencode($profileUser->username)
+                : $base.'/'.$locale.'/u/'.rawurlencode($profileUser->username);
+        }
+
+        return response()->json([
+            'share_url' => $shareUrl,
+            'canonical' => $seo['canonical'] ?? $shareUrl,
+            'robots' => $seo['robots'] ?? 'noindex, nofollow',
+            'og_title' => $seo['og_title'] ?? '',
+            'og_description' => $seo['og_description'] ?? '',
+            'og_type' => $seo['og_type'] ?? 'website',
+            'og_url' => $seo['url'] ?? $shareUrl,
+            'og_site_name' => (string) config('app.name', 'SysNoxis'),
+            'og_locale' => $seo['og_locale'] ?? 'en_US',
+            'og_image' => $seo['og_image'] ?? $this->config->defaultOgImageUrl(),
+            'og_image_type' => $seo['og_image_type'] ?? null,
+            'og_image_width' => $seo['og_image_width'] ?? null,
+            'og_image_height' => $seo['og_image_height'] ?? null,
+            'twitter_card' => $seo['twitter_card'] ?? 'summary_large_image',
+            'twitter_site' => $seo['twitter_site'] ?? null,
+            'privacy_redacted' => ($seo['exclusion_reason'] ?? null) === 'private_or_restricted_post',
+        ]);
     }
 }

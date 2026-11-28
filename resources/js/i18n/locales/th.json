@@ -42,7 +42,8 @@
         "reportIssue": "รายงานปัญหา",
         "contactSupport": "ติดต่อฝ่ายสนับสนุน",
         "viewPublicProfile": "โปรไฟล์สาธารณะ",
-        "appearanceLanguage": "ธีมและภาษา"
+        "appearanceLanguage": "ธีมและภาษา",
+        "back": "ย้อนกลับ"
     },
     "theme": {
         "light": "สว่าง",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "สำรวจชุมชน {brand}",
             "description": "เรื่องราวใหม่ๆ และไอเดียสดใหม่กำลังรอคุณอยู่"
+        },
+        "guestWelcome": {
+            "title": "ยินดีต้อนรับสู่ {brand}",
+            "subtitle": "เชื่อมต่อ แบ่งปัน และค้นพบสิ่งใหม่ไปกับชุมชนระดับโลก",
+            "cta": "เข้าร่วมฟรี"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "รูปภาพหน้าปก (JPG, PNG, WebP)",
         "save": "บันทึกโปรไฟล์",
         "noPosts": "ยังไม่มีโพสต์สาธารณะ",
-        "noBookmarks": "คุณยังไม่ได้บันทึกโพสต์ใดๆ"
+        "noBookmarks": "คุณยังไม่ได้บันทึกโพสต์ใดๆ",
+        "share": "แชร์โปรไฟล์",
+        "shareCopied": "คัดลอกลิงก์โปรไฟล์แล้ว"
     },
     "search": {
         "title": "ค้นหา",
@@ -1712,7 +1720,28 @@
             "minPostChars": "จำนวนอักขระขั้นต่ำของโพสต์สำหรับดัชนี",
             "minTopicPosts": "จำนวนโพสต์ขั้นต่ำต่อกลุ่มหัวข้อ",
             "dailyGscInspectionQuota": "ขีดจำกัดโควตาการตรวจสอบ GSC รายวัน",
-            "saveSeoEngineSettings": "บันทึกการตั้งค่าเครื่องมือ SEO"
+            "saveSeoEngineSettings": "บันทึกการตั้งค่าเครื่องมือ SEO",
+            "socialSharingTitle": "การแชร์โซเชียลหลายภาษาและเมตาดาตา Open Graph",
+            "socialSharingDesc": "ตั้งค่าหัวข้อและคำอธิบาย Open Graph หน้าแรกตามภาษา พร้อมทดสอบตัวอย่างการ์ดจริงโดยไม่เปิดเผยเนื้อหาส่วนตัว",
+            "socialPreviewTester": "เครื่องมือทดสอบตัวอย่างลิงก์โซเชียล",
+            "previewPageType": "ประเภทหน้า",
+            "pageTypeHome": "หน้าแรก",
+            "pageTypePost": "โพสต์สาธารณะ",
+            "pageTypeCommunity": "ชุมชนสาธารณะ",
+            "pageTypeProfile": "โปรไฟล์สมาชิก",
+            "pageTypePremium": "หน้า Premium",
+            "pageTypeReferral": "หน้าลิงก์เชิญเพื่อน",
+            "previewEntity": "รายการเป้าหมาย",
+            "previewLatestPublic": "ใช้ตัวอย่างสาธารณะล่าสุด",
+            "runSocialPreview": "สร้างตัวอย่าง",
+            "previewFailed": "ไม่สามารถสร้างตัวอย่างการ์ดโซเชียลได้",
+            "privacyProtected": "ปกป้องความเป็นส่วนตัวแล้ว",
+            "twitterHandleLabel": "บัญชี X / Twitter อย่างเป็นทางการ (ไม่บังคับ)",
+            "saveSocialSharing": "บันทึกเมตาดาตาโซเชียล",
+            "shareUrlLabel": "ลิงก์ที่ใช้แชร์",
+            "metaOgTypeLabel": "ประเภท OG:",
+            "metaTwitterCardLabel": "การ์ด X:",
+            "metaRobotsLabel": "คำสั่ง Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "โพสต์ #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "ผู้ใช้"
         },
         "next": "ถัดไป",
-        "previous": "ก่อนหน้า"
+        "previous": "ก่อนหน้า",
+        "loading": "กำลังโหลด..."
     },
     "pwa": {
         "installApp": "ติดตั้งแอป SysNoxis"

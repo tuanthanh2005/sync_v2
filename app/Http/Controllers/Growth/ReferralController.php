@@ -29,15 +29,33 @@ class ReferralController extends Controller
     ) {}
 
     /**
+     * Public Localized Referral Landing Redirect (/{locale}/r/{code}).
+     */
+    public function visitLocalized(Request $request, string $locale, string $code): RedirectResponse
+    {
+        return $this->visit($request, $code, $locale);
+    }
+
+    /**
      * Public Referral Landing Redirect (/r/{code}) — validates code, tracks human visit once,
      * attaches First-Touch attribution cookie (30d default), and sends X-Robots-Tag: noindex, nofollow
      * so referral links NEVER create duplicate SEO URLs.
      */
-    public function visit(Request $request, string $code): RedirectResponse
+    public function visit(Request $request, string $code, ?string $locale = null): RedirectResponse
     {
         $validCode = $this->referralService->recordVisit($code, $request);
         $nextPath = $this->referralService->sanitizeInternalReturnPath($request->query('next'));
+        $targetLocale = $locale ?: app()->getLocale();
         $target = $nextPath ?? route('register', [], false);
+
+        if ($targetLocale !== '' && $targetLocale !== 'en' && ! str_contains($target, 'lang=')) {
+            $separator = str_contains($target, '?') ? '&' : '?';
+            $target .= $separator.'lang='.rawurlencode($targetLocale);
+        }
+
+        if ($request->hasSession() && $targetLocale !== '') {
+            $request->session()->put('locale', $targetLocale);
+        }
 
         $response = redirect()->to($target)
             ->header('X-Robots-Tag', 'noindex, nofollow');

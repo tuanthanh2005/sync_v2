@@ -24,6 +24,7 @@ use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
 use App\Services\Monetization\PlatformCapabilityService;
 use App\Services\Policy\FooterMenuService;
+use App\Services\Seo\SeoConfigService;
 use App\Services\Social\HashtagService;
 use App\Services\Social\SearchService;
 use App\Services\Social\TrustLevelResolver;
@@ -107,6 +108,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => $systemPublic['siteName'] ?: (string) config('app.name'),
             'appUrl' => config('app.url'),
+            'canonicalOrigin' => app(SeoConfigService::class)->canonicalBaseUrl(),
             'locale' => $locale,
             'isRtl' => $this->languageService->isRtl($locale),
             'languages' => $this->languageService->publicEnabledLanguages(),

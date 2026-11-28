@@ -300,6 +300,8 @@ class FeedService
 
         return [
             'id' => $post->id,
+            'slug' => $post->slug,
+            'language_code' => $post->language_code ?: 'en',
             'category' => $post->category->value,
             'category_label' => $post->category->label(),
             'title' => $post->title,

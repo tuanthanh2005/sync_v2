@@ -32,11 +32,19 @@ class SetLocale
             $enabledCodes = LanguageService::allCodes();
         }
 
-        // Respect explicit URL locale prefix (e.g., /vi/posts/..., /ja/topics/...) without IP-redirecting bots.
+        // Respect explicit URL locale prefix (e.g., /vi, /ja/topics/...) without IP-redirecting bots.
         $firstSegment = $request->segment(1);
         $candidate = is_string($firstSegment) && in_array($firstSegment, $enabledCodes, true)
             ? $firstSegment
             : null;
+
+        // Also honor explicit valid shared URL query locale (?lang=xx or ?locale=xx) above session/browser defaults.
+        if ($candidate === null) {
+            $queryCandidate = $request->query('lang') ?? $request->query('locale');
+            if (is_string($queryCandidate) && in_array($queryCandidate, $enabledCodes, true)) {
+                $candidate = $queryCandidate;
+            }
+        }
 
         if ($candidate === null) {
             $candidate = $request->hasSession()

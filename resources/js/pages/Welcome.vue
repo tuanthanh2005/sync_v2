@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import {
-    ArrowRight,
     ArrowUp,
     BriefcaseBusiness,
     ChevronLeft,
@@ -16,11 +15,11 @@ import {
     TrendingUp,
     Users,
     Wallet,
+    X,
 } from '@lucide/vue';
 import type { Component } from 'vue';
 import {
     computed,
-    nextTick,
     onBeforeUnmount,
     onMounted,
     ref,
@@ -28,6 +27,7 @@ import {
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import HomeController from '@/actions/App/Http/Controllers/HomeController';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import LoadingSkeleton from '@/components/common/LoadingSkeleton.vue';
@@ -36,8 +36,10 @@ import BannerSlot from '@/components/monetization/BannerSlot.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
 import { Button } from '@/components/ui/button';
+import { useHorizontalScroll } from '@/composables/useHorizontalScroll';
 import { isModalRuntimeActive } from '@/composables/useModalRuntimeLock';
-import { login, register } from '@/routes';
+import { localeUrlPrefix } from '@/lib/share';
+import { register } from '@/routes';
 import type {
     ActiveBannerDisplay,
     AdSensePageConfig,
@@ -73,10 +75,43 @@ const props = withDefaults(
     },
 );
 
-const { t } = useI18n();
+const GUEST_WELCOME_DISMISSED_KEY = 'sysnoxis.guest_welcome_dismissed.v1';
+
+function readGuestWelcomeDismissed(): boolean {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+
+    try {
+        return window.localStorage.getItem(GUEST_WELCOME_DISMISSED_KEY) === '1';
+    } catch {
+        return false;
+    }
+}
+
+const { t, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const brandName = computed(() => page.props.name);
+const guestWelcomeDismissed = ref<boolean>(readGuestWelcomeDismissed());
+
+const registerHref = computed<string>(() => {
+    const base = register().url;
+    return locale.value && locale.value !== 'en'
+        ? `${base}?lang=${encodeURIComponent(locale.value)}`
+        : base;
+});
+
+function dismissGuestWelcome(): void {
+    guestWelcomeDismissed.value = true;
+    if (typeof window !== 'undefined') {
+        try {
+            window.localStorage.setItem(GUEST_WELCOME_DISMISSED_KEY, '1');
+        } catch {
+            // Ignore blocked storage contexts gracefully
+        }
+    }
+}
 
 const feedItems = computed<PublicFeedPost[]>(() => {
     const items = [...organicItems.value];
@@ -165,66 +200,22 @@ const tabs = computed<Array<{ key: string; label: string; icon: Component }>>(
 
 const tabListRef = ref<HTMLElement | null>(null);
 const tabButtonRefs = ref<Record<string, HTMLButtonElement | null>>({});
-const canScrollTabsLeft = ref(false);
-const canScrollTabsRight = ref(false);
 
-function updateTabScrollState(): void {
-    const el = tabListRef.value;
-    if (!el) {
-        canScrollTabsLeft.value = false;
-        canScrollTabsRight.value = false;
-        return;
-    }
-
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    if (maxScroll <= 2) {
-        canScrollTabsLeft.value = false;
-        canScrollTabsRight.value = false;
-        return;
-    }
-
-    const absLeft = Math.abs(el.scrollLeft);
-    canScrollTabsLeft.value = absLeft > 4;
-    canScrollTabsRight.value = absLeft < maxScroll - 4;
-}
-
-function scrollTabsBy(direction: -1 | 1): void {
-    const el = tabListRef.value;
-    if (!el) {
-        return;
-    }
-
-    el.scrollBy({
-        left: direction * Math.max(180, Math.round(el.clientWidth * 0.55)),
-        behavior: 'smooth',
-    });
-}
-
-function handleTabWheel(event: WheelEvent): void {
-    const el = tabListRef.value;
-    if (!el || el.scrollWidth <= el.clientWidth) {
-        return;
-    }
-
-    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-        event.preventDefault();
-        el.scrollLeft += event.deltaY;
-        updateTabScrollState();
-    }
-}
+const {
+    canScrollStart: canScrollTabsLeft,
+    canScrollEnd: canScrollTabsRight,
+    updateScrollState: updateTabScrollState,
+    scrollByDirection: scrollTabsBy,
+    handleWheel: handleTabWheel,
+    scrollChildIntoView,
+} = useHorizontalScroll(tabListRef, [
+    locale,
+    () => props.categories.length,
+    () => Boolean(user.value),
+]);
 
 function scrollActiveTabIntoView(tabKey: string): void {
-    void nextTick(() => {
-        const el = tabButtonRefs.value[tabKey];
-        if (el && typeof el.scrollIntoView === 'function') {
-            el.scrollIntoView({
-                inline: 'center',
-                block: 'nearest',
-                behavior: 'smooth',
-            });
-        }
-        updateTabScrollState();
-    });
+    scrollChildIntoView(tabButtonRefs.value[tabKey]);
 }
 
 watch(
@@ -237,9 +228,11 @@ watch(
 function switchTab(tabKey: string): void {
     hasNewPostsBanner.value = false;
     scrollActiveTabIntoView(tabKey);
+    const prefix = localeUrlPrefix(locale.value);
+    const baseUrl = prefix !== '' ? prefix : '/';
     router.get(
-        HomeController.index.url({ query: { tab: tabKey } }),
-        {},
+        baseUrl,
+        { tab: tabKey },
         {
             preserveState: true,
             preserveScroll: false,
@@ -387,9 +380,6 @@ onMounted(() => {
         }
         void checkForNewerPosts();
     }, 90_000);
-
-    void nextTick(() => updateTabScrollState());
-    window.addEventListener('resize', updateTabScrollState, { passive: true });
 });
 
 onBeforeUnmount(() => {
@@ -398,9 +388,6 @@ onBeforeUnmount(() => {
     if (freshnessTimer !== null) {
         clearInterval(freshnessTimer);
     }
-    if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', updateTabScrollState);
-    }
 });
 </script>
 
@@ -408,45 +395,54 @@ onBeforeUnmount(() => {
     <div class="space-y-5">
         <Head :title="t('home.pageTitle')" />
 
-        <!-- Guest-only Commercial Hero Banner -->
+        <!-- Compact Dismissible Guest Welcome Banner (Content First, Zero Login Button Duplication) -->
         <section
-            v-if="!user"
-            class="overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8"
+            v-if="!user && !guestWelcomeDismissed"
+            data-test="guest-welcome-card"
+            class="flex flex-col gap-3 rounded-xl border border-border bg-card px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5 sm:py-3.5"
         >
-            <p
-                class="inline-flex items-center rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold tracking-wider text-accent-foreground uppercase"
-            >
-                {{ t('home.hero.eyebrow', { brand: brandName }) }}
-            </p>
+            <div class="flex min-w-0 items-center gap-3">
+                <div
+                    class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary"
+                    aria-hidden="true"
+                >
+                    <AppLogoIcon class="size-6" />
+                </div>
+                <div class="min-w-0 text-start">
+                    <h1
+                        class="truncate text-sm font-semibold text-foreground sm:text-base"
+                    >
+                        {{ t('home.guestWelcome.title', { brand: brandName }) }}
+                    </h1>
+                    <p
+                        class="line-clamp-2 text-xs text-muted-foreground sm:truncate sm:text-sm"
+                    >
+                        {{ t('home.guestWelcome.subtitle') }}
+                    </p>
+                </div>
+            </div>
 
-            <h1
-                class="mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            <div
+                class="flex shrink-0 items-center justify-between gap-2 sm:justify-end"
             >
-                {{ t('home.hero.heading') }}
-            </h1>
-
-            <p
-                class="mt-2.5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base"
-            >
-                {{ t('home.hero.description') }}
-            </p>
-
-            <div class="mt-6 flex flex-wrap items-center gap-3">
-                <Button class="rounded-lg font-semibold" as-child>
-                    <Link :href="register()">
-                        <span>{{ t('home.hero.primaryCta') }}</span>
-                        <ArrowRight class="size-4" aria-hidden="true" />
-                    </Link>
-                </Button>
                 <Button
-                    variant="secondary"
-                    class="rounded-lg font-medium"
+                    size="sm"
+                    class="min-h-9 rounded-lg px-4 font-semibold"
                     as-child
                 >
-                    <Link :href="login()">
-                        {{ t('home.hero.secondaryCta') }}
+                    <Link :href="registerHref">
+                        {{ t('home.guestWelcome.cta') }}
                     </Link>
                 </Button>
+                <button
+                    type="button"
+                    data-test="guest-welcome-dismiss"
+                    :aria-label="t('common.close')"
+                    class="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    @click="dismissGuestWelcome"
+                >
+                    <X class="size-4" aria-hidden="true" />
+                </button>
             </div>
         </section>
 
@@ -508,32 +504,40 @@ onBeforeUnmount(() => {
                 </button>
             </div>
 
-            <!-- Subtle Start/End scroll arrows when overflowing (Desktop-friendly) -->
+            <!-- Start/End scroll arrows when overflowing (Mobile, Tablet & Desktop) -->
             <div
                 v-if="canScrollTabsLeft"
-                class="pointer-events-none absolute inset-y-0 start-0 hidden items-center bg-gradient-to-r from-background via-background/85 to-transparent pe-4 sm:flex"
+                class="pointer-events-none absolute inset-y-0 start-0 z-10 flex items-center bg-gradient-to-r from-background via-background/90 to-transparent pe-4 rtl:bg-gradient-to-l"
             >
                 <button
                     type="button"
+                    data-test="home-tabs-scroll-start"
                     :aria-label="t('common.previous')"
-                    class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    class="pointer-events-auto flex size-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:size-7"
                     @click="scrollTabsBy(-1)"
                 >
-                    <ChevronLeft class="size-4" aria-hidden="true" />
+                    <ChevronLeft
+                        class="size-4 rtl:rotate-180"
+                        aria-hidden="true"
+                    />
                 </button>
             </div>
 
             <div
                 v-if="canScrollTabsRight"
-                class="pointer-events-none absolute inset-y-0 end-0 hidden items-center bg-gradient-to-l from-background via-background/85 to-transparent ps-4 sm:flex"
+                class="pointer-events-none absolute inset-y-0 end-0 z-10 flex items-center bg-gradient-to-l from-background via-background/90 to-transparent ps-4 rtl:bg-gradient-to-r"
             >
                 <button
                     type="button"
+                    data-test="home-tabs-scroll-end"
                     :aria-label="t('common.next')"
-                    class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    class="pointer-events-auto flex size-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:size-7"
                     @click="scrollTabsBy(1)"
                 >
-                    <ChevronRight class="size-4" aria-hidden="true" />
+                    <ChevronRight
+                        class="size-4 rtl:rotate-180"
+                        aria-hidden="true"
+                    />
                 </button>
             </div>
         </div>
@@ -544,8 +548,8 @@ onBeforeUnmount(() => {
             class="hidden sm:block"
         />
 
-        <!-- Post Composer -->
-        <PostComposer :categories="categories" />
+        <!-- Post Composer (Authenticated members only — hidden for Guests) -->
+        <PostComposer v-if="user" :categories="categories" />
 
         <!-- Mobile Below Composer Banner (auto-collapses if vacant) -->
         <BannerSlot

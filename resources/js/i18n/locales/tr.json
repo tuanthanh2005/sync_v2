@@ -42,7 +42,8 @@
         "reportIssue": "Sorun Bildir",
         "contactSupport": "Destek ile İletişime Geç",
         "viewPublicProfile": "Herkese Açık Profil",
-        "appearanceLanguage": "Görünüm ve Dil"
+        "appearanceLanguage": "Görünüm ve Dil",
+        "back": "Geri"
     },
     "theme": {
         "light": "Açık",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "{brand} topluluğunu keşfedin",
             "description": "Yeni hikâyeler ve taze fikirler sizi bekliyor."
+        },
+        "guestWelcome": {
+            "title": "{brand}'e hoş geldiniz",
+            "subtitle": "Küresel toplulukla bağlantı kurun, paylaşın ve keşfedin.",
+            "cta": "Ücretsiz katıl"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Kapak görseli (JPG, PNG, WebP)",
         "save": "Profili kaydet",
         "noPosts": "Henüz herkese açık gönderi yok.",
-        "noBookmarks": "Henüz hiçbir gönderiyi kaydetmediniz."
+        "noBookmarks": "Henüz hiçbir gönderiyi kaydetmediniz.",
+        "share": "Profili paylaş",
+        "shareCopied": "Profil bağlantısı panoya kopyalandı."
     },
     "search": {
         "title": "Arama",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Dizin İçin Min. Gönderi Karakteri",
             "minTopicPosts": "Konu Kümesi Başına Min. Gönderi",
             "dailyGscInspectionQuota": "Günlük GSC Denetim Kota Sınırı",
-            "saveSeoEngineSettings": "SEO Motoru Ayarlarını Kaydet"
+            "saveSeoEngineSettings": "SEO Motoru Ayarlarını Kaydet",
+            "socialSharingTitle": "Çok Dilli Sosyal Paylaşım ve Open Graph Meta Verileri",
+            "socialSharingDesc": "Her dil için ana sayfa Open Graph başlık/açıklamalarını ayarlayın ve gizli içerikleri sızdırmadan önizlemeyi test edin.",
+            "socialPreviewTester": "Sosyal Bağlantı Önizleme Test Aracı",
+            "previewPageType": "Sayfa türü",
+            "pageTypeHome": "Ana Akış",
+            "pageTypePost": "Herkese Açık Gönderi",
+            "pageTypeCommunity": "Herkese Açık Topluluk",
+            "pageTypeProfile": "Üye Profili",
+            "pageTypePremium": "Premium Sayfası",
+            "pageTypeReferral": "Davet Açılış Sayfası",
+            "previewEntity": "Hedef kayıt",
+            "previewLatestPublic": "En güncel herkese açık örneği kullan",
+            "runSocialPreview": "Önizleme Oluştur",
+            "previewFailed": "Sosyal kart önizlemesi oluşturulamadı.",
+            "privacyProtected": "Gizlilik Korumalı (Sansürlendi)",
+            "twitterHandleLabel": "Resmi X / Twitter kullanıcı adı (isteğe bağlı)",
+            "saveSocialSharing": "Sosyal Meta Verilerini Kaydet",
+            "shareUrlLabel": "Paylaşım URL",
+            "metaOgTypeLabel": "OG Türü:",
+            "metaTwitterCardLabel": "X Kartı:",
+            "metaRobotsLabel": "Robots Kuralı:"
         },
         "usersExtra": {
             "commentPostMeta": "Gönderi #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "Kullanıcı"
         },
         "next": "Sonraki",
-        "previous": "Önceki"
+        "previous": "Önceki",
+        "loading": "Yükleniyor..."
     },
     "pwa": {
         "installApp": "SysNoxis Uygulamasını Yükle"

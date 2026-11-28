@@ -42,7 +42,8 @@
         "reportIssue": "Mag-ulat ng Problema",
         "contactSupport": "Makipag-ugnayan sa Suporta",
         "viewPublicProfile": "Pampublikong Profile",
-        "appearanceLanguage": "Hitsura at Wika"
+        "appearanceLanguage": "Hitsura at Wika",
+        "back": "Bumalik"
     },
     "theme": {
         "light": "Maliwanag",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "Tuklasin ang komunidad ng {brand}",
             "description": "Naghihintay sa iyo ang mga bagong kuwento at sariwang ideya."
+        },
+        "guestWelcome": {
+            "title": "Maligayang pagdating sa {brand}",
+            "subtitle": "Kumonekta, magbahagi, at tumuklas kasama ang pandaigdigang komunidad.",
+            "cta": "Sumali nang libre"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Larawan ng pabalat (JPG, PNG, WebP)",
         "save": "I-save ang propayl",
         "noPosts": "Wala pang pampublikong paskil.",
-        "noBookmarks": "Wala ka pang nai-save na paskil."
+        "noBookmarks": "Wala ka pang nai-save na paskil.",
+        "share": "Ibahagi ang profile",
+        "shareCopied": "Nakopya ang link ng profile."
     },
     "search": {
         "title": "Paghahanap",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Min na Karakter ng Paskil para sa Index",
             "minTopicPosts": "Min na Paskil bawat Kumpol ng Paksa",
             "dailyGscInspectionQuota": "Araw-araw na Limitasyon sa Kota ng GSC Inspection",
-            "saveSeoEngineSettings": "I-save ang mga Setting ng SEO Engine"
+            "saveSeoEngineSettings": "I-save ang mga Setting ng SEO Engine",
+            "socialSharingTitle": "Multilingual Social Sharing at Open Graph Metadata",
+            "socialSharingDesc": "I-configure ang Open Graph na pamagat/paglalarawan bawat wika at i-preview ang totoong card nang walang tagas sa pribadong post.",
+            "socialPreviewTester": "Tagasuri ng Social Link Preview",
+            "previewPageType": "Uri ng pahina",
+            "pageTypeHome": "Home Feed",
+            "pageTypePost": "Pampublikong Post",
+            "pageTypeCommunity": "Pampublikong Komunidad",
+            "pageTypeProfile": "Profile ng Miyembro",
+            "pageTypePremium": "Pahina ng Premium",
+            "pageTypeReferral": "Landing ng Referral",
+            "previewEntity": "Target na tala",
+            "previewLatestPublic": "Gamitin ang pinakabagong pampublikong halimbawa",
+            "runSocialPreview": "Gumawa ng Preview",
+            "previewFailed": "Hindi magawa ang preview ng social card.",
+            "privacyProtected": "Protektado ang Privacy",
+            "twitterHandleLabel": "Opisyal na X / Twitter handle (opsyonal)",
+            "saveSocialSharing": "I-save ang Social Metadata",
+            "shareUrlLabel": "Nakuhang Share URL",
+            "metaOgTypeLabel": "Uri ng OG:",
+            "metaTwitterCardLabel": "X Card:",
+            "metaRobotsLabel": "Robots Tag:"
         },
         "usersExtra": {
             "commentPostMeta": "Paskil #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "Gumagamit"
         },
         "next": "Susunod",
-        "previous": "Nakaraan"
+        "previous": "Nakaraan",
+        "loading": "Naglo-load..."
     },
     "pwa": {
         "installApp": "I-install ang SysNoxis App"

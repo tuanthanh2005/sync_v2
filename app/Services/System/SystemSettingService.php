@@ -292,7 +292,7 @@ class SystemSettingService
                 'favicon32' => (string) config('syncviet.branding.assets.favicon_32', '/icons/favicon-32x32.png').$v,
                 'appleTouchIcon' => (string) config('syncviet.branding.assets.apple_touch_icon', '/apple-touch-icon.png').$v,
                 'pwa192' => (string) config('syncviet.branding.assets.pwa_192', '/icons/icon-192.png').$v,
-                'ogImage' => (string) config('syncviet.branding.assets.og_default', '/og-default.svg').$v,
+                'ogImage' => (string) config('syncviet.branding.assets.og_default', '/og-default.png').$v,
             ],
         ];
     }

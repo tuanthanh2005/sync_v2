@@ -16,6 +16,7 @@ use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
 use App\Services\Monetization\PlatformCapabilityService;
 use App\Services\Monetization\PremiumSubscriptionService;
+use App\Services\Seo\SeoMetadataService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -31,16 +32,30 @@ class ServicesCenterController extends Controller
         private readonly MonetizationPaymentService $paymentService,
         private readonly PlatformCapabilityService $platformService,
         private readonly AdSenseConfigService $adSenseService,
+        private readonly SeoMetadataService $seoMetadata,
     ) {}
 
-    public function index(Request $request): Response
+    public function indexLocalized(Request $request, string $locale): Response
+    {
+        return $this->index($request, $locale);
+    }
+
+    public function index(Request $request, ?string $locale = null): Response
     {
         $plans = $this->premiumService->publicPlans();
         $placements = $this->bannerService->publicPlacements();
         $boostPackages = $this->boostService->publicPackages();
 
+        $activeLocale = $locale ?: app()->getLocale();
         $appName = (string) config('app.name', 'SysNoxis');
-        $canonical = route('monetization.services');
+        $path = $locale !== null && $locale !== 'en' ? '/'.$locale.'/services' : '/services';
+        $seo = $this->seoMetadata->forStaticPage(
+            $path,
+            __('Services Center | :site', ['site' => $appName], $activeLocale),
+            __('Explore SysNoxis Premium membership, Banner Advertising placements, and Boost Post packages on :site.', ['site' => $appName], $activeLocale),
+            true,
+            $activeLocale,
+        );
 
         return Inertia::render('monetization/Services', [
             'plans' => $plans,
@@ -49,28 +64,22 @@ class ServicesCenterController extends Controller
             'platformCapabilities' => $this->platformService->capabilitiesForRequest($request),
             'exchangeRate' => $this->paymentService->exchangeRateVndPerUsd(),
         ])->withViewData([
-            'seo' => [
-                'title' => __('Services Center').' - '.$appName,
-                'description' => __('Explore SysNoxis Premium verified membership, Banner Advertising placements, and Boost Post packages.'),
-                'url' => $canonical,
-                'hreflangs' => $this->buildHreflangs($canonical),
-                'jsonLd' => [
-                    '@context' => 'https://schema.org',
-                    '@type' => 'WebPage',
-                    'name' => $appName.' Services Center',
-                    'url' => $canonical,
-                ],
-            ],
+            'seo' => $seo,
         ]);
     }
 
-    public function premium(Request $request): Response
+    public function premiumLocalized(Request $request, string $locale): Response
+    {
+        return $this->premium($request, $locale);
+    }
+
+    public function premium(Request $request, ?string $locale = null): Response
     {
         $user = $request->user();
         $platform = $this->platformService->resolvePlatform($request);
         $plans = $this->premiumService->publicPlans();
-        $appName = (string) config('app.name', 'SysNoxis');
-        $canonical = route('monetization.premium');
+        $activeLocale = $locale ?: app()->getLocale();
+        $seo = $this->seoMetadata->forPremium($activeLocale, $locale !== null);
 
         return Inertia::render('monetization/Premium', [
             'plans' => $plans,
@@ -81,19 +90,7 @@ class ServicesCenterController extends Controller
             'pendingOrdersCount' => $user !== null ? $this->paymentService->openPendingCount($user, PaymentServiceType::Premium) : 0,
             'maxPendingOrders' => $this->paymentService->maxPendingPaymentsPerUser(),
         ])->withViewData([
-            'seo' => [
-                'title' => 'SysNoxis Premium - '.$appName,
-                'description' => __('Upgrade to SysNoxis Premium for a blue member badge, reduced ads, and post analytics.'),
-                'url' => $canonical,
-                'hreflangs' => $this->buildHreflangs($canonical),
-                'jsonLd' => [
-                    '@context' => 'https://schema.org',
-                    '@type' => 'Product',
-                    'name' => 'SysNoxis Premium',
-                    'description' => 'Time-limited SysNoxis Premium membership with blue member badge and creator tools.',
-                    'brand' => ['@type' => 'Brand', 'name' => $appName],
-                ],
-            ],
+            'seo' => $seo,
         ]);
     }
 

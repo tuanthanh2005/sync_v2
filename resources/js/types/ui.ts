@@ -647,6 +647,8 @@ export type SocialDirectoryUserItem = {
 
 export type PublicFeedPost = {
     id: number;
+    slug?: string | null;
+    language_code?: string | null;
     category: string;
     category_label: string;
     title: string | null;

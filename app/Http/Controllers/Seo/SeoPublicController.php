@@ -126,4 +126,20 @@ SVG;
             'Cache-Control' => 'public, max-age=86400',
         ]);
     }
+
+    /**
+     * Serve the crisp 1200x630 raster PNG Open Graph image derived directly from the official SysNoxis S mark.
+     */
+    public function defaultOgImagePng(): Response
+    {
+        $file = public_path('og-default.png');
+        if (! is_file($file)) {
+            abort(404);
+        }
+
+        return response((string) file_get_contents($file), 200, [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'public, max-age=604800',
+        ]);
+    }
 }

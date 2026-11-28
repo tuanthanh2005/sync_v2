@@ -42,7 +42,8 @@
         "reportIssue": "समस्या की रिपोर्ट करें",
         "contactSupport": "सहायता से संपर्क करें",
         "viewPublicProfile": "सार्वजनिक प्रोफ़ाइल",
-        "appearanceLanguage": "दिखावट और भाषा"
+        "appearanceLanguage": "दिखावट और भाषा",
+        "back": "वापस"
     },
     "theme": {
         "light": "हल्का",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "{brand} समुदाय को जानें",
             "description": "नई कहानियां और ताज़ा विचार आपकी प्रतीक्षा कर रहे हैं।"
+        },
+        "guestWelcome": {
+            "title": "{brand} में आपका स्वागत है",
+            "subtitle": "वैश्विक समुदाय के साथ जुड़ें, साझा करें और नया खोजें।",
+            "cta": "मुफ़्त जुड़ें"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "कवर चित्र (JPG, PNG, WebP)",
         "save": "प्रोफ़ाइल सहेजें",
         "noPosts": "अभी तक कोई सार्वजनिक पोस्ट नहीं है।",
-        "noBookmarks": "आपने अभी तक कोई पोस्ट नहीं सहेजी है।"
+        "noBookmarks": "आपने अभी तक कोई पोस्ट नहीं सहेजी है।",
+        "share": "प्रोफ़ाइल साझा करें",
+        "shareCopied": "प्रोफ़ाइल लिंक क्लिपबोर्ड पर कॉपी हो गया।"
     },
     "search": {
         "title": "खोजें",
@@ -1712,7 +1720,28 @@
             "minPostChars": "इंडेक्स के लिए न्यूनतम पोस्ट अक्षर",
             "minTopicPosts": "प्रति विषय समूह न्यूनतम पोस्ट",
             "dailyGscInspectionQuota": "दैनिक GSC निरीक्षण कोटा सीमा",
-            "saveSeoEngineSettings": "SEO इंजन सेटिंग्स सहेजें"
+            "saveSeoEngineSettings": "SEO इंजन सेटिंग्स सहेजें",
+            "socialSharingTitle": "बहुभाषी सोशल शेयरिंग और Open Graph मेटाडेटा",
+            "socialSharingDesc": "प्रत्येक भाषा के लिए होमपेज Open Graph शीर्षक/विवरण सेट करें और निजी पोस्ट लीक किए बिना प्रीव्यू जांचें।",
+            "socialPreviewTester": "सोशल लिंक प्रीव्यू परीक्षक",
+            "previewPageType": "पृष्ठ प्रकार",
+            "pageTypeHome": "होम फ़ीड",
+            "pageTypePost": "सार्वजनिक पोस्ट",
+            "pageTypeCommunity": "सार्वजनिक समुदाय",
+            "pageTypeProfile": "सदस्य प्रोफ़ाइल",
+            "pageTypePremium": "प्रीमियम पृष्ठ",
+            "pageTypeReferral": "रेफ़रल लैंडिंग",
+            "previewEntity": "लक्षित रिकॉर्ड",
+            "previewLatestPublic": "नवीनतम सार्वजनिक नमूना उपयोग करें",
+            "runSocialPreview": "प्रीव्यू बनाएं",
+            "previewFailed": "सोशल कार्ड प्रीव्यू तैयार नहीं किया जा सका।",
+            "privacyProtected": "गोपनीयता सुरक्षित (छिपा हुआ)",
+            "twitterHandleLabel": "आधिकारिक X / Twitter हैंडल (वैकल्पिक)",
+            "saveSocialSharing": "सोशल मेटाडेटा सहेजें",
+            "shareUrlLabel": "साझा URL",
+            "metaOgTypeLabel": "OG प्रकार:",
+            "metaTwitterCardLabel": "X कार्ड:",
+            "metaRobotsLabel": "Robots निर्देश:"
         },
         "usersExtra": {
             "commentPostMeta": "पोस्ट #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "उपयोगकर्ता"
         },
         "next": "अगला",
-        "previous": "पिछला"
+        "previous": "पिछला",
+        "loading": "लोड हो रहा है..."
     },
     "pwa": {
         "installApp": "SysNoxis ऐप इंस्टॉल करें"

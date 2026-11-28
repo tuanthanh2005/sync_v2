@@ -47,7 +47,7 @@ return [
             'pwa_192' => '/icons/icon-192.png',
             'pwa_512' => '/icons/icon-512.png',
             'pwa_maskable_512' => '/icons/icon-maskable-512.png',
-            'og_default' => '/og-default.svg',
+            'og_default' => '/og-default.png',
         ],
     ],
 
@@ -168,7 +168,7 @@ return [
         'gsc_inspection_batch_size' => (int) env('SEO_GSC_INSPECTION_BATCH_SIZE', 25),
         'indexnow_endpoint' => (string) env('SEO_INDEXNOW_ENDPOINT', 'https://api.indexnow.org/indexnow'),
         'pagespeed_api_key' => env('PAGESPEED_INSIGHTS_API_KEY'),
-        'default_og_image' => '/og-default.svg',
+        'default_og_image' => '/og-default.png',
     ],
 
     /*

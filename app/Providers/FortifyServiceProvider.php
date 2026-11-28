@@ -11,6 +11,7 @@ use App\Services\Auth\AuthSecurityEventService;
 use App\Services\Auth\EmailVerificationChallengeService;
 use App\Services\Auth\PendingRegistrationService;
 use App\Services\Auth\TurnstileService;
+use App\Services\Seo\SeoMetadataService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -197,6 +198,8 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::registerView(fn () => Inertia::render('auth/Register', [
             'passwordRules' => Password::defaults()->toPasswordRulesString(),
+        ])->withViewData([
+            'seo' => app(SeoMetadataService::class)->forRegisterLanding(app()->getLocale()),
         ]));
 
         Fortify::twoFactorChallengeView(fn () => Inertia::render('auth/TwoFactorChallenge'));

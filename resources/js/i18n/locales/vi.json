@@ -42,7 +42,8 @@
         "reportIssue": "Báo cáo sự cố",
         "contactSupport": "Liên hệ hỗ trợ",
         "viewPublicProfile": "Hồ sơ công khai",
-        "appearanceLanguage": "Giao diện & Ngôn ngữ"
+        "appearanceLanguage": "Giao diện & Ngôn ngữ",
+        "back": "Quay lại"
     },
     "theme": {
         "light": "Sáng",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "Khám phá cộng đồng {brand}",
             "description": "Những câu chuyện và ý tưởng mới đang chờ bạn."
+        },
+        "guestWelcome": {
+            "title": "Chào mừng đến với {brand}",
+            "subtitle": "Kết nối, chia sẻ và khám phá cùng cộng đồng toàn cầu.",
+            "cta": "Tham gia miễn phí"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "Ảnh bìa (JPG, PNG, WebP)",
         "save": "Lưu hồ sơ",
         "noPosts": "Chưa có bài viết công khai nào.",
-        "noBookmarks": "Bạn chưa lưu bài viết nào."
+        "noBookmarks": "Bạn chưa lưu bài viết nào.",
+        "share": "Chia sẻ hồ sơ",
+        "shareCopied": "Đã sao chép liên kết hồ sơ."
     },
     "search": {
         "title": "Tìm kiếm",
@@ -1712,7 +1720,28 @@
             "minPostChars": "Số ký tự tối thiểu để lập chỉ mục bài viết",
             "minTopicPosts": "Số bài viết tối thiểu mỗi cụm chủ đề",
             "dailyGscInspectionQuota": "Hạn mức kiểm tra URL GSC hằng ngày",
-            "saveSeoEngineSettings": "Lưu cài đặt Hệ thống SEO"
+            "saveSeoEngineSettings": "Lưu cài đặt Hệ thống SEO",
+            "socialSharingTitle": "Chia sẻ mạng xã hội đa ngôn ngữ & thẻ Open Graph",
+            "socialSharingDesc": "Tùy chỉnh tiêu đề/mô tả Open Graph trang chủ theo từng ngôn ngữ và kiểm thử thẻ xem trước thực tế mà không rò rỉ bài viết riêng tư.",
+            "socialPreviewTester": "Công cụ kiểm thử thẻ chia sẻ mạng xã hội",
+            "previewPageType": "Loại trang",
+            "pageTypeHome": "Trang chủ",
+            "pageTypePost": "Bài viết công khai",
+            "pageTypeCommunity": "Cộng đồng",
+            "pageTypeProfile": "Hồ sơ thành viên",
+            "pageTypePremium": "Trang Premium",
+            "pageTypeReferral": "Trang mời bạn bè",
+            "previewEntity": "Đối tượng kiểm thử",
+            "previewLatestPublic": "Dùng mẫu công khai mới nhất",
+            "runSocialPreview": "Tạo bản xem trước",
+            "previewFailed": "Không thể tạo thẻ xem trước lúc này.",
+            "privacyProtected": "Đã ẩn nội dung riêng tư",
+            "twitterHandleLabel": "Tài khoản X / Twitter chính thức (tùy chọn)",
+            "saveSocialSharing": "Lưu cấu hình chia sẻ",
+            "shareUrlLabel": "Đường dẫn chia sẻ",
+            "metaOgTypeLabel": "Loại OG:",
+            "metaTwitterCardLabel": "Thẻ X:",
+            "metaRobotsLabel": "Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "Bài viết #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "Người dùng"
         },
         "next": "Tiếp theo",
-        "previous": "Trước"
+        "previous": "Trước",
+        "loading": "Đang tải..."
     },
     "pwa": {
         "installApp": "Cài đặt ứng dụng SysNoxis"

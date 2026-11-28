@@ -98,6 +98,12 @@ class PostController extends Controller
         ]);
 
         $effectiveLocale = $locale ?: ($post->language_code ?: 'en');
+        $queryLocale = $locale === null ? ($request->query('lang') ?? $request->query('locale')) : null;
+        $requestedShareLocale = is_string($queryLocale) && $queryLocale !== '' ? app()->getLocale() : null;
+        $isUntranslatedShare = $locale === null
+            && $requestedShareLocale !== null
+            && $requestedShareLocale !== ($post->language_code ?: 'en');
+
         $serializedPost = $this->feedService->serializeOne($post, $request->user());
 
         if ($translation !== null) {
@@ -110,7 +116,12 @@ class PostController extends Controller
         }
 
         $comments = $this->commentService->forPost($post, $request->user());
-        $seo = $this->seoMetadata->forPost($post, $effectiveLocale, $translation);
+        $seo = $this->seoMetadata->forPost(
+            $post,
+            $isUntranslatedShare ? $requestedShareLocale : $effectiveLocale,
+            $translation,
+            $isUntranslatedShare,
+        );
         $internalLinks = $this->internalLinking->forPost($post, $effectiveLocale);
 
         $this->organicGrowth->recordEvent('post_view', $request, $request->user(), 'post', $post->id, [

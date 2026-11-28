@@ -26,6 +26,11 @@ class HomeController extends Controller
         private readonly SeoMetadataService $seoMetadata,
     ) {}
 
+    public function localized(Request $request, string $locale): Response
+    {
+        return $this->index($request);
+    }
+
     /**
      * Display the public SysNoxis News Feed and guest landing hero.
      */
@@ -41,7 +46,9 @@ class HomeController extends Controller
             $request,
         );
 
-        $seo = $this->seoMetadata->forHome(app()->getLocale());
+        $locale = app()->getLocale();
+        $prefix = $locale !== 'en' ? '/'.$locale : '';
+        $seo = $this->seoMetadata->forHome($locale, $request->getPathInfo());
         $ssrPosts = array_map(static function (array $item): array {
             return [
                 'title' => (string) ($item['title'] ?: Str::limit(strip_tags((string) ($item['content'] ?? '')), 80)),
@@ -72,9 +79,9 @@ class HomeController extends Controller
                 'description' => (string) ($seo['description'] ?? ''),
                 'posts' => $ssrPosts,
                 'links' => [
-                    ['label' => 'Communities', 'href' => '/communities'],
-                    ['label' => 'Topics', 'href' => '/topics'],
-                    ['label' => 'SysNoxis Premium', 'href' => '/premium'],
+                    ['label' => 'Communities', 'href' => $prefix.'/communities'],
+                    ['label' => 'Topics', 'href' => $prefix.'/topics'],
+                    ['label' => 'SysNoxis Premium', 'href' => $prefix.'/premium'],
                 ],
             ],
         ]);

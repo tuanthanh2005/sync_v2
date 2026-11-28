@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import {
     Award,
     Bell,
@@ -21,6 +21,11 @@ import MemberBadges from '@/components/growth/MemberBadges.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/lib/formatters';
+import {
+    buildLocalizedReferralShareUrl,
+    copyToClipboard,
+    shareOrCopyLink,
+} from '@/lib/share';
 import { appToast } from '@/lib/toast';
 import { premium as accountPremiumRoute } from '@/routes/account';
 import type { MemberBadgeItem } from '@/types';
@@ -106,8 +111,17 @@ const props = defineProps<{
 }>();
 
 const { t, locale } = useI18n();
+const page = usePage();
 const copied = ref(false);
 const showQr = ref(false);
+
+const localizedReferralLink = computed<string>(() =>
+    buildLocalizedReferralShareUrl(
+        props.referral.code,
+        locale.value,
+        page.props.canonicalOrigin,
+    ),
+);
 
 const prefForm = useForm({
     weekly_digest: props.notificationPreferences.weekly_digest,
@@ -118,11 +132,11 @@ const prefForm = useForm({
 });
 
 const encodedLink = computed(() =>
-    encodeURIComponent(props.referral.referralLink),
+    encodeURIComponent(localizedReferralLink.value),
 );
 const shareMessage = computed(() =>
     encodeURIComponent(
-        `${t('growth.referral.shareMessage')} ${props.referral.referralLink}`,
+        `${t('growth.referral.shareMessage')} ${localizedReferralLink.value}`,
     ),
 );
 
@@ -136,7 +150,7 @@ const shareLinks = computed(() => ({
 
 // Deterministic local visual matrix derived from referral code (zero external QR CDN tracking!)
 const qrCells = computed(() => {
-    const seed = props.referral.code + '|' + props.referral.referralLink;
+    const seed = props.referral.code + '|' + localizedReferralLink.value;
     const size = 21;
     const cells: boolean[][] = [];
     let hash = 2166136261;
@@ -168,32 +182,34 @@ const qrCells = computed(() => {
 });
 
 async function copyReferralLink(): Promise<void> {
-    try {
-        await navigator.clipboard.writeText(props.referral.referralLink);
+    const ok = await copyToClipboard(localizedReferralLink.value);
+    if (ok) {
         copied.value = true;
         appToast.success(t('growth.referral.linkCopied'));
         setTimeout(() => {
             copied.value = false;
         }, 2000);
-    } catch {
+    } else {
         appToast.error(t('common.copyFailed'));
     }
 }
 
 async function nativeShare(): Promise<void> {
-    if (typeof navigator !== 'undefined' && 'share' in navigator) {
-        try {
-            await navigator.share({
-                title: 'SysNoxis',
-                text: t('growth.referral.shareMessage'),
-                url: props.referral.referralLink,
-            });
-            return;
-        } catch {
-            // User dismissed native share dialog
-        }
+    const result = await shareOrCopyLink({
+        url: localizedReferralLink.value,
+        title: String(page.props.name || 'SysNoxis'),
+        text: t('growth.referral.shareMessage'),
+        copiedMessage: t('growth.referral.linkCopied'),
+        failedMessage: t('common.copyFailed'),
+        preferNativeShare: true,
+    });
+
+    if (result === 'copied') {
+        copied.value = true;
+        setTimeout(() => {
+            copied.value = false;
+        }, 2000);
     }
-    await copyReferralLink();
 }
 
 function savePreferences(): void {
@@ -271,7 +287,7 @@ function savePreferences(): void {
                         <span
                             class="min-w-0 flex-1 truncate font-mono text-xs text-foreground"
                         >
-                            {{ referral.referralLink }}
+                            {{ localizedReferralLink }}
                         </span>
                         <Button
                             type="button"

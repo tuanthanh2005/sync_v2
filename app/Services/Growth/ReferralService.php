@@ -427,8 +427,11 @@ class ReferralService
     public function memberDashboardPayload(User $user): array
     {
         $codeModel = $this->getOrCreateCode($user);
-        $baseUrl = rtrim((string) config('app.url'), '/');
-        $referralLink = "{$baseUrl}/r/{$codeModel->code}";
+        $baseUrl = rtrim((string) config('syncviet.seo.canonical_base_url', config('app.url', 'https://sysnoxis.com')), '/');
+        $locale = app()->getLocale();
+        $referralLink = ($locale !== '' && $locale !== 'en')
+            ? "{$baseUrl}/{$locale}/r/{$codeModel->code}"
+            : "{$baseUrl}/r/{$codeModel->code}";
 
         $referrals = Referral::query()
             ->with('referee:id,name,username,created_at')

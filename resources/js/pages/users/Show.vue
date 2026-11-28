@@ -11,6 +11,7 @@ import {
     Newspaper,
     Pencil,
     Settings,
+    Share2,
     ShieldBan,
     ShieldCheck,
     UserMinus,
@@ -59,6 +60,10 @@ import {
     formatDate,
     formatNumber,
 } from '@/lib/formatters';
+import {
+    buildLocalizedProfileShareUrl,
+    shareOrCopyLink,
+} from '@/lib/share';
 import { appToast } from '@/lib/toast';
 import { login } from '@/routes';
 import { edit as editProfileSettings } from '@/routes/profile';
@@ -172,6 +177,23 @@ async function handleFollow(): Promise<void> {
     }
 }
 
+async function shareProfile(): Promise<void> {
+    const shareUrl = buildLocalizedProfileShareUrl(
+        props.profile_user.username,
+        locale.value,
+        page.props.canonicalOrigin,
+    );
+
+    await shareOrCopyLink({
+        url: shareUrl,
+        title: `${props.profile_user.name} (@${props.profile_user.username})`,
+        copiedMessage: t('profile.shareCopied'),
+        failedMessage: t('common.copyFailed'),
+        preferNativeShare:
+            typeof window !== 'undefined' && window.innerWidth < 768,
+    });
+}
+
 function handleBlock(): void {
     if (!user.value) {
         return;
@@ -282,6 +304,19 @@ function submitProfileDetails(): void {
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 pt-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            class="size-8 rounded-lg"
+                            data-test="share-profile-btn"
+                            :aria-label="t('profile.share')"
+                            :title="t('profile.share')"
+                            @click="shareProfile"
+                        >
+                            <Share2 class="size-4" aria-hidden="true" />
+                        </Button>
+
                         <template v-if="profile_user.is_owner">
                             <Dialog v-model:open="editOpen">
                                 <DialogTrigger as-child>

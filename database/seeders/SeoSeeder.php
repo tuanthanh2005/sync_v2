@@ -24,7 +24,7 @@ class SeoSeeder extends Seeder
         $defaults = [
             ['group' => 'general', 'key' => 'seo_enabled', 'value' => '1', 'type' => 'boolean'],
             ['group' => 'general', 'key' => 'allow_indexing_in_non_production', 'value' => '0', 'type' => 'boolean'],
-            ['group' => 'general', 'key' => 'default_og_image', 'value' => '/og-default.svg', 'type' => 'string'],
+            ['group' => 'general', 'key' => 'default_og_image', 'value' => '/og-default.png', 'type' => 'string'],
             ['group' => 'general', 'key' => 'organization_same_as', 'value' => '[]', 'type' => 'json'],
             ['group' => 'templates', 'key' => 'title_template_home', 'value' => '{site} — Global Community & Discussions', 'type' => 'string'],
             ['group' => 'templates', 'key' => 'title_template_post', 'value' => '{title} | {site}', 'type' => 'string'],

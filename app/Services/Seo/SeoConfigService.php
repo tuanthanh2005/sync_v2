@@ -216,27 +216,298 @@ class SeoConfigService
 
     public function defaultOgImageUrl(): string
     {
+        return $this->defaultOgImageMetadata()['url'];
+    }
+
+    /**
+     * Resolve the default Open Graph raster image URL and dimensions for crawler previews.
+     *
+     * @return array{url: string, secure_url: string|null, type: string, width: int|null, height: int|null}
+     */
+    public function defaultOgImageMetadata(): array
+    {
+        $base = $this->canonicalBaseUrl();
+
         try {
-            $customOg = app(SystemSettingService::class)->brandingPayload()['ogImageUrl'];
+            $branding = app(SystemSettingService::class)->brandingPayload();
+            $customOg = $branding['ogImageUrl'] ?? null;
+
             if (is_string($customOg) && $customOg !== '') {
-                return str_starts_with($customOg, 'https://') || str_starts_with($customOg, 'http://')
+                $url = str_starts_with($customOg, 'https://') || str_starts_with($customOg, 'http://')
                     ? $customOg
-                    : $this->canonicalBaseUrl().'/'.ltrim($customOg, '/');
+                    : $base.'/'.ltrim($customOg, '/');
+
+                $inspected = $this->inspectPublicImageMeta($customOg);
+
+                return [
+                    'url' => $url,
+                    'secure_url' => str_starts_with($url, 'https://') ? $url : null,
+                    'type' => $inspected['type'],
+                    'width' => $inspected['width'],
+                    'height' => $inspected['height'],
+                ];
             }
         } catch (\Throwable) {
             // Fall through to SEO config default when system_settings is unavailable.
         }
 
-        $path = $this->string('default_og_image', (string) config('syncviet.seo.default_og_image', '/og-default.svg'));
+        $path = $this->string('default_og_image', (string) config('syncviet.seo.default_og_image', '/og-default.png'));
+
+        // Upgrade legacy SVG fallback from pre-V1.0 installations transparently to the raster PNG card.
+        if ($path === '/og-default.svg') {
+            $path = '/og-default.png';
+        }
 
         if (str_starts_with($path, 'https://') || str_starts_with($path, 'http://')) {
-            return $path;
+            return [
+                'url' => $path,
+                'secure_url' => str_starts_with($path, 'https://') ? $path : null,
+                'type' => str_ends_with(strtolower($path), '.svg') ? 'image/svg+xml' : 'image/png',
+                'width' => null,
+                'height' => null,
+            ];
         }
 
         $version = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
-        $suffix = ($path === '/og-default.svg' && $version !== '') ? '?v='.rawurlencode($version) : '';
+        $isBuiltInDefault = in_array($path, ['/og-default.png', '/og-default.svg'], true);
+        $suffix = ($isBuiltInDefault && $version !== '') ? '?v='.rawurlencode($version) : '';
+        $url = $base.'/'.ltrim($path, '/').$suffix;
 
-        return $this->canonicalBaseUrl().'/'.ltrim($path, '/').$suffix;
+        if ($path === '/og-default.png') {
+            return [
+                'url' => $url,
+                'secure_url' => str_starts_with($url, 'https://') ? $url : null,
+                'type' => 'image/png',
+                'width' => 1200,
+                'height' => 630,
+            ];
+        }
+
+        $inspected = $this->inspectPublicImageMeta($path);
+
+        return [
+            'url' => $url,
+            'secure_url' => str_starts_with($url, 'https://') ? $url : null,
+            'type' => $inspected['type'],
+            'width' => $inspected['width'],
+            'height' => $inspected['height'],
+        ];
+    }
+
+    /**
+     * @return array{type: string, width: int|null, height: int|null}
+     */
+    private function inspectPublicImageMeta(string $relativeOrUrl): array
+    {
+        $parsedPath = parse_url($relativeOrUrl, PHP_URL_PATH);
+        $path = is_string($parsedPath) ? '/'.ltrim($parsedPath, '/') : '';
+        $lower = strtolower($path);
+
+        $fallbackType = match (true) {
+            str_ends_with($lower, '.webp') => 'image/webp',
+            str_ends_with($lower, '.jpg'), str_ends_with($lower, '.jpeg') => 'image/jpeg',
+            str_ends_with($lower, '.svg') => 'image/svg+xml',
+            default => 'image/png',
+        };
+
+        $candidateFiles = array_values(array_filter([
+            $path !== '' ? public_path(ltrim($path, '/')) : null,
+            str_starts_with($path, '/storage/')
+                ? storage_path('app/public/'.substr($path, strlen('/storage/')))
+                : null,
+        ]));
+
+        foreach ($candidateFiles as $file) {
+            if (is_file($file)) {
+                $info = @getimagesize($file);
+                if (is_array($info)) {
+                    return [
+                        'type' => (string) $info['mime'],
+                        'width' => (int) $info[0],
+                        'height' => (int) $info[1],
+                    ];
+                }
+            }
+        }
+
+        return [
+            'type' => $fallbackType,
+            'width' => null,
+            'height' => null,
+        ];
+    }
+
+    public function ogLocaleCode(string $locale): string
+    {
+        return match ($locale) {
+            'en' => 'en_US',
+            'vi' => 'vi_VN',
+            'es' => 'es_ES',
+            'pt-BR' => 'pt_BR',
+            'id' => 'id_ID',
+            'hi' => 'hi_IN',
+            'th' => 'th_TH',
+            'fil' => 'fil_PH',
+            'fr' => 'fr_FR',
+            'de' => 'de_DE',
+            'ja' => 'ja_JP',
+            'ko' => 'ko_KR',
+            'zh-CN' => 'zh_CN',
+            'ar' => 'ar_AR',
+            'tr' => 'tr_TR',
+            default => str_replace('-', '_', $locale),
+        };
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function ogLocaleAlternates(string $currentLocale): array
+    {
+        $currentOg = $this->ogLocaleCode($currentLocale);
+        $alternates = [];
+
+        foreach ($this->enabledLocales() as $code) {
+            $og = $this->ogLocaleCode($code);
+            if ($og !== $currentOg && ! in_array($og, $alternates, true)) {
+                $alternates[] = $og;
+            }
+        }
+
+        return $alternates;
+    }
+
+    public function twitterSiteHandle(): ?string
+    {
+        $raw = trim($this->string('twitter_site_handle', ''));
+        if ($raw === '') {
+            return null;
+        }
+
+        $normalized = str_starts_with($raw, '@') ? $raw : '@'.$raw;
+
+        return preg_match('/^@[A-Za-z0-9_]{1,15}$/', $normalized) === 1 ? $normalized : null;
+    }
+
+    /**
+     * Resolve localized Homepage SEO Title & Description across all 15 supported languages.
+     *
+     * @return array{title: string, description: string}
+     */
+    public function homeSeoCopy(string $locale): array
+    {
+        $siteName = (string) config('app.name', 'SysNoxis');
+        $defaultCatalog = self::localizedHomeDefaults();
+        $fallback = $defaultCatalog[$locale] ?? $defaultCatalog['en'];
+
+        $customLocaleTitle = trim($this->string('home_title_'.$locale, ''));
+        $customLocaleDescription = trim($this->string('home_description_'.$locale, ''));
+
+        if ($locale === 'en') {
+            $tplTitle = trim($this->string('title_template_home', ''));
+            $tplDescription = trim($this->string('description_template_home', ''));
+
+            $resolvedTitle = $customLocaleTitle !== ''
+                ? $customLocaleTitle
+                : ($tplTitle !== '' ? str_replace('{site}', $siteName, $tplTitle) : str_replace('{site}', $siteName, $fallback['title']));
+
+            $resolvedDesc = $customLocaleDescription !== ''
+                ? $customLocaleDescription
+                : ($tplDescription !== '' ? str_replace('{site}', $siteName, $tplDescription) : str_replace('{site}', $siteName, $fallback['description']));
+
+            return [
+                'title' => $resolvedTitle,
+                'description' => $resolvedDesc,
+            ];
+        }
+
+        return [
+            'title' => $customLocaleTitle !== ''
+                ? str_replace('{site}', $siteName, $customLocaleTitle)
+                : str_replace('{site}', $siteName, $fallback['title']),
+            'description' => $customLocaleDescription !== ''
+                ? str_replace('{site}', $siteName, $customLocaleDescription)
+                : str_replace('{site}', $siteName, $fallback['description']),
+        ];
+    }
+
+    /**
+     * Canonical defaults for all 15 locales when per-locale Admin overrides are unset.
+     *
+     * @return array<string, array{title: string, description: string}>
+     */
+    public static function localizedHomeDefaults(): array
+    {
+        return [
+            'en' => [
+                'title' => '{site} — Connect Beyond Borders',
+                'description' => 'Connect, share ideas, and join vibrant multilingual communities on {site}.',
+            ],
+            'vi' => [
+                'title' => '{site} — Kết nối vượt mọi biên giới',
+                'description' => 'Kết nối, chia sẻ câu chuyện và khám phá cộng đồng toàn cầu trên {site}.',
+            ],
+            'es' => [
+                'title' => '{site} — Conecta más allá de las fronteras',
+                'description' => 'Conecta, comparte ideas y únete a comunidades multilingües globales en {site}.',
+            ],
+            'pt-BR' => [
+                'title' => '{site} — Conecte-se Além das Fronteiras',
+                'description' => 'Conecte-se, compartilhe ideias e participe de comunidades globais em {site}.',
+            ],
+            'id' => [
+                'title' => '{site} — Terhubung Melampaui Batas',
+                'description' => 'Terhubung, berbagi cerita, dan bergabung dengan komunitas global di {site}.',
+            ],
+            'hi' => [
+                'title' => '{site} — सीमाओं से परे जुड़ें',
+                'description' => '{site} पर जुड़ें, विचार साझा करें और वैश्विक बहुभाषी समुदायों का हिस्सा बनें।',
+            ],
+            'th' => [
+                'title' => '{site} — เชื่อมต่อข้ามพรมแดน',
+                'description' => 'เชื่อมต่อ แบ่งปันเรื่องราว และเข้าร่วมชุมชนระดับโลกบน {site}',
+            ],
+            'fil' => [
+                'title' => '{site} — Kumonekta Lampas sa Mga Hangganan',
+                'description' => 'Kumonekta, magbahagi ng mga kuwento, at sumali sa mga pandaigdigang komunidad sa {site}.',
+            ],
+            'fr' => [
+                'title' => '{site} — Connectez-vous au-delà des frontières',
+                'description' => 'Échangez des idées, partagez vos histoires et rejoignez des communautés mondiales sur {site}.',
+            ],
+            'de' => [
+                'title' => '{site} — Grenzenlos vernetzt',
+                'description' => 'Vernetze dich, teile Ideen und entdecke weltweite Communities auf {site}.',
+            ],
+            'ja' => [
+                'title' => '{site} — 国境を越えてつながる',
+                'description' => '{site}で世界中のコミュニティとつながり、アイデアやストーリーを共有しよう。',
+            ],
+            'ko' => [
+                'title' => '{site} — 국경을 넘어 연결되다',
+                'description' => '{site}에서 전 세계 커뮤니티와 소통하고 아이디어와 이야기를 나누세요.',
+            ],
+            'zh-CN' => [
+                'title' => '{site} — 跨越边界的连接',
+                'description' => '在 {site} 与全球社区交流想法、分享故事并发现精彩讨论。',
+            ],
+            'ar' => [
+                'title' => '{site} — تواصل بلا حدود',
+                'description' => 'تواصل وشارك الأفكار والقصص وانضم إلى مجتمعات عالمية متعددة اللغات على {site}.',
+            ],
+            'tr' => [
+                'title' => '{site} — Sınırların Ötesinde Bağlan',
+                'description' => '{site} üzerinde bağlantı kurun, fikirlerinizi paylaşın ve küresel topluluklara katılın.',
+            ],
+        ];
+    }
+
+    public function cacheVersionToken(): string
+    {
+        $brandVersion = (string) config('syncviet.branding.asset_version', 'sysnoxis-2');
+        $ogCustom = $this->defaultOgImageUrl();
+
+        return sha1($brandVersion.'|'.$ogCustom.'|'.($this->isIndexingAllowed() ? '1' : '0').'|'.count($this->enabledLocales()));
     }
 
     public function sitemapShardSize(): int

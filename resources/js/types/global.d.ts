@@ -27,6 +27,7 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             appUrl: string;
+            canonicalOrigin?: string;
             locale: string;
             isRtl: boolean;
             languages: PublicLanguageItem[];

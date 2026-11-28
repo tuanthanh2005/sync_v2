@@ -42,7 +42,8 @@
         "reportIssue": "الإبلاغ عن مشكلة",
         "contactSupport": "التواصل مع الدعم",
         "viewPublicProfile": "الملف العام",
-        "appearanceLanguage": "المظهر واللغة"
+        "appearanceLanguage": "المظهر واللغة",
+        "back": "رجوع"
     },
     "theme": {
         "light": "فاتح",
@@ -161,6 +162,11 @@
         "empty": {
             "title": "استكشف مجتمع {brand}",
             "description": "قصص جديدة وأفكار ملهمة بانتظارك."
+        },
+        "guestWelcome": {
+            "title": "مرحبًا بك في {brand}",
+            "subtitle": "تواصل وشارك واكتشف الأفكار مع مجتمع عالمي.",
+            "cta": "انضم مجانًا"
         }
     },
     "post": {
@@ -251,7 +257,9 @@
         "cover": "صورة الغلاف (JPG, PNG, WebP)",
         "save": "حفظ الملف الشخصي",
         "noPosts": "لا توجد منشورات عامة بعد.",
-        "noBookmarks": "لم تقم بحفظ أي منشورات بعد."
+        "noBookmarks": "لم تقم بحفظ أي منشورات بعد.",
+        "share": "مشاركة الملف الشخصي",
+        "shareCopied": "تم نسخ رابط الملف الشخصي."
     },
     "search": {
         "title": "البحث",
@@ -1712,7 +1720,28 @@
             "minPostChars": "الحد الأدنى لأحرف المنشور للفهرسة",
             "minTopicPosts": "الحد الأدنى للمنشورات لكل عنقود موضوع",
             "dailyGscInspectionQuota": "الحد اليومي لحصة فحص GSC",
-            "saveSeoEngineSettings": "حفظ إعدادات محرك SEO"
+            "saveSeoEngineSettings": "حفظ إعدادات محرك SEO",
+            "socialSharingTitle": "المشاركة الاجتماعية متعددة اللغات وبيانات Open Graph",
+            "socialSharingDesc": "خصص عناوين وأوصاف Open Graph للرئيسية لكل لغة وعاين بطاقات المشاركة دون كشف المحتوى الخاص.",
+            "socialPreviewTester": "مختبر معاينة روابط الشبكات الاجتماعية",
+            "previewPageType": "نوع الصفحة",
+            "pageTypeHome": "الصفحة الرئيسية",
+            "pageTypePost": "منشور عام",
+            "pageTypeCommunity": "مجتمع عام",
+            "pageTypeProfile": "ملف العضو",
+            "pageTypePremium": "صفحة بريميوم",
+            "pageTypeReferral": "صفحة الدعوة والإحالة",
+            "previewEntity": "السجل المستهدف",
+            "previewLatestPublic": "استخدام أحدث عينة عامة",
+            "runSocialPreview": "إنشاء المعاينة",
+            "previewFailed": "تعذر إنشاء معاينة البطاقة الاجتماعية.",
+            "privacyProtected": "محمي للخصوصية (مخفي)",
+            "twitterHandleLabel": "حساب X / Twitter الرسمي (اختياري)",
+            "saveSocialSharing": "حفظ البيانات الاجتماعية",
+            "shareUrlLabel": "رابط المشاركة",
+            "metaOgTypeLabel": "نوع OG:",
+            "metaTwitterCardLabel": "بطاقة X:",
+            "metaRobotsLabel": "توجيه Robots:"
         },
         "usersExtra": {
             "commentPostMeta": "المنشور #{id} · {status}",
@@ -2350,7 +2379,8 @@
             "userFallback": "مستخدم"
         },
         "next": "التالي",
-        "previous": "السابق"
+        "previous": "السابق",
+        "loading": "جارٍ التحميل..."
     },
     "pwa": {
         "installApp": "تثبيت تطبيق SysNoxis"
