@@ -755,6 +755,7 @@ export type ProfileViewUser = {
     followers_count: number;
     following_count: number;
     posts_count: number;
+    bookmarks_count?: number | null;
     joined_at: string | null;
     is_owner: boolean;
     is_following: boolean;

@@ -42,11 +42,16 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
     getLiveFollowersCount,
     getLiveFollowingCount,
@@ -60,10 +65,7 @@ import {
     formatDate,
     formatNumber,
 } from '@/lib/formatters';
-import {
-    buildLocalizedProfileShareUrl,
-    shareOrCopyLink,
-} from '@/lib/share';
+import { buildLocalizedProfileShareUrl, shareOrCopyLink } from '@/lib/share';
 import { appToast } from '@/lib/toast';
 import { login } from '@/routes';
 import { edit as editProfileSettings } from '@/routes/profile';
@@ -243,7 +245,7 @@ function submitProfileDetails(): void {
 </script>
 
 <template>
-    <div class="space-y-5">
+    <div class="min-w-0 space-y-4 sm:space-y-5">
         <Head :title="`${profile_user.name} (@${profile_user.username})`" />
 
         <!-- Profile Header Card -->
@@ -251,7 +253,7 @@ function submitProfileDetails(): void {
             class="overflow-hidden rounded-2xl border border-border bg-card"
         >
             <div
-                class="relative h-36 w-full border-b border-border bg-muted/70 sm:h-48"
+                class="relative h-32 w-full border-b border-border bg-muted/70 sm:h-44 lg:h-48"
             >
                 <img
                     v-if="profile_user.cover"
@@ -272,13 +274,13 @@ function submitProfileDetails(): void {
                 </Button>
             </div>
 
-            <div class="px-5 pb-6 sm:px-6">
+            <div class="px-4 pb-5 sm:px-6 lg:pb-6">
                 <div
-                    class="-mt-12 flex flex-wrap items-end justify-between gap-4"
+                    class="-mt-10 flex items-end justify-between gap-3 sm:-mt-12"
                 >
-                    <div class="relative">
+                    <div class="relative shrink-0">
                         <Avatar
-                            class="size-24 rounded-full border-4 border-card shadow-2xs"
+                            class="size-20 rounded-full border-4 border-card shadow-2xs sm:size-24"
                         >
                             <AvatarImage
                                 v-if="profile_user.avatar"
@@ -303,381 +305,508 @@ function submitProfileDetails(): void {
                         </button>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2 pt-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            class="size-8 rounded-lg"
-                            data-test="share-profile-btn"
-                            :aria-label="t('profile.share')"
-                            :title="t('profile.share')"
-                            @click="shareProfile"
+                    <TooltipProvider :delay-duration="250">
+                        <div
+                            class="flex shrink-0 flex-wrap items-center justify-end gap-2"
                         >
-                            <Share2 class="size-4" aria-hidden="true" />
-                        </Button>
-
-                        <template v-if="profile_user.is_owner">
-                            <Dialog v-model:open="editOpen">
-                                <DialogTrigger as-child>
+                            <Tooltip>
+                                <TooltipTrigger as-child>
                                     <Button
-                                        size="sm"
-                                        class="rounded-lg"
-                                        @click="openEditModal"
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        class="size-10 rounded-xl lg:size-8 lg:rounded-lg"
+                                        data-test="share-profile-btn"
+                                        :aria-label="t('profile.share')"
+                                        @click="shareProfile"
                                     >
-                                        <Pencil class="size-4" />
-                                        <span>{{
-                                            t('profile.editProfile')
-                                        }}</span>
+                                        <Share2
+                                            class="size-4"
+                                            aria-hidden="true"
+                                        />
                                     </Button>
-                                </DialogTrigger>
-                                <DialogContent
-                                    structured
-                                    :show-close-button="false"
-                                    class="sm:max-w-xl"
-                                >
-                                    <div
-                                        class="flex min-h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-5 py-4 sm:px-6"
-                                    >
-                                        <DialogHeader
-                                            class="min-w-0 flex-1 gap-0 text-start"
-                                        >
-                                            <DialogTitle
-                                                class="truncate text-lg font-semibold text-foreground"
-                                            >
-                                                {{ t('profile.editProfile') }}
-                                            </DialogTitle>
-                                        </DialogHeader>
-                                        <DialogClose as-child>
-                                            <button
-                                                type="button"
-                                                :aria-label="t('common.close')"
-                                                class="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
-                                            >
-                                                <X
-                                                    class="size-5"
-                                                    aria-hidden="true"
-                                                />
-                                            </button>
-                                        </DialogClose>
-                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent>{{
+                                    t('profile.share')
+                                }}</TooltipContent>
+                            </Tooltip>
 
-                                    <form
-                                        id="profile-edit-form"
-                                        class="flex min-h-0 flex-1 flex-col"
-                                        @submit.prevent="submitProfileDetails"
+                            <template v-if="profile_user.is_owner">
+                                <Tooltip>
+                                    <TooltipTrigger as-child>
+                                        <span class="inline-flex lg:hidden">
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                class="size-10 rounded-xl"
+                                                data-test="mobile-account-settings-btn"
+                                                :aria-label="
+                                                    t('profile.accountSettings')
+                                                "
+                                                as-child
+                                            >
+                                                <Link
+                                                    :href="
+                                                        editProfileSettings()
+                                                    "
+                                                >
+                                                    <Settings
+                                                        class="size-4"
+                                                        aria-hidden="true"
+                                                    />
+                                                </Link>
+                                            </Button>
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>{{
+                                        t('profile.accountSettings')
+                                    }}</TooltipContent>
+                                </Tooltip>
+
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    class="hidden rounded-lg lg:inline-flex"
+                                    data-test="desktop-edit-profile-btn"
+                                    @click="openEditModal"
+                                >
+                                    <Pencil class="size-4" />
+                                    <span>{{ t('profile.editProfile') }}</span>
+                                </Button>
+
+                                <Dialog v-model:open="editOpen">
+                                    <DialogContent
+                                        structured
+                                        :show-close-button="false"
+                                        class="sm:max-w-xl"
                                     >
-                                        <!-- Upload progress bar -->
                                         <div
-                                            v-if="
-                                                profileForm.processing &&
-                                                profileForm.progress
-                                            "
-                                            class="h-1 w-full shrink-0 overflow-hidden bg-muted"
-                                            role="progressbar"
-                                            :aria-valuenow="
-                                                profileForm.progress.percentage
-                                            "
-                                            aria-valuemin="0"
-                                            aria-valuemax="100"
+                                            class="flex min-h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-5 py-4 sm:px-6"
                                         >
-                                            <div
-                                                class="h-full bg-primary transition-[width] duration-150"
-                                                :style="{
-                                                    width: `${profileForm.progress.percentage}%`,
-                                                }"
-                                            />
+                                            <DialogHeader
+                                                class="min-w-0 flex-1 gap-0 text-start"
+                                            >
+                                                <DialogTitle
+                                                    class="truncate text-lg font-semibold text-foreground"
+                                                >
+                                                    {{
+                                                        t('profile.editProfile')
+                                                    }}
+                                                </DialogTitle>
+                                            </DialogHeader>
+                                            <DialogClose as-child>
+                                                <button
+                                                    type="button"
+                                                    :aria-label="
+                                                        t('common.close')
+                                                    "
+                                                    class="flex size-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+                                                >
+                                                    <X
+                                                        class="size-5"
+                                                        aria-hidden="true"
+                                                    />
+                                                </button>
+                                            </DialogClose>
                                         </div>
 
-                                        <AutoHideScrollArea
-                                            class="min-h-0 flex-1 px-5 py-4"
+                                        <form
+                                            id="profile-edit-form"
+                                            class="flex min-h-0 flex-1 flex-col"
+                                            @submit.prevent="
+                                                submitProfileDetails
+                                            "
                                         >
-                                            <div class="space-y-5">
-                                                <!-- Cover Image Section -->
-                                                <div class="space-y-1.5">
-                                                    <Label>{{
-                                                        t('profile.cover')
-                                                    }}</Label>
-                                                    <CoverImageUploader
-                                                        v-model="
-                                                            profileForm.cover
-                                                        "
-                                                        v-model:removed="
-                                                            profileForm.remove_cover
-                                                        "
-                                                        :current-url="
-                                                            profile_user.cover
-                                                        "
-                                                        :external-error="
-                                                            profileForm.errors
-                                                                .cover
-                                                        "
-                                                        :disabled="
-                                                            profileForm.processing
-                                                        "
-                                                    />
-                                                </div>
-
-                                                <!-- Avatar Section -->
+                                            <!-- Upload progress bar -->
+                                            <div
+                                                v-if="
+                                                    profileForm.processing &&
+                                                    profileForm.progress
+                                                "
+                                                class="h-1 w-full shrink-0 overflow-hidden bg-muted"
+                                                role="progressbar"
+                                                :aria-valuenow="
+                                                    profileForm.progress
+                                                        .percentage
+                                                "
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                            >
                                                 <div
-                                                    class="rounded-xl border border-border/80 bg-muted/20 p-4"
-                                                >
-                                                    <AvatarUploader
-                                                        v-model="
-                                                            profileForm.avatar
-                                                        "
-                                                        v-model:removed="
-                                                            profileForm.remove_avatar
-                                                        "
-                                                        :current-url="
-                                                            profile_user.avatar
-                                                        "
-                                                        :display-name="
-                                                            profile_user.name
-                                                        "
-                                                        :external-error="
-                                                            profileForm.errors
-                                                                .avatar
-                                                        "
-                                                        :disabled="
-                                                            profileForm.processing
-                                                        "
-                                                    />
-                                                </div>
+                                                    class="h-full bg-primary transition-[width] duration-150"
+                                                    :style="{
+                                                        width: `${profileForm.progress.percentage}%`,
+                                                    }"
+                                                />
+                                            </div>
 
-                                                <div class="grid gap-1.5">
-                                                    <Label for="headline">{{
-                                                        t('profile.headline')
-                                                    }}</Label>
-                                                    <Input
-                                                        id="headline"
-                                                        v-model="
-                                                            profileForm.headline
-                                                        "
-                                                        maxlength="120"
-                                                    />
-                                                    <InputError
-                                                        :message="
-                                                            profileForm.errors
-                                                                .headline
-                                                        "
-                                                    />
-                                                </div>
+                                            <AutoHideScrollArea
+                                                class="min-h-0 flex-1 px-5 py-4"
+                                            >
+                                                <div class="space-y-5">
+                                                    <!-- Cover Image Section -->
+                                                    <div class="space-y-1.5">
+                                                        <Label>{{
+                                                            t('profile.cover')
+                                                        }}</Label>
+                                                        <CoverImageUploader
+                                                            v-model="
+                                                                profileForm.cover
+                                                            "
+                                                            v-model:removed="
+                                                                profileForm.remove_cover
+                                                            "
+                                                            :current-url="
+                                                                profile_user.cover
+                                                            "
+                                                            :external-error="
+                                                                profileForm
+                                                                    .errors
+                                                                    .cover
+                                                            "
+                                                            :disabled="
+                                                                profileForm.processing
+                                                            "
+                                                        />
+                                                    </div>
 
-                                                <div class="grid gap-1.5">
-                                                    <Label for="bio">{{
-                                                        t('profile.bio')
-                                                    }}</Label>
-                                                    <textarea
-                                                        id="bio"
-                                                        v-model="
-                                                            profileForm.bio
-                                                        "
-                                                        rows="3"
-                                                        maxlength="1000"
-                                                        class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
-                                                    />
-                                                    <InputError
-                                                        :message="
-                                                            profileForm.errors
-                                                                .bio
-                                                        "
-                                                    />
-                                                </div>
+                                                    <!-- Avatar Section -->
+                                                    <div
+                                                        class="rounded-xl border border-border/80 bg-muted/20 p-4"
+                                                    >
+                                                        <AvatarUploader
+                                                            v-model="
+                                                                profileForm.avatar
+                                                            "
+                                                            v-model:removed="
+                                                                profileForm.remove_avatar
+                                                            "
+                                                            :current-url="
+                                                                profile_user.avatar
+                                                            "
+                                                            :display-name="
+                                                                profile_user.name
+                                                            "
+                                                            :external-error="
+                                                                profileForm
+                                                                    .errors
+                                                                    .avatar
+                                                            "
+                                                            :disabled="
+                                                                profileForm.processing
+                                                            "
+                                                        />
+                                                    </div>
 
-                                                <div
-                                                    class="grid gap-3 sm:grid-cols-2"
-                                                >
                                                     <div class="grid gap-1.5">
-                                                        <Label for="location">{{
+                                                        <Label for="headline">{{
                                                             t(
-                                                                'profile.location',
+                                                                'profile.headline',
                                                             )
                                                         }}</Label>
                                                         <Input
-                                                            id="location"
+                                                            id="headline"
                                                             v-model="
-                                                                profileForm.location
+                                                                profileForm.headline
                                                             "
-                                                            maxlength="100"
-                                                        />
-                                                    </div>
-                                                    <div class="grid gap-1.5">
-                                                        <Label
-                                                            for="website_url"
-                                                            >{{
-                                                                t(
-                                                                    'profile.website',
-                                                                )
-                                                            }}</Label
-                                                        >
-                                                        <Input
-                                                            id="website_url"
-                                                            v-model="
-                                                                profileForm.website_url
-                                                            "
-                                                            type="url"
-                                                            placeholder="https://..."
+                                                            maxlength="120"
                                                         />
                                                         <InputError
                                                             :message="
                                                                 profileForm
                                                                     .errors
-                                                                    .website_url
+                                                                    .headline
                                                             "
                                                         />
                                                     </div>
+
+                                                    <div class="grid gap-1.5">
+                                                        <Label for="bio">{{
+                                                            t('profile.bio')
+                                                        }}</Label>
+                                                        <textarea
+                                                            id="bio"
+                                                            v-model="
+                                                                profileForm.bio
+                                                            "
+                                                            rows="3"
+                                                            maxlength="1000"
+                                                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
+                                                        />
+                                                        <InputError
+                                                            :message="
+                                                                profileForm
+                                                                    .errors.bio
+                                                            "
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        class="grid gap-3 sm:grid-cols-2"
+                                                    >
+                                                        <div
+                                                            class="grid gap-1.5"
+                                                        >
+                                                            <Label
+                                                                for="location"
+                                                                >{{
+                                                                    t(
+                                                                        'profile.location',
+                                                                    )
+                                                                }}</Label
+                                                            >
+                                                            <Input
+                                                                id="location"
+                                                                v-model="
+                                                                    profileForm.location
+                                                                "
+                                                                maxlength="100"
+                                                            />
+                                                        </div>
+                                                        <div
+                                                            class="grid gap-1.5"
+                                                        >
+                                                            <Label
+                                                                for="website_url"
+                                                                >{{
+                                                                    t(
+                                                                        'profile.website',
+                                                                    )
+                                                                }}</Label
+                                                            >
+                                                            <Input
+                                                                id="website_url"
+                                                                v-model="
+                                                                    profileForm.website_url
+                                                                "
+                                                                type="url"
+                                                                placeholder="https://..."
+                                                            />
+                                                            <InputError
+                                                                :message="
+                                                                    profileForm
+                                                                        .errors
+                                                                        .website_url
+                                                                "
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <p
+                                                        class="flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground"
+                                                    >
+                                                        <ShieldCheck
+                                                            class="mt-0.5 size-3.5 shrink-0 text-primary/70"
+                                                            aria-hidden="true"
+                                                        />
+                                                        <span>{{
+                                                            t(
+                                                                'upload.ownershipPolicyNotice',
+                                                            )
+                                                        }}</span>
+                                                    </p>
                                                 </div>
+                                            </AutoHideScrollArea>
 
-                                                <p
-                                                    class="flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground"
-                                                >
-                                                    <ShieldCheck
-                                                        class="mt-0.5 size-3.5 shrink-0 text-primary/70"
-                                                        aria-hidden="true"
-                                                    />
-                                                    <span>{{
-                                                        t(
-                                                            'upload.ownershipPolicyNotice',
-                                                        )
-                                                    }}</span>
-                                                </p>
-                                            </div>
-                                        </AutoHideScrollArea>
-
-                                        <DialogFooter
-                                            class="shrink-0 gap-3 border-t border-border bg-card px-5 pt-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:py-4"
-                                        >
-                                            <DialogClose as-child>
+                                            <DialogFooter
+                                                class="shrink-0 gap-3 border-t border-border bg-card px-5 pt-3.5 pb-[calc(0.875rem+env(safe-area-inset-bottom,0px))] sm:px-6 sm:py-4"
+                                            >
+                                                <DialogClose as-child>
+                                                    <Button
+                                                        type="button"
+                                                        variant="secondary"
+                                                        class="rounded-lg"
+                                                        :disabled="
+                                                            profileForm.processing
+                                                        "
+                                                    >
+                                                        {{ t('post.cancel') }}
+                                                    </Button>
+                                                </DialogClose>
                                                 <Button
-                                                    type="button"
-                                                    variant="secondary"
-                                                    class="rounded-lg"
+                                                    type="submit"
                                                     :disabled="
                                                         profileForm.processing
                                                     "
+                                                    class="rounded-lg"
                                                 >
-                                                    {{ t('post.cancel') }}
+                                                    <Spinner
+                                                        v-if="
+                                                            profileForm.processing
+                                                        "
+                                                    />
+                                                    <span>{{
+                                                        t('profile.save')
+                                                    }}</span>
                                                 </Button>
-                                            </DialogClose>
+                                            </DialogFooter>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    class="hidden rounded-lg lg:inline-flex"
+                                    data-test="desktop-account-settings-btn"
+                                    as-child
+                                >
+                                    <Link :href="editProfileSettings()">
+                                        <Settings class="size-4" />
+                                        <span>{{
+                                            t('profile.accountSettings')
+                                        }}</span>
+                                    </Link>
+                                </Button>
+                            </template>
+
+                            <template v-else>
+                                <Tooltip v-if="user">
+                                    <TooltipTrigger as-child>
+                                        <span class="inline-flex lg:hidden">
                                             <Button
-                                                type="submit"
-                                                :disabled="
-                                                    profileForm.processing
+                                                type="button"
+                                                variant="outline"
+                                                size="icon"
+                                                class="size-10 rounded-xl text-muted-foreground hover:text-destructive"
+                                                data-test="mobile-block-profile-btn"
+                                                :aria-label="
+                                                    profile_user.is_blocked
+                                                        ? t('profile.unblock')
+                                                        : t('profile.block')
                                                 "
-                                                class="rounded-lg"
+                                                @click="handleBlock"
                                             >
-                                                <Spinner
-                                                    v-if="
-                                                        profileForm.processing
-                                                    "
+                                                <ShieldBan
+                                                    class="size-4"
+                                                    aria-hidden="true"
                                                 />
-                                                <span>{{
-                                                    t('profile.save')
-                                                }}</span>
                                             </Button>
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                class="rounded-lg"
-                                as-child
-                            >
-                                <Link :href="editProfileSettings()">
-                                    <Settings class="size-4" />
-                                    <span>{{
-                                        t('profile.accountSettings')
-                                    }}</span>
-                                </Link>
-                            </Button>
-                        </template>
-
-                        <template v-else>
-                            <Button
-                                size="sm"
-                                :variant="
-                                    liveIsFollowing ? 'outline' : 'default'
-                                "
-                                :disabled="liveFollowPending"
-                                class="rounded-lg"
-                                @click="handleFollow"
-                            >
-                                <Spinner
-                                    v-if="liveFollowPending"
-                                    class="size-4"
-                                />
-                                <UserMinus
-                                    v-else-if="liveIsFollowing"
-                                    class="size-4"
-                                />
-                                <UserPlus v-else class="size-4" />
-                                <span>
-                                    {{
-                                        liveIsFollowing
-                                            ? t('profile.following')
-                                            : t('profile.follow')
-                                    }}
-                                </span>
-                            </Button>
-
-                            <Button
-                                v-if="user && !profile_user.is_blocked"
-                                variant="outline"
-                                size="sm"
-                                class="rounded-lg"
-                                @click="startMessage"
-                            >
-                                <MessageSquare class="size-4" />
-                                <span>{{ t('messages.messageUser') }}</span>
-                            </Button>
-
-                            <Button
-                                v-if="user"
-                                variant="ghost"
-                                size="sm"
-                                class="rounded-lg text-muted-foreground hover:text-destructive"
-                                @click="handleBlock"
-                            >
-                                <ShieldBan class="size-4" />
-                                <span>
-                                    {{
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>{{
                                         profile_user.is_blocked
                                             ? t('profile.unblock')
                                             : t('profile.block')
-                                    }}
-                                </span>
-                            </Button>
+                                    }}</TooltipContent>
+                                </Tooltip>
 
-                            <Button
-                                v-if="user"
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                class="size-8 rounded-lg text-muted-foreground"
-                                :aria-label="t('report.action')"
-                                @click="reportOpen = true"
-                            >
-                                <Flag class="size-4" />
-                            </Button>
-                        </template>
+                                <Tooltip v-if="user">
+                                    <TooltipTrigger as-child>
+                                        <span class="inline-flex lg:hidden">
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="icon"
+                                                class="size-10 rounded-xl text-muted-foreground"
+                                                data-test="mobile-report-profile-btn"
+                                                :aria-label="t('report.action')"
+                                                @click="reportOpen = true"
+                                            >
+                                                <Flag
+                                                    class="size-4"
+                                                    aria-hidden="true"
+                                                />
+                                            </Button>
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>{{
+                                        t('report.action')
+                                    }}</TooltipContent>
+                                </Tooltip>
 
-                        <ReportDialog
-                            v-if="user"
-                            v-model:open="reportOpen"
-                            target-type="user"
-                            :target-id="profile_user.id"
-                            default-reason="harassment"
-                        />
-                    </div>
+                                <div
+                                    class="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-2"
+                                >
+                                    <Button
+                                        size="sm"
+                                        :variant="
+                                            liveIsFollowing
+                                                ? 'outline'
+                                                : 'default'
+                                        "
+                                        :disabled="liveFollowPending"
+                                        class="rounded-lg"
+                                        @click="handleFollow"
+                                    >
+                                        <Spinner
+                                            v-if="liveFollowPending"
+                                            class="size-4"
+                                        />
+                                        <UserMinus
+                                            v-else-if="liveIsFollowing"
+                                            class="size-4"
+                                        />
+                                        <UserPlus v-else class="size-4" />
+                                        <span>
+                                            {{
+                                                liveIsFollowing
+                                                    ? t('profile.following')
+                                                    : t('profile.follow')
+                                            }}
+                                        </span>
+                                    </Button>
+
+                                    <Button
+                                        v-if="user && !profile_user.is_blocked"
+                                        variant="outline"
+                                        size="sm"
+                                        class="rounded-lg"
+                                        @click="startMessage"
+                                    >
+                                        <MessageSquare class="size-4" />
+                                        <span>{{
+                                            t('messages.messageUser')
+                                        }}</span>
+                                    </Button>
+
+                                    <Button
+                                        v-if="user"
+                                        variant="ghost"
+                                        size="sm"
+                                        class="rounded-lg text-muted-foreground hover:text-destructive"
+                                        @click="handleBlock"
+                                    >
+                                        <ShieldBan class="size-4" />
+                                        <span>
+                                            {{
+                                                profile_user.is_blocked
+                                                    ? t('profile.unblock')
+                                                    : t('profile.block')
+                                            }}
+                                        </span>
+                                    </Button>
+
+                                    <Button
+                                        v-if="user"
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        class="size-8 rounded-lg text-muted-foreground"
+                                        :aria-label="t('report.action')"
+                                        @click="reportOpen = true"
+                                    >
+                                        <Flag class="size-4" />
+                                    </Button>
+                                </div>
+                            </template>
+                        </div>
+                    </TooltipProvider>
+
+                    <ReportDialog
+                        v-if="user"
+                        v-model:open="reportOpen"
+                        target-type="user"
+                        :target-id="profile_user.id"
+                        default-reason="harassment"
+                    />
                 </div>
 
-                <div class="mt-4 space-y-2">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <h1 class="text-xl font-bold text-foreground">
+                <div class="mt-3.5 space-y-2 sm:mt-4">
+                    <div class="flex min-w-0 flex-wrap items-center gap-2">
+                        <h1
+                            class="min-w-0 text-lg font-bold break-words text-foreground sm:text-xl"
+                        >
                             {{ profile_user.name }}
                         </h1>
                         <UserBadges
@@ -685,17 +814,28 @@ function submitProfileDetails(): void {
                             mode="compact"
                             size="md"
                             :max="2"
-                            :fallback-is-premium="Boolean(profile_user.is_premium)"
+                            :fallback-is-premium="
+                                Boolean(profile_user.is_premium)
+                            "
                             :fallback-is-ai="Boolean(profile_user.is_ai_agent)"
                             :fallback-ai-disclosure="profile_user.ai_disclosure"
                         />
                     </div>
                     <div
-                        v-if="(profile_user.profile_badges ?? profile_user.badges ?? []).length > 0"
+                        v-if="
+                            (
+                                profile_user.profile_badges ??
+                                profile_user.badges ??
+                                []
+                            ).length > 0
+                        "
                         class="pt-0.5"
                     >
                         <UserBadges
-                            :badges="profile_user.profile_badges ?? profile_user.badges"
+                            :badges="
+                                profile_user.profile_badges ??
+                                profile_user.badges
+                            "
                             mode="showcase"
                             size="md"
                         />
@@ -713,7 +853,7 @@ function submitProfileDetails(): void {
                             t('ai.badge.defaultDisclosure')
                         }}
                     </div>
-                    <p class="text-sm text-muted-foreground">
+                    <p class="text-sm break-words text-muted-foreground">
                         @{{ profile_user.username }}
                         <span v-if="profile_user.headline">
                             · {{ profile_user.headline }}
@@ -721,42 +861,112 @@ function submitProfileDetails(): void {
                     </p>
                     <p
                         v-if="profile_user.bio"
-                        class="max-w-2xl text-sm leading-relaxed text-foreground/90"
+                        class="max-w-2xl text-sm leading-relaxed break-words text-foreground/90"
                     >
                         {{ profile_user.bio }}
                     </p>
 
                     <div
-                        class="flex flex-wrap items-center gap-4 pt-1 text-xs text-muted-foreground"
+                        class="flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-1 text-xs text-muted-foreground"
                     >
                         <span
                             v-if="profile_user.location"
-                            class="inline-flex items-center gap-1"
+                            class="inline-flex min-w-0 items-center gap-1"
                         >
-                            <MapPin class="size-3.5" />
-                            {{ profile_user.location }}
+                            <MapPin class="size-3.5 shrink-0" />
+                            <span class="break-words">{{
+                                profile_user.location
+                            }}</span>
                         </span>
                         <a
                             v-if="profile_user.website_url"
                             :href="profile_user.website_url"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex items-center gap-1 text-primary hover:underline"
+                            class="inline-flex max-w-full min-w-0 items-center gap-1 text-primary hover:underline"
                         >
-                            <Globe class="size-3.5" />
-                            {{ profile_user.website_url }}
+                            <Globe class="size-3.5 shrink-0" />
+                            <span class="truncate">{{
+                                profile_user.website_url
+                            }}</span>
                         </a>
                         <span
                             v-if="profile_user.joined_at"
                             class="inline-flex items-center gap-1"
                         >
-                            <Calendar class="size-3.5" />
-                            {{ formatDate(profile_user.joined_at, locale) }}
+                            <Calendar class="size-3.5 shrink-0" />
+                            <span>{{
+                                formatDate(profile_user.joined_at, locale)
+                            }}</span>
                         </span>
                     </div>
 
+                    <!-- Mobile & Tablet Compact Followers / Following Stats -->
                     <div
-                        class="flex flex-wrap items-center gap-2 pt-3 sm:gap-2.5"
+                        class="flex flex-wrap items-center gap-x-5 gap-y-1 pt-2 text-sm lg:hidden"
+                    >
+                        <button
+                            type="button"
+                            data-test="mobile-profile-followers-trigger"
+                            :aria-label="
+                                t('profile.followers', {
+                                    count: formatNumber(
+                                        liveFollowersCount,
+                                        locale,
+                                    ),
+                                })
+                            "
+                            class="inline-flex min-h-8 cursor-pointer items-baseline gap-1.5 rounded-md text-start transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+                            @click="openFollowModal('followers')"
+                        >
+                            <span
+                                class="font-semibold text-foreground tabular-nums"
+                            >
+                                {{
+                                    formatCompactNumber(
+                                        liveFollowersCount,
+                                        locale,
+                                    )
+                                }}
+                            </span>
+                            <span class="text-muted-foreground">
+                                {{ t('socialList.followersTitle') }}
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            data-test="mobile-profile-following-trigger"
+                            :aria-label="
+                                t('profile.followingCount', {
+                                    count: formatNumber(
+                                        liveFollowingCount,
+                                        locale,
+                                    ),
+                                })
+                            "
+                            class="inline-flex min-h-8 cursor-pointer items-baseline gap-1.5 rounded-md text-start transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+                            @click="openFollowModal('following')"
+                        >
+                            <span
+                                class="font-semibold text-foreground tabular-nums"
+                            >
+                                {{
+                                    formatCompactNumber(
+                                        liveFollowingCount,
+                                        locale,
+                                    )
+                                }}
+                            </span>
+                            <span class="text-muted-foreground">
+                                {{ t('socialList.followingTitle') }}
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Desktop Stats Cards (Preserved) -->
+                    <div
+                        class="hidden flex-wrap items-center gap-2.5 pt-3 lg:flex"
                     >
                         <button
                             type="button"
@@ -843,12 +1053,166 @@ function submitProfileDetails(): void {
                             </span>
                         </button>
                     </div>
+
+                    <!-- Mobile & Tablet Primary Profile Actions (Below Stats) -->
+                    <div v-if="profile_user.is_owner" class="pt-2.5 lg:hidden">
+                        <Button
+                            type="button"
+                            class="min-h-10 w-full justify-center gap-2 rounded-xl font-medium"
+                            data-test="mobile-edit-profile-btn"
+                            @click="openEditModal"
+                        >
+                            <Pencil
+                                class="size-4 shrink-0"
+                                aria-hidden="true"
+                            />
+                            <span>{{ t('profile.editProfile') }}</span>
+                        </Button>
+                    </div>
+
+                    <div
+                        v-else
+                        class="flex items-center gap-2.5 pt-2.5 lg:hidden"
+                    >
+                        <Button
+                            type="button"
+                            :variant="liveIsFollowing ? 'outline' : 'default'"
+                            :disabled="liveFollowPending"
+                            class="min-h-10 flex-1 justify-center gap-2 rounded-xl font-medium"
+                            data-test="mobile-follow-profile-btn"
+                            @click="handleFollow"
+                        >
+                            <Spinner
+                                v-if="liveFollowPending"
+                                class="size-4 shrink-0"
+                            />
+                            <UserMinus
+                                v-else-if="liveIsFollowing"
+                                class="size-4 shrink-0"
+                                aria-hidden="true"
+                            />
+                            <UserPlus
+                                v-else
+                                class="size-4 shrink-0"
+                                aria-hidden="true"
+                            />
+                            <span class="truncate">
+                                {{
+                                    liveIsFollowing
+                                        ? t('profile.following')
+                                        : t('profile.follow')
+                                }}
+                            </span>
+                        </Button>
+
+                        <Button
+                            v-if="user && !profile_user.is_blocked"
+                            type="button"
+                            variant="outline"
+                            class="min-h-10 flex-1 justify-center gap-2 rounded-xl font-medium"
+                            data-test="mobile-message-profile-btn"
+                            @click="startMessage"
+                        >
+                            <MessageSquare
+                                class="size-4 shrink-0"
+                                aria-hidden="true"
+                            />
+                            <span class="truncate">{{
+                                t('messages.messageUser')
+                            }}</span>
+                        </Button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Profile Tabs -->
-        <div class="flex items-center gap-2 border-b border-border pb-2">
+        <!-- Mobile & Tablet Profile Tabs (Balanced Segmented Underline + Counters) -->
+        <div
+            role="tablist"
+            :aria-label="t('profile.postsTab')"
+            :class="[
+                'border-b border-border lg:hidden',
+                profile_user.is_owner ? 'grid grid-cols-2' : 'flex',
+            ]"
+            data-test="mobile-profile-tabs"
+        >
+            <button
+                type="button"
+                role="tab"
+                :aria-selected="tab === 'posts'"
+                data-test="mobile-tab-posts"
+                :class="[
+                    'relative flex min-h-11 w-full cursor-pointer items-center justify-center gap-1.5 px-2 py-2.5 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:gap-2 sm:px-3 sm:text-sm',
+                    tab === 'posts'
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground',
+                ]"
+                @click="switchTab('posts')"
+            >
+                <Newspaper class="size-4 shrink-0" aria-hidden="true" />
+                <span class="truncate">{{ t('profile.postsTab') }}</span>
+                <span
+                    data-test="mobile-tab-posts-count"
+                    :class="[
+                        'inline-flex shrink-0 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums sm:px-2 sm:text-xs',
+                        tab === 'posts'
+                            ? 'bg-primary-soft text-primary'
+                            : 'bg-muted text-muted-foreground',
+                    ]"
+                >
+                    {{ formatCompactNumber(profile_user.posts_count, locale) }}
+                </span>
+                <span
+                    v-if="tab === 'posts'"
+                    class="absolute inset-x-2.5 bottom-0 h-0.5 rounded-full bg-primary"
+                    aria-hidden="true"
+                />
+            </button>
+
+            <button
+                v-if="profile_user.is_owner"
+                type="button"
+                role="tab"
+                :aria-selected="tab === 'bookmarks'"
+                data-test="mobile-tab-bookmarks"
+                :class="[
+                    'relative flex min-h-11 w-full cursor-pointer items-center justify-center gap-1.5 px-2 py-2.5 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none sm:gap-2 sm:px-3 sm:text-sm',
+                    tab === 'bookmarks'
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground',
+                ]"
+                @click="switchTab('bookmarks')"
+            >
+                <Bookmark class="size-4 shrink-0" aria-hidden="true" />
+                <span class="truncate">{{ t('profile.bookmarksTab') }}</span>
+                <span
+                    data-test="mobile-tab-bookmarks-count"
+                    :class="[
+                        'inline-flex shrink-0 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold tabular-nums sm:px-2 sm:text-xs',
+                        tab === 'bookmarks'
+                            ? 'bg-primary-soft text-primary'
+                            : 'bg-muted text-muted-foreground',
+                    ]"
+                >
+                    {{
+                        formatCompactNumber(
+                            profile_user.bookmarks_count ?? 0,
+                            locale,
+                        )
+                    }}
+                </span>
+                <span
+                    v-if="tab === 'bookmarks'"
+                    class="absolute inset-x-2.5 bottom-0 h-0.5 rounded-full bg-primary"
+                    aria-hidden="true"
+                />
+            </button>
+        </div>
+
+        <!-- Desktop Profile Tabs (Preserved) -->
+        <div
+            class="hidden items-center gap-2 border-b border-border pb-2 lg:flex"
+        >
             <Button
                 type="button"
                 size="sm"

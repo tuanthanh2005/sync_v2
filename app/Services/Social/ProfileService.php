@@ -76,6 +76,8 @@ class ProfileService
 
         $posts = [];
         $bookmarks = [];
+        $postsCount = 0;
+        $bookmarksCount = 0;
 
         $blockedMutual = $viewer !== null && ! $isOwner
             && in_array($targetUser->id, $this->feedService->mutualBlockedUserIds($viewer), true);
@@ -93,68 +95,92 @@ class ProfileService
                 ->orderByDesc('published_at')
                 ->orderByDesc('id');
 
+            $countQuery = Post::query()->where('user_id', $targetUser->id);
+
             if (! $isOwner) {
                 $postQuery->publicVisible();
+                $countQuery->publicVisible();
             } else {
-                $postQuery->whereIn('visibility', [
+                $ownerVisibilities = [
                     PostVisibility::Public->value,
                     PostVisibility::Community->value,
                     PostVisibility::Private->value,
-                ]);
+                ];
+                $postQuery->whereIn('visibility', $ownerVisibilities);
+                $countQuery->whereIn('visibility', $ownerVisibilities);
             }
 
+            $postsCount = $countQuery->count();
             $posts = $this->feedService->serializeCollection($postQuery->limit(20)->get(), $viewer);
         }
 
-        if ($isOwner && $tab === 'bookmarks') {
-            $bookmarkedPostIds = Bookmark::query()
-                ->where('user_id', $targetUser->id)
-                ->latest('created_at')
-                ->limit(20)
-                ->pluck('post_id')
-                ->all();
+        if ($isOwner) {
+            $bookmarksCount = $this->feedService->baseVisibleQuery($viewer)
+                ->whereExists(function ($sub) use ($targetUser): void {
+                    $sub->selectRaw('1')
+                        ->from('bookmarks')
+                        ->whereColumn('bookmarks.post_id', 'posts.id')
+                        ->where('bookmarks.user_id', $targetUser->id);
+                })
+                ->count();
 
-            if ($bookmarkedPostIds !== []) {
-                $bookmarkedPosts = $this->feedService->baseVisibleQuery($viewer)
-                    ->whereIn('id', $bookmarkedPostIds)
-                    ->get();
+            if ($tab === 'bookmarks') {
+                $bookmarkedPostIds = Bookmark::query()
+                    ->where('user_id', $targetUser->id)
+                    ->latest('created_at')
+                    ->limit(20)
+                    ->pluck('post_id')
+                    ->all();
 
-                $bookmarks = $this->feedService->serializeCollection($bookmarkedPosts, $viewer);
+                if ($bookmarkedPostIds !== []) {
+                    $bookmarkedPosts = $this->feedService->baseVisibleQuery($viewer)
+                        ->whereIn('id', $bookmarkedPostIds)
+                        ->get();
+
+                    $bookmarks = $this->feedService->serializeCollection($bookmarkedPosts, $viewer);
+                }
             }
         }
 
         $targetUser->loadMissing('rbacRole:id,slug,name');
         $resolvedProfileBadges = app(UserBadgeResolverService::class)->resolveForUser($targetUser);
 
+        $profileUser = [
+            'id' => $targetUser->id,
+            'name' => $targetUser->name,
+            'username' => $targetUser->username,
+            'role_label' => $targetUser->role->label(),
+            'headline' => $profile->headline,
+            'bio' => $profile->bio,
+            'location' => $profile->location,
+            'website_url' => $profile->website_url,
+            'avatar' => $targetUser->avatarUrl(),
+            'cover' => $profile->coverUrl(),
+            'is_verified' => $profile->is_verified_badge,
+            'is_premium' => $targetUser->isPremium(),
+            'account_type' => $targetUser->account_type->value,
+            'is_ai_agent' => $targetUser->isAiAgent(),
+            'ai_disclosure' => $targetUser->ai_disclosure,
+            'compact_badges' => $resolvedProfileBadges['compact'],
+            'profile_badges' => $resolvedProfileBadges['profile'],
+            'badges' => $resolvedProfileBadges['profile'],
+            'followers_count' => (int) ($profile->followers_count ?? 0),
+            'following_count' => (int) ($profile->following_count ?? 0),
+            'posts_count' => $postsCount,
+            'joined_at' => $targetUser->created_at?->toIso8601String(),
+            'is_owner' => $isOwner,
+            'is_following' => $isFollowing,
+            'is_blocked' => $isBlocked,
+        ];
+
+        // Strictly omit private bookmark counts for non-owners to prevent privacy leakage.
+        if ($isOwner) {
+            $profileUser['bookmarks_count'] = $bookmarksCount;
+        }
+
         return [
             'tab' => $isOwner && $tab === 'bookmarks' ? 'bookmarks' : 'posts',
-            'profile_user' => [
-                'id' => $targetUser->id,
-                'name' => $targetUser->name,
-                'username' => $targetUser->username,
-                'role_label' => $targetUser->role->label(),
-                'headline' => $profile->headline,
-                'bio' => $profile->bio,
-                'location' => $profile->location,
-                'website_url' => $profile->website_url,
-                'avatar' => $targetUser->avatarUrl(),
-                'cover' => $profile->coverUrl(),
-                'is_verified' => $profile->is_verified_badge,
-                'is_premium' => $targetUser->isPremium(),
-                'account_type' => $targetUser->account_type->value,
-                'is_ai_agent' => $targetUser->isAiAgent(),
-                'ai_disclosure' => $targetUser->ai_disclosure,
-                'compact_badges' => $resolvedProfileBadges['compact'],
-                'profile_badges' => $resolvedProfileBadges['profile'],
-                'badges' => $resolvedProfileBadges['profile'],
-                'followers_count' => (int) ($profile->followers_count ?? 0),
-                'following_count' => (int) ($profile->following_count ?? 0),
-                'posts_count' => Post::query()->where('user_id', $targetUser->id)->publicVisible()->count(),
-                'joined_at' => $targetUser->created_at?->toIso8601String(),
-                'is_owner' => $isOwner,
-                'is_following' => $isFollowing,
-                'is_blocked' => $isBlocked,
-            ],
+            'profile_user' => $profileUser,
             'posts' => $posts,
             'bookmarks' => $bookmarks,
         ];
