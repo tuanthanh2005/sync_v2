@@ -3,6 +3,8 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import {
     BadgeCheck,
     BriefcaseBusiness,
+    ChevronLeft,
+    ChevronRight,
     Clock,
     Compass,
     Cpu,
@@ -21,7 +23,14 @@ import {
     X,
 } from '@lucide/vue';
 import type { Component } from 'vue';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 import HomeController from '@/actions/App/Http/Controllers/HomeController';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
@@ -162,9 +171,13 @@ const loadingSuggestions = ref(false);
 const suggestions = ref<SuggestionsResponse | null>(null);
 const recentSearches = ref<string[]>([]);
 const searchBoxRef = ref<HTMLElement | null>(null);
+const categoryListRef = ref<HTMLElement | null>(null);
+const canScrollCategoriesStart = ref(false);
+const canScrollCategoriesEnd = ref(false);
 
 let suggestTimer: ReturnType<typeof setTimeout> | null = null;
 let suggestAbort: AbortController | null = null;
+let categoryResizeObserver: ResizeObserver | null = null;
 
 watch(
     () => props.query,
@@ -233,6 +246,81 @@ const resultTabs = computed(() => [
 function categoryIcon(name?: string): Component {
     return (name && CATEGORY_ICON_MAP[name]) || LayoutGrid;
 }
+
+function updateCategoryScrollState(): void {
+    const el = categoryListRef.value;
+    if (!el) {
+        canScrollCategoriesStart.value = false;
+        canScrollCategoriesEnd.value = false;
+        return;
+    }
+
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 2) {
+        canScrollCategoriesStart.value = false;
+        canScrollCategoriesEnd.value = false;
+        return;
+    }
+
+    const absScroll = Math.abs(el.scrollLeft);
+    canScrollCategoriesStart.value = absScroll > 4;
+    canScrollCategoriesEnd.value = absScroll < maxScroll - 4;
+}
+
+function scrollCategoriesBy(direction: -1 | 1): void {
+    const el = categoryListRef.value;
+    if (!el) {
+        return;
+    }
+
+    const isRtl =
+        typeof window !== 'undefined' &&
+        window.getComputedStyle(el).direction === 'rtl';
+    const dirFactor = isRtl ? -1 : 1;
+    const step = Math.max(180, Math.round(el.clientWidth * 0.55));
+
+    el.scrollBy({
+        left: dirFactor * direction * step,
+        behavior: 'smooth',
+    });
+}
+
+function handleCategoryWheel(event: WheelEvent): void {
+    const el = categoryListRef.value;
+    if (!el || el.scrollWidth <= el.clientWidth) {
+        return;
+    }
+
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+        event.preventDefault();
+        const isRtl =
+            typeof window !== 'undefined' &&
+            window.getComputedStyle(el).direction === 'rtl';
+        el.scrollLeft += (isRtl ? -1 : 1) * event.deltaY;
+        updateCategoryScrollState();
+    }
+}
+
+watch(categoryListRef, (el) => {
+    categoryResizeObserver?.disconnect();
+    categoryResizeObserver = null;
+
+    if (el && typeof ResizeObserver !== 'undefined') {
+        categoryResizeObserver = new ResizeObserver(() => {
+            updateCategoryScrollState();
+        });
+        categoryResizeObserver.observe(el);
+    }
+
+    void nextTick(() => updateCategoryScrollState());
+});
+
+watch(
+    () => [props.discovery?.categories, isExploreMode.value, locale.value],
+    () => {
+        void nextTick(() => updateCategoryScrollState());
+    },
+);
 
 function loadRecentSearches(): void {
     if (typeof window === 'undefined') {
@@ -414,6 +502,12 @@ onMounted(() => {
     if (typeof document !== 'undefined') {
         document.addEventListener('mousedown', handleOutsideClick);
     }
+    if (typeof window !== 'undefined') {
+        window.addEventListener('resize', updateCategoryScrollState, {
+            passive: true,
+        });
+    }
+    void nextTick(() => updateCategoryScrollState());
 });
 
 onBeforeUnmount(() => {
@@ -421,8 +515,13 @@ onBeforeUnmount(() => {
         clearTimeout(suggestTimer);
     }
     suggestAbort?.abort();
+    categoryResizeObserver?.disconnect();
+    categoryResizeObserver = null;
     if (typeof document !== 'undefined') {
         document.removeEventListener('mousedown', handleOutsideClick);
+    }
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', updateCategoryScrollState);
     }
 });
 </script>
@@ -714,26 +813,66 @@ onBeforeUnmount(() => {
                 <h2 class="text-sm font-semibold text-foreground">
                     {{ t('search.exploreCategories') }}
                 </h2>
-                <div
-                    class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto scroll-smooth py-0.5 sm:flex-wrap sm:overflow-visible sm:py-0"
-                >
-                    <Link
-                        v-for="cat in discovery.categories"
-                        :key="cat.value"
-                        :href="
-                            HomeController.index.url({
-                                query: { tab: cat.value },
-                            })
-                        "
-                        class="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-border bg-muted/30 px-3 py-2 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:bg-primary-soft/50 hover:text-primary"
+                <div class="relative min-w-0">
+                    <div
+                        ref="categoryListRef"
+                        :aria-label="t('search.exploreCategories')"
+                        class="no-scrollbar flex flex-nowrap items-center gap-2 overflow-x-auto overscroll-x-contain scroll-smooth py-0.5 select-none"
+                        @scroll.passive="updateCategoryScrollState"
+                        @wheel="handleCategoryWheel"
                     >
-                        <component
-                            :is="categoryIcon(cat.icon)"
-                            class="size-4 shrink-0 text-primary"
-                            aria-hidden="true"
-                        />
-                        <span>{{ cat.label }}</span>
-                    </Link>
+                        <Link
+                            v-for="cat in discovery.categories"
+                            :key="cat.value"
+                            :href="
+                                HomeController.index.url({
+                                    query: { tab: cat.value },
+                                })
+                            "
+                            class="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-border bg-muted/30 px-3 py-2 text-xs font-medium whitespace-nowrap text-foreground transition-colors hover:border-primary/40 hover:bg-primary-soft/50 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        >
+                            <component
+                                :is="categoryIcon(cat.icon)"
+                                class="size-4 shrink-0 text-primary"
+                                aria-hidden="true"
+                            />
+                            <span>{{ cat.label }}</span>
+                        </Link>
+                    </div>
+
+                    <div
+                        v-if="canScrollCategoriesStart"
+                        class="pointer-events-none absolute inset-y-0 start-0 z-10 flex items-center bg-gradient-to-r from-card via-card/90 to-transparent pe-4 rtl:bg-gradient-to-l"
+                    >
+                        <button
+                            type="button"
+                            :aria-label="t('common.previous')"
+                            class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                            @click="scrollCategoriesBy(-1)"
+                        >
+                            <ChevronLeft
+                                class="size-4 rtl:rotate-180"
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </div>
+
+                    <div
+                        v-if="canScrollCategoriesEnd"
+                        class="pointer-events-none absolute inset-y-0 end-0 z-10 flex items-center bg-gradient-to-l from-card via-card/90 to-transparent ps-4 rtl:bg-gradient-to-r"
+                    >
+                        <button
+                            type="button"
+                            :aria-label="t('common.next')"
+                            class="pointer-events-auto flex size-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-xs transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                            @click="scrollCategoriesBy(1)"
+                        >
+                            <ChevronRight
+                                class="size-4 rtl:rotate-180"
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </div>
                 </div>
             </section>
 
