@@ -7,18 +7,12 @@ import {
     Flag,
     Globe,
     HelpCircle,
-    Image as ImageIcon,
     Mail,
     Megaphone,
     MoreHorizontal,
     Palette,
-    ReceiptText,
     Settings,
     Shield,
-    ShieldCheck,
-    Sparkles,
-    Wallet as WalletIcon,
-    Zap,
 } from '@lucide/vue';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -31,22 +25,14 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
-import { formatVnd } from '@/lib/currency';
-import { overview as adminOverview } from '@/routes/admin';
-import { edit as editAppearance } from '@/routes/appearance';
 import {
-    advertising as advertisingRoute,
-    banner as bannerRoute,
-    boost as boostRoute,
-    services as servicesRoute,
-} from '@/routes/monetization';
-import { index as paymentsIndex } from '@/routes/payments';
-import { edit as editProfile } from '@/routes/profile';
-import { edit as editSecurity } from '@/routes/security';
-import { index as walletIndex } from '@/routes/wallet';
-import type { FooterLinkItem } from '@/types';
+    useNavigationMenuConfig,
+    type NavigationGroupId,
+} from '@/composables/useNavigationMenuConfig';
+import { toUrl } from '@/lib/utils';
+import { overview as adminOverview } from '@/routes/admin';
 
-type MenuGroupId = 'ads' | 'settings' | 'help';
+type MenuGroupId = NavigationGroupId;
 
 withDefaults(
     defineProps<{
@@ -57,40 +43,25 @@ withDefaults(
     },
 );
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const page = usePage();
 const { isCurrentUrl, isCurrentOrParentUrl } = useCurrentUrl();
+const {
+    advertisingItems,
+    authSettingsItems,
+    helpLinks,
+    hasContactLink,
+    supportEmail,
+    servicesNavItem,
+    isExternalHelpLink: isExternalLink,
+    resolveDefaultGroup,
+} = useNavigationMenuConfig();
 
 const open = ref(false);
 const user = computed(() => page.props.auth.user);
-const footer = computed(() => page.props.footer);
 const isRtl = computed(() => Boolean(page.props.isRtl));
-const walletBalance = computed(() => page.props.walletBalance ?? 0);
-const lang = computed<'vi' | 'en'>(() => (locale.value === 'en' ? 'en' : 'vi'));
 
 const expandedGroup = ref<MenuGroupId | null>('ads');
-
-function resolveDefaultGroup(): MenuGroupId {
-    const component = page.component;
-    if (component.startsWith('settings/')) {
-        return 'settings';
-    }
-    if (
-        component === 'Ads' ||
-        component === 'Wallet' ||
-        component === 'monetization/Advertising' ||
-        component === 'monetization/BoostPost' ||
-        component === 'monetization/BannerAds' ||
-        component === 'monetization/Payments'
-    ) {
-        return 'ads';
-    }
-    if (component.startsWith('policies/')) {
-        return 'help';
-    }
-
-    return user.value ? 'ads' : 'help';
-}
 
 watch(open, (isOpen) => {
     if (isOpen) {
@@ -104,43 +75,6 @@ function toggleGroup(group: MenuGroupId): void {
 
 function closeMenu(): void {
     open.value = false;
-}
-
-const helpLinks = computed<FooterLinkItem[]>(() => {
-    const allLinks = footer.value?.links ?? [];
-    if (allLinks.length === 0) {
-        return [];
-    }
-
-    const prioritySlugs = [
-        'help-center',
-        'contact-us',
-        'community-guidelines',
-        'privacy-policy',
-        'terms-of-service',
-    ];
-    const sorted = [...allLinks].sort((a, b) => {
-        const aIdx = prioritySlugs.findIndex((slug) => a.href.includes(slug));
-        const bIdx = prioritySlugs.findIndex((slug) => b.href.includes(slug));
-        const aScore = aIdx === -1 ? 99 : aIdx;
-        const bScore = bIdx === -1 ? 99 : bIdx;
-
-        return aScore - bScore;
-    });
-
-    return sorted.slice(0, 5);
-});
-
-const hasContactLink = computed(() =>
-    helpLinks.value.some((item) => item.href.includes('contact')),
-);
-
-function isExternalLink(item: FooterLinkItem): boolean {
-    return (
-        item.open_in_new_tab ||
-        item.href.startsWith('http://') ||
-        item.href.startsWith('https://')
-    );
 }
 </script>
 
@@ -226,100 +160,36 @@ function isExternalLink(item: FooterLinkItem): boolean {
                         class="mt-0.5 space-y-0.5 ps-2 pe-1 pb-1"
                     >
                         <Link
-                            :href="advertisingRoute()"
+                            v-for="item in advertisingItems"
+                            :key="item.id"
+                            :href="item.href"
                             @click="closeMenu"
                             :class="[
                                 'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                isCurrentUrl(advertisingRoute())
+                                (
+                                    item.exact
+                                        ? isCurrentUrl(toUrl(item.href))
+                                        : isCurrentOrParentUrl(toUrl(item.href))
+                                )
                                     ? 'bg-primary-soft font-medium text-accent-foreground'
                                     : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
                             ]"
                         >
-                            <Sparkles
+                            <component
+                                :is="item.icon"
                                 class="size-4 shrink-0"
                                 aria-hidden="true"
                             />
                             <span class="min-w-0 flex-1 truncate">{{
-                                t('nav.advertisingOverview')
+                                item.title
                             }}</span>
-                        </Link>
-                        <Link
-                            :href="boostRoute()"
-                            @click="closeMenu"
-                            :class="[
-                                'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                isCurrentOrParentUrl(boostRoute())
-                                    ? 'bg-primary-soft font-medium text-accent-foreground'
-                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                            ]"
-                        >
-                            <Zap class="size-4 shrink-0" aria-hidden="true" />
-                            <span class="min-w-0 flex-1 truncate">{{
-                                t('monetization.services.boostTitle')
-                            }}</span>
-                        </Link>
-                        <Link
-                            :href="bannerRoute()"
-                            @click="closeMenu"
-                            :class="[
-                                'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                isCurrentOrParentUrl(bannerRoute())
-                                    ? 'bg-primary-soft font-medium text-accent-foreground'
-                                    : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                            ]"
-                        >
-                            <ImageIcon
-                                class="size-4 shrink-0"
-                                aria-hidden="true"
-                            />
-                            <span class="min-w-0 flex-1 truncate">{{
-                                t('monetization.services.bannerTitle')
-                            }}</span>
-                        </Link>
-
-                        <template v-if="user">
-                            <Link
-                                :href="walletIndex()"
-                                @click="closeMenu"
-                                :class="[
-                                    'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                    isCurrentOrParentUrl(walletIndex())
-                                        ? 'bg-primary-soft font-medium text-accent-foreground'
-                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                ]"
+                            <span
+                                v-if="item.badgeText"
+                                class="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-semibold text-foreground tabular-nums"
                             >
-                                <WalletIcon
-                                    class="size-4 shrink-0"
-                                    aria-hidden="true"
-                                />
-                                <span class="min-w-0 flex-1 truncate">{{
-                                    t('monetization.wallet.title')
-                                }}</span>
-                                <span
-                                    class="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-semibold text-foreground tabular-nums"
-                                >
-                                    {{ formatVnd(walletBalance, lang) }}
-                                </span>
-                            </Link>
-                            <Link
-                                :href="paymentsIndex()"
-                                @click="closeMenu"
-                                :class="[
-                                    'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                    isCurrentOrParentUrl(paymentsIndex())
-                                        ? 'bg-primary-soft font-medium text-accent-foreground'
-                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                ]"
-                            >
-                                <ReceiptText
-                                    class="size-4 shrink-0"
-                                    aria-hidden="true"
-                                />
-                                <span class="min-w-0 flex-1 truncate">{{
-                                    t('monetization.payments.title')
-                                }}</span>
-                            </Link>
-                        </template>
+                                {{ item.badgeText }}
+                            </span>
+                        </Link>
                     </div>
                 </div>
 
@@ -357,63 +227,30 @@ function isExternalLink(item: FooterLinkItem): boolean {
                     >
                         <template v-if="user">
                             <Link
-                                :href="editProfile()"
+                                v-for="item in authSettingsItems"
+                                :key="item.id"
+                                :href="item.href"
                                 @click="closeMenu"
                                 :class="[
                                     'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                    isCurrentOrParentUrl(editProfile())
+                                    isCurrentOrParentUrl(toUrl(item.href))
                                         ? 'bg-primary-soft font-medium text-accent-foreground'
                                         : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
                                 ]"
                             >
-                                <Settings
+                                <component
+                                    :is="item.icon"
                                     class="size-4 shrink-0"
                                     aria-hidden="true"
                                 />
                                 <span class="min-w-0 flex-1 truncate">{{
-                                    t('nav.profile')
-                                }}</span>
-                            </Link>
-                            <Link
-                                :href="editSecurity()"
-                                @click="closeMenu"
-                                :class="[
-                                    'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                    isCurrentOrParentUrl(editSecurity())
-                                        ? 'bg-primary-soft font-medium text-accent-foreground'
-                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                ]"
-                            >
-                                <ShieldCheck
-                                    class="size-4 shrink-0"
-                                    aria-hidden="true"
-                                />
-                                <span class="min-w-0 flex-1 truncate">{{
-                                    t('nav.security')
+                                    item.title
                                 }}</span>
                                 <span
-                                    v-if="!user.two_factor_enabled"
+                                    v-if="item.warningDot"
                                     class="size-2 shrink-0 rounded-full bg-warning"
-                                    :title="t('sidebar.enable2fa')"
+                                    :title="item.warningTitle"
                                 />
-                            </Link>
-                            <Link
-                                :href="editAppearance()"
-                                @click="closeMenu"
-                                :class="[
-                                    'flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors',
-                                    isCurrentOrParentUrl(editAppearance())
-                                        ? 'bg-primary-soft font-medium text-accent-foreground'
-                                        : 'text-muted-foreground hover:bg-surface-hover hover:text-foreground',
-                                ]"
-                            >
-                                <Palette
-                                    class="size-4 shrink-0"
-                                    aria-hidden="true"
-                                />
-                                <span class="min-w-0 flex-1 truncate">{{
-                                    t('nav.appearance')
-                                }}</span>
                             </Link>
                         </template>
 
@@ -523,8 +360,8 @@ function isExternalLink(item: FooterLinkItem): boolean {
                         </template>
 
                         <a
-                            v-if="footer.supportEmail"
-                            :href="`mailto:${footer.supportEmail}`"
+                            v-if="supportEmail"
+                            :href="`mailto:${supportEmail}`"
                             class="flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
                             @click="closeMenu"
                         >
@@ -535,8 +372,8 @@ function isExternalLink(item: FooterLinkItem): boolean {
                         </a>
 
                         <a
-                            v-if="footer.supportEmail && !hasContactLink"
-                            :href="`mailto:${footer.supportEmail}`"
+                            v-if="supportEmail && !hasContactLink"
+                            :href="`mailto:${supportEmail}`"
                             class="flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
                             @click="closeMenu"
                         >
@@ -547,16 +384,17 @@ function isExternalLink(item: FooterLinkItem): boolean {
                         </a>
 
                         <Link
-                            :href="servicesRoute()"
+                            :href="servicesNavItem.href"
                             @click="closeMenu"
                             class="flex min-h-9 items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
                         >
-                            <Sparkles
+                            <component
+                                :is="servicesNavItem.icon"
                                 class="size-4 shrink-0"
                                 aria-hidden="true"
                             />
                             <span class="min-w-0 flex-1 truncate">{{
-                                t('monetization.services.pageTitle')
+                                servicesNavItem.title
                             }}</span>
                         </Link>
                     </div>
