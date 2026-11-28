@@ -735,7 +735,8 @@
             "growthOverview": "विकास अवलोकन",
             "growthReferrals": "रेफ़रल और धोखाधड़ी",
             "growthCampaigns": "अभियान और बैज",
-            "postFeedSettings": "पोस्ट और फ़ीड सेटिंग्स"
+            "postFeedSettings": "पोस्ट और फ़ीड सेटिंग्स",
+            "badges": "बैज प्रबंधन"
         },
         "common": {
             "search": "खोजें...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "उच्च जोखिम",
                 "riskViolation": "उल्लंघन"
             }
+        },
+        "badges": {
+            "title": "वैश्विक बैज प्रबंधन",
+            "subtitle": "आधिकारिक SysNoxis खाते, स्टाफ चिह्न, मॉडरेटर शील्ड और पूर्ण बैज ऑडिट लॉग प्रबंधित करें।",
+            "superAdminMode": "सुपर एडमिन पहुँच",
+            "readOnlyNotice": "केवल पठनीय दृश्य",
+            "grantTitle": "आधिकारिक या मान्यता बैज प्रदान करें",
+            "grantSubtitle": "केवल सुपर एडमिन ही आधिकारिक बैज दे सकते हैं। हर कार्रवाई के लिए ऑडिट कारण आवश्यक है।",
+            "targetUsername": "लक्षित उपयोगकर्ता नाम",
+            "usernamePlaceholder": "यूज़रनेम (उदा. alex_dev)",
+            "badgeType": "बैज प्रकार",
+            "reasonLabel": "ऑडिट कारण",
+            "reasonPlaceholder": "पात्रता सत्यापन स्पष्ट करें...",
+            "expiresAtLabel": "समाप्ति तिथि (वैकल्पिक)",
+            "publicVisibleToggle": "प्रदर्शन नाम के पास सार्वजनिक रूप से दिखाएँ",
+            "grantButton": "बैज प्रदान करें",
+            "searchPlaceholder": "नाम, यूज़रनेम या ID से खोजें...",
+            "allTypes": "सभी बैज प्रकार",
+            "allStatuses": "सभी स्थितियाँ",
+            "statusActive": "सक्रिय",
+            "statusRevoked": "निरस्त",
+            "statusHidden": "छिपा / आंतरिक",
+            "emptyTitle": "वर्तमान फ़िल्टर से कोई बैज मेल नहीं खाता",
+            "emptyDescription": "आधिकारिक, स्टाफ और मॉडरेटर बैज रिकॉर्ड यहाँ दिखाई देंगे।",
+            "hidePublic": "आंतरिक सेट करें (छिपाएँ)",
+            "showPublic": "सार्वजनिक दिखाएँ",
+            "revokeButton": "बैज रद्द करें",
+            "reasonAudit": "कारण और कर्ता",
+            "timestamps": "प्रदत्त / निरस्त",
+            "internalOnly": "आंतरिक खाता (छिपा हुआ)",
+            "ineligibleHidden": "भूमिका अयोग्य (स्वतः छिपा)",
+            "revokedPrefix": "निरस्त:",
+            "auditTitle": "हालिया बैज शासन लॉग",
+            "confirmGrantTitle": "बैज प्रदान की पुष्टि करें",
+            "confirmGrantDesc": "खाता {username} को '{badge}' प्रदान करें? यह ऑडिट लॉग में स्थायी रूप से दर्ज होगा।",
+            "confirmRevokeTitle": "खाता बैज रद्द करें",
+            "confirmRevokeDesc": "खाता {username} से '{badge}' वापस लें? ऑडिट इतिहास सुरक्षित रहेगा।",
+            "accountSectionTitle": "खाता बैज और पहचान",
+            "livePublicDisplay": "लाइव सार्वजनिक प्रदर्शन",
+            "noActivePublicBadges": "वर्तमान में कोई सार्वजनिक बैज प्रदर्शित नहीं है (सामान्य सदस्य)।",
+            "roleSuperAdmin": "सुपर एडमिन",
+            "roleAdmin": "प्रशासक",
+            "roleModerator": "मॉडरेटर",
+            "roleMember": "सदस्य",
+            "statusOk": "योग्य",
+            "statusNo": "नहीं",
+            "statusYes": "हाँ",
+            "statusActiveShort": "सक्रिय",
+            "allRoles": "सभी भूमिकाएँ"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "समुदाय खोजें",
         "restrictedTitle": "सूची उपलब्ध नहीं है",
         "restrictedHint": "आप इस खाते के कनेक्शन नहीं देख सकते।"
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "आधिकारिक खाता",
+            "description": "यह SysNoxis द्वारा संचालित एक आधिकारिक खाता है।"
+        },
+        "officialStaff": {
+            "label": "आधिकारिक स्टाफ",
+            "description": "यह खाता SysNoxis टीम के एक आधिकारिक सदस्य का है।"
+        },
+        "moderator": {
+            "label": "मॉडरेटर",
+            "description": "यह खाता SysNoxis के एक आधिकारिक मॉडरेटर का है।"
+        },
+        "premiumMember": {
+            "label": "प्रीमियम सदस्य",
+            "description": "इस खाते के पास सक्रिय SysNoxis Premium सदस्यता है। यह बैज पहचान सत्यापन को नहीं दर्शाता है।"
+        },
+        "earlyMember": {
+            "label": "प्रारंभिक सदस्य",
+            "description": "इस खाते को SysNoxis समुदाय के प्रारंभिक सदस्य के रूप में मान्यता प्राप्त है।"
+        },
+        "aiAccount": {
+            "label": "AI खाता",
+            "short": "AI",
+            "description": "यह खाता एक AI सिस्टम द्वारा संचालित है और पारदर्शी रूप से स्वचालित के रूप में चिह्नित है।"
+        },
+        "foundingMember": {
+            "description": "इस खाते को SysNoxis पर संस्थापक सदस्य मान्यता प्राप्त है।"
+        },
+        "referralAmbassador": {
+            "description": "SysNoxis पर सत्यापित सदस्यों को आमंत्रित करने के लिए सम्मानित।"
+        },
+        "communityBuilder": {
+            "description": "SysNoxis पर सक्रिय समुदाय बनाने के लिए सम्मानित।"
+        }
     }
 }

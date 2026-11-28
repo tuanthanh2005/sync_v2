@@ -17,6 +17,7 @@ use App\Models\UserSanction;
 use App\Models\VerificationRequest;
 use App\Notifications\SocialActivityNotification;
 use App\Services\Security\AuditLogger;
+use App\Services\Social\UserBadgeResolverService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -86,6 +87,8 @@ class AdminUserService
         }
 
         $paginator = $query->orderBy($sort, $dir)->paginate(20)->withQueryString();
+        $badgeResolver = app(UserBadgeResolverService::class);
+        $resolvedBadges = $badgeResolver->resolveForUsers($paginator->items());
 
         $items = array_values(
             collect($paginator->items())->map(static fn (User $u): array => [
@@ -101,6 +104,7 @@ class AdminUserService
                 'status' => $u->status->value,
                 'status_label' => $u->status->label(),
                 'is_verified_badge' => $u->profile !== null && $u->profile->is_verified_badge,
+                'compact_badges' => $resolvedBadges[$u->id]['compact'] ?? [],
                 'email_verified' => $u->email_verified_at !== null,
                 'two_factor_enabled' => $u->hasEnabledTwoFactorAuthentication(),
                 'posts_count' => (int) ($u->getAttribute('posts_count') ?? 0),
@@ -150,9 +154,11 @@ class AdminUserService
     /**
      * @return array<string, mixed>
      */
-    public function detailPayload(User $target): array
+    public function detailPayload(User $target, ?User $viewer = null): array
     {
         $target->loadMissing(['profile', 'rbacRole', 'creditAccount']);
+        $resolvedViewer = $viewer ?? $target;
+        $badgePayload = app(AdminBadgeManagementService::class)->userDetailPayload($target, $resolvedViewer);
 
         $sessions = Schema::hasTable('sessions')
             ? DB::table('sessions')
@@ -313,6 +319,8 @@ class AdminUserService
                 'headline' => $target->profile?->headline,
                 'bio' => $target->profile?->bio,
                 'is_verified_badge' => $target->profile !== null && $target->profile->is_verified_badge,
+                'compact_badges' => $badgePayload['resolved']['compact'] ?? [],
+                'profile_badges' => $badgePayload['resolved']['profile'] ?? [],
                 'role' => $target->role->value,
                 'role_label' => $target->rbacRole !== null ? $target->rbacRole->name : $target->role->label(),
                 'rbac_role_id' => $target->rbac_role_id,
@@ -364,6 +372,7 @@ class AdminUserService
             'campaigns' => $campaigns,
             'creditEntries' => $creditEntries,
             'audits' => $audits,
+            'badgeDetails' => $badgePayload,
         ];
     }
 
@@ -533,6 +542,15 @@ class AdminUserService
                 actorUsername: 'system',
             ));
 
+            if (in_array($sanctionType, [SanctionType::Ban, SanctionType::Suspend, SanctionType::Unban, SanctionType::Unsuspend], true)) {
+                app(AdminBadgeManagementService::class)->syncEligibilityForUser(
+                    target: $target->fresh(['rbacRole']) ?? $target,
+                    actor: $actor,
+                    trigger: "sanction:{$sanctionType->value}",
+                    revokeAllAuthority: $sanctionType === SanctionType::Ban,
+                );
+            }
+
             return $sanction;
         });
     }
@@ -583,15 +601,18 @@ class AdminUserService
             $target->forceFill(['deactivated_at' => now()])->save();
             $this->invalidateUserSessions($target);
             $this->auditLogger->log('admin.user.deactivated', $target, ['reason' => $reason], $actor);
+            app(AdminBadgeManagementService::class)->syncEligibilityForUser($target, $actor, 'lifecycle:deactivate');
         } elseif ($mode === 'soft_delete') {
             $this->assertNotLastSuperAdmin($target);
             $this->invalidateUserSessions($target);
             $target->delete();
             $this->auditLogger->log('admin.user.soft_deleted', $target, ['reason' => $reason], $actor);
+            app(AdminBadgeManagementService::class)->syncEligibilityForUser($target, $actor, 'lifecycle:soft_delete', revokeAllAuthority: true);
         } elseif ($mode === 'restore') {
             $target->restore();
             $target->forceFill(['deactivated_at' => null, 'status' => UserStatus::Active])->save();
             $this->auditLogger->log('admin.user.restored', $target, ['reason' => $reason], $actor);
+            app(UserBadgeResolverService::class)->invalidateForUser($target->id);
         }
     }
 

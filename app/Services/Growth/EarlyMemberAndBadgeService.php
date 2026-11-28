@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\UserAchievement;
 use App\Models\UserBadge;
 use App\Services\Monetization\PremiumSubscriptionService;
+use App\Services\Social\UserBadgeResolverService;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -159,7 +160,9 @@ class EarlyMemberAndBadgeService
             UserBadge::query()
                 ->where('user_id', $locked->user_id)
                 ->where('badge_type', MemberBadgeType::EarlyMember->value)
+                ->whereNull('revoked_at')
                 ->update([
+                    'status' => UserBadge::STATUS_REVOKED,
                     'revoked_by' => $actor->id,
                     'revoked_at' => now(),
                     'revoke_reason' => $cleanReason,
@@ -169,6 +172,8 @@ class EarlyMemberAndBadgeService
                 'member_number' => $locked->member_number,
                 'reason' => $cleanReason,
             ]);
+
+            app(UserBadgeResolverService::class)->invalidateForUser($locked->user_id);
 
             return $locked;
         });
@@ -186,39 +191,49 @@ class EarlyMemberAndBadgeService
         ?CarbonInterface $expiresAt = null,
         array $metadata = [],
     ): UserBadge {
-        $style = match ($type) {
-            MemberBadgeType::EarlyMember => ['icon' => 'award', 'color' => 'amber'],
-            MemberBadgeType::FoundingMember => ['icon' => 'crown', 'color' => 'emerald'],
-            MemberBadgeType::OfficialAccount => ['icon' => 'shield-check', 'color' => 'indigo'],
-            MemberBadgeType::ReferralAmbassador => ['icon' => 'gift', 'color' => 'indigo'],
-            MemberBadgeType::CommunityBuilder => ['icon' => 'users', 'color' => 'sky'],
-        };
+        $existingActive = UserBadge::query()
+            ->where('user_id', $user->id)
+            ->where('badge_type', $type->value)
+            ->active()
+            ->first();
 
-        $badge = UserBadge::query()->updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'badge_type' => $type->value,
-            ],
-            [
-                'label_key' => $type->labelKey(),
-                'icon' => $style['icon'],
-                'color' => $style['color'],
-                'grant_source' => $source,
-                'campaign_id' => $campaignId,
-                'granted_by' => $actor?->id,
-                'granted_at' => now(),
-                'expires_at' => $expiresAt,
-                'revoked_at' => null,
-                'revoked_by' => null,
-                'revoke_reason' => null,
-                'metadata' => $metadata !== [] ? $metadata : null,
-            ],
-        );
+        if ($existingActive !== null) {
+            if ($metadata !== []) {
+                $existingActive->forceFill(['metadata' => $metadata])->save();
+            }
+            app(UserBadgeResolverService::class)->invalidateForUser($user->id);
+
+            return $existingActive;
+        }
+
+        $badge = new UserBadge;
+        $badge->forceFill([
+            'user_id' => $user->id,
+            'badge_type' => $type->value,
+            'status' => UserBadge::STATUS_ACTIVE,
+            'label_key' => $type->labelKey(),
+            'icon' => $type->iconKey(),
+            'color' => $type->colorHex(),
+            'grant_source' => $source,
+            'campaign_id' => $campaignId,
+            'granted_by' => $actor?->id,
+            'granted_at' => now(),
+            'grant_reason' => $source,
+            'expires_at' => $expiresAt,
+            'revoked_at' => null,
+            'revoked_by' => null,
+            'revoke_reason' => null,
+            'is_public' => true,
+            'metadata' => $metadata !== [] ? $metadata : null,
+        ]);
+        $badge->save();
 
         $this->config->logActivity('growth.badge.granted', $actor, $user->id, UserBadge::class, $badge->id, [
             'badge_type' => $type->value,
             'source' => $source,
         ]);
+
+        app(UserBadgeResolverService::class)->invalidateForUser($user->id);
 
         return $badge;
     }
@@ -226,6 +241,7 @@ class EarlyMemberAndBadgeService
     public function revokeBadge(UserBadge $badge, string $reason, User $actor): UserBadge
     {
         $badge->forceFill([
+            'status' => UserBadge::STATUS_REVOKED,
             'revoked_by' => $actor->id,
             'revoked_at' => now(),
             'revoke_reason' => trim($reason) ?: 'Revoked by administrator',
@@ -236,6 +252,8 @@ class EarlyMemberAndBadgeService
             'reason' => $badge->revoke_reason,
         ]);
 
+        app(UserBadgeResolverService::class)->invalidateForUser($badge->user_id);
+
         return $badge;
     }
 
@@ -243,36 +261,24 @@ class EarlyMemberAndBadgeService
      * Batch-load active badges for a list of user IDs (zero N+1 queries on Feed/Comments/Search/Communities!).
      *
      * @param  list<int>  $userIds
-     * @return array<int, list<array{type: string, label_key: string, icon: string, color: string, member_number: int|null}>>
+     * @return array<int, list<array<string, mixed>>>
      */
     public function activeBadgesForUsers(array $userIds): array
     {
-        if ($userIds === [] || ! Schema::hasTable('user_badges')) {
+        $cleanIds = array_values(array_unique(array_filter($userIds, static fn (int $id): bool => $id > 0)));
+        if ($cleanIds === [] || ! Schema::hasTable('user_badges')) {
             return [];
         }
 
-        $rows = UserBadge::query()
-            ->whereIn('user_id', array_values(array_unique($userIds)))
-            ->whereNull('revoked_at')
-            ->where(static function ($q): void {
-                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
-            })
-            ->orderBy('id')
+        $users = User::query()
+            ->with('rbacRole:id,slug,name')
+            ->whereIn('id', $cleanIds)
             ->get();
 
+        $resolved = app(UserBadgeResolverService::class)->resolveForUsers($users);
         $map = [];
-        foreach ($rows as $row) {
-            $memberNum = is_array($row->metadata) && isset($row->metadata['member_number'])
-                ? (int) $row->metadata['member_number']
-                : null;
-
-            $map[$row->user_id][] = [
-                'type' => $row->badge_type,
-                'label_key' => $row->label_key,
-                'icon' => $row->icon,
-                'color' => $row->color,
-                'member_number' => $memberNum,
-            ];
+        foreach ($resolved as $uid => $data) {
+            $map[$uid] = $data['profile'];
         }
 
         return $map;

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Ai\AiCredentialsAndModelsController;
 use App\Http\Controllers\Admin\Ai\AiOverviewController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\AppealController;
+use App\Http\Controllers\Admin\BadgeManagementController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\ContentSettingsAndAnalyticsController;
 use App\Http\Controllers\Admin\FinanceController;
@@ -372,6 +373,19 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
             Route::patch('/roles/{role}/permissions', [RoleManagementController::class, 'syncPermissions'])
                 ->middleware('permission:roles.manage')
                 ->name('roles.permissions');
+
+            Route::get('/badges', [BadgeManagementController::class, 'index'])
+                ->middleware('permission:badges.view')
+                ->name('badges.index');
+            Route::post('/badges/grant', [BadgeManagementController::class, 'grant'])
+                ->middleware('permission:badges.grant,badges.manage')
+                ->name('badges.grant');
+            Route::post('/badges/{badge}/revoke', [BadgeManagementController::class, 'revoke'])
+                ->middleware('permission:badges.revoke,badges.manage')
+                ->name('badges.revoke');
+            Route::post('/badges/{badge}/visibility', [BadgeManagementController::class, 'toggleVisibility'])
+                ->middleware('permission:badges.manage')
+                ->name('badges.visibility');
 
             // ── Content Management ───────────────────────────────────────────────
             Route::get('/content/posts', [ContentModerationController::class, 'posts'])

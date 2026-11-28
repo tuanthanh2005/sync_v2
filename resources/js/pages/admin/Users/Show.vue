@@ -3,7 +3,9 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import {
     AlertTriangle,
     ArrowLeft,
-    BadgeCheck,
+    Award,
+    Eye,
+    EyeOff,
     KeyRound,
     LogOut,
     Mail,
@@ -12,6 +14,7 @@ import {
     ShieldBan,
     Trash2,
     UserCheck,
+    XCircle,
 } from '@lucide/vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -19,6 +22,8 @@ import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import ReasonDialog from '@/components/common/ReasonDialog.vue';
 import RoleBadge from '@/components/common/RoleBadge.vue';
+import InputError from '@/components/InputError.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,6 +31,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useInitials } from '@/composables/useInitials';
 import { formatCurrencyVnd, formatDateTime } from '@/lib/formatters';
+import {
+    grant as badgeGrantRoute,
+    revoke as badgeRevokeRoute,
+    visibility as badgeVisibilityRoute,
+} from '@/routes/admin/badges';
 import {
     index as adminUsers,
     lifecycle as userLifecycle,
@@ -35,6 +45,7 @@ import {
     sanction as userSanctionRoute,
     update as userUpdateRoute,
 } from '@/routes/admin/users';
+import type { UnifiedBadgeItem } from '@/types';
 
 const props = defineProps<{
     account: {
@@ -44,6 +55,8 @@ const props = defineProps<{
         email: string;
         avatar: string | null;
         is_verified_badge: boolean;
+        compact_badges?: UnifiedBadgeItem[];
+        profile_badges?: UnifiedBadgeItem[];
         role: 'user' | 'moderator' | 'admin';
         role_label: string;
         rbac_role: string;
@@ -161,9 +174,49 @@ const props = defineProps<{
         ip_address: string | null;
         created_at: string;
     }>;
+    badgeDetails: {
+        resolved: {
+            compact: UnifiedBadgeItem[];
+            profile: UnifiedBadgeItem[];
+        };
+        history: Array<{
+            id: number;
+            badge_type: string;
+            label: string;
+            label_key: string;
+            color: string;
+            icon: string;
+            status: string;
+            is_active: boolean;
+            is_public: boolean;
+            effective_eligible: boolean;
+            grant_source: string;
+            grant_reason: string | null;
+            granted_at: string;
+            granted_by_username: string | null;
+            expires_at: string | null;
+            revoked_at: string | null;
+            revoked_by_username: string | null;
+            revoke_reason: string | null;
+        }>;
+        eligibility: {
+            official_account: boolean;
+            official_staff: boolean;
+            moderator: boolean;
+            premium_member: boolean;
+            ai_account: boolean;
+        };
+        canManage: boolean;
+        grantableOptions: Array<{
+            value: string;
+            label_key: string;
+            color: string;
+            icon: string;
+        }>;
+    };
 }>();
 
-const { t, locale } = useI18n();
+const { t, te, locale } = useI18n();
 const { getInitials } = useInitials();
 
 function moderationStatusLabel(status: string): string {
@@ -258,6 +311,76 @@ function saveRole(): void {
     router.post(
         userRoleRoute.url(props.account.id),
         { role: selectedRole.value },
+        { preserveScroll: true },
+    );
+}
+
+const badgeGrantForm = useForm<{
+    user_id: number;
+    badge_type: string;
+    reason: string;
+    is_public: boolean;
+    user?: string;
+}>({
+    user_id: props.account.id,
+    badge_type: props.badgeDetails.grantableOptions[0]?.value ?? 'official_account',
+    reason: '',
+    is_public: true,
+});
+const badgeGrantConfirmOpen = ref(false);
+const badgeRevokeDialogOpen = ref(false);
+const badgeRevokeTargetId = ref<number | null>(null);
+const badgeRevokeProcessing = ref(false);
+
+function requestUserBadgeGrant(): void {
+    if (badgeGrantForm.reason.trim().length < 3) {
+        submitUserBadgeGrant();
+        return;
+    }
+    badgeGrantConfirmOpen.value = true;
+}
+
+function submitUserBadgeGrant(): void {
+    badgeGrantForm.post(badgeGrantRoute.url(), {
+        preserveScroll: true,
+        onSuccess: () => {
+            badgeGrantConfirmOpen.value = false;
+            badgeGrantForm.reset('reason');
+        },
+        onError: () => {
+            badgeGrantConfirmOpen.value = false;
+        },
+    });
+}
+
+function openUserBadgeRevoke(badgeId: number): void {
+    badgeRevokeTargetId.value = badgeId;
+    badgeRevokeDialogOpen.value = true;
+}
+
+function submitUserBadgeRevoke(reason: string): void {
+    if (badgeRevokeTargetId.value === null) {
+        return;
+    }
+    badgeRevokeProcessing.value = true;
+    router.post(
+        badgeRevokeRoute.url(badgeRevokeTargetId.value),
+        { reason },
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                badgeRevokeProcessing.value = false;
+                badgeRevokeDialogOpen.value = false;
+                badgeRevokeTargetId.value = null;
+            },
+        },
+    );
+}
+
+function toggleUserBadgeVisibility(badgeId: number, currentPublic: boolean): void {
+    router.post(
+        badgeVisibilityRoute.url(badgeId),
+        { is_public: !currentPublic },
         { preserveScroll: true },
     );
 }
@@ -412,9 +535,11 @@ function sendReset(): void {
                         class="flex items-center gap-2 text-lg font-bold text-foreground"
                     >
                         <span>{{ account.name }}</span>
-                        <BadgeCheck
-                            v-if="account.is_verified_badge"
-                            class="size-4 text-primary"
+                        <UserBadges
+                            :badges="account.compact_badges"
+                            mode="compact"
+                            size="md"
+                            :max="2"
                         />
                         <RoleBadge
                             :role="account.role"
@@ -614,6 +739,175 @@ function sendReset(): void {
                         >
                             {{ t('admin.common.save') }}
                         </Button>
+                    </div>
+                </div>
+
+                <!-- Account Badges Section -->
+                <div class="space-y-3 border-t border-border pt-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <h3
+                            class="flex items-center gap-1.5 text-xs font-semibold text-foreground"
+                        >
+                            <Award class="size-3.5 text-primary" />
+                            <span>{{ t('admin.badges.accountSectionTitle') }}</span>
+                        </h3>
+                        <Badge variant="secondary" class="text-[10px]">
+                            {{
+                                badgeDetails.canManage
+                                    ? t('admin.badges.superAdminMode')
+                                    : t('admin.badges.readOnlyNotice')
+                            }}
+                        </Badge>
+                    </div>
+
+                    <!-- Live Resolved Public Showcase -->
+                    <div class="rounded-lg border border-border/80 bg-background/60 p-3">
+                        <p class="mb-1.5 text-[11px] font-medium text-muted-foreground">
+                            {{ t('admin.badges.livePublicDisplay') }}
+                        </p>
+                        <UserBadges
+                            v-if="badgeDetails.resolved.profile.length > 0"
+                            :badges="badgeDetails.resolved.profile"
+                            mode="showcase"
+                            size="sm"
+                        />
+                        <p v-else class="text-xs text-muted-foreground">
+                            {{ t('admin.badges.noActivePublicBadges') }}
+                        </p>
+
+                        <div class="mt-2.5 flex flex-wrap gap-1.5 text-[10px]">
+                            <Badge :variant="badgeDetails.eligibility.official_account ? 'default' : 'outline'">
+                                {{ t('badges.officialAccount.label') }}:
+                                {{ badgeDetails.eligibility.official_account ? t('admin.badges.statusOk') : t('admin.badges.statusNo') }}
+                            </Badge>
+                            <Badge :variant="badgeDetails.eligibility.official_staff ? 'default' : 'outline'">
+                                {{ t('badges.officialStaff.label') }}:
+                                {{ badgeDetails.eligibility.official_staff ? t('admin.badges.statusOk') : t('admin.badges.statusNo') }}
+                            </Badge>
+                            <Badge :variant="badgeDetails.eligibility.moderator ? 'default' : 'outline'">
+                                {{ t('badges.moderator.label') }}:
+                                {{ badgeDetails.eligibility.moderator ? t('admin.badges.statusOk') : t('admin.badges.statusNo') }}
+                            </Badge>
+                            <Badge :variant="badgeDetails.eligibility.premium_member ? 'default' : 'outline'">
+                                {{ t('badges.premiumMember.label') }}:
+                                {{ badgeDetails.eligibility.premium_member ? t('admin.badges.statusActiveShort') : t('admin.badges.statusNo') }}
+                            </Badge>
+                            <Badge :variant="badgeDetails.eligibility.ai_account ? 'default' : 'outline'">
+                                {{ t('badges.aiAccount.label') }}:
+                                {{ badgeDetails.eligibility.ai_account ? t('admin.badges.statusYes') : t('admin.badges.statusNo') }}
+                            </Badge>
+                        </div>
+                    </div>
+
+                    <!-- Grant Form (Super Admin Only) -->
+                    <form
+                        v-if="badgeDetails.canManage"
+                        @submit.prevent="requestUserBadgeGrant"
+                        class="space-y-2 rounded-lg border border-border/80 p-3"
+                    >
+                        <div class="grid gap-2 sm:grid-cols-2">
+                            <select
+                                v-model="badgeGrantForm.badge_type"
+                                class="h-9 rounded-lg border border-input bg-background px-2.5 text-xs"
+                            >
+                                <option
+                                    v-for="opt in badgeDetails.grantableOptions"
+                                    :key="opt.value"
+                                    :value="opt.value"
+                                >
+                                    {{ te(opt.label_key) ? t(opt.label_key) : opt.value }}
+                                </option>
+                            </select>
+                            <Input
+                                v-model="badgeGrantForm.reason"
+                                class="h-9 text-xs"
+                                :placeholder="t('admin.badges.reasonPlaceholder')"
+                            />
+                        </div>
+                        <InputError :message="badgeGrantForm.errors.badge_type" />
+                        <InputError :message="badgeGrantForm.errors.reason" />
+                        <InputError :message="badgeGrantForm.errors.user" />
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label class="inline-flex items-center gap-2 text-[11px] text-muted-foreground">
+                                <input
+                                    v-model="badgeGrantForm.is_public"
+                                    type="checkbox"
+                                    class="rounded border-input"
+                                />
+                                <span>{{ t('admin.badges.publicVisibleToggle') }}</span>
+                            </label>
+                            <Button
+                                type="submit"
+                                size="sm"
+                                class="h-8 rounded-lg text-xs"
+                                :disabled="badgeGrantForm.processing"
+                            >
+                                {{ t('admin.badges.grantButton') }}
+                            </Button>
+                        </div>
+                    </form>
+
+                    <!-- Badge Grant / Revoke Audit History -->
+                    <div
+                        v-if="badgeDetails.history.length > 0"
+                        class="divide-y divide-border/70 rounded-lg border border-border/80 text-xs"
+                    >
+                        <div
+                            v-for="hb in badgeDetails.history"
+                            :key="hb.id"
+                            class="flex flex-wrap items-center justify-between gap-2 p-2.5"
+                        >
+                            <div class="min-w-0 space-y-0.5">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="font-semibold text-foreground">
+                                        {{ te(hb.label_key) ? t(hb.label_key) : hb.label }}
+                                    </span>
+                                    <Badge
+                                        :variant="hb.is_active ? 'default' : 'destructive'"
+                                        class="text-[10px]"
+                                    >
+                                        {{
+                                            hb.is_active
+                                                ? hb.is_public
+                                                    ? t('admin.badges.statusActive')
+                                                    : t('admin.badges.statusHidden')
+                                                : t('admin.badges.statusRevoked')
+                                        }}
+                                    </Badge>
+                                </div>
+                                <p v-if="hb.grant_reason" class="text-[11px] text-muted-foreground">
+                                    {{ hb.grant_reason }}
+                                </p>
+                                <p v-if="hb.revoke_reason" class="text-[11px] text-destructive">
+                                    {{ t('admin.badges.revokedPrefix') }} {{ hb.revoke_reason }}
+                                </p>
+                            </div>
+                            <div
+                                v-if="badgeDetails.canManage && hb.is_active"
+                                class="flex items-center gap-1"
+                            >
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    class="h-7 px-2 text-xs"
+                                    @click="toggleUserBadgeVisibility(hb.id, hb.is_public)"
+                                >
+                                    <EyeOff v-if="hb.is_public" class="size-3.5" />
+                                    <Eye v-else class="size-3.5" />
+                                </Button>
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="destructive"
+                                    class="h-7 px-2 text-[11px]"
+                                    @click="openUserBadgeRevoke(hb.id)"
+                                >
+                                    <XCircle class="me-1 size-3" />
+                                    {{ t('admin.badges.revokeButton') }}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1055,6 +1349,32 @@ function sendReset(): void {
             :title="t('admin.users.revokeSessions')"
             :description="`@${account.username}`"
             @confirm="confirmRevokeSessions"
+        />
+
+        <!-- Account Badge Confirm & Revoke Dialogs -->
+        <ConfirmActionDialog
+            v-model:open="badgeGrantConfirmOpen"
+            :title="t('admin.badges.confirmGrantTitle')"
+            :description="
+                t('admin.badges.confirmGrantDesc', {
+                    username: account.username,
+                    badge: badgeGrantForm.badge_type,
+                })
+            "
+            :confirm-label="t('admin.badges.grantButton')"
+            :destructive="false"
+            :processing="badgeGrantForm.processing"
+            @confirm="submitUserBadgeGrant"
+        />
+
+        <ReasonDialog
+            v-model:open="badgeRevokeDialogOpen"
+            :title="t('admin.badges.confirmRevokeTitle')"
+            :description="`@${account.username}`"
+            :confirm-label="t('admin.badges.revokeButton')"
+            :destructive="true"
+            :processing="badgeRevokeProcessing"
+            @submit="submitUserBadgeRevoke"
         />
     </div>
 </template>

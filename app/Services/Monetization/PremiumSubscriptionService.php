@@ -11,6 +11,7 @@ use App\Models\SubscriptionEvent;
 use App\Models\User;
 use App\Notifications\SocialActivityNotification;
 use App\Services\Security\AuditLogger;
+use App\Services\Social\UserBadgeResolverService;
 use App\Services\System\SystemSettingService;
 use Database\Seeders\MonetizationSeeder;
 use Illuminate\Support\Facades\DB;
@@ -201,6 +202,8 @@ class PremiumSubscriptionService
                     : ['plan' => $plan->name, 'date' => $newExpiresAt->format('Y-m-d')],
             ));
 
+            app(UserBadgeResolverService::class)->invalidateForUser($lockedUser->id);
+
             return $subscription;
         });
     }
@@ -307,6 +310,8 @@ class PremiumSubscriptionService
                 titleParams: ['days' => $days, 'reason' => $reason],
             ));
 
+            app(UserBadgeResolverService::class)->invalidateForUser($lockedUser->id);
+
             return $subscription;
         });
     }
@@ -395,6 +400,8 @@ class PremiumSubscriptionService
                 $actor,
             );
 
+            app(UserBadgeResolverService::class)->invalidateForUser($lockedUser->id);
+
             return $locked;
         });
     }
@@ -481,6 +488,8 @@ class PremiumSubscriptionService
                 ],
                 $actor,
             );
+
+            app(UserBadgeResolverService::class)->invalidateForUser($lockedUser->id);
 
             return $subscription;
         });
@@ -583,6 +592,8 @@ class PremiumSubscriptionService
                 ['target_user_id' => $lockedUser->id, 'days_delta' => $daysDelta, 'reason' => $cleanReason],
                 $actor,
             );
+
+            app(UserBadgeResolverService::class)->invalidateForUser($lockedUser->id);
 
             return $locked->fresh(['plan', 'user']) ?? $locked;
         });

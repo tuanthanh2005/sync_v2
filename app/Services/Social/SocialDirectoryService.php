@@ -8,7 +8,6 @@ use App\Models\Follow;
 use App\Models\Post;
 use App\Models\PostReaction;
 use App\Models\User;
-use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +20,7 @@ class SocialDirectoryService
 
     public function __construct(
         private readonly FeedService $feedService,
-        private readonly EarlyMemberAndBadgeService $badgeService,
+        private readonly UserBadgeResolverService $badgeResolver,
     ) {}
 
     /**
@@ -82,7 +81,8 @@ class SocialDirectoryService
                 $this->applyActiveUserConstraints($userQuery, $blockedIds, $search);
             })
             ->with([
-                'user:id,name,username,avatar_url,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'user:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'user.rbacRole:id,slug,name',
                 'user.profile:id,user_id,headline,bio,location,avatar_disk,avatar_path,is_verified_badge',
             ])
             ->orderByDesc('post_reactions.created_at')
@@ -187,7 +187,8 @@ class SocialDirectoryService
                 $this->applyActiveUserConstraints($userQuery, $blockedIds, $search, includeHeadline: true);
             })
             ->with([
-                "{$relationName}:id,name,username,avatar_url,role,status,premium_until,premium_suspended_at,account_type,ai_disclosure",
+                "{$relationName}:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure",
+                "{$relationName}.rbacRole:id,slug,name",
                 "{$relationName}.profile:id,user_id,headline,bio,location,avatar_disk,avatar_path,is_verified_badge",
             ])
             ->orderByDesc('follows.created_at')
@@ -327,7 +328,7 @@ class SocialDirectoryService
             }
         }
 
-        $badges = $this->badgeService->activeBadgesForUsers($userIds);
+        $badges = $this->badgeResolver->compactForUsers($users);
 
         return [
             'following_ids' => $followingIds,
@@ -348,6 +349,7 @@ class SocialDirectoryService
     ): array {
         $profile = $member->profile;
         $isSelf = $viewer !== null && $viewer->id === $member->id;
+        $compact = $badgesByUser[$member->id] ?? [];
 
         return [
             'id' => $member->id,
@@ -363,7 +365,8 @@ class SocialDirectoryService
             'is_premium' => $member->isPremium(),
             'is_ai_agent' => $member->isAiAgent(),
             'ai_disclosure' => $member->ai_disclosure,
-            'badges' => $badgesByUser[$member->id] ?? [],
+            'compact_badges' => $compact,
+            'badges' => $compact,
             'is_self' => $isSelf,
             'is_following' => ! $isSelf && isset($viewerFollowingIds[$member->id]),
             'can_follow' => ! $isSelf,

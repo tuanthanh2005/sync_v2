@@ -735,7 +735,8 @@
             "growthOverview": "Wachstumsübersicht",
             "growthReferrals": "Empfehlungen & Betrug",
             "growthCampaigns": "Kampagnen & Abzeichen",
-            "postFeedSettings": "Beitrags- & Feed-Einstellungen"
+            "postFeedSettings": "Beitrags- & Feed-Einstellungen",
+            "badges": "Abzeichen-Verwaltung"
         },
         "common": {
             "search": "Suchen...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Hohes Risiko",
                 "riskViolation": "Verstoß"
             }
+        },
+        "badges": {
+            "title": "Globale Abzeichen-Verwaltung",
+            "subtitle": "Verwalten Sie offizielle SysNoxis-Konten, Team-Abzeichen, Moderatoren-Schilde und vollständige Audit-Protokolle.",
+            "superAdminMode": "Super-Admin-Zugriff",
+            "readOnlyNotice": "Nur-Lese-Ansicht",
+            "grantTitle": "Offizielles oder Anerkennungsabzeichen vergeben",
+            "grantSubtitle": "Nur Super-Administratoren können Autoritätsabzeichen vergeben. Jede Aktion erfordert eine protokollierte Begründung.",
+            "targetUsername": "Ziel-Benutzername",
+            "usernamePlaceholder": "Benutzername (z. B. alex_dev)",
+            "badgeType": "Abzeichentyp",
+            "reasonLabel": "Audit-Grund",
+            "reasonPlaceholder": "Berechtigungsnachweis erläutern...",
+            "expiresAtLabel": "Läuft ab am (Optional)",
+            "publicVisibleToggle": "Abzeichen öffentlich neben dem Anzeigenamen einblenden",
+            "grantButton": "Abzeichen vergeben",
+            "searchPlaceholder": "Nach Name, Benutzername oder ID suchen...",
+            "allTypes": "Alle Abzeichentypen",
+            "allStatuses": "Alle Status",
+            "statusActive": "Aktiv",
+            "statusRevoked": "Widerrufen",
+            "statusHidden": "Verborgen / Intern",
+            "emptyTitle": "Keine Abzeichen entsprechen den aktuellen Filtern",
+            "emptyDescription": "Zuweisungen von offiziellen, Team- und Moderatoren-Abzeichen erscheinen hier.",
+            "hidePublic": "Intern setzen (Verbergen)",
+            "showPublic": "Öffentlich zeigen",
+            "revokeButton": "Widerrufen",
+            "reasonAudit": "Grund & Akteur",
+            "timestamps": "Vergeben / Widerrufen",
+            "internalOnly": "Internes Konto (verborgen)",
+            "ineligibleHidden": "Rolle unberechtigt (verborgen)",
+            "revokedPrefix": "Widerrufen:",
+            "auditTitle": "Aktuelle Abzeichen-Auditprotokolle",
+            "confirmGrantTitle": "Abzeichenvergabe bestätigen",
+            "confirmGrantDesc": "'{badge}' an Konto {username} vergeben? Dieser Vorgang wird dauerhaft protokolliert.",
+            "confirmRevokeTitle": "Konto-Abzeichen widerrufen",
+            "confirmRevokeDesc": "'{badge}' von Konto {username} widerrufen? Der Audit-Verlauf bleibt erhalten.",
+            "accountSectionTitle": "Konto-Abzeichen & Verifizierung",
+            "livePublicDisplay": "Aktuelle öffentliche Anzeige",
+            "noActivePublicBadges": "Derzeit werden keine öffentlichen Abzeichen angezeigt (Standardmitglied).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrator",
+            "roleModerator": "Moderator",
+            "roleMember": "Mitglied",
+            "statusOk": "Berechtigt",
+            "statusNo": "Nein",
+            "statusYes": "Ja",
+            "statusActiveShort": "Aktiv",
+            "allRoles": "Alle Rollen"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Communities entdecken",
         "restrictedTitle": "Liste nicht verfügbar",
         "restrictedHint": "Du kannst die Verbindungen dieses Kontos nicht einsehen."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Offizielles Konto",
+            "description": "Dies ist ein offizielles, von SysNoxis betriebenes Konto."
+        },
+        "officialStaff": {
+            "label": "Offizielles Team",
+            "description": "Dieses Konto gehört einem offiziellen Mitglied des SysNoxis-Teams."
+        },
+        "moderator": {
+            "label": "Moderator",
+            "description": "Dieses Konto gehört einem offiziellen SysNoxis-Moderator."
+        },
+        "premiumMember": {
+            "label": "Premium-Mitglied",
+            "description": "Dieses Konto verfügt über eine aktive SysNoxis Premium-Mitgliedschaft. Dieses Abzeichen stellt keine Identitätsprüfung dar."
+        },
+        "earlyMember": {
+            "label": "Frühes Mitglied",
+            "description": "Dieses Konto ist als frühes Mitglied der SysNoxis-Community anerkannt."
+        },
+        "aiAccount": {
+            "label": "KI-Konto",
+            "short": "KI",
+            "description": "Dieses Konto wird von einem KI-System betrieben und transparent als automatisiert gekennzeichnet."
+        },
+        "foundingMember": {
+            "description": "Dieses Konto trägt die Auszeichnung Gründungsmitglied auf SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Ausgezeichnet für die Einladung verifizierter Mitglieder zu SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Ausgezeichnet für den Aufbau einer aktiven Community auf SysNoxis."
+        }
     }
 }

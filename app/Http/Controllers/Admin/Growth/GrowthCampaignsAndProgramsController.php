@@ -123,10 +123,18 @@ class GrowthCampaignsAndProgramsController extends Controller
                 'value' => $s->value,
                 'label' => $s->label(),
             ], GrowthCampaignStatus::cases()),
-            'badgeTypes' => array_map(static fn (MemberBadgeType $b): array => [
-                'value' => $b->value,
-                'label' => $b->label(),
-            ], MemberBadgeType::cases()),
+            'badgeTypes' => array_map(
+                static fn (MemberBadgeType $b): array => [
+                    'value' => $b->value,
+                    'label' => $b->label(),
+                ],
+                [
+                    MemberBadgeType::EarlyMember,
+                    MemberBadgeType::FoundingMember,
+                    MemberBadgeType::ReferralAmbassador,
+                    MemberBadgeType::CommunityBuilder,
+                ],
+            ),
         ]);
     }
 
@@ -251,9 +259,16 @@ class GrowthCampaignsAndProgramsController extends Controller
 
     public function grantBadge(Request $request): RedirectResponse
     {
+        $allowedGrowthBadges = [
+            MemberBadgeType::EarlyMember->value,
+            MemberBadgeType::FoundingMember->value,
+            MemberBadgeType::ReferralAmbassador->value,
+            MemberBadgeType::CommunityBuilder->value,
+        ];
+
         $validated = $request->validate([
             'username' => ['required', 'string', 'exists:users,username'],
-            'badge_type' => ['required', Rule::in(array_map(static fn (MemberBadgeType $b): string => $b->value, MemberBadgeType::cases()))],
+            'badge_type' => ['required', Rule::in($allowedGrowthBadges)],
             'source' => ['nullable', 'string', 'max:40'],
         ]);
 
@@ -274,6 +289,11 @@ class GrowthCampaignsAndProgramsController extends Controller
 
     public function revokeBadge(Request $request, UserBadge $badge): RedirectResponse
     {
+        $badgeType = MemberBadgeType::tryFrom((string) $badge->badge_type);
+        if ($badgeType !== null && $badgeType->isAuthority()) {
+            abort(403, __('Authority badges must be revoked via Super Admin Badge Management.'));
+        }
+
         $validated = $request->validate([
             'reason' => ['required', 'string', 'min:3', 'max:240'],
         ]);

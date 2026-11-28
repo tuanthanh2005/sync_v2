@@ -29,7 +29,7 @@ const tooltipText = computed(
         :title="tooltipText"
         :aria-label="tooltipText"
         :class="[
-            'inline-flex shrink-0 items-center gap-1 rounded-md border border-indigo-500/30 bg-indigo-500/10 font-semibold text-indigo-700 dark:border-indigo-400/30 dark:bg-indigo-500/15 dark:text-indigo-300',
+            'inline-flex shrink-0 items-center gap-1 rounded-md border border-[#14B8A6]/35 bg-[#14B8A6]/10 font-semibold text-[#0F766E] dark:border-[#14B8A6]/35 dark:bg-[#14B8A6]/15 dark:text-[#2DD4BF]',
             size === 'md' ? 'px-2 py-0.5 text-xs' : 'h-5 px-1.5 text-[10px]',
         ]"
     >

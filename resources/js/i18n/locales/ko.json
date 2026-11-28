@@ -735,7 +735,8 @@
             "growthOverview": "성장 개요",
             "growthReferrals": "추천 및 부정행위",
             "growthCampaigns": "캠페인 및 배지",
-            "postFeedSettings": "게시물 및 피드 설정"
+            "postFeedSettings": "게시물 및 피드 설정",
+            "badges": "배지 관리"
         },
         "common": {
             "search": "검색...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "고위험",
                 "riskViolation": "위반"
             }
+        },
+        "badges": {
+            "title": "글로벌 배지 관리",
+            "subtitle": "SysNoxis 공식 계정, 공식 스태프 마크, 모더레이터 방패 및 감사 로그를 관리합니다.",
+            "superAdminMode": "최고 관리자 권한",
+            "readOnlyNotice": "읽기 전용 보기",
+            "grantTitle": "공식 또는 인증 배지 부여",
+            "grantSubtitle": "권한 배지는 최고 관리자만 부여할 수 있으며 모든 작업은 사유와 감사 기록을 필수로 남깁니다.",
+            "targetUsername": "대상 사용자 이름",
+            "usernamePlaceholder": "사용자 이름 (예: alex_dev)",
+            "badgeType": "배지 유형",
+            "reasonLabel": "감사 사유",
+            "reasonPlaceholder": "자격 확인 사유를 입력하세요...",
+            "expiresAtLabel": "만료 일시 (선택)",
+            "publicVisibleToggle": "표시 이름 옆에 공개 표시",
+            "grantButton": "배지 부여",
+            "searchPlaceholder": "이름, 사용자명 또는 ID 검색...",
+            "allTypes": "모든 배지 유형",
+            "allStatuses": "모든 상태",
+            "statusActive": "활성",
+            "statusRevoked": "철회됨",
+            "statusHidden": "숨김 / 내부용",
+            "emptyTitle": "필터와 일치하는 배지가 없습니다",
+            "emptyDescription": "공식, 스태프, 모더레이터 배지 부여 이력이 여기에 표시됩니다.",
+            "hidePublic": "내부 전용(숨기기)",
+            "showPublic": "공개 표시",
+            "revokeButton": "철회",
+            "reasonAudit": "사유 및 처리자",
+            "timestamps": "부여 / 철회 시각",
+            "internalOnly": "내부 계정(숨김)",
+            "ineligibleHidden": "역할 부적합(자동 숨김)",
+            "revokedPrefix": "철회:",
+            "auditTitle": "최근 배지 거버넌스 감사 로그",
+            "confirmGrantTitle": "배지 부여 확인",
+            "confirmGrantDesc": "계정 {username}님에게 '{badge}' 배지를 부여하시겠습니까? 감사 로그에 영구 기록됩니다.",
+            "confirmRevokeTitle": "계정 배지 철회",
+            "confirmRevokeDesc": "계정 {username}님의 '{badge}' 배지를 철회하시겠습니까? 감사 이력은 보존됩니다.",
+            "accountSectionTitle": "계정 배지 및 식별",
+            "livePublicDisplay": "현재 공개 표시",
+            "noActivePublicBadges": "현재 공개 표시 중인 배지가 없습니다 (일반 회원).",
+            "roleSuperAdmin": "최고 관리자",
+            "roleAdmin": "관리자",
+            "roleModerator": "모더레이터",
+            "roleMember": "회원",
+            "statusOk": "적격",
+            "statusNo": "아니오",
+            "statusYes": "예",
+            "statusActiveShort": "활성",
+            "allRoles": "모든 역할"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "커뮤니티 둘러보기",
         "restrictedTitle": "목록을 볼 수 없음",
         "restrictedHint": "이 계정의 연결 목록을 볼 수 없습니다."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "공식 계정",
+            "description": "SysNoxis가 운영하는 공식 계정입니다."
+        },
+        "officialStaff": {
+            "label": "공식 스태프",
+            "description": "SysNoxis 팀의 공식 구성원 계정입니다."
+        },
+        "moderator": {
+            "label": "모더레이터",
+            "description": "SysNoxis 공식 모더레이터의 계정입니다."
+        },
+        "premiumMember": {
+            "label": "프리미엄 회원",
+            "description": "활성화된 SysNoxis Premium 멤버십을 보유한 계정입니다. 이 배지는 신원 인증을 의미하지 않습니다."
+        },
+        "earlyMember": {
+            "label": "초기 회원",
+            "description": "SysNoxis 커뮤니티의 초기 회원으로 인정받은 계정입니다."
+        },
+        "aiAccount": {
+            "label": "AI 계정",
+            "short": "AI",
+            "description": "이 계정은 AI 시스템에 의해 운영되며 자동화된 계정임이 투명하게 표시됩니다."
+        },
+        "foundingMember": {
+            "description": "SysNoxis의 창립 회원 자격을 인정받은 계정입니다."
+        },
+        "referralAmbassador": {
+            "description": "인증된 회원을 SysNoxis에 초대한 공로로 인정받았습니다."
+        },
+        "communityBuilder": {
+            "description": "SysNoxis에서 활발한 커뮤니티를 구축한 공로로 인정받았습니다."
+        }
     }
 }

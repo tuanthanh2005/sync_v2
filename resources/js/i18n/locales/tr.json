@@ -735,7 +735,8 @@
             "growthOverview": "Büyüme Özeti",
             "growthReferrals": "Davetler ve Suistimal",
             "growthCampaigns": "Kampanyalar ve Rozetler",
-            "postFeedSettings": "Gönderi ve Akış Ayarları"
+            "postFeedSettings": "Gönderi ve Akış Ayarları",
+            "badges": "Rozet Yönetimi"
         },
         "common": {
             "search": "Ara...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Yüksek risk",
                 "riskViolation": "İhlal"
             }
+        },
+        "badges": {
+            "title": "Küresel Rozet Yönetimi",
+            "subtitle": "Resmi SysNoxis hesaplarını, ekip işaretlerini, moderatör kalkanlarını ve tam denetim günlüklerini yönetin.",
+            "superAdminMode": "Süper Yönetici Erişimi",
+            "readOnlyNotice": "Salt Okunur Görünüm",
+            "grantTitle": "Resmi veya Tanınma Rozeti Ver",
+            "grantSubtitle": "Yetki rozetlerini yalnızca Süper Yöneticiler atayabilir. Her işlem kayıtlı bir gerekçe gerektirir.",
+            "targetUsername": "Hedef Kullanıcı Adı",
+            "usernamePlaceholder": "kullanıcı adı (örn. alex_dev)",
+            "badgeType": "Rozet Türü",
+            "reasonLabel": "Denetim Gerekçesi",
+            "reasonPlaceholder": "Uygunluk doğrulamasını açıklayın...",
+            "expiresAtLabel": "Bitiş Tarihi (İsteğe Bağlı)",
+            "publicVisibleToggle": "Rozeti görünen adın yanında herkese açık göster",
+            "grantButton": "Rozet Ver",
+            "searchPlaceholder": "Ad, kullanıcı adı veya ID ile ara...",
+            "allTypes": "Tüm Rozet Türleri",
+            "allStatuses": "Tüm Durumlar",
+            "statusActive": "Aktif",
+            "statusRevoked": "Geri Alındı",
+            "statusHidden": "Gizli / Dahili",
+            "emptyTitle": "Filtrelere uyan rozet kaydı yok",
+            "emptyDescription": "Resmi, ekip ve moderatör rozeti atamaları burada görünecektir.",
+            "hidePublic": "Dahili Yap (Gizle)",
+            "showPublic": "Herkese Göster",
+            "revokeButton": "Rozeti Geri Al",
+            "reasonAudit": "Gerekçe ve İşlemi Yapan",
+            "timestamps": "Verilme / Geri Alma",
+            "internalOnly": "Dahili hesap (gizli)",
+            "ineligibleHidden": "Rol uygun değil (otomatik gizlendi)",
+            "revokedPrefix": "Geri alındı:",
+            "auditTitle": "Son Rozet Yönetimi Denetim Günlükleri",
+            "confirmGrantTitle": "Rozet Atamasını Onayla",
+            "confirmGrantDesc": "{username} hesabına '{badge}' rozeti verilsin mi? Denetim günlüklerine kalıcı olarak işlenecektir.",
+            "confirmRevokeTitle": "Hesap Rozetini Geri Al",
+            "confirmRevokeDesc": "{username} hesabından '{badge}' geri alınsın mı? Denetim geçmişi korunacaktır.",
+            "accountSectionTitle": "Hesap Rozetleri ve Doğrulama",
+            "livePublicDisplay": "Canlı Genel Görünüm",
+            "noActivePublicBadges": "Şu anda genel rozet gösterilmiyor (standart üye).",
+            "roleSuperAdmin": "Süper Yönetici",
+            "roleAdmin": "Yönetici",
+            "roleModerator": "Moderatör",
+            "roleMember": "Üye",
+            "statusOk": "Uygun",
+            "statusNo": "Hayır",
+            "statusYes": "Evet",
+            "statusActiveShort": "Aktif",
+            "allRoles": "Tüm Roller"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Toplulukları keşfet",
         "restrictedTitle": "Liste kullanılamıyor",
         "restrictedHint": "Bu hesabın bağlantılarını görüntüleyemezsiniz."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Resmi Hesap",
+            "description": "Bu, SysNoxis tarafından işletilen resmi bir hesaptır."
+        },
+        "officialStaff": {
+            "label": "Resmi Ekip",
+            "description": "Bu hesap SysNoxis ekibinin resmi bir üyesine aittir."
+        },
+        "moderator": {
+            "label": "Moderatör",
+            "description": "Bu hesap resmi bir SysNoxis moderatörüne aittir."
+        },
+        "premiumMember": {
+            "label": "Premium Üye",
+            "description": "Bu hesap aktif bir SysNoxis Premium üyeliğine sahiptir. Bu rozet kimlik doğrulaması anlamına gelmez."
+        },
+        "earlyMember": {
+            "label": "Erken Üye",
+            "description": "Bu hesap SysNoxis topluluğunun erken üyelerinden biri olarak tanınmaktadır."
+        },
+        "aiAccount": {
+            "label": "Yapay Zeka Hesabı",
+            "short": "AI",
+            "description": "Bu hesap bir yapay zeka sistemi tarafından işletilmekte ve şeffaf biçimde otomatik olarak tanımlanmaktadır."
+        },
+        "foundingMember": {
+            "description": "Bu hesap SysNoxis üzerinde Kurucu Üye takdirine sahiptir."
+        },
+        "referralAmbassador": {
+            "description": "SysNoxis platformuna doğrulanmış üyeler davet ettiği için takdir edildi."
+        },
+        "communityBuilder": {
+            "description": "SysNoxis üzerinde aktif bir topluluk oluşturduğu için takdir edildi."
+        }
     }
 }

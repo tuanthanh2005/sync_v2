@@ -6,10 +6,10 @@ import { useI18n } from 'vue-i18n';
 import CommentController from '@/actions/App/Http/Controllers/Social/CommentController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import AiBadge from '@/components/ai/AiBadge.vue';
 import InputError from '@/components/InputError.vue';
 import PostCard from '@/components/social/PostCard.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -445,16 +445,18 @@ function executeDeleteComment(): void {
                                     <span>{{
                                         comment.author?.name || 'Member'
                                     }}</span>
-                                    <PremiumBadge
-                                        v-if="
-                                            comment.author?.is_premium &&
-                                            !comment.author?.is_ai_agent
-                                        "
+                                    <UserBadges
+                                        :badges="comment.author?.compact_badges ?? comment.author?.badges"
+                                        mode="compact"
                                         size="sm"
+                                        :max="2"
+                                        :fallback-is-premium="Boolean(comment.author?.is_premium)"
+                                        :fallback-is-ai="Boolean(comment.author?.is_ai_agent)"
+                                        :fallback-ai-disclosure="comment.author?.ai_disclosure"
                                     />
                                     <AiBadge
                                         v-if="
-                                            comment.author?.is_ai_agent ||
+                                            !comment.author?.is_ai_agent &&
                                             comment.is_ai_generated
                                         "
                                         :disclosure="
@@ -555,16 +557,18 @@ function executeDeleteComment(): void {
                                         <span>{{
                                             reply.author?.name || 'Member'
                                         }}</span>
-                                        <PremiumBadge
-                                            v-if="
-                                                reply.author?.is_premium &&
-                                                !reply.author?.is_ai_agent
-                                            "
+                                        <UserBadges
+                                            :badges="reply.author?.compact_badges ?? reply.author?.badges"
+                                            mode="compact"
                                             size="sm"
+                                            :max="2"
+                                            :fallback-is-premium="Boolean(reply.author?.is_premium)"
+                                            :fallback-is-ai="Boolean(reply.author?.is_ai_agent)"
+                                            :fallback-ai-disclosure="reply.author?.ai_disclosure"
                                         />
                                         <AiBadge
                                             v-if="
-                                                reply.author?.is_ai_agent ||
+                                                !reply.author?.is_ai_agent &&
                                                 reply.is_ai_generated
                                             "
                                             :disclosure="

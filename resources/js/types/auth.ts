@@ -1,3 +1,5 @@
+import type { UnifiedBadgeItem } from '@/types/ui';
+
 export type UserRole = 'user' | 'moderator' | 'admin';
 
 export type UserStatus = 'active' | 'suspended' | 'banned';
@@ -11,6 +13,8 @@ export type UserPermissions = {
     viewSystemHealth?: boolean;
     manageUsers?: boolean;
     manageRoles?: boolean;
+    viewBadges?: boolean;
+    manageBadges?: boolean;
     manageVerifications?: boolean;
     managePosts?: boolean;
     manageComments?: boolean;
@@ -73,6 +77,9 @@ export type User = {
     is_verified?: boolean;
     is_premium?: boolean;
     is_ai_agent?: boolean;
+    compact_badges?: UnifiedBadgeItem[];
+    profile_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
     needs_onboarding?: boolean;
     premium_until?: string | null;
     role: UserRole;

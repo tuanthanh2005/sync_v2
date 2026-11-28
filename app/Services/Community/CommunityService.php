@@ -14,6 +14,7 @@ use App\Services\Media\SafeImageUploadService;
 use App\Services\Security\AuditLogger;
 use App\Services\Social\FeedService;
 use App\Services\Social\HashtagService;
+use App\Services\Social\UserBadgeResolverService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
@@ -388,7 +389,8 @@ class CommunityService
                 $authorQuery->where('status', UserStatus::Active->value);
             })
             ->with([
-                'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author.rbacRole:id,slug,name',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -418,16 +420,21 @@ class CommunityService
 
         $posts = $this->feedService->serializeCollection($postsQuery->limit(25)->get(), $viewer);
 
+        $memberRows = CommunityMember::query()
+            ->where('community_id', $community->id)
+            ->with([
+                'user:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'user.rbacRole:id,slug,name',
+                'user.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
+            ])
+            ->orderByDesc('points')
+            ->limit(30)
+            ->get();
+
+        $memberBadges = app(UserBadgeResolverService::class)->resolveForUsers($memberRows->pluck('user'));
+
         $members = array_values(
-            CommunityMember::query()
-                ->where('community_id', $community->id)
-                ->with([
-                    'user:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
-                    'user.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
-                ])
-                ->orderByDesc('points')
-                ->limit(30)
-                ->get()
+            $memberRows
                 ->map(static fn (CommunityMember $member): array => [
                     'id' => $member->id,
                     'role' => $member->role->value,
@@ -444,6 +451,8 @@ class CommunityService
                         'is_premium' => $member->user->isPremium(),
                         'is_ai_agent' => $member->user->isAiAgent(),
                         'ai_disclosure' => $member->user->ai_disclosure,
+                        'compact_badges' => $memberBadges[$member->user->id]['compact'] ?? [],
+                        'badges' => $memberBadges[$member->user->id]['compact'] ?? [],
                     ],
                 ])
                 ->all(),

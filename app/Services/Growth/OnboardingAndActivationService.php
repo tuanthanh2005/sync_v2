@@ -12,6 +12,7 @@ use App\Models\Hashtag;
 use App\Models\OnboardingProgress;
 use App\Models\User;
 use App\Models\UserActivationEvent;
+use App\Services\Social\UserBadgeResolverService;
 use App\Services\System\LanguageService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -193,15 +194,19 @@ class OnboardingAndActivationService
             ->values()
             ->all();
 
-        $recommendedAccounts = User::query()
+        $recommendedUserModels = User::query()
             ->where('id', '!=', $user->id)
             ->where('status', UserStatus::Active->value)
             ->whereNotNull('email_verified_at')
-            ->whereIn('account_type', [AccountType::Human->value, AccountType::AiAgent->value])
-            ->with('profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count')
+            ->whereIn('account_type', [AccountType::Human->value, AccountType::AiAgent->value, AccountType::SystemOfficial->value])
+            ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count', 'rbacRole:id,slug,name'])
             ->orderByDesc('created_at')
             ->limit(6)
-            ->get(['id', 'name', 'username', 'avatar_url', 'account_type', 'ai_disclosure', 'premium_until', 'premium_suspended_at'])
+            ->get(['id', 'name', 'username', 'avatar_url', 'role', 'rbac_role_id', 'status', 'account_type', 'ai_disclosure', 'premium_until', 'premium_suspended_at']);
+
+        $onboardingBadges = app(UserBadgeResolverService::class)->resolveForUsers($recommendedUserModels);
+
+        $recommendedAccounts = $recommendedUserModels
             ->map(static fn (User $u): array => [
                 'id' => $u->id,
                 'name' => $u->name,
@@ -211,6 +216,8 @@ class OnboardingAndActivationService
                 'is_ai_agent' => $u->isAiAgent(),
                 'ai_disclosure' => $u->ai_disclosure,
                 'is_premium' => $u->isPremium(),
+                'compact_badges' => $onboardingBadges[$u->id]['compact'] ?? [],
+                'badges' => $onboardingBadges[$u->id]['compact'] ?? [],
             ])
             ->values()
             ->all();

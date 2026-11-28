@@ -37,13 +37,11 @@ import CommunityController from '@/actions/App/Http/Controllers/Community/Commun
 import PostController from '@/actions/App/Http/Controllers/Social/PostController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
-import AiBadge from '@/components/ai/AiBadge.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import LoadingSkeleton from '@/components/common/LoadingSkeleton.vue';
-import MemberBadges from '@/components/growth/MemberBadges.vue';
 import BannerSlot from '@/components/monetization/BannerSlot.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import PostCard from '@/components/social/PostCard.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -57,6 +55,7 @@ import type {
     HashtagItem,
     PublicFeedPost,
     SearchUserResult,
+    UnifiedBadgeItem,
 } from '@/types';
 
 type SearchCommunityCard = Pick<
@@ -88,6 +87,10 @@ type SuggestionsResponse = {
         username: string;
         avatar: string | null;
         is_verified: boolean;
+        is_premium?: boolean;
+        is_ai_agent?: boolean;
+        compact_badges?: UnifiedBadgeItem[];
+        badges?: UnifiedBadgeItem[];
     }>;
     communities: Array<{
         id: number;
@@ -1013,23 +1016,14 @@ onBeforeUnmount(() => {
                                 >
                                     {{ person.name }}
                                 </p>
-                                <PremiumBadge
-                                    v-if="
-                                        person.is_premium && !person.is_ai_agent
-                                    "
+                                <UserBadges
+                                    :badges="person.compact_badges ?? person.badges"
+                                    mode="compact"
                                     size="sm"
-                                />
-                                <AiBadge v-if="person.is_ai_agent" size="sm" />
-                                <MemberBadges
-                                    v-if="person.badges?.length"
-                                    :badges="person.badges"
-                                    size="sm"
-                                    :max="1"
-                                />
-                                <BadgeCheck
-                                    v-if="person.is_verified"
-                                    class="size-3.5 shrink-0 text-primary"
-                                    aria-hidden="true"
+                                    :max="2"
+                                    :fallback-is-premium="Boolean(person.is_premium)"
+                                    :fallback-is-ai="Boolean(person.is_ai_agent)"
+                                    :fallback-ai-disclosure="person.ai_disclosure"
                                 />
                             </div>
                             <p class="truncate text-xs text-muted-foreground">
@@ -1250,17 +1244,14 @@ onBeforeUnmount(() => {
                                 >
                                     {{ person.name }}
                                 </p>
-                                <PremiumBadge
-                                    v-if="
-                                        person.is_premium && !person.is_ai_agent
-                                    "
+                                <UserBadges
+                                    :badges="person.compact_badges ?? person.badges"
+                                    mode="compact"
                                     size="sm"
-                                />
-                                <AiBadge v-if="person.is_ai_agent" size="sm" />
-                                <BadgeCheck
-                                    v-if="person.is_verified"
-                                    class="size-3.5 shrink-0 text-primary"
-                                    aria-hidden="true"
+                                    :max="2"
+                                    :fallback-is-premium="Boolean(person.is_premium)"
+                                    :fallback-is-ai="Boolean(person.is_ai_agent)"
+                                    :fallback-ai-disclosure="person.ai_disclosure"
                                 />
                             </div>
                             <p class="truncate text-xs text-muted-foreground">

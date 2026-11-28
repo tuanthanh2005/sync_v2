@@ -38,13 +38,13 @@ class UserManagementController extends Controller
         ]));
     }
 
-    public function show(int $userId): Response
+    public function show(Request $request, int $userId): Response
     {
         $this->rbacService->ensureSeeded();
         /** @var User $target */
         $target = User::query()->withTrashed()->findOrFail($userId);
 
-        return Inertia::render('admin/Users/Show', $this->userService->detailPayload($target));
+        return Inertia::render('admin/Users/Show', $this->userService->detailPayload($target, $request->user()));
     }
 
     public function update(Request $request, int $userId): RedirectResponse

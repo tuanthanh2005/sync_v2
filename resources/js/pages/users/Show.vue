@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import {
-    BadgeCheck,
     Bookmark,
     Calendar,
     Camera,
@@ -22,17 +21,15 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MessageController from '@/actions/App/Http/Controllers/Messaging/MessageController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
-import AiBadge from '@/components/ai/AiBadge.vue';
 import AutoHideScrollArea from '@/components/common/AutoHideScrollArea.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import ReportDialog from '@/components/common/ReportDialog.vue';
-import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import FollowListModal, {
     type FollowModalTab,
 } from '@/components/social/FollowListModal.vue';
 import PostCard from '@/components/social/PostCard.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import AvatarUploader from '@/components/upload/AvatarUploader.vue';
 import CoverImageUploader from '@/components/upload/CoverImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -648,33 +645,29 @@ function submitProfileDetails(): void {
                         <h1 class="text-xl font-bold text-foreground">
                             {{ profile_user.name }}
                         </h1>
-                        <PremiumBadge
-                            v-if="
-                                profile_user.is_premium &&
-                                !profile_user.is_ai_agent
-                            "
+                        <UserBadges
+                            :badges="profile_user.compact_badges"
+                            mode="compact"
                             size="md"
+                            :max="2"
+                            :fallback-is-premium="Boolean(profile_user.is_premium)"
+                            :fallback-is-ai="Boolean(profile_user.is_ai_agent)"
+                            :fallback-ai-disclosure="profile_user.ai_disclosure"
                         />
-                        <AiBadge
-                            v-if="profile_user.is_ai_agent"
-                            :disclosure="profile_user.ai_disclosure"
+                    </div>
+                    <div
+                        v-if="(profile_user.profile_badges ?? profile_user.badges ?? []).length > 0"
+                        class="pt-0.5"
+                    >
+                        <UserBadges
+                            :badges="profile_user.profile_badges ?? profile_user.badges"
+                            mode="showcase"
                             size="md"
-                        />
-                        <MemberBadges
-                            v-if="profile_user.badges?.length"
-                            :badges="profile_user.badges"
-                            size="md"
-                            :max="3"
-                        />
-                        <BadgeCheck
-                            v-if="profile_user.is_verified"
-                            class="size-5 text-primary"
-                            aria-hidden="true"
                         />
                     </div>
                     <div
                         v-if="profile_user.is_ai_agent"
-                        class="rounded-xl border border-indigo-500/25 bg-indigo-500/5 px-3.5 py-2.5 text-xs text-muted-foreground"
+                        class="rounded-xl border border-[#14B8A6]/30 bg-[#14B8A6]/5 px-3.5 py-2.5 text-xs text-muted-foreground"
                     >
                         <strong class="font-semibold text-foreground">{{
                             t('ai.badge.profileBannerTitle')

@@ -39,13 +39,15 @@ class CommentService
             ->whereNull('parent_id')
             ->where('moderation_status', ModerationStatus::Approved->value)
             ->with([
-                'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author.rbacRole:id,slug,name',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'replies' => function ($replyQuery) use ($blockedIds): void {
                     $replyQuery
                         ->where('moderation_status', ModerationStatus::Approved->value)
                         ->with([
-                            'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                            'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                            'author.rbacRole:id,slug,name',
                             'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                         ]);
 
@@ -60,8 +62,22 @@ class CommentService
             $commentsQuery->whereNotIn('user_id', $blockedIds);
         }
 
+        $comments = $commentsQuery->get();
+        $commentAuthors = collect();
+        foreach ($comments as $c) {
+            if ($c->author !== null) {
+                $commentAuthors->push($c->author);
+            }
+            foreach ($c->replies as $r) {
+                if ($r->author !== null) {
+                    $commentAuthors->push($r->author);
+                }
+            }
+        }
+        $resolvedBadges = app(UserBadgeResolverService::class)->resolveForUsers($commentAuthors);
+
         return array_values(
-            $commentsQuery->get()->map(function (Comment $comment) use ($post, $viewer): array {
+            $comments->map(function (Comment $comment) use ($post, $viewer, $resolvedBadges): array {
                 return [
                     'id' => $comment->id,
                     'content' => $comment->content,
@@ -82,9 +98,11 @@ class CommentService
                         'is_premium' => $comment->author->isPremium(),
                         'is_ai_agent' => $comment->author->isAiAgent(),
                         'ai_disclosure' => $comment->author->ai_disclosure,
+                        'compact_badges' => $resolvedBadges[$comment->author->id]['compact'] ?? [],
+                        'badges' => $resolvedBadges[$comment->author->id]['compact'] ?? [],
                     ],
                     'replies' => array_values(
-                        $comment->replies->map(static function (Comment $reply) use ($post, $viewer): array {
+                        $comment->replies->map(static function (Comment $reply) use ($post, $viewer, $resolvedBadges): array {
                             return [
                                 'id' => $reply->id,
                                 'parent_id' => $reply->parent_id,
@@ -106,6 +124,8 @@ class CommentService
                                     'is_premium' => $reply->author->isPremium(),
                                     'is_ai_agent' => $reply->author->isAiAgent(),
                                     'ai_disclosure' => $reply->author->ai_disclosure,
+                                    'compact_badges' => $resolvedBadges[$reply->author->id]['compact'] ?? [],
+                                    'badges' => $resolvedBadges[$reply->author->id]['compact'] ?? [],
                                 ],
                             ];
                         })->all(),

@@ -735,7 +735,8 @@
             "growthOverview": "Resumen de Crecimiento",
             "growthReferrals": "Referidos y Fraude",
             "growthCampaigns": "Campañas e Insignias",
-            "postFeedSettings": "Ajustes de Publicación y Feed"
+            "postFeedSettings": "Ajustes de Publicación y Feed",
+            "badges": "Gestión de insignias"
         },
         "common": {
             "search": "Buscar...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Riesgo alto",
                 "riskViolation": "Infracción"
             }
+        },
+        "badges": {
+            "title": "Gestión global de insignias",
+            "subtitle": "Administra cuentas oficiales de SysNoxis, insignias de personal, escudos de moderador y registros de auditoría.",
+            "superAdminMode": "Acceso Super Admin",
+            "readOnlyNotice": "Vista de solo lectura",
+            "grantTitle": "Otorgar insignia oficial o de reconocimiento",
+            "grantSubtitle": "Solo los Super Administradores pueden asignar insignias de autoridad. Toda acción requiere un motivo registrado.",
+            "targetUsername": "Usuario destinatario",
+            "usernamePlaceholder": "usuario (ej. alex_dev)",
+            "badgeType": "Tipo de insignia",
+            "reasonLabel": "Motivo de auditoría",
+            "reasonPlaceholder": "Indica la justificación...",
+            "expiresAtLabel": "Expira el (opcional)",
+            "publicVisibleToggle": "Mostrar insignia públicamente junto al nombre",
+            "grantButton": "Otorgar insignia",
+            "searchPlaceholder": "Buscar por nombre, usuario o ID...",
+            "allTypes": "Todos los tipos",
+            "allStatuses": "Todos los estados",
+            "statusActive": "Activa",
+            "statusRevoked": "Revocada",
+            "statusHidden": "Oculta / Interna",
+            "emptyTitle": "No hay insignias con los filtros actuales",
+            "emptyDescription": "Aquí aparecerán las asignaciones de insignias oficiales, personal y moderadores.",
+            "hidePublic": "Ocultar (Interna)",
+            "showPublic": "Mostrar públicamente",
+            "revokeButton": "Revocar",
+            "reasonAudit": "Motivo y responsable",
+            "timestamps": "Otorgada / Revocada",
+            "internalOnly": "Cuenta interna (oculta)",
+            "ineligibleHidden": "Rol no elegible (oculta)",
+            "revokedPrefix": "Revocada:",
+            "auditTitle": "Registros recientes de auditoría de insignias",
+            "confirmGrantTitle": "Confirmar asignación de insignia",
+            "confirmGrantDesc": "¿Otorgar '{badge}' a la cuenta {username}? Se registrará de forma permanente en auditoría.",
+            "confirmRevokeTitle": "Revocar insignia de cuenta",
+            "confirmRevokeDesc": "¿Revocar '{badge}' de la cuenta {username}? El historial de auditoría se conservará.",
+            "accountSectionTitle": "Insignias de cuenta y verificación",
+            "livePublicDisplay": "Visualización pública en vivo",
+            "noActivePublicBadges": "No se muestran insignias públicas (miembro estándar).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrador",
+            "roleModerator": "Moderador",
+            "roleMember": "Miembro",
+            "statusOk": "Elegible",
+            "statusNo": "No",
+            "statusYes": "Sí",
+            "statusActiveShort": "Activa",
+            "allRoles": "Todos los roles"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Explorar comunidades",
         "restrictedTitle": "Lista no disponible",
         "restrictedHint": "No puedes ver las conexiones de esta cuenta."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Cuenta oficial",
+            "description": "Esta es una cuenta oficial operada por SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Personal oficial",
+            "description": "Esta cuenta pertenece a un miembro oficial del equipo de SysNoxis."
+        },
+        "moderator": {
+            "label": "Moderador",
+            "description": "Esta cuenta pertenece a un moderador oficial de SysNoxis."
+        },
+        "premiumMember": {
+            "label": "Miembro Premium",
+            "description": "Esta cuenta tiene una membresía activa de SysNoxis Premium. Esta insignia no indica verificación de identidad."
+        },
+        "earlyMember": {
+            "label": "Miembro pionero",
+            "description": "Esta cuenta es reconocida como uno de los primeros miembros de la comunidad SysNoxis."
+        },
+        "aiAccount": {
+            "label": "Cuenta de IA",
+            "short": "IA",
+            "description": "Esta cuenta es operada por un sistema de IA y se identifica de forma transparente como automatizada."
+        },
+        "foundingMember": {
+            "description": "Esta cuenta cuenta con el reconocimiento de Miembro Fundador en SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Reconocido por invitar miembros verificados a SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Reconocido por construir una comunidad activa en SysNoxis."
+        }
     }
 }

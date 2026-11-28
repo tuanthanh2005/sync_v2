@@ -735,7 +735,8 @@
             "growthOverview": "Visão Geral de Crescimento",
             "growthReferrals": "Indicações e Fraude",
             "growthCampaigns": "Campanhas e Selos",
-            "postFeedSettings": "Configurações de Postagem e Feed"
+            "postFeedSettings": "Configurações de Postagem e Feed",
+            "badges": "Gestão de selos"
         },
         "common": {
             "search": "Pesquisar...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Risco alto",
                 "riskViolation": "Violação"
             }
+        },
+        "badges": {
+            "title": "Gestão global de selos",
+            "subtitle": "Gerencie contas oficiais da SysNoxis, selos da equipe, escudos de moderadores e logs de auditoria.",
+            "superAdminMode": "Acesso Super Admin",
+            "readOnlyNotice": "Modo somente leitura",
+            "grantTitle": "Conceder selo oficial ou de reconhecimento",
+            "grantSubtitle": "Apenas Super Administradores podem atribuir selos de autoridade. Toda ação exige motivo auditado.",
+            "targetUsername": "Usuário destinatário",
+            "usernamePlaceholder": "usuario (ex. alex_dev)",
+            "badgeType": "Tipo de selo",
+            "reasonLabel": "Motivo de auditoria",
+            "reasonPlaceholder": "Explique a elegibilidade...",
+            "expiresAtLabel": "Expira em (opcional)",
+            "publicVisibleToggle": "Exibir selo publicamente ao lado do nome",
+            "grantButton": "Conceder selo",
+            "searchPlaceholder": "Buscar por nome, usuário ou ID...",
+            "allTypes": "Todos os tipos",
+            "allStatuses": "Todos os status",
+            "statusActive": "Ativo",
+            "statusRevoked": "Revogado",
+            "statusHidden": "Oculto / Interno",
+            "emptyTitle": "Nenhum selo corresponde aos filtros",
+            "emptyDescription": "Atribuições de selos oficiais, equipe e moderadores aparecerão aqui.",
+            "hidePublic": "Tornar interno (Ocultar)",
+            "showPublic": "Exibir publicamente",
+            "revokeButton": "Revogar",
+            "reasonAudit": "Motivo e responsável",
+            "timestamps": "Concedido / Revogado",
+            "internalOnly": "Conta interna (oculta)",
+            "ineligibleHidden": "Cargo inelegível (oculto)",
+            "revokedPrefix": "Revogado:",
+            "auditTitle": "Logs recentes de governança de selos",
+            "confirmGrantTitle": "Confirmar concessão de selo",
+            "confirmGrantDesc": "Conceder '{badge}' para a conta {username}? Isso será registrado permanentemente.",
+            "confirmRevokeTitle": "Revogar selo da conta",
+            "confirmRevokeDesc": "Revogar '{badge}' da conta {username}? O histórico de auditoria será preservado.",
+            "accountSectionTitle": "Selos e identificação da conta",
+            "livePublicDisplay": "Exibição pública ao vivo",
+            "noActivePublicBadges": "Nenhum selo público exibido (membro padrão).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrador",
+            "roleModerator": "Moderador",
+            "roleMember": "Membro",
+            "statusOk": "Elegível",
+            "statusNo": "Não",
+            "statusYes": "Sim",
+            "statusActiveShort": "Ativo",
+            "allRoles": "Todos os cargos"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Explorar comunidades",
         "restrictedTitle": "Lista indisponível",
         "restrictedHint": "Você não pode visualizar as conexões desta conta."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Conta oficial",
+            "description": "Esta é uma conta oficial operada pela SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Equipe oficial",
+            "description": "Esta conta pertence a um membro oficial da equipe SysNoxis."
+        },
+        "moderator": {
+            "label": "Moderador",
+            "description": "Esta conta pertence a um moderador oficial da SysNoxis."
+        },
+        "premiumMember": {
+            "label": "Membro Premium",
+            "description": "Esta conta possui uma assinatura ativa do SysNoxis Premium. Este selo não indica verificação de identidade."
+        },
+        "earlyMember": {
+            "label": "Membro pioneiro",
+            "description": "Esta conta é reconhecida como um dos primeiros membros da comunidade SysNoxis."
+        },
+        "aiAccount": {
+            "label": "Conta de IA",
+            "short": "IA",
+            "description": "Esta conta é operada por um sistema de IA e identificada com transparência como automatizada."
+        },
+        "foundingMember": {
+            "description": "Esta conta possui reconhecimento de Membro Fundador na SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Reconhecido por convidar membros verificados para a SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Reconhecido por construir uma comunidade ativa na SysNoxis."
+        }
     }
 }

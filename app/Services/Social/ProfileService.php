@@ -10,7 +10,6 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Notifications\SocialActivityNotification;
-use App\Services\Growth\EarlyMemberAndBadgeService;
 use App\Services\Media\SafeImageUploadService;
 use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
@@ -85,7 +84,8 @@ class ProfileService
             $postQuery = Post::query()
                 ->where('user_id', $targetUser->id)
                 ->with([
-                    'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                    'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                    'author.rbacRole:id,slug,name',
                     'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                     'media',
                     'poll.options',
@@ -123,6 +123,9 @@ class ProfileService
             }
         }
 
+        $targetUser->loadMissing('rbacRole:id,slug,name');
+        $resolvedProfileBadges = app(UserBadgeResolverService::class)->resolveForUser($targetUser);
+
         return [
             'tab' => $isOwner && $tab === 'bookmarks' ? 'bookmarks' : 'posts',
             'profile_user' => [
@@ -141,7 +144,9 @@ class ProfileService
                 'account_type' => $targetUser->account_type->value,
                 'is_ai_agent' => $targetUser->isAiAgent(),
                 'ai_disclosure' => $targetUser->ai_disclosure,
-                'badges' => app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers([$targetUser->id])[$targetUser->id] ?? [],
+                'compact_badges' => $resolvedProfileBadges['compact'],
+                'profile_badges' => $resolvedProfileBadges['profile'],
+                'badges' => $resolvedProfileBadges['profile'],
                 'followers_count' => (int) ($profile->followers_count ?? 0),
                 'following_count' => (int) ($profile->following_count ?? 0),
                 'posts_count' => Post::query()->where('user_id', $targetUser->id)->publicVisible()->count(),

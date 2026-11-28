@@ -24,6 +24,7 @@ use App\Services\Billing\PaymentGatewayInterface;
 use App\Services\Moderation\ContentFilterService;
 use App\Services\Security\RbacService;
 use App\Services\Seo\SeoConfigService;
+use App\Services\Social\UserBadgeResolverService;
 use App\Services\System\LanguageService;
 use App\Services\System\SystemSettingService;
 use Carbon\CarbonImmutable;
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->scoped(LanguageService::class);
         $this->app->scoped(SeoConfigService::class);
         $this->app->scoped(ContentFilterService::class);
+        $this->app->scoped(UserBadgeResolverService::class);
     }
 
     /**

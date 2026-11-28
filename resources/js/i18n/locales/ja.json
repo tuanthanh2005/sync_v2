@@ -735,7 +735,8 @@
             "growthOverview": "グロース概要",
             "growthReferrals": "紹介・不正対策",
             "growthCampaigns": "キャンペーン・バッジ",
-            "postFeedSettings": "投稿・フィード設定"
+            "postFeedSettings": "投稿・フィード設定",
+            "badges": "バッジ管理"
         },
         "common": {
             "search": "検索...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "高リスク",
                 "riskViolation": "規約違反"
             }
+        },
+        "badges": {
+            "title": "グローバルバッジ管理",
+            "subtitle": "SysNoxis 公式アカウント、公式スタッフ認証、モデレーターバッジ、監査ログを一元管理します。",
+            "superAdminMode": "Super Admin 権限",
+            "readOnlyNotice": "閲覧専用モード",
+            "grantTitle": "公式・認定バッジの付与",
+            "grantSubtitle": "権限バッジの付与・剥奪は Super Admin のみ実行できます。すべての操作で監査理由の記録が必須です。",
+            "targetUsername": "対象ユーザー名",
+            "usernamePlaceholder": "ユーザー名 (例: alex_dev)",
+            "badgeType": "バッジ種別",
+            "reasonLabel": "監査理由",
+            "reasonPlaceholder": "付与・確認の根拠を入力...",
+            "expiresAtLabel": "有効期限（任意）",
+            "publicVisibleToggle": "表示名の横に公開表示する",
+            "grantButton": "バッジを付与",
+            "searchPlaceholder": "名前・ユーザー名・ID で検索...",
+            "allTypes": "すべての種別",
+            "allStatuses": "すべての状態",
+            "statusActive": "有効",
+            "statusRevoked": "剥奪済み",
+            "statusHidden": "非公開・内部",
+            "emptyTitle": "条件に一致するバッジ記録がありません",
+            "emptyDescription": "公式・スタッフ・モデレーターバッジの履歴がここに表示されます。",
+            "hidePublic": "内部設定（非公開）",
+            "showPublic": "公開表示にする",
+            "revokeButton": "剥奪する",
+            "reasonAudit": "理由・実行者",
+            "timestamps": "付与 / 剥奪日時",
+            "internalOnly": "内部アカウント（非公開）",
+            "ineligibleHidden": "権限不適合（自動非表示）",
+            "revokedPrefix": "剥奪:",
+            "auditTitle": "最近のバッジ管理監査ログ",
+            "confirmGrantTitle": "バッジ付与の確認",
+            "confirmGrantDesc": "アカウント {username} に「{badge}」を付与しますか？操作は監査ログに永久記録されます。",
+            "confirmRevokeTitle": "バッジの剥奪",
+            "confirmRevokeDesc": "アカウント {username} から「{badge}」を剥奪しますか？監査履歴は保持されます。",
+            "accountSectionTitle": "アカウントバッジ・識別",
+            "livePublicDisplay": "現在の公開表示",
+            "noActivePublicBadges": "公開表示中のバッジはありません（一般会員）。",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "管理者",
+            "roleModerator": "モデレーター",
+            "roleMember": "会員",
+            "statusOk": "適格",
+            "statusNo": "いいえ",
+            "statusYes": "はい",
+            "statusActiveShort": "有効",
+            "allRoles": "すべてのロール"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "コミュニティを探す",
         "restrictedTitle": "リストを表示できません",
         "restrictedHint": "このアカウントのつながりは表示できません。"
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "公式アカウント",
+            "description": "これは SysNoxis が運営する公式アカウントです。"
+        },
+        "officialStaff": {
+            "label": "公式スタッフ",
+            "description": "このアカウントは SysNoxis チームの公式メンバーに属しています。"
+        },
+        "moderator": {
+            "label": "モデレーター",
+            "description": "このアカウントは SysNoxis の公式モデレーターに属しています。"
+        },
+        "premiumMember": {
+            "label": "プレミアム会員",
+            "description": "このアカウントは有効な SysNoxis Premium メンバーシップを保有しています。このバッジは本人確認を意味するものではありません。"
+        },
+        "earlyMember": {
+            "label": "アーリーメンバー",
+            "description": "このアカウントは SysNoxis コミュニティの初期メンバーとして認定されています。"
+        },
+        "aiAccount": {
+            "label": "AI アカウント",
+            "short": "AI",
+            "description": "このアカウントは AI システムによって運営されており、自動化アカウントとして透明に明示されています。"
+        },
+        "foundingMember": {
+            "description": "SysNoxis における創設メンバーとして認定されています。"
+        },
+        "referralAmbassador": {
+            "description": "SysNoxis へ認証済みメンバーを招待した功績で認定されています。"
+        },
+        "communityBuilder": {
+            "description": "SysNoxis で活発なコミュニティを築いた功績で認定されています。"
+        }
     }
 }

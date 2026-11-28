@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
 import {
-    BadgeCheck,
     Bell,
     ChevronDown,
     Compass,
@@ -36,7 +35,6 @@ import { useI18n } from 'vue-i18n';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import SearchController from '@/actions/App/Http/Controllers/Social/SearchController';
-import AiBadge from '@/components/ai/AiBadge.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue';
@@ -48,7 +46,7 @@ import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import MiniFooter from '@/components/footer/MiniFooter.vue';
 import AdvertisingCenterNav from '@/components/monetization/AdvertisingCenterNav.vue';
 import BannerSlot from '@/components/monetization/BannerSlot.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -890,9 +888,14 @@ function isItemActive(item: SidebarNavItem): boolean {
                                             <span class="truncate">{{
                                                 user.name
                                             }}</span>
-                                            <PremiumBadge
-                                                v-if="user.is_premium"
-                                                size="sm"
+                                            <UserBadges
+                                                :badges="user.compact_badges ?? user.badges"
+                                                mode="compact"
+                                                size="xs"
+                                                :max="2"
+                                                :interactive="false"
+                                                :fallback-is-premium="Boolean(user.is_premium)"
+                                                :fallback-is-ai="Boolean(user.is_ai_agent)"
                                             />
                                         </p>
                                         <p
@@ -1575,18 +1578,14 @@ function isItemActive(item: SidebarNavItem): boolean {
                                         <span class="truncate">{{
                                             account.name
                                         }}</span>
-                                        <BadgeCheck
-                                            v-if="account.is_verified"
-                                            class="size-3.5 shrink-0 text-primary"
-                                            aria-hidden="true"
-                                        />
-                                        <PremiumBadge
-                                            v-if="account.is_premium"
-                                            size="sm"
-                                        />
-                                        <AiBadge
-                                            v-if="account.is_ai_agent"
-                                            size="sm"
+                                        <UserBadges
+                                            :badges="account.compact_badges ?? account.badges"
+                                            mode="compact"
+                                            size="xs"
+                                            :max="2"
+                                            :fallback-is-premium="Boolean(account.is_premium)"
+                                            :fallback-is-ai="Boolean(account.is_ai_agent)"
+                                            :fallback-ai-disclosure="account.ai_disclosure"
                                         />
                                     </p>
                                     <p

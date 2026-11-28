@@ -104,7 +104,8 @@ class TopicController extends Controller
             ->where('seo_noindex', false)
             ->whereHas('hashtags', static fn ($q) => $q->where('hashtags.id', $hashtag->id))
             ->with([
-                'author:id,name,username,avatar_url,status',
+                'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author.rbacRole:id,slug,name',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -116,10 +117,7 @@ class TopicController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        $serializedPosts = $postsPaginator->getCollection()
-            ->map(fn (Post $post): array => $this->feedService->serializeOne($post, $request->user()))
-            ->values()
-            ->all();
+        $serializedPosts = $this->feedService->serializeCollection($postsPaginator->getCollection(), $request->user());
 
         $seo = $this->metadata->forTopic($hashtag, $activeLocale, $page);
         $linking = $this->internalLinking->forTopic($hashtag, $activeLocale);

@@ -5,7 +5,7 @@ import { onBeforeUnmount, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MessageController from '@/actions/App/Http/Controllers/Messaging/MessageController';
 import EmptyState from '@/components/common/EmptyState.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -129,9 +129,13 @@ onBeforeUnmount(() => {
                                     <span class="truncate">{{
                                         conv.other_user?.name || 'Member'
                                     }}</span>
-                                    <PremiumBadge
-                                        v-if="conv.other_user?.is_premium"
-                                        size="sm"
+                                    <UserBadges
+                                        :badges="conv.other_user?.compact_badges ?? conv.other_user?.badges"
+                                        mode="compact"
+                                        size="xs"
+                                        :max="2"
+                                        :fallback-is-premium="Boolean(conv.other_user?.is_premium)"
+                                        :fallback-is-ai="Boolean(conv.other_user?.is_ai_agent)"
                                     />
                                 </p>
                                 <p
@@ -202,12 +206,13 @@ onBeforeUnmount(() => {
                                 <span class="truncate">{{
                                     activeConversation.other_user?.name
                                 }}</span>
-                                <PremiumBadge
-                                    v-if="
-                                        activeConversation.other_user
-                                            ?.is_premium
-                                    "
+                                <UserBadges
+                                    :badges="activeConversation.other_user?.compact_badges ?? activeConversation.other_user?.badges"
+                                    mode="compact"
                                     size="sm"
+                                    :max="2"
+                                    :fallback-is-premium="Boolean(activeConversation.other_user?.is_premium)"
+                                    :fallback-is-ai="Boolean(activeConversation.other_user?.is_ai_agent)"
                                 />
                             </p>
                             <p class="truncate text-xs text-muted-foreground">

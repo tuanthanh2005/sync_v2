@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { BadgeCheck, Eye, Search, ShieldCheck, Users } from '@lucide/vue';
+import { Eye, Search, ShieldCheck, Users } from '@lucide/vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import AdminPagination from '@/components/admin/AdminPagination.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import RoleBadge from '@/components/common/RoleBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,15 @@ type UserRow = {
     status: 'active' | 'suspended' | 'banned';
     status_label: string;
     is_verified_badge: boolean;
+    compact_badges?: Array<{
+        type: string;
+        label_key: string;
+        description_key?: string;
+        icon?: string;
+        color?: string;
+        member_number?: number | null;
+        ai_disclosure?: string | null;
+    }>;
     email_verified: boolean;
     two_factor_enabled: boolean;
     posts_count: number;
@@ -217,9 +227,11 @@ function statusVariant(
                                         <span class="truncate">{{
                                             u.name
                                         }}</span>
-                                        <BadgeCheck
-                                            v-if="u.is_verified_badge"
-                                            class="size-3.5 shrink-0 text-primary"
+                                        <UserBadges
+                                            :badges="u.compact_badges"
+                                            mode="compact"
+                                            size="xs"
+                                            :max="2"
                                         />
                                         <ShieldCheck
                                             v-if="u.two_factor_enabled"
@@ -357,9 +369,11 @@ function statusVariant(
                                                 <span class="truncate">{{
                                                     u.name
                                                 }}</span>
-                                                <BadgeCheck
-                                                    v-if="u.is_verified_badge"
-                                                    class="size-3.5 shrink-0 text-primary"
+                                                <UserBadges
+                                                    :badges="u.compact_badges"
+                                                    mode="compact"
+                                                    size="xs"
+                                                    :max="2"
                                                 />
                                                 <ShieldCheck
                                                     v-if="u.two_factor_enabled"

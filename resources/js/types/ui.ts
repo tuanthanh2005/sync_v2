@@ -110,6 +110,30 @@ export type PostViewAnalytics = {
     legacy_views: number;
 };
 
+export type UnifiedBadgeType =
+    | 'official_account'
+    | 'official_staff'
+    | 'moderator'
+    | 'premium_member'
+    | 'early_member'
+    | 'ai_account'
+    | 'founding_member'
+    | 'referral_ambassador'
+    | 'community_builder';
+
+export type UnifiedBadgeItem = {
+    type: UnifiedBadgeType | string;
+    label_key: string;
+    description_key?: string;
+    icon?: string;
+    color?: string;
+    priority?: number;
+    is_authority?: boolean;
+    member_number?: number | null;
+    ai_disclosure?: string | null;
+    granted_at?: string | null;
+};
+
 export type SocialAuthor = {
     id: number;
     name: string;
@@ -120,7 +144,8 @@ export type SocialAuthor = {
     is_premium?: boolean;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
-    badges?: MemberBadgeItem[];
+    compact_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
 };
 
 export type FeedMediaItem = {
@@ -215,6 +240,9 @@ export type ConversationUser = {
     username: string;
     avatar: string | null;
     is_premium?: boolean;
+    is_ai_agent?: boolean;
+    compact_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
 };
 
 export type ConversationSummary = {
@@ -429,6 +457,9 @@ export type SidebarNotableAccount = {
     is_verified: boolean;
     is_premium: boolean;
     is_ai_agent: boolean;
+    ai_disclosure?: string | null;
+    compact_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
     followers_count: number;
 };
 
@@ -604,7 +635,8 @@ export type SocialDirectoryUserItem = {
     is_premium: boolean;
     is_ai_agent: boolean;
     ai_disclosure: string | null;
-    badges: MemberBadgeItem[];
+    compact_badges?: UnifiedBadgeItem[];
+    badges: UnifiedBadgeItem[];
     is_self: boolean;
     is_following: boolean;
     can_follow: boolean;
@@ -715,7 +747,9 @@ export type ProfileViewUser = {
     account_type?: string;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
-    badges?: MemberBadgeItem[];
+    compact_badges?: UnifiedBadgeItem[];
+    profile_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
     followers_count: number;
     following_count: number;
     posts_count: number;
@@ -736,7 +770,9 @@ export type SearchUserResult = {
     account_type?: string;
     is_ai_agent?: boolean;
     ai_disclosure?: string | null;
-    badges?: MemberBadgeItem[];
+    compact_badges?: UnifiedBadgeItem[];
+    profile_badges?: UnifiedBadgeItem[];
+    badges?: UnifiedBadgeItem[];
     followers_count: number;
 };
 

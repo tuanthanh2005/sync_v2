@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\Admin\AdminBadgeManagementService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -36,7 +37,7 @@ class RbacService
                 'permissions' => [
                     'dashboard.view', 'analytics.view', 'system_health.view', 'system_health.manage',
                     'users.view', 'users.update', 'users.suspend', 'users.ban', 'users.restore', 'users.delete', 'users.manage',
-                    'roles.view', 'verification.view', 'verification.approve', 'verification.reject',
+                    'roles.view', 'badges.view', 'verification.view', 'verification.approve', 'verification.reject',
                     'posts.view', 'posts.update', 'posts.delete', 'posts.restore', 'posts.manage', 'posts.moderate',
                     'posts.settings.view', 'posts.settings.manage',
                     'feed.settings.view', 'feed.settings.manage',
@@ -165,6 +166,7 @@ class RbacService
             'system_health' => ['view', 'manage'],
             'users' => ['view', 'update', 'suspend', 'ban', 'restore', 'delete', 'manage'],
             'roles' => ['view', 'update', 'manage'],
+            'badges' => ['view', 'grant', 'revoke', 'manage'],
             'verification' => ['view', 'approve', 'reject'],
             'posts' => ['view', 'update', 'delete', 'restore', 'manage', 'moderate'],
             'posts.settings' => ['view', 'manage'],
@@ -219,7 +221,7 @@ class RbacService
             return;
         }
 
-        if (Role::query()->exists() && Permission::query()->where('slug', 'posts.settings.view')->exists()) {
+        if (Role::query()->exists() && Permission::query()->where('slug', 'badges.manage')->exists()) {
             return;
         }
 
@@ -332,7 +334,10 @@ class RbacService
             );
         }
 
-        return $target->fresh(['rbacRole.permissions']) ?? $target;
+        $freshTarget = $target->fresh(['rbacRole.permissions']) ?? $target;
+        app(AdminBadgeManagementService::class)->syncEligibilityForUser($freshTarget, $actor, 'rbac.role_assigned');
+
+        return $freshTarget;
     }
 
     /**

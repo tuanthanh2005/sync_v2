@@ -21,7 +21,6 @@ use App\Models\PostReaction;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Models\UserHiddenPost;
-use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -96,7 +95,8 @@ class FeedService
         $query = Post::query()
             ->publicVisible()
             ->with([
-                'author:id,name,username,avatar_url,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'author.rbacRole:id,slug,name',
                 'author.profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge',
                 'community:id,name,slug',
                 'hashtags:id,name,slug',
@@ -203,8 +203,8 @@ class FeedService
             }
         }
 
-        $authorIds = array_values(array_unique(array_map(static fn (mixed $id): int => (int) $id, $posts->pluck('user_id')->all())));
-        $badgesByUser = app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers($authorIds);
+        $authors = $posts->pluck('author')->filter(static fn (mixed $u): bool => $u instanceof User)->values();
+        $resolvedBadgesByUser = app(UserBadgeResolverService::class)->resolveForUsers($authors);
 
         /** @var array<int, array<string, int>> $reactionSummaries */
         $reactionSummaries = [];
@@ -221,7 +221,7 @@ class FeedService
         }
 
         return array_values(
-            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts, $badgesByUser, $reactionSummaries): array {
+            $posts->map(function (Post $post) use ($viewer, $viewerReactions, $viewerBookmarks, $viewerVotes, $ownerBoosts, $resolvedBadgesByUser, $reactionSummaries): array {
                 $item = $this->serializeOne(
                     $post,
                     $viewer,
@@ -229,10 +229,8 @@ class FeedService
                     isset($viewerBookmarks[$post->id]),
                     $post->poll !== null ? ($viewerVotes[$post->poll->id] ?? []) : [],
                     $reactionSummaries[$post->id] ?? [],
+                    $resolvedBadgesByUser[$post->user_id] ?? null,
                 );
-                if (is_array($item['author'] ?? null)) {
-                    $item['author']['badges'] = $badgesByUser[$post->user_id] ?? [];
-                }
                 $item['boost_summary'] = $ownerBoosts[$post->id] ?? null;
 
                 return $item;
@@ -245,6 +243,7 @@ class FeedService
      *
      * @param  list<int>  $votedOptionIds
      * @param  array<string, int>|null  $reactionSummary
+     * @param  array{compact: list<array<string, mixed>>, profile: list<array<string, mixed>>, primary: array<string, mixed>|null, ai: array<string, mixed>|null}|null  $preResolvedAuthorBadges
      * @return array<string, mixed>
      */
     public function serializeOne(
@@ -254,9 +253,11 @@ class FeedService
         bool $isBookmarked = false,
         array $votedOptionIds = [],
         ?array $reactionSummary = null,
+        ?array $preResolvedAuthorBadges = null,
     ): array {
         $author = $post->author;
         $profile = $author?->profile;
+        $authorBadges = $preResolvedAuthorBadges ?? ($author !== null ? app(UserBadgeResolverService::class)->resolveForUser($author) : null);
 
         if ($reactionSummary === null && $post->reactions_count > 0) {
             $reactionSummary = [];
@@ -360,6 +361,8 @@ class FeedService
                 'is_premium' => $author->isPremium(),
                 'is_ai_agent' => $author->isAiAgent(),
                 'ai_disclosure' => $author->ai_disclosure,
+                'compact_badges' => $authorBadges['compact'] ?? [],
+                'badges' => $authorBadges['compact'] ?? [],
             ],
             'community' => $post->community === null ? null : [
                 'id' => $post->community->id,

@@ -735,7 +735,8 @@
             "growthOverview": "Tổng quan Tăng trưởng",
             "growthReferrals": "Giới thiệu & Chống gian lận",
             "growthCampaigns": "Chiến dịch & Huy hiệu",
-            "postFeedSettings": "Cài đặt Bài viết & Bảng tin"
+            "postFeedSettings": "Cài đặt Bài viết & Bảng tin",
+            "badges": "Quản lý huy hiệu"
         },
         "common": {
             "search": "Tìm kiếm...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Rủi ro cao",
                 "riskViolation": "Vi phạm"
             }
+        },
+        "badges": {
+            "title": "Quản lý huy hiệu toàn hệ thống",
+            "subtitle": "Quản trị tài khoản chính thức SysNoxis, tích vàng nhân sự, huy hiệu điều hành viên và nhật ký kiểm toán.",
+            "superAdminMode": "Quyền Super Admin",
+            "readOnlyNotice": "Chế độ chỉ xem",
+            "grantTitle": "Cấp huy hiệu chính thức hoặc ghi nhận",
+            "grantSubtitle": "Chỉ Super Admin mới được cấp/thu hồi huy hiệu chính thức. Mọi thao tác đều bắt buộc lý do và lưu nhật ký.",
+            "targetUsername": "Username nhận huy hiệu",
+            "usernamePlaceholder": "username (ví dụ: alex_dev)",
+            "badgeType": "Loại huy hiệu",
+            "reasonLabel": "Lý do cấp (Audit)",
+            "reasonPlaceholder": "Ghi rõ căn cứ xác minh quyền hạn...",
+            "expiresAtLabel": "Ngày hết hạn (Tùy chọn)",
+            "publicVisibleToggle": "Hiển thị công khai cạnh tên tài khoản",
+            "grantButton": "Cấp huy hiệu",
+            "searchPlaceholder": "Tìm theo tên, username hoặc ID...",
+            "allTypes": "Tất cả loại huy hiệu",
+            "allStatuses": "Tất cả trạng thái",
+            "statusActive": "Đang hoạt động",
+            "statusRevoked": "Đã thu hồi",
+            "statusHidden": "Ẩn nội bộ",
+            "emptyTitle": "Chưa có bản ghi huy hiệu phù hợp",
+            "emptyDescription": "Lịch sử cấp và thu hồi huy hiệu chính thức sẽ hiển thị tại đây.",
+            "hidePublic": "Đặt nội bộ (Ẩn)",
+            "showPublic": "Hiện công khai",
+            "revokeButton": "Thu hồi",
+            "reasonAudit": "Lý do & Người thực hiện",
+            "timestamps": "Thời gian cấp / thu hồi",
+            "internalOnly": "Tài khoản nội bộ (đang ẩn)",
+            "ineligibleHidden": "Không đủ điều kiện vai trò (đã ẩn)",
+            "revokedPrefix": "Thu hồi:",
+            "auditTitle": "Nhật ký kiểm toán huy hiệu gần đây",
+            "confirmGrantTitle": "Xác nhận cấp huy hiệu",
+            "confirmGrantDesc": "Cấp huy hiệu '{badge}' cho tài khoản {username}? Thao tác sẽ được ghi vào nhật ký hệ thống.",
+            "confirmRevokeTitle": "Thu hồi huy hiệu tài khoản",
+            "confirmRevokeDesc": "Thu hồi huy hiệu '{badge}' của tài khoản {username}? Lịch sử kiểm toán vẫn được giữ nguyên.",
+            "accountSectionTitle": "Huy hiệu & Nhận diện tài khoản",
+            "livePublicDisplay": "Hiển thị công khai hiện tại",
+            "noActivePublicBadges": "Hiện không hiển thị huy hiệu công khai (thành viên thường).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Quản trị viên",
+            "roleModerator": "Điều hành viên",
+            "roleMember": "Thành viên",
+            "statusOk": "Đủ điều kiện",
+            "statusNo": "Không",
+            "statusYes": "Có",
+            "statusActiveShort": "Đang bật",
+            "allRoles": "Tất cả vai trò"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Khám phá cộng đồng",
         "restrictedTitle": "Danh sách không khả dụng",
         "restrictedHint": "Bạn không thể xem danh sách kết nối của tài khoản này."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Tài khoản chính thức",
+            "description": "Đây là tài khoản chính thức được vận hành bởi SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Nhân sự chính thức",
+            "description": "Tài khoản này thuộc về thành viên chính thức trong đội ngũ SysNoxis."
+        },
+        "moderator": {
+            "label": "Điều hành viên",
+            "description": "Tài khoản này thuộc về điều hành viên chính thức của SysNoxis."
+        },
+        "premiumMember": {
+            "label": "Thành viên Premium",
+            "description": "Tài khoản này đang sử dụng gói SysNoxis Premium. Huy hiệu này không đồng nghĩa với xác minh danh tính."
+        },
+        "earlyMember": {
+            "label": "Thành viên tiên phong",
+            "description": "Tài khoản này được ghi nhận là thành viên gia nhập sớm của cộng đồng SysNoxis."
+        },
+        "aiAccount": {
+            "label": "Tài khoản AI",
+            "short": "AI",
+            "description": "Tài khoản này được vận hành bởi hệ thống AI và được công khai minh bạch là tự động."
+        },
+        "foundingMember": {
+            "description": "Tài khoản này được công nhận là Thành viên sáng lập trên SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Được vinh danh vì giới thiệu các thành viên đã xác minh cho SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Được ghi nhận vì xây dựng cộng đồng hoạt động tích cực trên SysNoxis."
+        }
     }
 }

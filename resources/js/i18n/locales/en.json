@@ -735,7 +735,8 @@
             "growthOverview": "Growth Overview",
             "growthReferrals": "Referrals & Fraud",
             "growthCampaigns": "Campaigns & Badges",
-            "postFeedSettings": "Post & Feed Settings"
+            "postFeedSettings": "Post & Feed Settings",
+            "badges": "Badge Management"
         },
         "common": {
             "search": "Search...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "High risk",
                 "riskViolation": "Violation"
             }
+        },
+        "badges": {
+            "title": "Global Badge Management",
+            "subtitle": "Manage official SysNoxis accounts, verified staff marks, moderator shields, and complete badge audit logs.",
+            "superAdminMode": "Super Admin Access",
+            "readOnlyNotice": "Read-Only Audit View",
+            "grantTitle": "Grant Official or Recognition Badge",
+            "grantSubtitle": "Only Super Administrators can assign authority badges. Every action requires a documented reason and audit trail.",
+            "targetUsername": "Target Username",
+            "usernamePlaceholder": "username (e.g. alex_dev)",
+            "badgeType": "Badge Type",
+            "reasonLabel": "Audit Reason",
+            "reasonPlaceholder": "Explain eligibility verification...",
+            "expiresAtLabel": "Expires At (Optional)",
+            "publicVisibleToggle": "Display badge publicly next to display name",
+            "grantButton": "Grant Badge",
+            "searchPlaceholder": "Search user by name, username, or ID...",
+            "allTypes": "All Badge Types",
+            "allStatuses": "All Statuses",
+            "statusActive": "Active",
+            "statusRevoked": "Revoked",
+            "statusHidden": "Hidden / Internal",
+            "emptyTitle": "No badge records match current filters",
+            "emptyDescription": "Official, staff, moderator, and recognition badge assignments will appear here.",
+            "hidePublic": "Set Internal (Hide)",
+            "showPublic": "Show Publicly",
+            "revokeButton": "Revoke Badge",
+            "reasonAudit": "Reason & Actor",
+            "timestamps": "Granted / Revoked",
+            "internalOnly": "Internal account (hidden)",
+            "ineligibleHidden": "Role ineligible (auto-hidden)",
+            "revokedPrefix": "Revoked:",
+            "auditTitle": "Recent Badge Governance Logs",
+            "confirmGrantTitle": "Confirm Badge Assignment",
+            "confirmGrantDesc": "Grant '{badge}' to account {username}? This event will be logged permanently in audit records.",
+            "confirmRevokeTitle": "Revoke Account Badge",
+            "confirmRevokeDesc": "Revoke '{badge}' from account {username}? Audit history will be preserved.",
+            "accountSectionTitle": "Account Badges & Verification",
+            "livePublicDisplay": "Live Public Badge Showcase",
+            "noActivePublicBadges": "No public badges currently displayed (standard member).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrator",
+            "roleModerator": "Moderator",
+            "roleMember": "Member",
+            "statusOk": "Eligible",
+            "statusNo": "No",
+            "statusYes": "Yes",
+            "statusActiveShort": "Active",
+            "allRoles": "All Roles"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Explore communities",
         "restrictedTitle": "List unavailable",
         "restrictedHint": "You cannot view this account's connections."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Official Account",
+            "description": "This is an official account operated by SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Official Staff",
+            "description": "This account belongs to an official member of the SysNoxis team."
+        },
+        "moderator": {
+            "label": "Moderator",
+            "description": "This account belongs to an official SysNoxis moderator."
+        },
+        "premiumMember": {
+            "label": "Premium Member",
+            "description": "This account has an active SysNoxis Premium membership. This badge does not indicate identity verification."
+        },
+        "earlyMember": {
+            "label": "Early Member",
+            "description": "This account is recognized as an early member of the SysNoxis community."
+        },
+        "aiAccount": {
+            "label": "AI Account",
+            "short": "AI",
+            "description": "This account is operated by an AI system and is transparently identified as automated."
+        },
+        "foundingMember": {
+            "description": "This account holds Founding Member recognition on SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Recognized for inviting verified members to SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Recognized for building an active community on SysNoxis."
+        }
     }
 }

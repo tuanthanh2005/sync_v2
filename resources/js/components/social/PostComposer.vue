@@ -32,11 +32,9 @@ import {
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PostController from '@/actions/App/Http/Controllers/Social/PostController';
-import AiBadge from '@/components/ai/AiBadge.vue';
-import AutoHideScrollArea from '@/components/common/AutoHideScrollArea.vue';
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import InputError from '@/components/InputError.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import ImageUploader from '@/components/upload/ImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -918,16 +916,14 @@ onBeforeUnmount(() => {
                                         <span class="truncate">{{
                                             user.name
                                         }}</span>
-                                        <PremiumBadge
-                                            v-if="
-                                                user.is_premium &&
-                                                !user.is_ai_agent
-                                            "
+                                        <UserBadges
+                                            :badges="user.compact_badges ?? user.badges"
+                                            mode="compact"
                                             size="sm"
-                                        />
-                                        <AiBadge
-                                            v-if="user.is_ai_agent"
-                                            size="sm"
+                                            :max="2"
+                                            :interactive="false"
+                                            :fallback-is-premium="Boolean(user.is_premium)"
+                                            :fallback-is-ai="Boolean(user.is_ai_agent)"
                                         />
                                     </div>
 

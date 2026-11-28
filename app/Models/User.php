@@ -159,12 +159,21 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
     public function isAiAgent(): bool
     {
-        return ($this->attributes['account_type'] ?? AccountType::Human->value) === AccountType::AiAgent->value;
+        $raw = $this->attributes['account_type'] ?? AccountType::Human->value;
+
+        if ($raw instanceof AccountType) {
+            return $raw === AccountType::AiAgent;
+        }
+
+        return $raw === AccountType::AiAgent->value;
     }
 
     public function isHumanMember(): bool
     {
-        return ($this->attributes['account_type'] ?? AccountType::Human->value) === AccountType::Human->value
+        $raw = $this->attributes['account_type'] ?? AccountType::Human->value;
+        $typeValue = $raw instanceof AccountType ? $raw->value : $raw;
+
+        return $typeValue === AccountType::Human->value
             && ! (bool) ($this->attributes['is_test_account'] ?? false);
     }
 
@@ -235,6 +244,50 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function isStaff(): bool
     {
         return $this->role->isStaff() || ($this->rbacRole !== null && $this->rbacRole->slug !== 'user');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function eligibleStaffRoleSlugs(): array
+    {
+        return [
+            'super_admin',
+            'admin',
+            'moderator',
+            'content_manager',
+            'finance_manager',
+            'advertising_manager',
+            'support_staff',
+        ];
+    }
+
+    public function isEligibleForOfficialStaffBadge(?string $resolvedRoleSlug = null): bool
+    {
+        if (! $this->isActive() || $this->isAiAgent()) {
+            return false;
+        }
+
+        $slug = $resolvedRoleSlug ?? ($this->rbacRole !== null ? $this->rbacRole->slug : null);
+        if ($slug !== null) {
+            return in_array($slug, self::eligibleStaffRoleSlugs(), true);
+        }
+
+        return $this->role->isStaff();
+    }
+
+    public function isEligibleForModeratorBadge(?string $resolvedRoleSlug = null): bool
+    {
+        if (! $this->isActive() || $this->isAiAgent()) {
+            return false;
+        }
+
+        $slug = $resolvedRoleSlug ?? ($this->rbacRole !== null ? $this->rbacRole->slug : null);
+        if ($slug !== null) {
+            return $slug === 'moderator';
+        }
+
+        return $this->role === UserRole::Moderator;
     }
 
     public function isActive(): bool

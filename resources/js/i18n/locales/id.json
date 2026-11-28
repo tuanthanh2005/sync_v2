@@ -735,7 +735,8 @@
             "growthOverview": "Ringkasan Pertumbuhan",
             "growthReferrals": "Referral & Penipuan",
             "growthCampaigns": "Kampanye & Lencana",
-            "postFeedSettings": "Pengaturan Postingan & Feed"
+            "postFeedSettings": "Pengaturan Postingan & Feed",
+            "badges": "Manajemen Lencana"
         },
         "common": {
             "search": "Cari...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Risiko tinggi",
                 "riskViolation": "Pelanggaran"
             }
+        },
+        "badges": {
+            "title": "Manajemen Lencana Global",
+            "subtitle": "Kelola akun resmi SysNoxis, tanda staf resmi, perisai moderator, dan log audit lencana.",
+            "superAdminMode": "Akses Super Admin",
+            "readOnlyNotice": "Tampilan Hanya Baca",
+            "grantTitle": "Berikan Lencana Resmi atau Penghargaan",
+            "grantSubtitle": "Hanya Super Admin yang dapat memberikan lencana otoritas. Setiap tindakan wajib disertai alasan audit.",
+            "targetUsername": "Username Target",
+            "usernamePlaceholder": "username (mis. alex_dev)",
+            "badgeType": "Jenis Lencana",
+            "reasonLabel": "Alasan Audit",
+            "reasonPlaceholder": "Jelaskan verifikasi kelayakan...",
+            "expiresAtLabel": "Kedaluwarsa Pada (Opsional)",
+            "publicVisibleToggle": "Tampilkan lencana secara publik di sebelah nama",
+            "grantButton": "Berikan Lencana",
+            "searchPlaceholder": "Cari pengguna menurut nama, username, atau ID...",
+            "allTypes": "Semua Jenis Lencana",
+            "allStatuses": "Semua Status",
+            "statusActive": "Aktif",
+            "statusRevoked": "Dicabut",
+            "statusHidden": "Tersembunyi / Internal",
+            "emptyTitle": "Tidak ada catatan lencana yang cocok",
+            "emptyDescription": "Penetapan lencana resmi, staf, dan moderator akan muncul di sini.",
+            "hidePublic": "Setel Internal (Sembunyikan)",
+            "showPublic": "Tampilkan ke Publik",
+            "revokeButton": "Cabut Lencana",
+            "reasonAudit": "Alasan & Pelaksana",
+            "timestamps": "Diberikan / Dicabut",
+            "internalOnly": "Akun internal (disembunyikan)",
+            "ineligibleHidden": "Peran tidak memenuhi syarat (tersembunyi)",
+            "revokedPrefix": "Dicabut:",
+            "auditTitle": "Log Tata Kelola Lencana Terbaru",
+            "confirmGrantTitle": "Konfirmasi Pemberian Lencana",
+            "confirmGrantDesc": "Berikan '{badge}' kepada akun {username}? Tindakan ini dicatat permanen di log audit.",
+            "confirmRevokeTitle": "Cabut Lencana Akun",
+            "confirmRevokeDesc": "Cabut '{badge}' dari akun {username}? Riwayat audit tetap disimpan.",
+            "accountSectionTitle": "Lencana & Verifikasi Akun",
+            "livePublicDisplay": "Tampilan Publik Saat Ini",
+            "noActivePublicBadges": "Tidak ada lencana publik yang ditampilkan (anggota standar).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrator",
+            "roleModerator": "Moderator",
+            "roleMember": "Anggota",
+            "statusOk": "Memenuhi syarat",
+            "statusNo": "Tidak",
+            "statusYes": "Ya",
+            "statusActiveShort": "Aktif",
+            "allRoles": "Semua Peran"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Jelajahi komunitas",
         "restrictedTitle": "Daftar tidak tersedia",
         "restrictedHint": "Anda tidak dapat melihat koneksi akun ini."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Akun Resmi",
+            "description": "Ini adalah akun resmi yang dikelola oleh SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Staf Resmi",
+            "description": "Akun ini milik anggota resmi tim SysNoxis."
+        },
+        "moderator": {
+            "label": "Moderator",
+            "description": "Akun ini milik moderator resmi SysNoxis."
+        },
+        "premiumMember": {
+            "label": "Anggota Premium",
+            "description": "Akun ini memiliki keanggotaan SysNoxis Premium aktif. Lencana ini tidak menandakan verifikasi identitas."
+        },
+        "earlyMember": {
+            "label": "Anggota Awal",
+            "description": "Akun ini diakui sebagai anggota awal komunitas SysNoxis."
+        },
+        "aiAccount": {
+            "label": "Akun AI",
+            "short": "AI",
+            "description": "Akun ini dioperasikan oleh sistem AI dan diidentifikasi secara transparan sebagai akun otomatis."
+        },
+        "foundingMember": {
+            "description": "Akun ini memiliki pengakuan Anggota Pendiri di SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "Diakui karena mengundang anggota terverifikasi ke SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Diakui karena membangun komunitas aktif di SysNoxis."
+        }
     }
 }

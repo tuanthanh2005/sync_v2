@@ -735,7 +735,8 @@
             "growthOverview": "Buod ng Paglago",
             "growthReferrals": "Mga Referral at Panloloko",
             "growthCampaigns": "Mga Kampanya at Badge",
-            "postFeedSettings": "Mga Setting ng Post at Feed"
+            "postFeedSettings": "Mga Setting ng Post at Feed",
+            "badges": "Pamamahala ng Badge"
         },
         "common": {
             "search": "Maghanap...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "Mataas na panganib",
                 "riskViolation": "Paglabag"
             }
+        },
+        "badges": {
+            "title": "Pamamahala ng Pandaigdigang Badge",
+            "subtitle": "Pamahalaan ang mga opisyal na account ng SysNoxis, badge ng kawani, moderator shield, at audit log.",
+            "superAdminMode": "Super Admin na Access",
+            "readOnlyNotice": "Pagtingin Lang",
+            "grantTitle": "Magbigay ng Opisyal o Pagkilalang Badge",
+            "grantSubtitle": "Tanging Super Admin lang ang maaaring magbigay ng badge ng awtoridad. Kailangan ng malinaw na dahilan para sa bawat aksyon.",
+            "targetUsername": "Target na Username",
+            "usernamePlaceholder": "username (hal. alex_dev)",
+            "badgeType": "Uri ng Badge",
+            "reasonLabel": "Dahilan sa Audit",
+            "reasonPlaceholder": "Ipaliwanag ang pagiging karapat-dapat...",
+            "expiresAtLabel": "Mag-e-expire Sa (Opsyonal)",
+            "publicVisibleToggle": "Ipakita nang publiko ang badge sa tabi ng pangalan",
+            "grantButton": "Ibigay ang Badge",
+            "searchPlaceholder": "Maghanap gamit ang pangalan, username, o ID...",
+            "allTypes": "Lahat ng Uri ng Badge",
+            "allStatuses": "Lahat ng Estado",
+            "statusActive": "Aktibo",
+            "statusRevoked": "Binawi",
+            "statusHidden": "Nakatago / Panloob",
+            "emptyTitle": "Walang badge na tugma sa mga filter",
+            "emptyDescription": "Lalabas dito ang mga opisyal, kawani, at moderator badge.",
+            "hidePublic": "Gawing Panloob (Itago)",
+            "showPublic": "Ipakita sa Publiko",
+            "revokeButton": "Bawiin ang Badge",
+            "reasonAudit": "Dahilan at Nagpatupad",
+            "timestamps": "Ibinigay / Binawi",
+            "internalOnly": "Panloob na account (nakatago)",
+            "ineligibleHidden": "Hindi kwalipikado ang tungkulin (nakatago)",
+            "revokedPrefix": "Binawi:",
+            "auditTitle": "Mga Kamakailang Log sa Badge",
+            "confirmGrantTitle": "Kumpirmahin ang Pagbibigay ng Badge",
+            "confirmGrantDesc": "Ibigay ang '{badge}' sa account na {username}? Permanenteng itatala ito sa audit log.",
+            "confirmRevokeTitle": "Bawiin ang Badge ng Account",
+            "confirmRevokeDesc": "Bawiin ang '{badge}' mula sa account na {username}? Mananatili ang kasaysayan sa audit.",
+            "accountSectionTitle": "Mga Badge at Pagkilala ng Account",
+            "livePublicDisplay": "Kasalukuyang Pampublikong Pagpapakita",
+            "noActivePublicBadges": "Walang ipinapakitang pampublikong badge (karaniwang miyembro).",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "Administrator",
+            "roleModerator": "Tagapamagitan",
+            "roleMember": "Miyembro",
+            "statusOk": "Kwalipikado",
+            "statusNo": "Hindi",
+            "statusYes": "Oo",
+            "statusActiveShort": "Aktibo",
+            "allRoles": "Lahat ng Tungkulin"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "Tuklasin ang mga komunidad",
         "restrictedTitle": "Hindi available ang listahan",
         "restrictedHint": "Hindi mo maaaring tingnan ang mga koneksyon ng account na ito."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "Opisyal na Account",
+            "description": "Isa itong opisyal na account na pinatatakbo ng SysNoxis."
+        },
+        "officialStaff": {
+            "label": "Opisyal na Kawani",
+            "description": "Pagmamay-ari ang account na ito ng isang opisyal na miyembro ng koponan ng SysNoxis."
+        },
+        "moderator": {
+            "label": "Tagapamagitan",
+            "description": "Pagmamay-ari ang account na ito ng isang opisyal na tagapamagitan ng SysNoxis."
+        },
+        "premiumMember": {
+            "label": "Miyembrong Premium",
+            "description": "May aktibong membership sa SysNoxis Premium ang account na ito. Hindi nangangahulugang beripikado ang pagkakakilanlan."
+        },
+        "earlyMember": {
+            "label": "Maagang Miyembro",
+            "description": "Kinikilala ang account na ito bilang isang maagang miyembro ng komunidad ng SysNoxis."
+        },
+        "aiAccount": {
+            "label": "Account ng AI",
+            "short": "AI",
+            "description": "Pinatatakbo ang account na ito ng isang sistemang AI at malinaw na minarkahang awtomatiko."
+        },
+        "foundingMember": {
+            "description": "May pagkilalang Tagapagtatag na Miyembro sa SysNoxis ang account na ito."
+        },
+        "referralAmbassador": {
+            "description": "Kinikilala para sa pag-imbita ng mga beripikadong miyembro sa SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "Kinikilala para sa pagbuo ng aktibong komunidad sa SysNoxis."
+        }
     }
 }

@@ -7,7 +7,6 @@ use App\Enums\UserStatus;
 use App\Models\Community;
 use App\Models\Hashtag;
 use App\Models\User;
-use App\Services\Growth\EarlyMemberAndBadgeService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -241,7 +240,7 @@ class SearchService
      *
      * @return array{
      *     query: string,
-     *     users: list<array{id: int, name: string, username: string, avatar: string|null, is_verified: bool}>,
+     *     users: list<array{id: int, name: string, username: string, avatar: string|null, is_verified: bool, is_premium: bool, is_ai_agent: bool, compact_badges: list<array<string, mixed>>, badges: list<array<string, mixed>>}>,
      *     communities: list<array{id: int, name: string, slug: string, members_count: int, avatar: string|null}>,
      *     topics: list<array{id: int, name: string, slug: string, posts_count: int}>,
      *     posts: list<array{id: int, title: string}>
@@ -269,8 +268,8 @@ class SearchService
             $blockedIds = $viewer !== null ? $this->feedService->mutualBlockedUserIds($viewer) : [];
 
             $usersQuery = User::query()
-                ->select(['id', 'name', 'username', 'avatar_url', 'status'])
-                ->with(['profile:id,user_id,avatar_disk,avatar_path,is_verified_badge'])
+                ->select(['id', 'name', 'username', 'avatar_url', 'role', 'rbac_role_id', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
+                ->with(['profile:id,user_id,avatar_disk,avatar_path,is_verified_badge', 'rbacRole:id,slug,name'])
                 ->where('status', UserStatus::Active->value)
                 ->whereNotNull('email_verified_at')
                 ->where(function (Builder $q) use ($patterns): void {
@@ -283,12 +282,19 @@ class SearchService
                 $usersQuery->whereNotIn('id', $blockedIds);
             }
 
-            $users = array_values($usersQuery->limit(3)->get()->map(static fn (User $u): array => [
+            $suggestedUsers = $usersQuery->limit(3)->get();
+            $suggestedBadges = app(UserBadgeResolverService::class)->resolveForUsers($suggestedUsers);
+
+            $users = array_values($suggestedUsers->map(static fn (User $u): array => [
                 'id' => $u->id,
                 'name' => $u->name,
                 'username' => $u->username,
                 'avatar' => $u->avatarUrl(),
                 'is_verified' => $u->profile !== null && $u->profile->is_verified_badge,
+                'is_premium' => $u->isPremium(),
+                'is_ai_agent' => $u->isAiAgent(),
+                'compact_badges' => $suggestedBadges[$u->id]['compact'] ?? [],
+                'badges' => $suggestedBadges[$u->id]['compact'] ?? [],
             ])->all());
 
             $communities = array_values(Community::query()
@@ -356,7 +362,7 @@ class SearchService
         };
 
         if ($cacheKey !== null) {
-            /** @var array{query: string, users: list<array{id: int, name: string, username: string, avatar: string|null, is_verified: bool}>, communities: list<array{id: int, name: string, slug: string, members_count: int, avatar: string|null}>, topics: list<array{id: int, name: string, slug: string, posts_count: int}>, posts: list<array{id: int, title: string}>} $cached */
+            /** @var array{query: string, users: list<array{id: int, name: string, username: string, avatar: string|null, is_verified: bool, is_premium: bool, is_ai_agent: bool, compact_badges: list<array<string, mixed>>, badges: list<array<string, mixed>>}>, communities: list<array{id: int, name: string, slug: string, members_count: int, avatar: string|null}>, topics: list<array{id: int, name: string, slug: string, posts_count: int}>, posts: list<array{id: int, title: string}>} $cached */
             $cached = Cache::remember($cacheKey, now()->addSeconds(20), $compute);
 
             return $cached;
@@ -423,15 +429,14 @@ class SearchService
         );
 
         $accountsQuery = User::query()
-            ->select(['id', 'name', 'username', 'avatar_url', 'status', 'premium_until', 'premium_suspended_at', 'account_type', 'ai_disclosure'])
-            ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
+            ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count', 'rbacRole:id,slug,name'])
             ->where('users.status', UserStatus::Active->value)
             ->whereNotNull('users.email_verified_at')
             ->whereHas('profile')
             ->leftJoin('profiles', 'profiles.user_id', '=', 'users.id')
             ->orderByDesc('profiles.followers_count')
             ->orderByDesc('users.id')
-            ->select('users.id', 'users.name', 'users.username', 'users.avatar_url', 'users.status', 'users.premium_until', 'users.premium_suspended_at', 'users.account_type', 'users.ai_disclosure');
+            ->select('users.id', 'users.name', 'users.username', 'users.avatar_url', 'users.role', 'users.rbac_role_id', 'users.status', 'users.premium_until', 'users.premium_suspended_at', 'users.account_type', 'users.ai_disclosure');
 
         if ($viewer !== null) {
             $accountsQuery->where('users.id', '!=', $viewer->id);
@@ -491,6 +496,9 @@ class SearchService
      *     is_verified: bool,
      *     is_premium: bool,
      *     is_ai_agent: bool,
+     *     ai_disclosure: string|null,
+     *     compact_badges: list<array<string, mixed>>,
+     *     badges: list<array<string, mixed>>,
      *     followers_count: int
      * }>
      */
@@ -505,11 +513,14 @@ class SearchService
          *     is_verified: bool,
          *     is_premium: bool,
          *     is_ai_agent: bool,
+         *     ai_disclosure: string|null,
+         *     compact_badges: list<array<string, mixed>>,
+         *     badges: list<array<string, mixed>>,
          *     followers_count: int
          * }> $cached */
         $cached = Cache::remember('syncviet.sidebar.notable_accounts.v1', now()->addMinutes(3), static function (): array {
             $users = User::query()
-                ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count'])
+                ->with(['profile:id,user_id,headline,avatar_disk,avatar_path,is_verified_badge,followers_count', 'rbacRole:id,slug,name'])
                 ->where('users.status', UserStatus::Active->value)
                 ->whereNotNull('users.email_verified_at')
                 ->whereHas('profile')
@@ -521,13 +532,18 @@ class SearchService
                     'users.name',
                     'users.username',
                     'users.avatar_url',
+                    'users.role',
+                    'users.rbac_role_id',
                     'users.status',
                     'users.premium_until',
                     'users.premium_suspended_at',
                     'users.account_type',
+                    'users.ai_disclosure',
                 )
                 ->limit(10)
                 ->get();
+
+            $resolvedBadges = app(UserBadgeResolverService::class)->resolveForUsers($users);
 
             return array_values($users->map(static fn (User $user): array => [
                 'id' => $user->id,
@@ -538,6 +554,9 @@ class SearchService
                 'is_verified' => $user->profile !== null && $user->profile->is_verified_badge,
                 'is_premium' => $user->isPremium(),
                 'is_ai_agent' => $user->isAiAgent(),
+                'ai_disclosure' => $user->ai_disclosure,
+                'compact_badges' => $resolvedBadges[$user->id]['compact'] ?? [],
+                'badges' => $resolvedBadges[$user->id]['compact'] ?? [],
                 'followers_count' => $user->profile !== null ? $user->profile->followers_count : 0,
             ])->all());
         });
@@ -599,10 +618,9 @@ class SearchService
             return [];
         }
 
-        $ids = array_map(static fn (User $u): int => $u->id, $users);
-        $badgesByUser = app(EarlyMemberAndBadgeService::class)->activeBadgesForUsers($ids);
+        $resolvedBadges = app(UserBadgeResolverService::class)->resolveForUsers($users);
 
-        return array_map(static function (User $user) use ($badgesByUser): array {
+        return array_map(static function (User $user) use ($resolvedBadges): array {
             return [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -613,7 +631,8 @@ class SearchService
                 'is_premium' => $user->isPremium(),
                 'is_ai_agent' => $user->isAiAgent(),
                 'ai_disclosure' => $user->ai_disclosure,
-                'badges' => $badgesByUser[$user->id] ?? [],
+                'compact_badges' => $resolvedBadges[$user->id]['compact'] ?? [],
+                'badges' => $resolvedBadges[$user->id]['compact'] ?? [],
                 'followers_count' => $user->profile !== null ? $user->profile->followers_count : 0,
             ];
         }, $users);

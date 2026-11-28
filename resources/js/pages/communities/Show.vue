@@ -21,9 +21,9 @@ import CommunityController from '@/actions/App/Http/Controllers/Community/Commun
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
 import EmptyState from '@/components/common/EmptyState.vue';
 import BannerSlot from '@/components/monetization/BannerSlot.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import PostCard from '@/components/social/PostCard.vue';
 import PostComposer from '@/components/social/PostComposer.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import AvatarUploader from '@/components/upload/AvatarUploader.vue';
 import CoverImageUploader from '@/components/upload/CoverImageUploader.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -583,9 +583,14 @@ function submitEdit(): void {
                                 class="flex items-center gap-1 text-sm font-semibold text-foreground"
                             >
                                 <span>{{ member.user.name }}</span>
-                                <PremiumBadge
-                                    v-if="member.user.is_premium"
+                                <UserBadges
+                                    :badges="member.user.compact_badges ?? member.user.badges"
+                                    mode="compact"
                                     size="sm"
+                                    :max="2"
+                                    :fallback-is-premium="Boolean(member.user.is_premium)"
+                                    :fallback-is-ai="Boolean(member.user.is_ai_agent)"
+                                    :fallback-ai-disclosure="member.user.ai_disclosure"
                                 />
                             </p>
                             <p class="text-xs text-muted-foreground">

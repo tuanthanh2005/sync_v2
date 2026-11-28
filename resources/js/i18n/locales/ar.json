@@ -735,7 +735,8 @@
             "growthOverview": "نظرة عامة على النمو",
             "growthReferrals": "الإحالات والاحتيال",
             "growthCampaigns": "الحملات والشارات",
-            "postFeedSettings": "إعدادات النشر والموجز"
+            "postFeedSettings": "إعدادات النشر والموجز",
+            "badges": "إدارة الشارات"
         },
         "common": {
             "search": "بحث...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "خطر مرتفع",
                 "riskViolation": "مخالفة"
             }
+        },
+        "badges": {
+            "title": "إدارة الشارات العامة",
+            "subtitle": "إدارة حسابات SysNoxis الرسمية وشارات الطاقم ودروع المشرفين وسجلات التدقيق الكاملة.",
+            "superAdminMode": "صلاحية المدير الأعلى",
+            "readOnlyNotice": "عرض للقراءة فقط",
+            "grantTitle": "منح شارة رسمية أو تقديرية",
+            "grantSubtitle": "يمكن للمدير الأعلى فقط منح شارات السلطة. يتطلب كل إجراء سبباً موثقاً وسجل تدقيق.",
+            "targetUsername": "اسم المستخدم المستهدف",
+            "usernamePlaceholder": "اسم المستخدم (مثال: alex_dev)",
+            "badgeType": "نوع الشارة",
+            "reasonLabel": "سبب التدقيق",
+            "reasonPlaceholder": "اشرح أساس الأهلية...",
+            "expiresAtLabel": "تنتهي في (اختياري)",
+            "publicVisibleToggle": "عرض الشارة علناً بجانب الاسم",
+            "grantButton": "منح الشارة",
+            "searchPlaceholder": "ابحث بالاسم أو اسم المستخدم أو المعرف...",
+            "allTypes": "كل أنواع الشارات",
+            "allStatuses": "كل الحالات",
+            "statusActive": "نشطة",
+            "statusRevoked": "مسحوبة",
+            "statusHidden": "مخفية / داخلية",
+            "emptyTitle": "لا توجد سجلات شارات مطابقة",
+            "emptyDescription": "ستظهر هنا عمليات منح الشارات الرسمية والطاقم والمشرفين.",
+            "hidePublic": "تعيين كداخلي (إخفاء)",
+            "showPublic": "عرض علناً",
+            "revokeButton": "سحب الشارة",
+            "reasonAudit": "السبب والمنفذ",
+            "timestamps": "تاريخ المنح / السحب",
+            "internalOnly": "حساب داخلي (مخفي)",
+            "ineligibleHidden": "الدور غير مؤهل (مخفي تلقائياً)",
+            "revokedPrefix": "تم السحب:",
+            "auditTitle": "سجلات تدقيق الشارات الأخيرة",
+            "confirmGrantTitle": "تأكيد منح الشارة",
+            "confirmGrantDesc": "هل تريد منح '{badge}' للحساب {username}؟ سيتم توثيق ذلك بشكل دائم.",
+            "confirmRevokeTitle": "سحب شارة الحساب",
+            "confirmRevokeDesc": "هل تريد سحب '{badge}' من الحساب {username}؟ سيتم الاحتفاظ بسجل التدقيق.",
+            "accountSectionTitle": "شارات الحساب والتحقق",
+            "livePublicDisplay": "العرض العام المباشر",
+            "noActivePublicBadges": "لا توجد شارات عامة معروضة حالياً (عضو عادي).",
+            "roleSuperAdmin": "المدير الأعلى",
+            "roleAdmin": "المسؤول",
+            "roleModerator": "المشرف",
+            "roleMember": "عضو",
+            "statusOk": "مؤهل",
+            "statusNo": "لا",
+            "statusYes": "نعم",
+            "statusActiveShort": "نشط",
+            "allRoles": "كل الأدوار"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "استكشف المجتمعات",
         "restrictedTitle": "القائمة غير متاحة",
         "restrictedHint": "لا يمكنك عرض قائمة اتصالات هذا الحساب."
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "حساب رسمي",
+            "description": "هذا حساب رسمي تديره منصة SysNoxis."
+        },
+        "officialStaff": {
+            "label": "طاقم رسمي",
+            "description": "ينتمي هذا الحساب إلى عضو رسمي في فريق SysNoxis."
+        },
+        "moderator": {
+            "label": "مشرف",
+            "description": "ينتمي هذا الحساب إلى مشرف رسمي في SysNoxis."
+        },
+        "premiumMember": {
+            "label": "عضو بريميوم",
+            "description": "يمتلك هذا الحساب اشتراك SysNoxis Premium نشطاً. لا تشير هذه الشارة إلى توثيق الهوية."
+        },
+        "earlyMember": {
+            "label": "عضو مبكر",
+            "description": "يحمل هذا الحساب تقديراً بصفته من الأعضاء الأوائل في مجتمع SysNoxis."
+        },
+        "aiAccount": {
+            "label": "حساب ذكاء اصطناعي",
+            "short": "AI",
+            "description": "يُدار هذا الحساب بواسطة نظام ذكاء اصطناعي ويُعرّف بشفافية كحساب آلي."
+        },
+        "foundingMember": {
+            "description": "يحمل هذا الحساب تقدير العضو المؤسس على SysNoxis."
+        },
+        "referralAmbassador": {
+            "description": "معترف به لدعوة أعضاء موثقين إلى SysNoxis."
+        },
+        "communityBuilder": {
+            "description": "معترف به لبناء مجتمع نشط على SysNoxis."
+        }
     }
 }

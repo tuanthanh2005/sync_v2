@@ -4,9 +4,10 @@ import { Check, Compass, Globe, Sparkles, Users } from '@lucide/vue';
 import { useI18n } from 'vue-i18n';
 import CommunityController from '@/actions/App/Http/Controllers/Community/CommunityController';
 import ReferralController from '@/actions/App/Http/Controllers/Growth/ReferralController';
-import AiBadge from '@/components/ai/AiBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import type { UnifiedBadgeItem } from '@/types';
 
 const props = defineProps<{
     enabled: boolean;
@@ -40,7 +41,9 @@ const props = defineProps<{
         username: string;
         headline: string | null;
         is_ai_agent: boolean;
+        is_premium?: boolean;
         ai_disclosure: string | null;
+        compact_badges?: UnifiedBadgeItem[];
     }>;
     languages: Array<{ code: string; native_name: string }>;
 }>();
@@ -224,12 +227,16 @@ function joinCommunity(slug: string): void {
                         class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/30 px-2.5 py-1.5 text-xs hover:bg-muted"
                     >
                         <span class="font-medium">{{ u.name }}</span>
-                        <AiBadge
-                            v-if="u.is_ai_agent"
-                            :disclosure="u.ai_disclosure"
-                            size="sm"
+                        <UserBadges
+                            :badges="u.compact_badges"
+                            mode="compact"
+                            size="xs"
+                            :max="2"
+                            :fallback-is-premium="Boolean(u.is_premium)"
+                            :fallback-is-ai="Boolean(u.is_ai_agent)"
+                            :fallback-ai-disclosure="u.ai_disclosure"
                         />
-                        <Badge v-else variant="outline"
+                        <Badge v-if="!u.is_ai_agent" variant="outline"
                             >@{{ u.username }}</Badge
                         >
                     </Link>

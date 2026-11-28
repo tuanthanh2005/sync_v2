@@ -2,7 +2,6 @@
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import {
     ArrowRight,
-    BadgeCheck,
     Bookmark,
     Check,
     Copy,
@@ -31,12 +30,11 @@ import ProfileViewController from '@/actions/App/Http/Controllers/Social/Profile
 import ConfirmActionDialog from '@/components/common/ConfirmActionDialog.vue';
 import ImageLightbox from '@/components/common/ImageLightbox.vue';
 import BoostPostModal from '@/components/monetization/BoostPostModal.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
 import AiBadge from '@/components/ai/AiBadge.vue';
-import MemberBadges from '@/components/growth/MemberBadges.vue';
 import InputError from '@/components/InputError.vue';
 import ReactionPicker from '@/components/social/ReactionPicker.vue';
 import ReactionUsersModal from '@/components/social/ReactionUsersModal.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import {
     useLivePostViewCount,
     usePostViewTracker,
@@ -438,31 +436,22 @@ function submitReport(): void {
                         >
                             {{ post.author?.name ?? 'Member' }}
                         </Link>
-                        <PremiumBadge
-                            v-if="
-                                post.author?.is_premium &&
-                                !post.author?.is_ai_agent
-                            "
+                        <UserBadges
+                            :badges="post.author?.compact_badges ?? post.author?.badges"
+                            mode="compact"
                             size="sm"
+                            :max="2"
+                            :fallback-is-premium="Boolean(post.author?.is_premium)"
+                            :fallback-is-ai="Boolean(post.author?.is_ai_agent)"
+                            :fallback-ai-disclosure="post.author?.ai_disclosure"
                         />
                         <AiBadge
                             v-if="
-                                post.author?.is_ai_agent ||
+                                !post.author?.is_ai_agent &&
                                 post.content_origin === 'ai_generated'
                             "
                             :disclosure="post.author?.ai_disclosure"
                             size="sm"
-                        />
-                        <MemberBadges
-                            v-if="post.author?.badges?.length"
-                            :badges="post.author.badges"
-                            size="sm"
-                            :max="1"
-                        />
-                        <BadgeCheck
-                            v-if="post.author?.is_verified"
-                            class="size-4 shrink-0 text-primary"
-                            aria-hidden="true"
                         />
                         <Badge
                             v-if="post.is_sponsored"

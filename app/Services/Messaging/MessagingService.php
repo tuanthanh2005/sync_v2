@@ -8,6 +8,7 @@ use App\Models\Message;
 use App\Models\User;
 use App\Models\UserBlock;
 use App\Services\Moderation\ContentFilterService;
+use App\Services\Social\UserBadgeResolverService;
 use App\Services\System\SystemSettingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -128,15 +129,21 @@ class MessagingService
                     ->orWhere('user_two_id', $viewer->id);
             })
             ->with([
-                'userOne:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
+                'userOne:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'userOne.rbacRole:id,slug,name',
                 'userOne.profile:id,user_id,avatar_disk,avatar_path',
-                'userTwo:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
+                'userTwo:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'userTwo.rbacRole:id,slug,name',
                 'userTwo.profile:id,user_id,avatar_disk,avatar_path',
             ])
             ->orderByDesc('last_message_at')
             ->orderByDesc('id')
             ->limit(30)
             ->get();
+
+        $badgeResolver = app(UserBadgeResolverService::class);
+        $otherUsers = $conversations->map(static fn (Conversation $c): ?User => $c->otherUserFor($viewer))->filter()->values();
+        $resolvedOtherBadges = $badgeResolver->resolveForUsers($otherUsers);
 
         $conversationIds = $conversations->pluck('id')->all();
 
@@ -169,7 +176,7 @@ class MessagingService
         }
 
         $serializedConversations = array_values(
-            $conversations->map(static function (Conversation $conv) use ($viewer, $unreadByConversation, $latestMessages): array {
+            $conversations->map(static function (Conversation $conv) use ($viewer, $unreadByConversation, $latestMessages, $resolvedOtherBadges): array {
                 $other = $conv->otherUserFor($viewer);
                 $lastMessage = $latestMessages[$conv->id] ?? null;
 
@@ -181,6 +188,9 @@ class MessagingService
                         'username' => $other->username,
                         'avatar' => $other->avatarUrl(),
                         'is_premium' => $other->isPremium(),
+                        'is_ai_agent' => $other->isAiAgent(),
+                        'compact_badges' => $resolvedOtherBadges[$other->id]['compact'] ?? [],
+                        'badges' => $resolvedOtherBadges[$other->id]['compact'] ?? [],
                     ],
                     'last_message' => $lastMessage?->body,
                     'last_message_at' => $conv->last_message_at?->toIso8601String(),
@@ -194,12 +204,15 @@ class MessagingService
         if ($activeConversation !== null) {
             $this->markRead($viewer, $activeConversation);
             $activeConversation->loadMissing([
-                'userOne:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
+                'userOne:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'userOne.rbacRole:id,slug,name',
                 'userOne.profile:id,user_id,avatar_disk,avatar_path',
-                'userTwo:id,name,username,avatar_url,status,premium_until,premium_suspended_at',
+                'userTwo:id,name,username,avatar_url,role,rbac_role_id,status,premium_until,premium_suspended_at,account_type,ai_disclosure',
+                'userTwo.rbacRole:id,slug,name',
                 'userTwo.profile:id,user_id,avatar_disk,avatar_path',
             ]);
             $other = $activeConversation->otherUserFor($viewer);
+            $activeOtherBadges = $other !== null ? $badgeResolver->resolveForUser($other)['compact'] : [];
 
             $messages = array_values(
                 Message::query()
@@ -225,6 +238,9 @@ class MessagingService
                     'username' => $other->username,
                     'avatar' => $other->avatarUrl(),
                     'is_premium' => $other->isPremium(),
+                    'is_ai_agent' => $other->isAiAgent(),
+                    'compact_badges' => $activeOtherBadges,
+                    'badges' => $activeOtherBadges,
                 ],
                 'messages' => $messages,
             ];

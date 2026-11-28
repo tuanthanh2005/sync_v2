@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
 import {
-    BadgeCheck,
     Check,
     Heart,
     Lightbulb,
@@ -14,9 +13,7 @@ import type { Component } from 'vue';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ProfileViewController from '@/actions/App/Http/Controllers/Social/ProfileViewController';
-import AiBadge from '@/components/ai/AiBadge.vue';
-import MemberBadges from '@/components/growth/MemberBadges.vue';
-import PremiumBadge from '@/components/monetization/PremiumBadge.vue';
+import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -180,34 +177,15 @@ async function handleToggleFollow(): Promise<void> {
                         {{ item.name }}
                     </Link>
 
-                    <PremiumBadge
-                        v-if="item.is_premium && !item.is_ai_agent"
+                    <UserBadges
+                        :badges="item.compact_badges ?? item.badges"
+                        mode="compact"
                         size="sm"
+                        :max="2"
+                        :fallback-is-premium="Boolean(item.is_premium)"
+                        :fallback-is-ai="Boolean(item.is_ai_agent)"
+                        :fallback-ai-disclosure="item.ai_disclosure"
                     />
-                    <AiBadge
-                        v-if="item.is_ai_agent"
-                        :disclosure="item.ai_disclosure"
-                        size="sm"
-                    />
-                    <MemberBadges
-                        v-if="item.badges?.length"
-                        :badges="item.badges"
-                        size="sm"
-                        :max="1"
-                    />
-                    <BadgeCheck
-                        v-if="item.is_verified"
-                        class="size-3.5 shrink-0 text-primary"
-                        aria-hidden="true"
-                    />
-                    <span
-                        v-if="
-                            item.role === 'admin' || item.role === 'moderator'
-                        "
-                        class="inline-flex shrink-0 items-center rounded-full border border-border bg-muted/60 px-1.5 py-0.5 text-[10px] leading-none font-medium text-muted-foreground"
-                    >
-                        {{ item.role_label }}
-                    </span>
                 </div>
 
                 <div

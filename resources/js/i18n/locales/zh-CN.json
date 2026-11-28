@@ -735,7 +735,8 @@
             "growthOverview": "增长概览",
             "growthReferrals": "推荐与反作弊",
             "growthCampaigns": "活动与徽章",
-            "postFeedSettings": "发帖与信息流设置"
+            "postFeedSettings": "发帖与信息流设置",
+            "badges": "徽章管理"
         },
         "common": {
             "search": "搜索...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "高风险",
                 "riskViolation": "严重违规"
             }
+        },
+        "badges": {
+            "title": "全局徽章管理",
+            "subtitle": "管理 SysNoxis 官方账号、官方团队标识、版主盾牌及完整审计日志。",
+            "superAdminMode": "超级管理员权限",
+            "readOnlyNotice": "只读审计视图",
+            "grantTitle": "授予官方或荣誉徽章",
+            "grantSubtitle": "仅超级管理员可分配权威徽章。所有操作均需填写原因并永久记录审计日志。",
+            "targetUsername": "目标用户名",
+            "usernamePlaceholder": "用户名（例如 alex_dev）",
+            "badgeType": "徽章类型",
+            "reasonLabel": "审计原因",
+            "reasonPlaceholder": "说明资格核验依据...",
+            "expiresAtLabel": "过期时间（可选）",
+            "publicVisibleToggle": "在显示名称旁公开展示徽章",
+            "grantButton": "授予徽章",
+            "searchPlaceholder": "按姓名、用户名或 ID 搜索...",
+            "allTypes": "所有徽章类型",
+            "allStatuses": "所有状态",
+            "statusActive": "有效",
+            "statusRevoked": "已撤销",
+            "statusHidden": "内部隐藏",
+            "emptyTitle": "没有符合筛选条件的徽章记录",
+            "emptyDescription": "官方、团队成员及版主徽章分配记录将在此显示。",
+            "hidePublic": "设为内部（隐藏）",
+            "showPublic": "公开显示",
+            "revokeButton": "撤销徽章",
+            "reasonAudit": "原因与操作人",
+            "timestamps": "授予 / 撤销时间",
+            "internalOnly": "内部账号（已隐藏）",
+            "ineligibleHidden": "角色不符合条件（已隐藏）",
+            "revokedPrefix": "已撤销：",
+            "auditTitle": "近期徽章治理审计日志",
+            "confirmGrantTitle": "确认授予徽章",
+            "confirmGrantDesc": "确定授予账号 {username}“{badge}”徽章吗？此操作将永久记录到审计日志。",
+            "confirmRevokeTitle": "撤销账号徽章",
+            "confirmRevokeDesc": "确定撤销账号 {username} 的“{badge}”徽章吗？审计历史将完整保留。",
+            "accountSectionTitle": "账号徽章与身份标识",
+            "livePublicDisplay": "当前公开展示",
+            "noActivePublicBadges": "当前未展示公开徽章（普通成员）。",
+            "roleSuperAdmin": "超级管理员",
+            "roleAdmin": "管理员",
+            "roleModerator": "版主",
+            "roleMember": "成员",
+            "statusOk": "符合",
+            "statusNo": "否",
+            "statusYes": "是",
+            "statusActiveShort": "有效",
+            "allRoles": "所有角色"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "探索社区",
         "restrictedTitle": "无法查看列表",
         "restrictedHint": "你无法查看此账号的关系列表。"
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "官方账号",
+            "description": "这是由 SysNoxis 运营的官方账号。"
+        },
+        "officialStaff": {
+            "label": "官方团队成员",
+            "description": "此账号属于 SysNoxis 官方团队成员。"
+        },
+        "moderator": {
+            "label": "版主",
+            "description": "此账号属于 SysNoxis 官方版主。"
+        },
+        "premiumMember": {
+            "label": "Premium 会员",
+            "description": "此账号拥有有效的 SysNoxis Premium 会员资格。此徽章不代表身份认证。"
+        },
+        "earlyMember": {
+            "label": "早期成员",
+            "description": "此账号已被认证为 SysNoxis 社区的早期成员。"
+        },
+        "aiAccount": {
+            "label": "AI 账号",
+            "short": "AI",
+            "description": "此账号由 AI 系统运营，并已透明标注为自动化账号。"
+        },
+        "foundingMember": {
+            "description": "此账号在 SysNoxis 上拥有创始成员荣誉。"
+        },
+        "referralAmbassador": {
+            "description": "因向 SysNoxis 邀请已认证成员而获得认可。"
+        },
+        "communityBuilder": {
+            "description": "因在 SysNoxis 上建设活跃社区而获得认可。"
+        }
     }
 }

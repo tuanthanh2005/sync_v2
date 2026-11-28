@@ -735,7 +735,8 @@
             "growthOverview": "ภาพรวมการเติบโต",
             "growthReferrals": "การแนะนำและทุจริต",
             "growthCampaigns": "แคมเปญและป้าย",
-            "postFeedSettings": "ตั้งค่าโพสต์และฟีด"
+            "postFeedSettings": "ตั้งค่าโพสต์และฟีด",
+            "badges": "จัดการตราประจำตัว"
         },
         "common": {
             "search": "ค้นหา...",
@@ -2278,6 +2279,55 @@
                 "riskHigh": "ความเสี่ยงสูง",
                 "riskViolation": "ละเมิดกฎ"
             }
+        },
+        "badges": {
+            "title": "การจัดการตราประจำตัวส่วนกลาง",
+            "subtitle": "จัดการบัญชีทางการของ SysNoxis เครื่องหมายทีมงาน โล่ผู้ดูแล และบันทึกการตรวจสอบตรา",
+            "superAdminMode": "สิทธิ์ Super Admin",
+            "readOnlyNotice": "มุมมองอ่านอย่างเดียว",
+            "grantTitle": "มอบตราทางการหรือตรารับรอง",
+            "grantSubtitle": "เฉพาะ Super Admin เท่านั้นที่สามารถมอบตราสิทธิ์ได้ ทุกการดำเนินการต้องระบุเหตุผลและบันทึกประวัติ",
+            "targetUsername": "ชื่อผู้ใช้เป้าหมาย",
+            "usernamePlaceholder": "username (เช่น alex_dev)",
+            "badgeType": "ประเภทตรา",
+            "reasonLabel": "เหตุผลในการตรวจสอบ",
+            "reasonPlaceholder": "อธิบายเหตุผลและสิทธิ์...",
+            "expiresAtLabel": "วันหมดอายุ (ไม่บังคับ)",
+            "publicVisibleToggle": "แสดงตราต่อสาธารณะข้างชื่อบัญชี",
+            "grantButton": "มอบตรา",
+            "searchPlaceholder": "ค้นหาด้วยชื่อ username หรือ ID...",
+            "allTypes": "ตราทุกประเภท",
+            "allStatuses": "สถานะทั้งหมด",
+            "statusActive": "ใช้งานอยู่",
+            "statusRevoked": "ถูกเพิกถอน",
+            "statusHidden": "ซ่อน / ภายใน",
+            "emptyTitle": "ไม่พบข้อมูลตราตามตัวกรอง",
+            "emptyDescription": "รายการมอบตราทางการ ทีมงาน และผู้ดูแลจะแสดงที่นี่",
+            "hidePublic": "ตั้งเป็นภายใน (ซ่อน)",
+            "showPublic": "แสดงสาธารณะ",
+            "revokeButton": "เพิกถอนตรา",
+            "reasonAudit": "เหตุผลและผู้ดำเนินการ",
+            "timestamps": "มอบเมื่อ / เพิกถอนเมื่อ",
+            "internalOnly": "บัญชีภายใน (ซ่อนอยู่)",
+            "ineligibleHidden": "สิทธิ์บทบาทไม่ครบ (ซ่อนอัตโนมัติ)",
+            "revokedPrefix": "เพิกถอน:",
+            "auditTitle": "บันทึกการกำกับดูแลตราล่าสุด",
+            "confirmGrantTitle": "ยืนยันการมอบตรา",
+            "confirmGrantDesc": "มอบตรา '{badge}' ให้บัญชี {username} หรือไม่? ระบบจะบันทึกในประวัติการตรวจสอบถาวร",
+            "confirmRevokeTitle": "เพิกถอนตราบัญชี",
+            "confirmRevokeDesc": "เพิกถอนตรา '{badge}' ของบัญชี {username} หรือไม่? ประวัติการตรวจสอบจะยังคงอยู่",
+            "accountSectionTitle": "ตราและการยืนยันบัญชี",
+            "livePublicDisplay": "การแสดงผลสาธารณะปัจจุบัน",
+            "noActivePublicBadges": "ไม่มีตราที่แสดงสาธารณะ (สมาชิกทั่วไป)",
+            "roleSuperAdmin": "Super Admin",
+            "roleAdmin": "ผู้ดูแลระบบ",
+            "roleModerator": "ผู้ดูแล",
+            "roleMember": "สมาชิก",
+            "statusOk": "มีสิทธิ์",
+            "statusNo": "ไม่",
+            "statusYes": "ใช่",
+            "statusActiveShort": "ใช้งาน",
+            "allRoles": "ทุกบทบาท"
         }
     },
     "common": {
@@ -2942,5 +2992,41 @@
         "exploreCommunities": "สำรวจชุมชน",
         "restrictedTitle": "ไม่สามารถดูรายการนี้ได้",
         "restrictedHint": "คุณไม่สามารถดูรายชื่อการเชื่อมต่อของบัญชีนี้ได้"
+    },
+    "badges": {
+        "officialAccount": {
+            "label": "บัญชีทางการ",
+            "description": "นี่คือบัญชีทางการที่ดำเนินการโดย SysNoxis"
+        },
+        "officialStaff": {
+            "label": "ทีมงานทางการ",
+            "description": "บัญชีนี้เป็นของสมาชิกทีมงานทางการของ SysNoxis"
+        },
+        "moderator": {
+            "label": "ผู้ดูแลระบบ",
+            "description": "บัญชีนี้เป็นของผู้ดูแลระบบทางการของ SysNoxis"
+        },
+        "premiumMember": {
+            "label": "สมาชิกพรีเมียม",
+            "description": "บัญชีนี้มีสมาชิก SysNoxis Premium ที่ใช้งานอยู่ ตรานี้ไม่ได้หมายถึงการยืนยันตัวตน"
+        },
+        "earlyMember": {
+            "label": "สมาชิกรุ่นแรก",
+            "description": "บัญชีนี้ได้รับการรับรองว่าเป็นสมาชิกรุ่นแรกของชุมชน SysNoxis"
+        },
+        "aiAccount": {
+            "label": "บัญชี AI",
+            "short": "AI",
+            "description": "บัญชีนี้ดำเนินการโดยระบบ AI และระบุอย่างโปร่งใสว่าเป็นบัญชีอัตโนมัติ"
+        },
+        "foundingMember": {
+            "description": "บัญชีนี้ได้รับการยกย่องเป็นสมาชิกผู้ก่อตั้งบน SysNoxis"
+        },
+        "referralAmbassador": {
+            "description": "ได้รับการยกย่องจากการเชิญสมาชิกที่ยืนยันตัวตนแล้วสู่ SysNoxis"
+        },
+        "communityBuilder": {
+            "description": "ได้รับการยกย่องจากการสร้างชุมชนที่คึกคักบน SysNoxis"
+        }
     }
 }

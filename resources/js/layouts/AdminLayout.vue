@@ -3,6 +3,7 @@ import { Link, router, usePage } from '@inertiajs/vue3';
 import {
     Activity,
     ArrowLeft,
+    Award,
     BadgeCheck,
     BarChart3,
     Bell,
@@ -83,6 +84,7 @@ import {
 import { index as adminAds } from '@/routes/admin/ads';
 import { index as adminAppeals } from '@/routes/admin/appeals';
 import { index as adminBackups } from '@/routes/admin/backups';
+import { index as adminBadges } from '@/routes/admin/badges';
 import {
     comments as adminComments,
     communities as adminCommunities,
@@ -286,6 +288,15 @@ const navGroups = computed<AdminMenuGroup[]>(() => {
                               label: t('admin.nav.roles'),
                               href: adminRoles.url(),
                               icon: KeyRound,
+                          },
+                      ]
+                    : []),
+                ...(perms.viewBadges || perms.manageBadges
+                    ? [
+                          {
+                              label: t('admin.nav.badges'),
+                              href: adminBadges.url(),
+                              icon: Award,
                           },
                       ]
                     : []),
