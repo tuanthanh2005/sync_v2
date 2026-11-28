@@ -463,6 +463,26 @@ class SeoRegistryService
             }
         });
 
+        // Exclude any legacy-host registry rows that no longer match the active canonical host.
+        $canonicalHost = $this->config->canonicalHost();
+        SeoUrlRegistry::query()
+            ->where('is_in_sitemap', true)
+            ->orWhere('index_eligibility', SeoIndexEligibility::Eligible->value)
+            ->chunkById(200, static function ($rows) use ($canonicalHost): void {
+                foreach ($rows as $row) {
+                    $rowHost = strtolower((string) parse_url((string) ($row->canonical_url ?: $row->url), PHP_URL_HOST));
+                    if ($rowHost !== '' && $rowHost !== $canonicalHost) {
+                        $row->forceFill([
+                            'index_eligibility' => SeoIndexEligibility::Excluded,
+                            'status' => SeoUrlStatus::Excluded,
+                            'exclusion_reason' => 'legacy_domain_migrated',
+                            'is_in_sitemap' => false,
+                            'lastmod_at' => now(),
+                        ])->save();
+                    }
+                }
+            });
+
         $eligible = SeoUrlRegistry::query()->eligibleForSitemap()->count();
 
         return ['processed' => $processed, 'eligible' => $eligible];
@@ -524,13 +544,22 @@ class SeoRegistryService
         $urlHash = $this->canonicalUrls->urlHash($data['url']);
         $existing = SeoUrlRegistry::query()->where('url_hash', $urlHash)->first();
 
-        // Also handle slug/URL rename for the same entity+locale cleanly
-        if ($existing === null && $data['entity_id'] !== null) {
-            $existing = SeoUrlRegistry::query()
-                ->where('entity_type', $data['entity_type']->value)
-                ->where('entity_id', $data['entity_id'])
-                ->where('locale', $data['locale'])
-                ->first();
+        // Also handle slug/URL/domain rename for the same entity+locale cleanly
+        if ($existing === null) {
+            if ($data['entity_id'] !== null) {
+                $existing = SeoUrlRegistry::query()
+                    ->where('entity_type', $data['entity_type']->value)
+                    ->where('entity_id', $data['entity_id'])
+                    ->where('locale', $data['locale'])
+                    ->first();
+            } else {
+                $existing = SeoUrlRegistry::query()
+                    ->where('entity_type', $data['entity_type']->value)
+                    ->whereNull('entity_id')
+                    ->where('path', $data['path'])
+                    ->where('locale', $data['locale'])
+                    ->first();
+            }
         }
 
         $isEligible = $data['index_eligibility'] === SeoIndexEligibility::Eligible && ! $data['is_noindex_forced'] && $data['http_status'] === 200;

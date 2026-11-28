@@ -33,7 +33,7 @@
 
 ## 3. Checklist Kiểm thử Thủ công trên Thiết bị thật (Release Sign-off)
 
-1. Mở `https://syncviet.com` trên iPhone (Safari) & Android (Chrome): kiểm tra không có thanh cuộn ngang ở trang chủ, bài viết, hồ sơ, cộng đồng, ví, quảng cáo, tin nhắn, đăng nhập và `/admin`.
+1. Mở `https://sysnoxis.com` trên iPhone (Safari) & Android (Chrome): kiểm tra không có thanh cuộn ngang ở trang chủ, bài viết, hồ sơ, cộng đồng, ví, quảng cáo, tin nhắn, đăng nhập và `/admin`.
 2. Bấm vào ô tìm kiếm, bình luận, đăng bài, nạp ví trên iPhone: xác nhận màn hình **không tự phóng to**; thử chụm hai ngón phóng to trang web xác nhận **pinch-to-zoom vẫn hoạt động**.
 3. Nhấn giữ đoạn văn bản bài viết, bình luận, `@username` và mã giao dịch: xác nhận menu Copy/Paste hệ điều hành hoạt động bình thường.
 4. Bấm nút `+` trên Bottom Nav: xác nhận mở Full-Screen Composer, nhập nháp rồi bấm `X` → hiện hộp thoại xác nhận hủy bản nháp; nút `Publish` không bị bàn phím che.

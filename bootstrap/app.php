@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckMaintenanceMode;
+use App\Http\Middleware\EnforceCanonicalDomainMiddleware;
 use App\Http\Middleware\EnsureAdminHasTwoFactor;
 use App\Http\Middleware\EnsureAuthenticatedEmailIsVerified;
 use App\Http\Middleware\EnsureUserHasPermission;
@@ -41,6 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->prepend(SeoRedirectMiddleware::class);
+        $middleware->prepend(EnforceCanonicalDomainMiddleware::class);
 
         $middleware->web(append: [
             SetLocale::class,

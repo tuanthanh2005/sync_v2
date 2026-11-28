@@ -2342,7 +2342,7 @@
             "viewPending": "View Pending Orders"
         },
         "compliance": {
-            "storeNotice": "Purchases on native app store builds follow official platform in-app billing policies. Manage plans anytime on syncviet.com."
+            "storeNotice": "Purchases on native app store builds follow official platform in-app billing policies. Manage plans anytime on {domain}."
         },
         "faq": {
             "title": "Frequently Asked Questions",

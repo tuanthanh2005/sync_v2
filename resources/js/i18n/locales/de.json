@@ -2342,7 +2342,7 @@
             "viewPending": "Ausstehende Bestellungen ansehen"
         },
         "compliance": {
-            "storeNotice": "Käufe über native App-Store-Versionen folgen den offiziellen In-App-Abrechnungsrichtlinien der jeweiligen Plattform. Verwalten Sie Tarife jederzeit unter syncviet.com."
+            "storeNotice": "Käufe über native App-Store-Versionen folgen den offiziellen In-App-Abrechnungsrichtlinien der jeweiligen Plattform. Verwalten Sie Tarife jederzeit unter {domain}."
         },
         "faq": {
             "title": "Häufig gestellte Fragen",

@@ -106,11 +106,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Canonical Domain & Legacy Domain 301 Redirect Configuration
+    |--------------------------------------------------------------------------
+    | Controls 301 canonicalization from legacy domains (e.g. syncviet.com,
+    | www.syncviet.com) and www apex normalization to the primary domain.
+    | Payment webhooks (/webhooks/*), /up, and /.well-known/* are always exempt.
+    */
+    'domain_migration' => [
+        'redirect_enabled' => (bool) env('DOMAIN_REDIRECT_ENABLED', false),
+        'primary_url' => rtrim((string) env('SEO_CANONICAL_URL', env('APP_URL', 'https://sysnoxis.com')), '/'),
+        'legacy_hosts' => array_values(array_filter(array_map(
+            static fn (string $host): string => strtolower(trim($host)),
+            explode(',', (string) env('DOMAIN_LEGACY_HOSTS', '')),
+        ))),
+        'redirect_www_to_apex' => (bool) env('DOMAIN_REDIRECT_WWW_TO_APEX', true),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Advanced International SEO & Organic Growth Engine V2.0
     |--------------------------------------------------------------------------
     */
     'seo' => [
-        'canonical_base_url' => rtrim((string) env('SEO_CANONICAL_URL', env('APP_URL', 'https://syncviet.com')), '/'),
+        'canonical_base_url' => rtrim((string) env('SEO_CANONICAL_URL', env('APP_URL', 'https://sysnoxis.com')), '/'),
         'sitemap_shard_size' => (int) env('SEO_SITEMAP_SHARD_SIZE', 5000),
         'sitemap_storage_dir' => 'seo/sitemaps',
         'min_post_words_for_index' => (int) env('SEO_MIN_POST_WORDS', 12),

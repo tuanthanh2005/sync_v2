@@ -209,6 +209,7 @@ Read `docs/PROJECT_PLAN.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/B
 ## 2. Server Portability & Production Constraints
 
 - Must run cleanly on **Hostinger Shared Hosting** (`SESSION_DRIVER=database`, `CACHE_STORE=database`, `QUEUE_CONNECTION=database`, Cron-driven `schedule:run` + bounded `queue:work --stop-when-empty --max-time=40 --timeout=25`, `ssr.enabled => false`, Vite static build in `public/build/`).
+- **Primary Production Domain**: `https://sysnoxis.com` (attached as a parked alias domain on the existing Hostinger Business vhost `~/domains/syncviet.com/syncviet` sharing the single codebase and `u137711404_syncviet` MySQL database). Legacy `syncviet.com`, `www.syncviet.com`, and `www.sysnoxis.com` permanently 301-redirect (preserving path + query string) to `https://sysnoxis.com` via `EnforceCanonicalDomainMiddleware` (`DOMAIN_REDIRECT_ENABLED=true`, `DOMAIN_LEGACY_HOSTS=syncviet.com,www.syncviet.com`), strictly exempting `/webhooks/*`, `/up`, `/.well-known/*`, and `/google*.html`. Note: Hostinger filesystem & cron working directory remains `~/domains/syncviet.com/syncviet`.
 - Must remain **100% portable to VPS / Cloud Server without code rewrites**:
     - Never hardcode absolute server paths, IPs, domains, brand names, or database credentials. Read all runtime settings from `.env` and `config/*.php` (`config('app.name')`, `config('app.url')`, `config('syncviet.media_disk')`).
     - Use Laravel Storage Abstraction (`Storage::disk(...)`) supporting `local`, `public`, and `s3` (Cloudflare R2).

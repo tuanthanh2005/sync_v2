@@ -67,6 +67,14 @@ type BenefitPresentation = {
 const { t, te, locale } = useI18n();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const siteDomain = computed(() => {
+    const raw = typeof page.props.appUrl === 'string' ? page.props.appUrl : '';
+    try {
+        return raw ? new URL(raw).host : 'sysnoxis.com';
+    } catch {
+        return 'sysnoxis.com';
+    }
+});
 
 const currency = ref<'VND' | 'USD'>(defaultCurrencyForLocale(locale.value));
 const selectedProvider = ref<string>(props.paymentMethods[0]?.code ?? 'vietqr');
@@ -558,7 +566,9 @@ function submitPurchase(): void {
             >
                 {{
                     platformCapabilities.policy_note ||
-                    t('monetization.compliance.storeNotice')
+                    t('monetization.compliance.storeNotice', {
+                        domain: siteDomain,
+                    })
                 }}
             </div>
         </section>

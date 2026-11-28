@@ -14,8 +14,8 @@
 
 ## 2. Production Configuration Required Before Go-Live
 
-1. Set `APP_ENV=production`, `APP_URL=https://syncviet.com`, `SEO_CANONICAL_URL=https://syncviet.com` in production `.env`.
+1. Set `APP_ENV=production`, `APP_URL=https://sysnoxis.com`, `SEO_CANONICAL_URL=https://sysnoxis.com` in production `.env`.
 2. Ensure `seo_enabled = true` in `/admin/seo` (and verify no accidental `noindex` exists on homepage/public posts once `APP_ENV=production`).
 3. Add Google Site Verification meta/file token, optional Bing IndexNow key, and Google Search Console Service Account JSON in `/admin/seo/integrations`.
-4. Run `php artisan app:seo:backfill` once after initial content is published, and submit `https://syncviet.com/sitemap.xml` in Google Search Console.
+4. Run `php artisan app:seo:backfill` once after initial content is published, and submit `https://sysnoxis.com/sitemap.xml` in Google Search Console.
 5. **Indexing Honesty Note**: Google indexing has **NOT** been claimed or verified yet — verify real indexing status inside Search Console / `/admin/seo` after live launch.

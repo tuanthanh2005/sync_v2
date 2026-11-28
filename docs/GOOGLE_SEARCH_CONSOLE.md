@@ -21,8 +21,8 @@ SyncViet integrates **only** the 4 official Google Search Console APIs:
 
 1. In Google Cloud Console, enable **Google Search Console API** (free — no paid billing required).
 2. Create a Service Account and download its JSON key.
-3. In Google Search Console → **Settings → Users and permissions**, add the Service Account `client_email` as a **Full** user on `sc-domain:syncviet.com`.
-4. In SyncViet **Admin → SEO Center → Integrations & GSC**, paste the Service Account JSON and enter `sc-domain:syncviet.com`.
+3. In Google Search Console → **Settings → Users and permissions**, add the Service Account `client_email` as a **Full** user on `sc-domain:sysnoxis.com`.
+4. In SyncViet **Admin → SEO Center → Integrations & GSC**, paste the Service Account JSON and enter `sc-domain:sysnoxis.com`.
 5. SyncViet signs RS256 JWT assertions natively via PHP `openssl_sign()` and encrypts the credentials with Laravel `Crypt::encryptString()` (`APP_KEY`).
 6. Click **Test Connection**.
 

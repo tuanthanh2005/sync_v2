@@ -58,7 +58,7 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureTrustedAuthUrls(): void
     {
         ResetPassword::createUrlUsing(static function (object $notifiable, string $token): string {
-            $trustedOrigin = rtrim((string) config('app.url', 'https://syncviet.com'), '/');
+            $trustedOrigin = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/');
             $email = method_exists($notifiable, 'getEmailForPasswordReset')
                 ? (string) $notifiable->getEmailForPasswordReset()
                 : '';
@@ -67,7 +67,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         VerifyEmail::createUrlUsing(static function (object $notifiable): string {
-            $trustedOrigin = rtrim((string) config('app.url', 'https://syncviet.com'), '/');
+            $trustedOrigin = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/');
             $expireMinutes = (int) Config::get('auth.verification.expire', 60);
 
             URL::forceRootUrl($trustedOrigin);

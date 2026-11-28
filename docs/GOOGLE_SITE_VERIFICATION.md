@@ -2,7 +2,7 @@
 
 ## 1. Recommended Property Type
 
-Prioritize a **Domain Property** (`sc-domain:syncviet.com`) in Google Search Console so all protocols (`http`/`https`) and subdomains (`www` and apex) are unified under one verified property.
+Prioritize a **Domain Property** (`sc-domain:sysnoxis.com`) in Google Search Console so all protocols (`http`/`https`) and subdomains (`www` and apex) are unified under one verified property.
 
 ## 2. Supported Verification Methods
 

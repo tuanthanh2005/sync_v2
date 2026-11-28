@@ -2342,7 +2342,7 @@
             "viewPending": "Bekleyen Siparişleri Görüntüle"
         },
         "compliance": {
-            "storeNotice": "Yerel uygulama mağazası sürümlerindeki satın alımlar resmi platform uygulama içi faturalandırma politikalarına tabidir. Planları istediğiniz zaman syncviet.com üzerinden yönetebilirsiniz."
+            "storeNotice": "Yerel uygulama mağazası sürümlerindeki satın alımlar resmi platform uygulama içi faturalandırma politikalarına tabidir. Planları istediğiniz zaman {domain} üzerinden yönetebilirsiniz."
         },
         "faq": {
             "title": "Sıkça Sorulan Sorular",

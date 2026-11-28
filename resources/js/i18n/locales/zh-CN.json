@@ -2342,7 +2342,7 @@
             "viewPending": "查看待支付订单"
         },
         "compliance": {
-            "storeNotice": "在原生应用商店客户端上的购买遵循对应平台官方应用内购买政策。您可随时在 syncviet.com 管理订阅方案。"
+            "storeNotice": "在原生应用商店客户端上的购买遵循对应平台官方应用内购买政策。您可随时在 {domain} 管理订阅方案。"
         },
         "faq": {
             "title": "常见问题",

@@ -2342,7 +2342,7 @@
             "viewPending": "Xem đơn chờ thanh toán"
         },
         "compliance": {
-            "storeNotice": "Giao dịch trên ứng dụng cửa hàng tuân theo chính sách thanh toán của nền tảng. Bạn có thể quản lý gói dịch vụ trực tiếp trên syncviet.com."
+            "storeNotice": "Giao dịch trên ứng dụng cửa hàng tuân theo chính sách thanh toán của nền tảng. Bạn có thể quản lý gói dịch vụ trực tiếp trên {domain}."
         },
         "faq": {
             "title": "Câu hỏi thường gặp",

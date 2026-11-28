@@ -2342,7 +2342,7 @@
             "viewPending": "Ver pedidos pendientes"
         },
         "compliance": {
-            "storeNotice": "Las compras en aplicaciones nativas de tiendas oficiales siguen las políticas de facturación integradas de cada plataforma. Gestiona tus planes en cualquier momento en syncviet.com."
+            "storeNotice": "Las compras en aplicaciones nativas de tiendas oficiales siguen las políticas de facturación integradas de cada plataforma. Gestiona tus planes en cualquier momento en {domain}."
         },
         "faq": {
             "title": "Preguntas frecuentes",

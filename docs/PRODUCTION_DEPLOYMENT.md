@@ -1,6 +1,7 @@
 # SyncViet Production Deployment Checklist & Runbook (PHẦN 42)
 
-**Target Production Path on Hostinger**: `~/domains/syncviet.com/syncviet` (`public_html` symlinked to `syncviet/public`)  
+**Primary Production Domain**: `https://sysnoxis.com` (legacy `syncviet.com` & `www.*` 301-redirected via `EnforceCanonicalDomainMiddleware`, `/webhooks/*` exempt)  
+**Target Production Path on Hostinger**: `~/domains/syncviet.com/syncviet` (`public_html` symlinked to `syncviet/public`; `sysnoxis.com` attached as parked alias on same vhost & database)  
 **PHP Runtime Requirement**: **PHP 8.4+** (Hostinger SSH default `php` may be 8.3 — always use detected PHP 8.4 binary!)
 
 ## 1. Pre-Deployment Checklist (Mandatory Before Every Release)
@@ -13,8 +14,11 @@
 - [ ] Production `.env` verified:
     - `APP_ENV=production`
     - `APP_DEBUG=false`
-    - `APP_URL=https://syncviet.com`
-    - `SEO_CANONICAL_URL=https://syncviet.com`
+    - `APP_URL=https://sysnoxis.com`
+    - `SEO_CANONICAL_URL=https://sysnoxis.com`
+    - `DOMAIN_REDIRECT_ENABLED=true`
+    - `DOMAIN_LEGACY_HOSTS=syncviet.com,www.syncviet.com`
+    - `DOMAIN_REDIRECT_WWW_TO_APEX=true`
     - `APP_LOCALE=en` / `APP_FALLBACK_LOCALE=en`
     - `HASH_DRIVER=argon2id`
     - `SESSION_DRIVER=database`, `CACHE_STORE=database`, `QUEUE_CONNECTION=database`
@@ -49,10 +53,11 @@ $PHP_BIN artisan queue:restart
 
 ## 3. Post-Deployment Smoke Verification
 
-- [ ] `GET https://syncviet.com/up` -> `200 OK`
-- [ ] `GET https://syncviet.com/` -> `200 OK`, proper light/dark rendering, zero console/manifest errors
-- [ ] `GET https://syncviet.com/robots.txt` & `/sitemap.xml` -> `200 OK`
+- [ ] `GET https://sysnoxis.com/up` -> `200 OK`
+- [ ] `GET https://sysnoxis.com/` -> `200 OK`, proper light/dark rendering, zero console/manifest errors
+- [ ] `GET https://sysnoxis.com/robots.txt` & `/sitemap.xml` -> `200 OK` (all `<loc>` use `https://sysnoxis.com`)
+- [ ] `GET https://syncviet.com/en/posts/example` -> `301` -> `https://sysnoxis.com/en/posts/example`
 - [ ] Login + TOTP 2FA on Admin account -> `/admin/system-health` shows DB OK, Cache OK, `app_debug: off`, Backup recorded, Cron heartbeat updating
 - [ ] Test Guest registration / login / public post view
 - [ ] Verify Hostinger hPanel Cron jobs are active (`schedule:run` + bounded priority `queue:work --queue=payments,high,default,seo,ai`)
-- [ ] Confirm `.env` and `.git` return `403`/`404` publicly (`curl -I https://syncviet.com/.env`)
+- [ ] Confirm `.env` and `.git` return `403`/`404` publicly (`curl -I https://sysnoxis.com/.env`)

@@ -40,4 +40,4 @@ Verified with zero errors (`exit code 0`):
 ## 4. Core Web Vitals & Field Data Status (PHẦN 29 — Honest Reporting)
 
 - **Local Lab Status**: Initial HTML payload sizes are lightweight (`21 KB – 31 KB` uncompressed), guest bundle loads zero Admin JS chunks, fonts (`Be Vietnam Pro`) are self-hosted woff2 with `scrollbar-gutter: stable` eliminating layout shifts.
-- **Field Data (CrUX / Real-User LCP, INP, CLS)**: **Not Yet Available / Not Verified** — SyncViet is pre-public-launch and does not yet have 28-day real-user CrUX telemetry or live production PageSpeed Insights runs. Owner should run PageSpeed Insights against live `https://syncviet.com` post-deploy and track CrUX in Google Search Console.
+- **Field Data (CrUX / Real-User LCP, INP, CLS)**: **Not Yet Available / Not Verified** — SyncViet is pre-public-launch and does not yet have 28-day real-user CrUX telemetry or live production PageSpeed Insights runs. Owner should run PageSpeed Insights against live `https://sysnoxis.com` post-deploy and track CrUX in Google Search Console.

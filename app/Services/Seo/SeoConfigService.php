@@ -25,11 +25,11 @@ class SeoConfigService
      */
     public function canonicalBaseUrl(): string
     {
-        $configured = (string) config('syncviet.seo.canonical_base_url', config('app.url', 'https://syncviet.com'));
+        $configured = (string) config('syncviet.seo.canonical_base_url', config('app.url', 'https://sysnoxis.com'));
         $trimmed = rtrim(trim($configured), '/');
 
         if ($trimmed === '' || ! preg_match('#^https?://[a-zA-Z0-9.-]+(?::\d+)?$#', $trimmed)) {
-            return 'https://syncviet.com';
+            return 'https://sysnoxis.com';
         }
 
         return $trimmed;
@@ -39,7 +39,7 @@ class SeoConfigService
     {
         $host = parse_url($this->canonicalBaseUrl(), PHP_URL_HOST);
 
-        return is_string($host) && $host !== '' ? strtolower($host) : 'syncviet.com';
+        return is_string($host) && $host !== '' ? strtolower($host) : 'sysnoxis.com';
     }
 
     public function isIndexingAllowed(): bool

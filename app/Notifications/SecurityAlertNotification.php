@@ -35,7 +35,7 @@ class SecurityAlertNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $appName = (string) config('app.name', 'SyncViet');
-        $securityUrl = rtrim((string) config('app.url', 'https://syncviet.com'), '/').'/settings/security';
+        $securityUrl = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/').'/settings/security';
 
         return (new MailMessage)
             ->subject("[{$appName}] ".__($this->titleKey, $this->params))

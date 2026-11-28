@@ -2342,7 +2342,7 @@
             "viewPending": "Tingnan ang mga Nakabinbing Order"
         },
         "compliance": {
-            "storeNotice": "Ang mga pagbili sa mga bersyon ng app store ay sumusunod sa opisyal na patakaran sa in-app billing ng plataporma. Pamahalaan ang mga plan anumang oras sa syncviet.com."
+            "storeNotice": "Ang mga pagbili sa mga bersyon ng app store ay sumusunod sa opisyal na patakaran sa in-app billing ng plataporma. Pamahalaan ang mga plan anumang oras sa {domain}."
         },
         "faq": {
             "title": "Mga Madalas Itanong",

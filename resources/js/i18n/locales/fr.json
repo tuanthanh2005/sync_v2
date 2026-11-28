@@ -2342,7 +2342,7 @@
             "viewPending": "Voir les commandes en attente"
         },
         "compliance": {
-            "storeNotice": "Les achats sur les versions natives des boutiques d'applications suivent les politiques officielles de facturation intégrée de chaque plateforme. Gérez vos offres à tout moment sur syncviet.com."
+            "storeNotice": "Les achats sur les versions natives des boutiques d'applications suivent les politiques officielles de facturation intégrée de chaque plateforme. Gérez vos offres à tout moment sur {domain}."
         },
         "faq": {
             "title": "Foire aux questions",

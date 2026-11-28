@@ -25,7 +25,9 @@ use App\Services\Security\RbacService;
 use App\Services\Seo\GoogleSearchConsoleService;
 use App\Services\Seo\IndexNowService;
 use App\Services\Seo\KeywordIntelligenceService;
+use App\Services\Seo\RobotsAndRedirectService;
 use App\Services\Seo\SeoAuditService;
+use App\Services\Seo\SeoConfigService;
 use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
 use App\Services\Social\PostViewTrackingService;
@@ -37,6 +39,7 @@ use Database\Seeders\SeoSeeder;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\Schema;
 
@@ -391,6 +394,167 @@ Artisan::command('app:auth:remediate-unverified {--dry-run : Audit only without 
         $res['remember_tokens_rotated'],
     ));
 })->purpose('Audit existing unverified accounts and revoke their active sessions & remember tokens without deleting real data');
+
+Artisan::command('app:domain:health', function (): void {
+    $seoConfig = app(SeoConfigService::class);
+    $payload = [
+        'app_env' => config('app.env'),
+        'app_debug' => (bool) config('app.debug'),
+        'app_url' => config('app.url'),
+        'seo_canonical_url' => $seoConfig->canonicalBaseUrl(),
+        'seo_canonical_host' => $seoConfig->canonicalHost(),
+        'redirect_enabled' => (bool) config('syncviet.domain_migration.redirect_enabled', false),
+        'legacy_hosts' => config('syncviet.domain_migration.legacy_hosts', []),
+        'session_domain' => config('session.domain'),
+        'session_secure' => (bool) config('session.secure'),
+        'google_redirect' => config('services.google.redirect'),
+        'google_client_configured' => trim((string) config('services.google.client_id', '')) !== '',
+        'mail_host' => config('mail.mailers.smtp.host'),
+        'mail_from' => config('mail.from.address'),
+        'trusted_proxies_set' => config('syncviet.trusted_proxies') !== null && trim((string) config('syncviet.trusted_proxies')) !== '',
+        'db_counts' => [
+            'users' => DB::table('users')->count(),
+            'posts' => DB::table('posts')->count(),
+            'comments' => DB::table('comments')->count(),
+            'communities' => DB::table('communities')->count(),
+            'payments' => Schema::hasTable('payments') ? DB::table('payments')->count() : 0,
+            'seo_urls' => Schema::hasTable('seo_url_registry') ? DB::table('seo_url_registry')->count() : 0,
+            'seo_sitemaps_urls' => Schema::hasTable('seo_sitemaps') ? (int) DB::table('seo_sitemaps')->sum('total_urls') : 0,
+        ],
+        'integrations' => [
+            'turnstile_enabled' => Schema::hasTable('system_settings') ? DB::table('system_settings')->where('key', 'auth_turnstile_enabled')->value('value') : null,
+            'google_login_feature' => Schema::hasTable('system_settings') ? DB::table('system_settings')->where('key', 'feature_google_login')->value('value') : null,
+            'contact_email' => Schema::hasTable('system_settings') ? DB::table('system_settings')->where('key', 'contact_email')->value('value') : null,
+            'seo_api_connections' => Schema::hasTable('seo_api_connections')
+                ? DB::table('seo_api_connections')->select('provider', 'status', 'property_identifier', 'verification_method')->get()->toArray()
+                : [],
+        ],
+    ];
+
+    $this->line(json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}');
+})->purpose('Print safe non-secret domain configuration, database counts, and integration status for deployment verification');
+
+Artisan::command(
+    'app:domain:configure {primaryUrl} {legacyHosts=none} {redirectEnabled=0} {--rebuild-seo : Run SEO backfill and sitemap rebuild after updating config}',
+    function (string $primaryUrl, string $legacyHosts, string $redirectEnabled): int {
+        $cleanUrl = rtrim(trim($primaryUrl), '/');
+        if (preg_match('#^https://[a-zA-Z0-9.-]+$#', $cleanUrl) !== 1) {
+            $this->error('Invalid primaryUrl. Expected https://domain.tld');
+
+            return 1;
+        }
+
+        $parsedLegacy = $legacyHosts === 'none' || trim($legacyHosts) === ''
+            ? []
+            : array_values(array_filter(array_map(
+                static fn (string $h): string => strtolower(trim($h)),
+                explode(',', $legacyHosts),
+            )));
+
+        foreach ($parsedLegacy as $host) {
+            if (preg_match('/^[a-z0-9.-]+$/', $host) !== 1) {
+                $this->error("Invalid legacy host: {$host}");
+
+                return 1;
+            }
+        }
+
+        $redirectFlag = in_array(strtolower(trim($redirectEnabled)), ['1', 'true', 'yes', 'on'], true) ? 'true' : 'false';
+        $legacyCsv = implode(',', $parsedLegacy);
+        $envPath = base_path('.env');
+
+        if (! is_file($envPath) || ! is_readable($envPath) || ! is_writable($envPath)) {
+            $this->error('.env file is missing or not writable.');
+
+            return 1;
+        }
+
+        $rawEnv = (string) file_get_contents($envPath);
+        $backupDir = storage_path('app/private/backups');
+        if (! is_dir($backupDir)) {
+            @mkdir($backupDir, 0700, true);
+        }
+        $backupFile = $backupDir.'/env-domain-mig-'.now()->format('Ymd-His').'.bak';
+        if (! is_file($backupDir.'/env-pre-sysnoxis.bak')) {
+            @file_put_contents($backupDir.'/env-pre-sysnoxis.bak', $rawEnv);
+            @chmod($backupDir.'/env-pre-sysnoxis.bak', 0600);
+        }
+        @file_put_contents($backupFile, $rawEnv);
+        @chmod($backupFile, 0600);
+
+        $updates = [
+            'APP_URL' => $cleanUrl,
+            'SEO_CANONICAL_URL' => $cleanUrl,
+            'DOMAIN_REDIRECT_ENABLED' => $redirectFlag,
+            'DOMAIN_LEGACY_HOSTS' => $legacyCsv,
+            'DOMAIN_REDIRECT_WWW_TO_APEX' => 'true',
+        ];
+
+        if (preg_match('/^GOOGLE_REDIRECT_URI=/m', $rawEnv) === 1) {
+            $updates['GOOGLE_REDIRECT_URI'] = $cleanUrl.'/auth/google/callback';
+        }
+
+        $updatedEnv = $rawEnv;
+        foreach ($updates as $key => $value) {
+            $line = "{$key}={$value}";
+            if (preg_match('/^'.preg_quote($key, '/').'=.*$/m', $updatedEnv) === 1) {
+                $updatedEnv = (string) preg_replace('/^'.preg_quote($key, '/').'=.*$/m', $line, $updatedEnv, 1);
+            } else {
+                $updatedEnv = rtrim($updatedEnv, "\r\n")."\n{$line}\n";
+            }
+        }
+
+        $tmpEnv = $envPath.'.tmp.'.bin2hex(random_bytes(4));
+        file_put_contents($tmpEnv, $updatedEnv);
+        @chmod($tmpEnv, 0600);
+        rename($tmpEnv, $envPath);
+
+        // Refresh process environment so config:cache inside this command reads the updated values
+        foreach ($updates as $key => $value) {
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+            putenv("{$key}={$value}");
+        }
+
+        // Apply updated runtime config inside this process before rebuilding caches & SEO
+        config([
+            'app.url' => $cleanUrl,
+            'syncviet.seo.canonical_base_url' => $cleanUrl,
+            'syncviet.domain_migration.primary_url' => $cleanUrl,
+            'syncviet.domain_migration.redirect_enabled' => $redirectFlag === 'true',
+            'syncviet.domain_migration.legacy_hosts' => $parsedLegacy,
+            'syncviet.domain_migration.redirect_www_to_apex' => true,
+        ]);
+
+        Cache::forget(SeoConfigService::CACHE_KEY);
+        Cache::forget(RobotsAndRedirectService::ROBOTS_CACHE_KEY);
+
+        $seoSummary = null;
+        if ((bool) $this->option('rebuild-seo')) {
+            app(SeoConfigService::class)->flushCache();
+            $reg = app(SeoRegistryService::class)->backfillAll();
+            $map = app(SitemapEngineService::class)->rebuildAll();
+            $seoSummary = ['processed' => $reg['processed'], 'eligible' => $reg['eligible'], 'sitemaps' => $map['sitemaps'], 'urls' => $map['urls']];
+        }
+
+        Artisan::call('optimize:clear');
+        Artisan::call('config:cache');
+        Artisan::call('route:cache');
+        Artisan::call('view:cache');
+
+        $this->line(json_encode([
+            'status' => 'ok',
+            'primary_url' => $cleanUrl,
+            'legacy_hosts' => $parsedLegacy,
+            'redirect_enabled' => $redirectFlag === 'true',
+            'google_redirect_updated' => array_key_exists('GOOGLE_REDIRECT_URI', $updates),
+            'seo_rebuilt' => $seoSummary,
+            'backup_file' => basename($backupFile),
+        ], JSON_UNESCAPED_SLASHES) ?: '{}');
+
+        return 0;
+    },
+)->purpose('Safely update allowlisted non-secret domain keys in .env, rebuild caches, and optionally backfill SEO sitemaps');
 
 Schedule::command('app:auth:cleanup-pending')->hourly()->withoutOverlapping();
 

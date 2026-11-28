@@ -2342,7 +2342,7 @@
             "viewPending": "Lihat Pesanan Tertunda"
         },
         "compliance": {
-            "storeNotice": "Pembelian pada versi aplikasi toko resmi mengikuti kebijakan penagihan dalam aplikasi platform resmi. Kelola paket kapan saja di syncviet.com."
+            "storeNotice": "Pembelian pada versi aplikasi toko resmi mengikuti kebijakan penagihan dalam aplikasi platform resmi. Kelola paket kapan saja di {domain}."
         },
         "faq": {
             "title": "Pertanyaan yang Sering Diajukan",

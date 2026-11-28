@@ -45,7 +45,7 @@
 ## 3. Mandatory Pre-Go-Live Conditions (To Move From `CONDITIONALLY READY` -> `READY`)
 
 1. **Apply Symfony Security Patch (`AUD-008`, P1)**: Owner approves and runs `composer update symfony/http-kernel symfony/mailer symfony/routing symfony/serializer` and confirms `composer audit` = `0`.
-2. **Production `.env` & Proxy Security**: Set `APP_ENV=production`, `APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`, `LOG_STACK=daily`, `LOG_DAILY_DAYS=14`, `TRUSTED_PROXIES`, `SEO_CANONICAL_URL=https://syncviet.com`, and strong `PAYMENT_WEBHOOK_SECRET`.
+2. **Production `.env` & Proxy Security**: Set `APP_ENV=production`, `APP_DEBUG=false`, `SESSION_SECURE_COOKIE=true`, `LOG_STACK=daily`, `LOG_DAILY_DAYS=14`, `TRUSTED_PROXIES`, `SEO_CANONICAL_URL=https://sysnoxis.com`, and strong `PAYMENT_WEBHOOK_SECRET`.
 3. **Hostinger Cron Setup**: Enable both `schedule:run` and priority-ordered bounded `queue:work --queue=payments,high,default,seo,ai` via PHP 8.4 in hPanel.
 4. **Legal & Policy Publication**: Review and publish required legal policies in `/admin/policies` and confirm Vietnamese/international regulatory & tax obligations (`docs/LEGAL_LAUNCH_CHECKLIST.md`) prior to Public Launch and prior to accepting real payments.
-5. **Post-Deploy Physical Mobile & PageSpeed Check**: Verify live `https://syncviet.com` on Safari iOS, Chrome Android, and PageSpeed Insights; keep paid/reward campaigns off until live verification passes.
+5. **Post-Deploy Physical Mobile & PageSpeed Check**: Verify live `https://sysnoxis.com` on Safari iOS, Chrome Android, and PageSpeed Insights; keep paid/reward campaigns off until live verification passes.

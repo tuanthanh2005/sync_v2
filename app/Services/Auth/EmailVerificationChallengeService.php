@@ -92,7 +92,7 @@ class EmailVerificationChallengeService
             ]);
         });
 
-        $trustedOrigin = rtrim((string) config('app.url', 'https://syncviet.com'), '/');
+        $trustedOrigin = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/');
         $confirmationUrl = "{$trustedOrigin}/verify-email/confirm/{$rawLinkToken}";
 
         try {
