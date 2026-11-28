@@ -2932,12 +2932,25 @@
         "comingSoon": "قريبًا",
         "modal": {
             "attachmentsLabel": "إضافة إلى منشورك",
-            "continueEditing": "متابعة التحرير",
+            "continueEditing": "متابعة التعديل",
+            "discardEditConfirm": "تجاهل التغييرات",
+            "discardEditDesc": "ستفقد التغييرات غير المحفوظة.",
+            "discardEditTitle": "تجاهل التغييرات؟",
+            "editTitle": "تعديل المنشور",
+            "existingImages": "الصور الحالية ({count})",
+            "imageLimitReached": "تم الوصول إلى الحد الأقصى ({max} صور). أزل صورة حالية لإضافة صورة جديدة.",
             "insertEmoji": "إدراج رمز تعبيري",
             "insertHashtag": "إضافة وسم (هاشتاغ)",
+            "moveImageEarlier": "نقل الصورة للأمام",
+            "moveImageLater": "نقل الصورة للخلف",
             "personalizedPlaceholder": "بمَ تفكر يا {name}؟",
+            "pollLockedNotice": "لا يمكن تعديل الاستطلاعات بعد نشرها لضمان نزاهة التصويت.",
+            "removeExistingImage": "إزالة الصورة",
+            "removeLink": "إزالة الرابط",
             "resumeDraftPrompt": "لديك مسودة غير محفوظة جاهزة للمتابعة.",
-            "title": "إنشاء منشور"
+            "savingChanges": "جارٍ حفظ التغييرات...",
+            "title": "إنشاء منشور",
+            "visibilityCommunity": "مجتمع"
         },
         "videoComingSoonTooltip": "نشر الفيديو قادم قريبًا"
     },

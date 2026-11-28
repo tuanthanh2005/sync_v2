@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "Thêm vào bài viết",
             "continueEditing": "Tiếp tục chỉnh sửa",
+            "discardEditConfirm": "Bỏ thay đổi",
+            "discardEditDesc": "Những thay đổi chưa được lưu sẽ bị mất.",
+            "discardEditTitle": "Bỏ thay đổi?",
+            "editTitle": "Chỉnh sửa bài viết",
+            "existingImages": "Ảnh hiện tại ({count})",
+            "imageLimitReached": "Đã đạt tối đa {max} ảnh. Hãy gỡ bớt ảnh hiện tại nếu muốn thêm ảnh mới.",
             "insertEmoji": "Chèn biểu tượng cảm xúc",
             "insertHashtag": "Thêm hashtag",
+            "moveImageEarlier": "Di chuyển ảnh lên trước",
+            "moveImageLater": "Di chuyển ảnh ra sau",
             "personalizedPlaceholder": "{name} ơi, bạn đang nghĩ gì thế?",
+            "pollLockedNotice": "Bình chọn không thể chỉnh sửa sau khi đăng để đảm bảo tính công bằng.",
+            "removeExistingImage": "Gỡ ảnh",
+            "removeLink": "Gỡ liên kết",
             "resumeDraftPrompt": "Bạn đang có bản nháp chưa đăng, bấm để tiếp tục.",
-            "title": "Tạo bài viết"
+            "savingChanges": "Đang lưu thay đổi...",
+            "title": "Tạo bài viết",
+            "visibilityCommunity": "Cộng đồng"
         },
         "videoComingSoonTooltip": "Tính năng đăng video đang phát triển"
     },

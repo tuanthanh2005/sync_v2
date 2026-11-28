@@ -241,11 +241,26 @@ class PostController extends Controller
         $user = $request->user();
         abort_if($user === null, 403);
 
-        /** @var array{title?: string|null, content: string, category?: string|null} $validated */
+        /** @var array<int, UploadedFile> $uploadedImages */
+        $uploadedImages = $request->file('images', []);
+
+        /** @var array{
+         *     title?: string|null,
+         *     content: string,
+         *     category?: string|null,
+         *     visibility?: string|null,
+         *     link_url?: string|null,
+         *     link_synced?: bool|string|int|null,
+         *     media_synced?: bool|string|int|null,
+         *     existing_media?: list<array{id: int|string, alt_text?: string|null}>|null,
+         *     image_alts?: list<string|null>|null,
+         *     expected_updated_at?: string|null
+         * } $validated
+         */
         $validated = $request->validated();
         $validated['ip_address'] = $request->ip();
 
-        $updated = $this->postService->update($user, $post, $validated);
+        $updated = $this->postService->update($user, $post, $validated, array_values($uploadedImages));
 
         if ($updated->moderation_status === ModerationStatus::Pending) {
             Inertia::flash('toast', [

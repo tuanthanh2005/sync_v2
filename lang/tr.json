@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Politika sayfası başarıyla kaydedildi.",
     "Đã thêm liên kết Footer mới.": "Alt bilgi bağlantısı başarıyla eklendi.",
     "Đã xóa liên kết Footer.": "Alt bilgi bağlantısı başarıyla silindi.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Diğer tüm tarayıcı oturumlarından ve cihazlardan çıkış yapıldı."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Diğer tüm tarayıcı oturumlarından ve cihazlardan çıkış yapıldı.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Bu gönderi başka bir oturumda güncellendi. Kaydetmeden önce lütfen yenileyip en son sürümü inceleyin.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Etkin veya inceleme bekleyen bir reklam kampanyası varken öne çıkarılan gönderiyi gizliye alamazsınız.",
+    "One or more selected media items do not belong to this post.": "Seçilen medya öğelerinden biri veya birkaçı bu gönderiye ait değil."
 }

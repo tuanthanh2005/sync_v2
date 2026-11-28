@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Halaman kebijakan berhasil disimpan.",
     "Đã thêm liên kết Footer mới.": "Tautan footer berhasil ditambahkan.",
     "Đã xóa liên kết Footer.": "Tautan footer berhasil dihapus.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Berhasil keluar dari semua sesi peramban dan perangkat lainnya."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Berhasil keluar dari semua sesi peramban dan perangkat lainnya.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Postingan ini diperbarui di sesi lain. Silakan muat ulang dan tinjau versi terbaru sebelum menyimpan.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Anda tidak dapat mengubah postingan yang dipromosikan menjadi privat saat kampanye iklan aktif atau menunggu tinjauan.",
+    "One or more selected media items do not belong to this post.": "Satu atau beberapa media yang dipilih bukan milik postingan ini."
 }

@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Richtlinienseite erfolgreich gespeichert.",
     "Đã thêm liên kết Footer mới.": "Footer-Link erfolgreich hinzugefügt.",
     "Đã xóa liên kết Footer.": "Footer-Link erfolgreich gelöscht.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Von allen anderen Browsersitzungen und Geräten abgemeldet."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Von allen anderen Browsersitzungen und Geräten abgemeldet.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Dieser Beitrag wurde in einer anderen Sitzung aktualisiert. Bitte laden Sie neu und prüfen Sie die neueste Version vor dem Speichern.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Ein beworbener Beitrag kann während einer aktiven oder zur Prüfung eingereichten Kampagne nicht auf privat gestellt werden.",
+    "One or more selected media items do not belong to this post.": "Mindestens ein ausgewähltes Medium gehört nicht zu diesem Beitrag."
 }

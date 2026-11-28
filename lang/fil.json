@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Matagumpay na nai-save ang pahina ng patakaran.",
     "Đã thêm liên kết Footer mới.": "Matagumpay na naidagdag ang link sa footer.",
     "Đã xóa liên kết Footer.": "Matagumpay na nabura ang link sa footer.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Nag-sign out na mula sa lahat ng iba pang sesyon ng browser at device."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Nag-sign out na mula sa lahat ng iba pang sesyon ng browser at device.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Na-update ang paskil na ito sa ibang session. I-refresh at suriin ang pinakabagong bersyon bago i-save.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Hindi maaaring gawing pribado ang naka-boost na paskil habang may aktibo o nakabinbing ad campaign.",
+    "One or more selected media items do not belong to this post.": "Ang isa o higit pang napiling media ay hindi kabilang sa paskil na ito."
 }

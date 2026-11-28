@@ -2932,12 +2932,25 @@
         "comingSoon": "Bientôt disponible",
         "modal": {
             "attachmentsLabel": "Ajouter à votre publication",
-            "continueEditing": "Continuer la rédaction",
+            "continueEditing": "Continuer la modification",
+            "discardEditConfirm": "Ignorer les modifications",
+            "discardEditDesc": "Vos modifications non enregistrées seront perdues.",
+            "discardEditTitle": "Ignorer les modifications ?",
+            "editTitle": "Modifier la publication",
+            "existingImages": "Photos actuelles ({count})",
+            "imageLimitReached": "Maximum de {max} photos atteint. Supprimez une photo existante pour en ajouter une nouvelle.",
             "insertEmoji": "Insérer un emoji",
             "insertHashtag": "Ajouter un hashtag",
+            "moveImageEarlier": "Déplacer la photo avant",
+            "moveImageLater": "Déplacer la photo après",
             "personalizedPlaceholder": "Qu'avez-vous en tête, {name} ?",
+            "pollLockedNotice": "Les sondages ne peuvent pas être modifiés après publication afin de préserver l’équité.",
+            "removeExistingImage": "Retirer la photo",
+            "removeLink": "Retirer le lien",
             "resumeDraftPrompt": "Vous avez un brouillon non enregistré prêt à être repris.",
-            "title": "Créer une publication"
+            "savingChanges": "Enregistrement des modifications...",
+            "title": "Créer une publication",
+            "visibilityCommunity": "Communauté"
         },
         "videoComingSoonTooltip": "La publication de vidéos sera bientôt disponible"
     },

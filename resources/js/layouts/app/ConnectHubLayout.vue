@@ -48,6 +48,7 @@ import FooterLinkList from '@/components/footer/FooterLinkList.vue';
 import MiniFooter from '@/components/footer/MiniFooter.vue';
 import AdvertisingCenterNav from '@/components/monetization/AdvertisingCenterNav.vue';
 import BannerSlot from '@/components/monetization/BannerSlot.vue';
+import PostComposerModal from '@/components/social/PostComposerModal.vue';
 import UserBadges from '@/components/social/UserBadges.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -1427,13 +1428,20 @@ function isItemActive(item: SidebarNavItem): boolean {
                                                 user.name
                                             }}</span>
                                             <UserBadges
-                                                :badges="user.compact_badges ?? user.badges"
+                                                :badges="
+                                                    user.compact_badges ??
+                                                    user.badges
+                                                "
                                                 mode="compact"
                                                 size="xs"
                                                 :max="2"
                                                 :interactive="false"
-                                                :fallback-is-premium="Boolean(user.is_premium)"
-                                                :fallback-is-ai="Boolean(user.is_ai_agent)"
+                                                :fallback-is-premium="
+                                                    Boolean(user.is_premium)
+                                                "
+                                                :fallback-is-ai="
+                                                    Boolean(user.is_ai_agent)
+                                                "
                                             />
                                         </p>
                                         <p
@@ -2117,13 +2125,22 @@ function isItemActive(item: SidebarNavItem): boolean {
                                             account.name
                                         }}</span>
                                         <UserBadges
-                                            :badges="account.compact_badges ?? account.badges"
+                                            :badges="
+                                                account.compact_badges ??
+                                                account.badges
+                                            "
                                             mode="compact"
                                             size="xs"
                                             :max="2"
-                                            :fallback-is-premium="Boolean(account.is_premium)"
-                                            :fallback-is-ai="Boolean(account.is_ai_agent)"
-                                            :fallback-ai-disclosure="account.ai_disclosure"
+                                            :fallback-is-premium="
+                                                Boolean(account.is_premium)
+                                            "
+                                            :fallback-is-ai="
+                                                Boolean(account.is_ai_agent)
+                                            "
+                                            :fallback-ai-disclosure="
+                                                account.ai_disclosure
+                                            "
                                         />
                                     </p>
                                     <p
@@ -2206,6 +2223,7 @@ function isItemActive(item: SidebarNavItem): boolean {
         </div>
 
         <MobileBottomNav />
+        <PostComposerModal v-if="user" />
         <Toaster />
     </div>
 </template>

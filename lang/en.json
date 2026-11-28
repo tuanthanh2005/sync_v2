@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Policy page saved successfully.",
     "Đã thêm liên kết Footer mới.": "Footer link added successfully.",
     "Đã xóa liên kết Footer.": "Footer link deleted successfully.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Signed out of all other browser sessions and devices."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Signed out of all other browser sessions and devices.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "This post was updated in another session. Please refresh and review the latest version before saving.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "You cannot switch a promoted post to private while an ad campaign is active or pending review.",
+    "One or more selected media items do not belong to this post.": "One or more selected media items do not belong to this post."
 }

@@ -422,7 +422,7 @@
     "Post publishing, anti-spam, and feed settings saved.": "Đã lưu cài đặt đăng bài, chống spam và bảng tin.",
     "Post removed.": "Đã xóa bài viết.",
     "Post unpinned.": "Đã bỏ ghim bài viết.",
-    "Post updated.": "Đã cập nhật bài viết.",
+    "Post updated.": "Đã cập nhật bài viết thành công.",
     "Posting is currently disabled by the administrator.": "Tính năng đăng bài hiện đang tạm tắt bởi quản trị viên.",
     "Posting is currently restricted in this community.": "Việc đăng bài hiện đang bị hạn chế trong cộng đồng này.",
     "Premium Management": "Quản lý SysNoxis Premium",
@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Đã lưu cấu hình trang chính sách.",
     "Đã thêm liên kết Footer mới.": "Đã thêm liên kết Footer mới.",
     "Đã xóa liên kết Footer.": "Đã xóa liên kết Footer.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Bài viết đã được cập nhật ở một phiên khác. Vui lòng tải lại và kiểm tra phiên bản mới nhất trước khi lưu.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Không thể chuyển bài viết đang quảng cáo sang chế độ riêng tư khi chiến dịch đang chạy hoặc chờ duyệt.",
+    "One or more selected media items do not belong to this post.": "Một hoặc nhiều ảnh đã chọn không thuộc bài viết này."
 }

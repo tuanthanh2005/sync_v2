@@ -673,6 +673,7 @@ export type PublicFeedPost = {
     view_analytics?: PostViewAnalytics | null;
     published_at: string | null;
     edited_at?: string | null;
+    updated_at?: string | null;
     edit_count?: number;
     content_origin?: string;
     is_ai_assisted?: boolean;

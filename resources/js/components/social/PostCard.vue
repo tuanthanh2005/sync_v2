@@ -45,10 +45,7 @@ import {
     formatDateTime,
     formatNumber,
 } from '@/lib/formatters';
-import {
-    buildLocalizedPostShareUrl,
-    shareOrCopyLink,
-} from '@/lib/share';
+import { buildLocalizedPostShareUrl, shareOrCopyLink } from '@/lib/share';
 import { appToast } from '@/lib/toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -67,9 +64,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useInitials } from '@/composables/useInitials';
+import { openEditComposer } from '@/composables/useMobileComposer';
 import { login } from '@/routes';
 import type { CategoryOption, PublicFeedPost } from '@/types';
 
@@ -100,7 +97,6 @@ const { getInitials } = useInitials();
 
 const articleRef = ref<HTMLElement | null>(null);
 const isContentExpanded = ref(false);
-const isEditing = ref(false);
 const reportOpen = ref(false);
 const hasOpenedReportModal = ref(false);
 const boostModalOpen = ref(false);
@@ -181,12 +177,6 @@ async function copyPostContent(): Promise<void> {
         appToast.error(t('common.copyFailed'));
     }
 }
-
-const editForm = useForm({
-    title: props.post.title ?? '',
-    content: props.post.content,
-    category: props.post.category,
-});
 
 const reportForm = useForm({
     target_type: 'post',
@@ -364,15 +354,6 @@ async function handleShare(): Promise<void> {
     }
 }
 
-function saveEdit(): void {
-    editForm.patch(PostController.update.url(props.post.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            isEditing.value = false;
-        },
-    });
-}
-
 const deletingPost = ref(false);
 
 function deletePost(): void {
@@ -458,11 +439,16 @@ function submitReport(): void {
                             {{ post.author?.name ?? 'Member' }}
                         </Link>
                         <UserBadges
-                            :badges="post.author?.compact_badges ?? post.author?.badges"
+                            :badges="
+                                post.author?.compact_badges ??
+                                post.author?.badges
+                            "
                             mode="compact"
                             size="sm"
                             :max="2"
-                            :fallback-is-premium="Boolean(post.author?.is_premium)"
+                            :fallback-is-premium="
+                                Boolean(post.author?.is_premium)
+                            "
                             :fallback-is-ai="Boolean(post.author?.is_ai_agent)"
                             :fallback-ai-disclosure="post.author?.ai_disclosure"
                         />
@@ -581,8 +567,9 @@ function submitReport(): void {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         v-if="post.can_edit"
+                        data-test="post-edit-action"
                         class="min-h-10 cursor-pointer"
-                        @click="isEditing = !isEditing"
+                        @click="openEditComposer(post, categories)"
                     >
                         <Pencil class="mr-2 size-4" />
                         <span>{{ t('post.edit') }}</span>
@@ -596,7 +583,11 @@ function submitReport(): void {
                         <span>{{ t('monetization.boost.ctaButton') }}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        v-if="user && user.id !== post.author?.id && !post.is_sponsored"
+                        v-if="
+                            user &&
+                            user.id !== post.author?.id &&
+                            !post.is_sponsored
+                        "
                         class="min-h-10 cursor-pointer"
                         @click="hideFromMyFeed"
                     >
@@ -648,70 +639,27 @@ function submitReport(): void {
                     }}
                 </span>
                 <Link
-                    v-if="post.moderation_status !== 'pending' && user && user.id === post.author?.id"
+                    v-if="
+                        post.moderation_status !== 'pending' &&
+                        user &&
+                        user.id === post.author?.id
+                    "
                     href="/settings/appeals"
                     class="text-[11px] font-medium text-primary hover:underline"
                 >
                     {{ t('post.moderationBanner.appealLink') }}
                 </Link>
             </div>
-            <p v-if="post.moderation_reason" class="mt-1 text-[11px] text-muted-foreground">
+            <p
+                v-if="post.moderation_reason"
+                class="mt-1 text-[11px] text-muted-foreground"
+            >
                 {{ post.moderation_reason }}
             </p>
         </div>
 
-        <!-- Edit form or Content -->
-        <div v-if="isEditing" class="mt-4 space-y-3">
-            <Input
-                v-model="editForm.title"
-                type="text"
-                maxlength="180"
-                :placeholder="t('home.composer.titlePlaceholder')"
-            />
-            <textarea
-                v-model="editForm.content"
-                rows="4"
-                required
-                class="w-full rounded-xl border border-input bg-muted/30 px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <select
-                    v-if="categories.length > 0"
-                    v-model="editForm.category"
-                    class="h-8 rounded-lg border border-input bg-card px-2.5 text-xs"
-                >
-                    <option
-                        v-for="cat in categories"
-                        :key="cat.value"
-                        :value="cat.value"
-                    >
-                        {{ cat.label }}
-                    </option>
-                </select>
-                <div class="flex items-center gap-2">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        class="rounded-lg text-xs"
-                        @click="isEditing = false"
-                    >
-                        {{ t('post.cancel') }}
-                    </Button>
-                    <Button
-                        type="button"
-                        size="sm"
-                        class="rounded-lg text-xs"
-                        :disabled="editForm.processing"
-                        @click="saveEdit"
-                    >
-                        {{ t('post.saveChanges') }}
-                    </Button>
-                </div>
-            </div>
-        </div>
-
-        <div v-else class="mt-3 space-y-3">
+        <!-- Post Content -->
+        <div class="mt-3 space-y-3">
             <h2
                 v-if="post.title"
                 class="text-base leading-snug font-bold [overflow-wrap:anywhere] break-words text-foreground sm:text-lg"

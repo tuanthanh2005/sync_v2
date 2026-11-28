@@ -2932,12 +2932,25 @@
         "comingSoon": "Coming soon",
         "modal": {
             "attachmentsLabel": "Add to your post",
-            "continueEditing": "Keep editing",
+            "continueEditing": "Continue editing",
+            "discardEditConfirm": "Discard changes",
+            "discardEditDesc": "Your unsaved changes will be lost.",
+            "discardEditTitle": "Discard changes?",
+            "editTitle": "Edit post",
+            "existingImages": "Current photos ({count})",
+            "imageLimitReached": "Maximum of {max} photos reached. Remove an existing photo to add a new one.",
             "insertEmoji": "Insert emoji",
             "insertHashtag": "Add hashtag",
+            "moveImageEarlier": "Move photo earlier",
+            "moveImageLater": "Move photo later",
             "personalizedPlaceholder": "What's on your mind, {name}?",
+            "pollLockedNotice": "Polls cannot be edited once published to keep voting results fair.",
+            "removeExistingImage": "Remove photo",
+            "removeLink": "Remove link",
             "resumeDraftPrompt": "You have an unsaved draft ready to continue.",
-            "title": "Create post"
+            "savingChanges": "Saving changes...",
+            "title": "Create post",
+            "visibilityCommunity": "Community"
         },
         "videoComingSoonTooltip": "Video posting is coming soon"
     },

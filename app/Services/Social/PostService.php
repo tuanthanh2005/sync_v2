@@ -33,6 +33,7 @@ use App\Services\Notification\NotificationService;
 use App\Services\Security\AuditLogger;
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -360,9 +361,22 @@ class PostService
      * Update an existing post while preserving published_at & historical engagement,
      * incrementing edit_count, and re-running Anti-Spam & Moderation safeguards.
      *
-     * @param  array{title?: string|null, content: string, category?: string|null, ip_address?: string|null}  $data
+     * @param  array{
+     *     title?: string|null,
+     *     content: string,
+     *     category?: string|null,
+     *     visibility?: string|null,
+     *     link_url?: string|null,
+     *     link_synced?: bool|string|int|null,
+     *     media_synced?: bool|string|int|null,
+     *     existing_media?: list<array{id: int|string, alt_text?: string|null}>|null,
+     *     image_alts?: list<string|null>|null,
+     *     expected_updated_at?: string|null,
+     *     ip_address?: string|null
+     * }  $data
+     * @param  list<UploadedFile>  $images
      */
-    public function update(User $actor, Post $post, array $data): Post
+    public function update(User $actor, Post $post, array $data, array $images = []): Post
     {
         $policyConfig = app(PostingPolicyConfigService::class);
         $trustResolver = app(TrustLevelResolver::class);
@@ -383,6 +397,12 @@ class PostService
             }
         }
 
+        if ($images !== [] && ! $this->settings->featureEnabled('feature_image_upload')) {
+            throw ValidationException::withMessages([
+                'images' => [__('Image uploads are currently disabled.')],
+            ]);
+        }
+
         $rateLimiter->assertCanEditPost($actor, $ipAddress);
 
         $cleanContent = $duplicateDetector->stripInvisibleOnly($data['content']);
@@ -392,11 +412,93 @@ class PostService
             ]);
         }
 
-        $maxLength = max(100, (int) $trustResolver->limitsFor($actor)['max_post_length']);
+        $limits = $trustResolver->limitsFor($actor);
+        $maxLength = max(100, (int) $limits['max_post_length']);
         if (mb_strlen($cleanContent) > $maxLength) {
             throw ValidationException::withMessages([
                 'content' => [__('Post content exceeds the maximum allowed length of :max characters.', ['max' => $maxLength])],
             ]);
+        }
+
+        $linkSynced = array_key_exists('link_url', $data)
+            || filter_var($data['link_synced'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $linkUrl = $post->link_url;
+        $linkMeta = $post->link_meta;
+
+        if ($linkSynced) {
+            $rawLink = isset($data['link_url']) ? trim((string) $data['link_url']) : '';
+            $linkUrl = $rawLink !== '' ? $rawLink : null;
+
+            if ($linkUrl !== null && ! $this->linkPreviewService->isSafePublicUrl($linkUrl)) {
+                throw ValidationException::withMessages([
+                    'link_url' => [__('The provided link URL is blocked or invalid.')],
+                ]);
+            }
+
+            if ($linkUrl === null) {
+                $linkMeta = null;
+            } elseif ($linkUrl !== $post->link_url) {
+                $linkMeta = $this->linkPreviewService->fetch($linkUrl);
+            }
+        }
+
+        $nextVisibility = $post->visibility;
+        if ($post->community_id === null && isset($data['visibility'])) {
+            $candidateVisibility = PostVisibility::tryFrom((string) $data['visibility']);
+            if ($candidateVisibility === PostVisibility::Public || $candidateVisibility === PostVisibility::Private) {
+                if (
+                    $candidateVisibility === PostVisibility::Private
+                    && $post->visibility !== PostVisibility::Private
+                    && AdCampaign::query()
+                        ->where('post_id', $post->id)
+                        ->whereIn('status', [
+                            AdCampaignStatus::PendingReview->value,
+                            AdCampaignStatus::Active->value,
+                            AdCampaignStatus::Paused->value,
+                        ])
+                        ->exists()
+                ) {
+                    throw ValidationException::withMessages([
+                        'visibility' => [__('You cannot switch a promoted post to private while an ad campaign is active or pending review.')],
+                    ]);
+                }
+
+                $nextVisibility = $candidateVisibility;
+            }
+        }
+
+        $mediaSynced = $images !== []
+            || filter_var($data['media_synced'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $maxImages = max(1, min(10, (int) $limits['max_images_per_post']));
+
+        /** @var list<array{id: int, alt_text: ?string}> $keptEntries */
+        $keptEntries = [];
+        if ($mediaSynced) {
+            $existingRows = $post->media()->get()->keyBy('id');
+            $seenIds = [];
+            foreach (($data['existing_media'] ?? []) as $item) {
+                $mediaId = (int) $item['id'];
+                if ($mediaId <= 0 || isset($seenIds[$mediaId])) {
+                    continue;
+                }
+                if (! $existingRows->has($mediaId)) {
+                    throw ValidationException::withMessages([
+                        'images' => [__('One or more selected media items do not belong to this post.')],
+                    ]);
+                }
+                $seenIds[$mediaId] = true;
+                $rawAlt = isset($item['alt_text']) ? trim((string) $item['alt_text']) : '';
+                $keptEntries[] = [
+                    'id' => $mediaId,
+                    'alt_text' => $rawAlt !== '' ? mb_substr($rawAlt, 0, 250) : null,
+                ];
+            }
+
+            if (count($keptEntries) + count($images) > $maxImages) {
+                throw ValidationException::withMessages([
+                    'images' => [__('You can attach up to :max images per post at your current trust tier.', ['max' => $maxImages])],
+                ]);
+            }
         }
 
         $evaluation = $antiSpam->evaluatePost(
@@ -405,7 +507,7 @@ class PostService
                 'title' => isset($data['title']) ? (string) $data['title'] : null,
                 'content' => $cleanContent,
                 'community_id' => $post->community_id,
-                'link_url' => $post->link_url,
+                'link_url' => $linkUrl,
                 'ip_address' => $ipAddress,
             ],
             actionContext: 'post.edit',
@@ -413,41 +515,145 @@ class PostService
         );
 
         $category = PostCategory::tryFrom((string) ($data['category'] ?? '')) ?? $post->category;
+        $imageAlts = $data['image_alts'] ?? [];
+        $storedImages = [];
+        $removedMediaFiles = [];
 
-        DB::transaction(function () use ($actor, $post, $category, $evaluation, $rateLimiter, $ipAddress): void {
-            $editHistory = new PostEditHistory([
-                'previous_title' => $post->title,
-                'previous_content' => $post->content,
-            ]);
-            $editHistory->post_id = $post->id;
-            $editHistory->editor_id = $actor->id;
-            $editHistory->created_at = now();
-            $editHistory->save();
-
-            $post->forceFill([
-                'title' => $evaluation['filtered_title'],
-                'content' => $evaluation['filtered_content'],
-                'category' => $category->value,
-                'edited_at' => now(),
-                'edit_count' => (int) $post->edit_count + 1,
-                'moderation_status' => $evaluation['moderation_status'],
-                'lifecycle_status' => $evaluation['lifecycle_status'],
-                'moderation_reason' => $evaluation['moderation_reason'],
-                'spam_risk_score' => $evaluation['risk_score'],
-                'content_fingerprint' => $evaluation['content_fingerprint'],
-                'link_fingerprint' => $evaluation['link_fingerprint'],
-                'needs_rerank' => $evaluation['moderation_status'] === ModerationStatus::Approved,
-            ])->save();
-
-            if ($evaluation['moderation_status'] !== ModerationStatus::Approved) {
-                $this->stopCampaignsForPost($post, __('Promoted post entered moderation review after editing; remaining budget refunded.'));
+        try {
+            if ($mediaSynced && $images !== []) {
+                foreach (array_slice($images, 0, max(0, $maxImages - count($keptEntries))) as $image) {
+                    $storedImages[] = $this->imageUploadService->storeImage($image, 'posts', 'post', 'images', true);
+                }
             }
 
-            if (! $actor->isAiAgent()) {
-                $rateLimiter->recordUsage($actor, 'edit', $post->id, $ipAddress);
-            }
-        });
+            DB::transaction(function () use (
+                $actor,
+                $post,
+                $data,
+                $category,
+                $nextVisibility,
+                $linkUrl,
+                $linkMeta,
+                $mediaSynced,
+                $keptEntries,
+                $storedImages,
+                $imageAlts,
+                $evaluation,
+                $rateLimiter,
+                $ipAddress,
+                &$removedMediaFiles,
+            ): void {
+                /** @var Post $lockedPost */
+                $lockedPost = Post::query()->whereKey($post->id)->lockForUpdate()->firstOrFail();
 
+                if (isset($data['expected_updated_at']) && trim($data['expected_updated_at']) !== '') {
+                    $expectedTime = Carbon::parse(trim($data['expected_updated_at']))->getTimestamp();
+                    $actualTime = ($lockedPost->updated_at ?? $lockedPost->created_at)?->getTimestamp();
+                    if ($actualTime !== null && $expectedTime !== $actualTime) {
+                        throw ValidationException::withMessages([
+                            'content' => [__('This post was updated in another session. Please refresh and review the latest version before saving.')],
+                        ]);
+                    }
+                }
+
+                $editHistory = new PostEditHistory([
+                    'previous_title' => $lockedPost->title,
+                    'previous_content' => $lockedPost->content,
+                ]);
+                $editHistory->post_id = $lockedPost->id;
+                $editHistory->editor_id = $actor->id;
+                $editHistory->created_at = now();
+                $editHistory->save();
+
+                $lockedPost->forceFill([
+                    'title' => $evaluation['filtered_title'],
+                    'content' => $evaluation['filtered_content'],
+                    'category' => $category->value,
+                    'visibility' => $nextVisibility->value,
+                    'link_url' => $linkUrl,
+                    'link_meta' => $linkMeta,
+                    'edited_at' => now(),
+                    'edit_count' => (int) $lockedPost->edit_count + 1,
+                    'moderation_status' => $evaluation['moderation_status'],
+                    'lifecycle_status' => $evaluation['lifecycle_status'],
+                    'moderation_reason' => $evaluation['moderation_reason'],
+                    'spam_risk_score' => $evaluation['risk_score'],
+                    'content_fingerprint' => $evaluation['content_fingerprint'],
+                    'link_fingerprint' => $evaluation['link_fingerprint'],
+                    'needs_rerank' => $evaluation['moderation_status'] === ModerationStatus::Approved,
+                ])->save();
+
+                if ($mediaSynced) {
+                    $existingMedia = $lockedPost->media()->get()->keyBy('id');
+                    $keptIds = [];
+
+                    foreach ($keptEntries as $sortOrder => $entry) {
+                        $mediaModel = $existingMedia->get($entry['id']);
+                        if ($mediaModel instanceof PostMedia) {
+                            $mediaModel->forceFill([
+                                'sort_order' => $sortOrder,
+                                'alt_text' => $entry['alt_text'],
+                            ])->save();
+                            $keptIds[] = $mediaModel->id;
+                        }
+                    }
+
+                    $baseOrder = count($keptIds);
+                    foreach ($storedImages as $offset => $mediaInfo) {
+                        $rawAlt = isset($imageAlts[$offset]) ? trim((string) $imageAlts[$offset]) : '';
+                        $media = new PostMedia([
+                            'disk' => $mediaInfo['disk'],
+                            'path' => $mediaInfo['path'],
+                            'mime_type' => $mediaInfo['mime_type'],
+                            'width' => $mediaInfo['width'],
+                            'height' => $mediaInfo['height'],
+                            'size_bytes' => $mediaInfo['size_bytes'],
+                            'alt_text' => $rawAlt !== '' ? mb_substr($rawAlt, 0, 250) : null,
+                            'sort_order' => $baseOrder + $offset,
+                        ]);
+                        $media->post_id = $lockedPost->id;
+                        $media->user_id = $actor->id;
+                        $media->save();
+                    }
+
+                    foreach ($existingMedia as $existingRow) {
+                        if (! in_array($existingRow->id, $keptIds, true)) {
+                            $removedMediaFiles[] = [
+                                'disk' => $existingRow->disk,
+                                'path' => $existingRow->path,
+                            ];
+                            $existingRow->delete();
+                        }
+                    }
+                }
+
+                if ($evaluation['moderation_status'] !== ModerationStatus::Approved) {
+                    $this->stopCampaignsForPost($lockedPost, __('Promoted post entered moderation review after editing; remaining budget refunded.'));
+                }
+
+                if (! $actor->isAiAgent()) {
+                    $rateLimiter->recordUsage($actor, 'edit', $lockedPost->id, $ipAddress);
+                }
+            });
+        } catch (\Throwable $exception) {
+            foreach ($storedImages as $mediaInfo) {
+                $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['path']);
+                $this->imageUploadService->deleteIfExists($mediaInfo['disk'], $mediaInfo['thumbnail_path']);
+            }
+
+            throw $exception;
+        }
+
+        if ($removedMediaFiles !== []) {
+            $imageUploadService = $this->imageUploadService;
+            DB::afterCommit(static function () use ($imageUploadService, $removedMediaFiles): void {
+                foreach ($removedMediaFiles as $file) {
+                    $imageUploadService->deleteIfExists($file['disk'], $file['path']);
+                }
+            });
+        }
+
+        $post->refresh();
         $this->hashtagService->syncForPost($post);
         $antiSpam->logPostEvaluationIfNotable($actor, $post, $evaluation, 'post.edit', $ipAddress);
 

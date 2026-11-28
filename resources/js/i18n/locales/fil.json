@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "Idagdag sa iyong post",
             "continueEditing": "Ipagpatuloy ang pag-edit",
+            "discardEditConfirm": "Itapon ang mga pagbabago",
+            "discardEditDesc": "Mawawala ang mga pagbabagong hindi na-save.",
+            "discardEditTitle": "Itapon ang mga pagbabago?",
+            "editTitle": "I-edit ang paskil",
+            "existingImages": "Mga kasalukuyang larawan ({count})",
+            "imageLimitReached": "Naabot na ang maximum na {max} larawan. Mag-alis ng kasalukuyang larawan bago magdagdag.",
             "insertEmoji": "Magpasok ng emoji",
             "insertHashtag": "Magdagdag ng hashtag",
+            "moveImageEarlier": "Ilipat ang larawan pauna",
+            "moveImageLater": "Ilipat ang larawan pahuli",
             "personalizedPlaceholder": "Ano ang nasa isip mo, {name}?",
+            "pollLockedNotice": "Hindi maaaring i-edit ang mga poll pagkatapos mailathala upang manatiling patas ang boto.",
+            "removeExistingImage": "Alisin ang larawan",
+            "removeLink": "Alisin ang link",
             "resumeDraftPrompt": "Mayroon kang hindi na-save na burador na handang ipagpatuloy.",
-            "title": "Gumawa ng post"
+            "savingChanges": "Sine-save ang mga pagbabago...",
+            "title": "Gumawa ng post",
+            "visibilityCommunity": "Komunidad"
         },
         "videoComingSoonTooltip": "Malapit na ang pag-post ng video"
     },

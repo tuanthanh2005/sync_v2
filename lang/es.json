@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Página de política guardada correctamente.",
     "Đã thêm liên kết Footer mới.": "Enlace del pie de página añadido correctamente.",
     "Đã xóa liên kết Footer.": "Enlace del pie de página eliminado correctamente.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Se ha cerrado la sesión en todos los demás navegadores y dispositivos."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Se ha cerrado la sesión en todos los demás navegadores y dispositivos.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Esta publicación se actualizó en otra sesión. Recarga y revisa la versión más reciente antes de guardar.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "No puedes cambiar una publicación promocionada a privada mientras haya una campaña activa o en revisión.",
+    "One or more selected media items do not belong to this post.": "Uno o más archivos multimedia seleccionados no pertenecen a esta publicación."
 }

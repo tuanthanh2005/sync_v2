@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "Zum Beitrag hinzufügen",
             "continueEditing": "Weiter bearbeiten",
+            "discardEditConfirm": "Änderungen verwerfen",
+            "discardEditDesc": "Ihre nicht gespeicherten Änderungen gehen verloren.",
+            "discardEditTitle": "Änderungen verwerfen?",
+            "editTitle": "Beitrag bearbeiten",
+            "existingImages": "Aktuelle Fotos ({count})",
+            "imageLimitReached": "Maximal {max} Fotos erreicht. Entfernen Sie ein vorhandenes Foto, um ein neues hinzuzufügen.",
             "insertEmoji": "Emoji einfügen",
             "insertHashtag": "Hashtag hinzufügen",
+            "moveImageEarlier": "Foto nach vorne verschieben",
+            "moveImageLater": "Foto nach hinten verschieben",
             "personalizedPlaceholder": "Was beschäftigt Sie, {name}?",
+            "pollLockedNotice": "Umfragen können nach der Veröffentlichung nicht bearbeitet werden, um faire Ergebnisse zu sichern.",
+            "removeExistingImage": "Foto entfernen",
+            "removeLink": "Link entfernen",
             "resumeDraftPrompt": "Sie haben einen ungespeicherten Entwurf, den Sie fortsetzen können.",
-            "title": "Beitrag erstellen"
+            "savingChanges": "Änderungen werden gespeichert...",
+            "title": "Beitrag erstellen",
+            "visibilityCommunity": "Community"
         },
         "videoComingSoonTooltip": "Das Veröffentlichen von Videos ist demnächst verfügbar"
     },

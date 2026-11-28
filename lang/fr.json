@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "Page de politique enregistrée avec succès.",
     "Đã thêm liên kết Footer mới.": "Lien de pied de page ajouté avec succès.",
     "Đã xóa liên kết Footer.": "Lien de pied de page supprimé avec succès.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Déconnecté de tous les autres navigateurs et appareils."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "Déconnecté de tous les autres navigateurs et appareils.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "Cette publication a été modifiée dans une autre session. Actualisez la page et vérifiez la dernière version avant d’enregistrer.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "Impossible de passer une publication sponsorisée en privé tant qu’une campagne publicitaire est active ou en attente de validation.",
+    "One or more selected media items do not belong to this post.": "Un ou plusieurs médias sélectionnés n’appartiennent pas à cette publication."
 }

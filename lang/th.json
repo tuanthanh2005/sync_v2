@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "บันทึกหน้านโยบายเรียบร้อยแล้ว",
     "Đã thêm liên kết Footer mới.": "เพิ่มลิงก์ส่วนท้ายเว็บเรียบร้อยแล้ว",
     "Đã xóa liên kết Footer.": "ลบลิงก์ส่วนท้ายเว็บเรียบร้อยแล้ว",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "ออกจากระบบในเซสชันเบราว์เซอร์และอุปกรณ์อื่นทั้งหมดแล้ว"
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "ออกจากระบบในเซสชันเบราว์เซอร์และอุปกรณ์อื่นทั้งหมดแล้ว",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "โพสต์นี้ถูกอัปเดตในเซสชันอื่น โปรดรีเฟรชและตรวจสอบเวอร์ชันล่าสุดก่อนบันทึก",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "ไม่สามารถเปลี่ยนโพสต์ที่กำลังโปรโมตเป็นส่วนตัวได้ขณะแคมเปญโฆษณาทำงานอยู่หรือรอตรวจสอบ",
+    "One or more selected media items do not belong to this post.": "สื่อที่เลือกอย่างน้อยหนึ่งรายการไม่ได้เป็นของโพสต์นี้"
 }

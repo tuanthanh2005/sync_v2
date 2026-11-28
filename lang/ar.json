@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "تم حفظ صفحة السياسة بنجاح.",
     "Đã thêm liên kết Footer mới.": "تمت إضافة رابط التذييل بنجاح.",
     "Đã xóa liên kết Footer.": "تم حذف رابط التذييل بنجاح.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "تم تسجيل الخروج من جميع جلسات المتصفح والأجهزة الأخرى."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "تم تسجيل الخروج من جميع جلسات المتصفح والأجهزة الأخرى.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "تم تحديث هذا المنشور في جلسة أخرى. يرجى التحديث ومراجعة أحدث نسخة قبل الحفظ.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "لا يمكنك تحويل منشور مروّج إلى خاص أثناء نشاط حملة إعلانية أو انتظار مراجعتها.",
+    "One or more selected media items do not belong to this post.": "عنصر وسائط واحد أو أكثر من العناصر المحددة لا ينتمي إلى هذا المنشور."
 }

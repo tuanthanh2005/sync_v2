@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "Gönderine ekle",
             "continueEditing": "Düzenlemeye devam et",
+            "discardEditConfirm": "Değişikliklerden vazgeç",
+            "discardEditDesc": "Kaydedilmemiş değişiklikleriniz kaybolacak.",
+            "discardEditTitle": "Değişikliklerden vazgeçilsin mi?",
+            "editTitle": "Gönderiyi düzenle",
+            "existingImages": "Mevcut fotoğraflar ({count})",
+            "imageLimitReached": "Maksimum {max} fotoğraf sınırına ulaşıldı. Yeni eklemek için mevcut bir fotoğrafı kaldırın.",
             "insertEmoji": "Emoji ekle",
             "insertHashtag": "Etiket (hashtag) ekle",
+            "moveImageEarlier": "Fotoğrafı öne taşı",
+            "moveImageLater": "Fotoğrafı arkaya taşı",
             "personalizedPlaceholder": "Aklında ne var, {name}?",
+            "pollLockedNotice": "Oylama sonuçlarının adil kalması için anketler yayınlandıktan sonra düzenlenemez.",
+            "removeExistingImage": "Fotoğrafı kaldır",
+            "removeLink": "Bağlantıyı kaldır",
             "resumeDraftPrompt": "Devam etmeye hazır kaydedilmemiş bir taslağınız var.",
-            "title": "Gönderi oluştur"
+            "savingChanges": "Değişiklikler kaydediliyor...",
+            "title": "Gönderi oluştur",
+            "visibilityCommunity": "Topluluk"
         },
         "videoComingSoonTooltip": "Video paylaşımı yakında geliyor"
     },

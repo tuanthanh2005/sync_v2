@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "เพิ่มลงในโพสต์ของคุณ",
             "continueEditing": "แก้ไขต่อ",
+            "discardEditConfirm": "ละทิ้งการเปลี่ยนแปลง",
+            "discardEditDesc": "การเปลี่ยนแปลงที่ยังไม่ได้บันทึกจะหายไป",
+            "discardEditTitle": "ละทิ้งการเปลี่ยนแปลงหรือไม่?",
+            "editTitle": "แก้ไขโพสต์",
+            "existingImages": "รูปภาพปัจจุบัน ({count})",
+            "imageLimitReached": "ครบจำนวนสูงสุด {max} รูปแล้ว ลบรูปที่มีอยู่เพื่อเพิ่มรูปใหม่",
             "insertEmoji": "แทรกอีโมจิ",
             "insertHashtag": "เพิ่มแฮชแท็ก",
+            "moveImageEarlier": "เลื่อนรูปขึ้นก่อนหน้า",
+            "moveImageLater": "เลื่อนรูปไปถัดไป",
             "personalizedPlaceholder": "คุณกำลังคิดอะไรอยู่ {name}?",
+            "pollLockedNotice": "ไม่สามารถแก้ไขโพลหลังเผยแพร่เพื่อความยุติธรรมของผลโหวต",
+            "removeExistingImage": "ลบรูปภาพ",
+            "removeLink": "ลบลิงก์",
             "resumeDraftPrompt": "คุณมีฉบับร่างที่ยังไม่ได้บันทึกพร้อมให้ทำต่อ",
-            "title": "สร้างโพสต์"
+            "savingChanges": "กำลังบันทึกการเปลี่ยนแปลง...",
+            "title": "สร้างโพสต์",
+            "visibilityCommunity": "ชุมชน"
         },
         "videoComingSoonTooltip": "ฟีเจอร์โพสต์วิดีโอจะเปิดให้บริการเร็วๆ นี้"
     },

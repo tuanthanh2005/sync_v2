@@ -339,6 +339,7 @@ class FeedService
                 : null,
             'published_at' => ($post->published_at ?? $post->created_at)?->toIso8601String(),
             'edited_at' => $post->edited_at?->toIso8601String(),
+            'updated_at' => $post->updated_at?->toIso8601String(),
             'edit_count' => (int) ($post->edit_count ?? 0),
             'content_origin' => $post->content_origin->value,
             'is_ai_assisted' => (bool) $post->is_ai_assisted,

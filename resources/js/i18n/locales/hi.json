@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "अपनी पोस्ट में जोड़ें",
             "continueEditing": "संपादन जारी रखें",
+            "discardEditConfirm": "बदलाव हटाएँ",
+            "discardEditDesc": "आपके बिना सहेजे गए बदलाव खो जाएँगे।",
+            "discardEditTitle": "बदलाव हटाएँ?",
+            "editTitle": "पोस्ट संपादित करें",
+            "existingImages": "वर्तमान फ़ोटो ({count})",
+            "imageLimitReached": "अधिकतम {max} फ़ोटो की सीमा पूरी हो गई। नई फ़ोटो जोड़ने के लिए मौजूदा फ़ोटो हटाएँ।",
             "insertEmoji": "इमोजी डालें",
             "insertHashtag": "हैशटैग जोड़ें",
+            "moveImageEarlier": "फ़ोटो को पहले लाएँ",
+            "moveImageLater": "फ़ोटो को बाद में ले जाएँ",
             "personalizedPlaceholder": "{name}, आपके मन में क्या है?",
+            "pollLockedNotice": "मतदान के परिणाम निष्पक्ष रखने के लिए प्रकाशित होने के बाद पोल संपादित नहीं किए जा सकते।",
+            "removeExistingImage": "फ़ोटो हटाएँ",
+            "removeLink": "लिंक हटाएँ",
             "resumeDraftPrompt": "आपके पास एक सहेजा न गया ड्राफ़्ट है जिसे आप जारी रख सकते हैं।",
-            "title": "पोस्ट बनाएं"
+            "savingChanges": "बदलाव सहेजे जा रहे हैं...",
+            "title": "पोस्ट बनाएं",
+            "visibilityCommunity": "समुदाय"
         },
         "videoComingSoonTooltip": "वीडियो पोस्ट करने की सुविधा जल्द आ रही है"
     },

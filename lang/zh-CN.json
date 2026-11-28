@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "政策页面保存成功。",
     "Đã thêm liên kết Footer mới.": "页脚链接添加成功。",
     "Đã xóa liên kết Footer.": "页脚链接删除成功。",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "已退出其他所有浏览器会话与设备。"
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "已退出其他所有浏览器会话与设备。",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "该帖子已在另一会话中被更新。请刷新并查看最新版本后再保存。",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "当广告活动正在投放或等待审核时，无法将推广帖子设为私密。",
+    "One or more selected media items do not belong to this post.": "所选媒体项中的一个或多个不属于此帖子。"
 }

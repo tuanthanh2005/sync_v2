@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "정책 페이지가 저장되었습니다.",
     "Đã thêm liên kết Footer mới.": "푸터 링크가 추가되었습니다.",
     "Đã xóa liên kết Footer.": "푸터 링크가 삭제되었습니다.",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "다른 모든 브라우저 세션 및 기기에서 로그아웃되었습니다."
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "다른 모든 브라우저 세션 및 기기에서 로그아웃되었습니다.",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "이 게시물은 다른 세션에서 수정되었습니다. 저장하기 전에 새로고침하여 최신 버전을 확인하세요.",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "광고 캠페인이 진행 중이거나 검토 대기 중인 홍보 게시물은 비공개로 전환할 수 없습니다.",
+    "One or more selected media items do not belong to this post.": "선택한 미디어 중 하나 이상이 이 게시물에 속하지 않습니다."
 }

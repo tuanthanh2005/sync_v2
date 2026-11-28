@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "添加到帖子",
             "continueEditing": "继续编辑",
+            "discardEditConfirm": "放弃更改",
+            "discardEditDesc": "未保存的更改将会丢失。",
+            "discardEditTitle": "放弃更改？",
+            "editTitle": "编辑帖子",
+            "existingImages": "当前图片 ({count})",
+            "imageLimitReached": "已达 {max} 张图片上限。请先移除现有图片后再添加新图片。",
             "insertEmoji": "插入表情",
             "insertHashtag": "添加话题标签",
+            "moveImageEarlier": "将图片前移",
+            "moveImageLater": "将图片后移",
             "personalizedPlaceholder": "{name}，此刻你在想什么？",
+            "pollLockedNotice": "为保证投票结果公正，发布后的投票不可编辑。",
+            "removeExistingImage": "移除图片",
+            "removeLink": "移除链接",
             "resumeDraftPrompt": "您有一份未保存的草稿，点击可继续编辑。",
-            "title": "创建帖子"
+            "savingChanges": "正在保存更改...",
+            "title": "创建帖子",
+            "visibilityCommunity": "社区"
         },
         "videoComingSoonTooltip": "视频发布功能即将推出"
     },

@@ -2,6 +2,7 @@ import type { Directive } from 'vue';
 import type { Auth } from '@/types/auth';
 import type {
     AdminPendingCounts,
+    CategoryOption,
     FooterSharedData,
     MonetizationQuickShared,
     PublicLanguageItem,
@@ -34,6 +35,7 @@ declare module '@inertiajs/core' {
             translationOverrides: Record<string, string>;
             supportedLocales: string[];
             systemSettings: SystemSettingsPublic;
+            postCategories?: CategoryOption[];
             footer: FooterSharedData;
             sidebarHighlights: SidebarHighlights;
             monetizationQuick: MonetizationQuickShared | null;

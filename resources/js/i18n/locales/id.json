@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "Tambahkan ke postingan Anda",
             "continueEditing": "Lanjutkan mengedit",
+            "discardEditConfirm": "Buang perubahan",
+            "discardEditDesc": "Perubahan yang belum disimpan akan hilang.",
+            "discardEditTitle": "Buang perubahan?",
+            "editTitle": "Edit postingan",
+            "existingImages": "Foto saat ini ({count})",
+            "imageLimitReached": "Maksimal {max} foto tercapai. Hapus foto yang ada untuk menambahkan yang baru.",
             "insertEmoji": "Sisipkan emoji",
             "insertHashtag": "Tambahkan tagar",
+            "moveImageEarlier": "Pindahkan foto ke depan",
+            "moveImageLater": "Pindahkan foto ke belakang",
             "personalizedPlaceholder": "Apa yang sedang Anda pikirkan, {name}?",
+            "pollLockedNotice": "Jajak pendapat tidak dapat diedit setelah diterbitkan agar hasil voting tetap adil.",
+            "removeExistingImage": "Hapus foto",
+            "removeLink": "Hapus tautan",
             "resumeDraftPrompt": "Anda memiliki draf yang belum disimpan dan siap dilanjutkan.",
-            "title": "Buat postingan"
+            "savingChanges": "Menyimpan perubahan...",
+            "title": "Buat postingan",
+            "visibilityCommunity": "Komunitas"
         },
         "videoComingSoonTooltip": "Fitur posting video akan segera hadir"
     },

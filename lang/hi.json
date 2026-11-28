@@ -776,5 +776,8 @@
     "Đã lưu cấu hình trang chính sách.": "नीति पृष्ठ सफलतापूर्वक सहेजा गया।",
     "Đã thêm liên kết Footer mới.": "फ़ुटर लिंक सफलतापूर्वक जोड़ा गया।",
     "Đã xóa liên kết Footer.": "फ़ुटर लिंक सफलतापूर्वक हटाया गया।",
-    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "अन्य सभी ब्राउज़र सत्रों और उपकरणों से साइन आउट हो गया।"
+    "Đã đăng xuất khỏi tất cả thiết bị và phiên trình duyệt khác.": "अन्य सभी ब्राउज़र सत्रों और उपकरणों से साइन आउट हो गया।",
+    "This post was updated in another session. Please refresh and review the latest version before saving.": "यह पोस्ट किसी अन्य सत्र में अपडेट की गई थी। सहेजने से पहले कृपया रीफ़्रेश करें और नवीनतम संस्करण देखें।",
+    "You cannot switch a promoted post to private while an ad campaign is active or pending review.": "जब कोई विज्ञापन अभियान सक्रिय या समीक्षाधीन हो, तब आप प्रमोटेड पोस्ट को निजी नहीं कर सकते।",
+    "One or more selected media items do not belong to this post.": "चयनित एक या अधिक मीडिया आइटम इस पोस्ट से संबंधित नहीं हैं।"
 }

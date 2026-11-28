@@ -6,6 +6,7 @@ use App\Enums\AdCampaignStatus;
 use App\Enums\AiDraftStatus;
 use App\Enums\BannerCampaignStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\PostCategory;
 use App\Enums\ReportStatus;
 use App\Models\AdCampaign;
 use App\Models\AiContentDraft;
@@ -115,6 +116,7 @@ class HandleInertiaRequests extends Middleware
             'translationOverrides' => $this->languageService->overridesForLocale($locale),
             'supportedLocales' => $this->languageService->enabledCodes(),
             'systemSettings' => $systemPublic,
+            'postCategories' => PostCategory::options(),
             'footer' => $this->footerMenuService->shared($locale),
             'sidebarHighlights' => [
                 'trendingHashtags' => $this->hashtagService->trending(5),

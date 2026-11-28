@@ -2933,11 +2933,24 @@
         "modal": {
             "attachmentsLabel": "投稿に追加",
             "continueEditing": "編集を続ける",
+            "discardEditConfirm": "変更を破棄",
+            "discardEditDesc": "保存されていない変更は失われます。",
+            "discardEditTitle": "変更を破棄しますか？",
+            "editTitle": "投稿を編集",
+            "existingImages": "現在の写真 ({count})",
+            "imageLimitReached": "写真は最大{max}枚までです。新しい写真を追加するには既存の写真を削除してください。",
             "insertEmoji": "絵文字を挿入",
             "insertHashtag": "ハッシュタグを追加",
+            "moveImageEarlier": "写真を前に移動",
+            "moveImageLater": "写真を後ろに移動",
             "personalizedPlaceholder": "{name}さん、いま何を考えていますか？",
+            "pollLockedNotice": "投票の公平性を保つため、公開後のアンケートは編集できません。",
+            "removeExistingImage": "写真を削除",
+            "removeLink": "リンクを削除",
             "resumeDraftPrompt": "未保存の下書きがあります。続きから編集できます。",
-            "title": "投稿を作成"
+            "savingChanges": "変更を保存中...",
+            "title": "投稿を作成",
+            "visibilityCommunity": "コミュニティ"
         },
         "videoComingSoonTooltip": "動画投稿機能は近日公開予定です"
     },
