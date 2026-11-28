@@ -78,7 +78,7 @@ export function initializePwa(): void {
                                 waitingWorker = installing;
                                 updateAvailable.value = true;
                                 appToast.action(
-                                    'A newer version of SyncViet is ready.',
+                                    'A newer version of SysNoxis is ready.',
                                     'Reload',
                                     () => {
                                         applyPwaUpdate();

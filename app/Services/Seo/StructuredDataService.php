@@ -22,7 +22,7 @@ class StructuredDataService
      */
     public function organization(): array
     {
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $baseUrl = $this->config->canonicalBaseUrl();
 
         $schema = [
@@ -52,7 +52,7 @@ class StructuredDataService
      */
     public function webSite(string $locale): array
     {
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $baseUrl = $this->config->canonicalBaseUrl();
 
         return [
@@ -110,7 +110,7 @@ class StructuredDataService
                 : Str::limit(trim(strip_tags($translation !== null ? $translation->translated_body : $post->content)), 110));
 
         $body = trim(strip_tags($translation !== null ? $translation->translated_body : $post->content));
-        $authorName = $post->author !== null ? $post->author->name : (string) config('app.name', 'SyncViet');
+        $authorName = $post->author !== null ? $post->author->name : (string) config('app.name', 'SysNoxis');
         $authorUrl = $post->author !== null ? $this->canonicalUrls->profileCanonicalUrl($post->author) : $this->config->canonicalBaseUrl().'/';
 
         $isLongForm = mb_strlen($body) >= 450 && is_string($post->title) && trim($post->title) !== '';
@@ -187,7 +187,7 @@ class StructuredDataService
         }
 
         $crumbs = [
-            ['name' => (string) config('app.name', 'SyncViet'), 'url' => $this->config->canonicalBaseUrl().'/'],
+            ['name' => (string) config('app.name', 'SysNoxis'), 'url' => $this->config->canonicalBaseUrl().'/'],
         ];
         if ($post->community !== null && $post->community->visibility === 'public') {
             $crumbs[] = [
@@ -216,7 +216,7 @@ class StructuredDataService
         ];
 
         $crumbs = [
-            ['name' => (string) config('app.name', 'SyncViet'), 'url' => $this->config->canonicalBaseUrl().'/'],
+            ['name' => (string) config('app.name', 'SysNoxis'), 'url' => $this->config->canonicalBaseUrl().'/'],
             ['name' => 'Communities', 'url' => $this->canonicalUrls->absoluteUrl('/communities')],
             ['name' => $community->name, 'url' => $canonicalUrl],
         ];
@@ -259,7 +259,7 @@ class StructuredDataService
         ];
 
         $crumbs = [
-            ['name' => (string) config('app.name', 'SyncViet'), 'url' => $this->config->canonicalBaseUrl().'/'],
+            ['name' => (string) config('app.name', 'SysNoxis'), 'url' => $this->config->canonicalBaseUrl().'/'],
             ['name' => $user->name, 'url' => $canonicalUrl],
         ];
 
@@ -281,7 +281,7 @@ class StructuredDataService
         ];
 
         $crumbs = [
-            ['name' => (string) config('app.name', 'SyncViet'), 'url' => $this->config->canonicalBaseUrl().'/'],
+            ['name' => (string) config('app.name', 'SysNoxis'), 'url' => $this->config->canonicalBaseUrl().'/'],
             ['name' => 'Topics', 'url' => $this->canonicalUrls->absoluteUrl('/topics')],
             ['name' => '#'.$hashtag->name, 'url' => $canonicalUrl],
         ];
@@ -307,7 +307,7 @@ class StructuredDataService
                 'isPartOf' => ['@id' => $this->config->canonicalBaseUrl().'/#website'],
             ],
             $this->breadcrumbs([
-                ['name' => (string) config('app.name', 'SyncViet'), 'url' => $this->config->canonicalBaseUrl().'/'],
+                ['name' => (string) config('app.name', 'SysNoxis'), 'url' => $this->config->canonicalBaseUrl().'/'],
                 ['name' => $title, 'url' => $canonicalUrl],
             ]),
         ];

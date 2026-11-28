@@ -28,7 +28,7 @@ class SeoMetadataService
     public function forHome(?string $locale = null): array
     {
         $lang = $locale ?: app()->getLocale();
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $canonical = $this->config->canonicalBaseUrl().'/';
         $override = $this->findOverride(SeoEntityType::Page->value, null, $lang, '/');
 
@@ -64,7 +64,7 @@ class SeoMetadataService
     {
         $post->loadMissing(['author', 'community', 'media']);
         $lang = $locale ?: ($translation?->target_locale ?: ($post->language_code ?: $this->config->defaultLocale()));
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
 
         $eval = $translation !== null
             ? $this->qualityGate->evaluateTranslation($translation, $post)
@@ -120,7 +120,7 @@ class SeoMetadataService
     public function forCommunity(Community $community, ?string $locale = null): array
     {
         $lang = $locale ?: ($community->language_code ?: $this->config->defaultLocale());
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $eval = $this->qualityGate->evaluateCommunity($community);
         $canonical = $this->canonicalUrls->communityCanonicalUrl($community);
         $override = $this->findOverride(SeoEntityType::Community->value, $community->id, $lang);
@@ -154,7 +154,7 @@ class SeoMetadataService
     public function forProfile(User $user, ?string $locale = null): array
     {
         $lang = $locale ?: app()->getLocale();
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $eval = $this->qualityGate->evaluateProfile($user);
         $canonical = $this->canonicalUrls->profileCanonicalUrl($user);
         $override = $this->findOverride(SeoEntityType::Profile->value, $user->id, $lang);
@@ -187,7 +187,7 @@ class SeoMetadataService
     public function forTopic(Hashtag $hashtag, ?string $locale = null, int $page = 1): array
     {
         $lang = $locale ?: $this->config->defaultLocale();
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $eval = $this->qualityGate->evaluateTopic($hashtag);
         $canonical = $this->canonicalUrls->topicCanonicalUrl($hashtag, $lang, $page);
         $override = $this->findOverride(SeoEntityType::Topic->value, $hashtag->id, $lang);
@@ -222,7 +222,7 @@ class SeoMetadataService
     public function forPolicy(PolicyPage $policy, ?string $locale = null, bool $isLocalizedRoute = false): array
     {
         $lang = $locale ?: app()->getLocale();
-        $siteName = (string) config('app.name', 'SyncViet');
+        $siteName = (string) config('app.name', 'SysNoxis');
         $eval = $this->qualityGate->evaluatePolicy($policy);
 
         $defaultCanonical = $this->canonicalUrls->policyCanonicalUrl(
@@ -302,7 +302,7 @@ class SeoMetadataService
      */
     private function assemble(array $data): array
     {
-        $title = Str::limit(trim((string) ($data['title'] ?? config('app.name', 'SyncViet'))), 110, '');
+        $title = Str::limit(trim((string) ($data['title'] ?? config('app.name', 'SysNoxis'))), 110, '');
         $description = Str::limit(trim((string) ($data['description'] ?? '')), 170, '');
         $canonical = (string) ($data['canonical'] ?? $this->config->canonicalBaseUrl().'/');
         $robots = (string) ($data['robots'] ?? 'noindex, nofollow');

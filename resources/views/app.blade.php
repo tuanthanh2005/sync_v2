@@ -40,7 +40,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="default">
-        <meta name="apple-mobile-web-app-title" content="{{ config('app.name', 'SyncViet') }}">
+        <meta name="apple-mobile-web-app-title" content="{{ config('app.name', 'SysNoxis') }}">
         <meta name="format-detection" content="telephone=no">
         <link rel="manifest" href="/manifest.webmanifest">
 
@@ -81,7 +81,7 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color matching SyncViet light/dark tokens --}}
+        {{-- Inline style to set the HTML background color matching SysNoxis light/dark tokens --}}
         <style>
             html {
                 background-color: #f3f5f9;
@@ -100,7 +100,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         <x-inertia::head>
-            <title>{{ $seoData['title'] ?? config('app.name', 'SyncViet') }}</title>
+            <title>{{ $seoData['title'] ?? config('app.name', 'SysNoxis') }}</title>
             @if (! empty($robotsDirective))
                 <meta name="robots" content="{{ $robotsDirective }}">
             @endif
@@ -109,7 +109,7 @@
                 <meta property="og:title" content="{{ $seoData['og_title'] ?? $seoData['title'] ?? config('app.name') }}">
                 <meta property="og:description" content="{{ $seoData['og_description'] ?? $seoData['description'] }}">
                 <meta property="og:type" content="{{ $seoData['og_type'] ?? $seoData['type'] ?? 'website' }}">
-                <meta property="og:site_name" content="{{ config('app.name', 'SyncViet') }}">
+                <meta property="og:site_name" content="{{ config('app.name', 'SysNoxis') }}">
                 @if (! empty($seoData['og_locale']))
                     <meta property="og:locale" content="{{ $seoData['og_locale'] }}">
                 @endif

@@ -124,7 +124,7 @@ class AdminNotificationService
                         titleVi: $broadcast->title,
                         titleEn: $broadcast->title,
                         url: $broadcast->action_url ?: '/',
-                        actorName: config('app.name', 'SyncViet'),
+                        actorName: config('app.name', 'SysNoxis'),
                         actorUsername: 'system',
                     ));
                     $sentCount++;

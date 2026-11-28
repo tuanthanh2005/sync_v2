@@ -25,7 +25,7 @@ class HomeController extends Controller
     ) {}
 
     /**
-     * Display the public SyncViet News Feed and guest landing hero.
+     * Display the public SysNoxis News Feed and guest landing hero.
      */
     public function index(Request $request): Response
     {
@@ -61,13 +61,13 @@ class HomeController extends Controller
             'seo' => $seo,
             'seoSsr' => [
                 'type' => 'home',
-                'heading' => (string) config('app.name', 'SyncViet'),
+                'heading' => (string) config('app.name', 'SysNoxis'),
                 'description' => (string) ($seo['description'] ?? ''),
                 'posts' => $ssrPosts,
                 'links' => [
                     ['label' => 'Communities', 'href' => '/communities'],
                     ['label' => 'Topics', 'href' => '/topics'],
-                    ['label' => 'SyncViet Premium', 'href' => '/premium'],
+                    ['label' => 'SysNoxis Premium', 'href' => '/premium'],
                 ],
             ],
         ]);

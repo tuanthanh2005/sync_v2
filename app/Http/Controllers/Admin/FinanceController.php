@@ -102,7 +102,7 @@ class FinanceController extends Controller
 
         return response($csv, 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="syncviet-payments-'.now()->format('Ymd').'.csv"',
+            'Content-Disposition' => 'attachment; filename="sysnoxis-payments-'.now()->format('Ymd').'.csv"',
         ]);
     }
 }

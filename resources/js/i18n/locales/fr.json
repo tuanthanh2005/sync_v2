@@ -256,7 +256,7 @@
         "clearHistory": "Effacer",
         "errorLoadFailed": "Impossible de charger les résultats de recherche pour le moment. Veuillez réessayer.",
         "exploreCategories": "Parcourir par catégorie",
-        "exploreHeading": "Explorer SyncViet",
+        "exploreHeading": "Explorer SysNoxis",
         "exploreMore": "Découvrez les sujets et communautés actifs",
         "exploreSubtitle": "Découvrez des discussions, des communautés actives, des sujets et des voix remarquables.",
         "exploreTitle": "Explorer",
@@ -332,7 +332,7 @@
         "highlightSecurity": "Protection du compte multicouche avec vérification par e-mail et authentification à deux facteurs.",
         "highlightCommunity": "Des discussions constructives et respectueuses avec de solides garanties de confidentialité.",
         "confirmPassword": {
-            "layoutDescription": "Il s'agit d'une zone sécurisée de SyncViet. Veuillez confirmer votre mot de passe avant de continuer.",
+            "layoutDescription": "Il s'agit d'une zone sécurisée de SysNoxis. Veuillez confirmer votre mot de passe avant de continuer.",
             "layoutTitle": "Confirmez votre mot de passe",
             "pageTitle": "Confirmer le mot de passe",
             "submit": "Confirmer le mot de passe"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Continuer avec Google",
             "forgotPassword": "Mot de passe oublié ?",
-            "layoutDescription": "Connectez-vous pour rejoindre les discussions, communautés et sujets internationaux sur SyncViet.",
+            "layoutDescription": "Connectez-vous pour rejoindre les discussions, communautés et sujets internationaux sur SysNoxis.",
             "layoutTitle": "Connectez-vous à votre compte",
             "noAccount": "Vous n'avez pas encore de compte ?",
             "orDivider": "ou",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "Vous avez déjà un compte ?",
             "continueWithGoogle": "S'inscrire avec Google",
-            "layoutDescription": "Créez votre compte SyncViet pour vous connecter avec des communautés du monde entier.",
+            "layoutDescription": "Créez votre compte SysNoxis pour vous connecter avec des communautés du monde entier.",
             "layoutTitle": "Créer un nouveau compte",
             "loginLink": "Se connecter",
             "orCreateAccount": "ou créer avec une adresse e-mail",
@@ -386,7 +386,7 @@
             "pausedNotice": "Les nouvelles inscriptions sont temporairement suspendues pour raison de sécurité. Les membres vérifiés peuvent toujours se connecter."
         },
         "resetPassword": {
-            "layoutDescription": "Choisissez un nouveau mot de passe sécurisé pour votre compte SyncViet.",
+            "layoutDescription": "Choisissez un nouveau mot de passe sécurisé pour votre compte SysNoxis.",
             "layoutTitle": "Réinitialiser votre mot de passe",
             "pageTitle": "Réinitialiser le mot de passe",
             "submit": "Mettre à jour le mot de passe"
@@ -564,7 +564,7 @@
         "title": "Gestionnaire de publicités",
         "subtitle": "Promouvez vos publications pour atteindre des audiences ciblées, stimuler l'engagement et atteindre vos objectifs.",
         "guideButton": "Guide d'utilisation",
-        "guideTitle": "Comment fonctionne la publicité sur SyncViet",
+        "guideTitle": "Comment fonctionne la publicité sur SysNoxis",
         "guidePoints": {
             "p1": "1. Sélectionnez l'une de vos publications publiques approuvées comme contenu sponsorisé.",
             "p2": "2. Choisissez votre objectif, les thématiques ciblées, le calendrier et le budget en VND entiers.",
@@ -612,7 +612,7 @@
         "estReach": "Portée estimée",
         "estClicks": "Clics estimés",
         "estAvgCpc": "CPC de référence",
-        "estimatesDisclaimer": "Les estimations sont fournies à titre indicatif uniquement ; SyncViet ne garantit pas un nombre fixe d'impressions ou de clics.",
+        "estimatesDisclaimer": "Les estimations sont fournies à titre indicatif uniquement ; SysNoxis ne garantit pas un nombre fixe d'impressions ou de clics.",
         "walletBoxTitle": "Solde du portefeuille publicitaire",
         "topUpShort": "Recharger",
         "sufficientWallet": "Solde suffisant ({amount} requis)",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "Centre d'administration",
-        "backToSite": "Retour sur SyncViet",
+        "backToSite": "Retour sur SysNoxis",
         "collapseSidebar": "Réduire la barre latérale",
         "expandSidebar": "Développer la barre latérale",
         "quickSearch": "Recherche rapide d'utilisateurs, publications, journaux...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Indexées Google",
             "notIndexed": "Non indexées",
             "kpiTechnicalScore": "Score santé technique",
-            "scoreDisclaimer": "Score technique interne SyncViet (NON un score de classement Google).",
+            "scoreDisclaimer": "Score technique interne SysNoxis (NON un score de classement Google).",
             "gscPerformance": "Performance Google Search Console",
             "gscHonestSubtitle": "Clics, impressions, CTR et position réels via l’API Search Console.",
             "gscNotConnected": "Google Search Console — Configuration requise",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "Créer un nouveau modèle de prompt",
             "savePromptBtn": "Enregistrer le modèle de prompt",
             "contentTitle": "Flux de contenu IA, file de validation humaine et planificateur",
-            "contentSubtitle": "Générez des brouillons JSON structurés, consultez les scores Quality Gate, modifiez et approuvez avant publication via le pipeline standard SyncViet Post et SEO V2.0.",
+            "contentSubtitle": "Générez des brouillons JSON structurés, consultez les scores Quality Gate, modifiez et approuvez avant publication via le pipeline standard SysNoxis Post et SEO V2.0.",
             "generateDraftHeading": "Générer un brouillon de contenu IA",
             "topicLabel": "Sujet / Brief éditorial",
             "generateBtn": "Générer un brouillon",
@@ -2146,7 +2146,7 @@
         "previous": "Précédent"
     },
     "pwa": {
-        "installApp": "Installer l’application SyncViet"
+        "installApp": "Installer l’application SysNoxis"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "Administration"
         },
         "badge": {
-            "title": "Membre SyncViet Premium",
-            "tooltip": "Ce badge bleu appartient à un abonnement payant SyncViet Premium actif. Il est distinct de la Vérification d'identité, d'une Organisation officielle ou des rôles d'Administrateur."
+            "title": "Membre SysNoxis Premium",
+            "tooltip": "Ce badge bleu appartient à un abonnement payant SysNoxis Premium actif. Il est distinct de la Vérification d'identité, d'une Organisation officielle ou des rôles d'Administrateur."
         },
         "common": {
             "days": "jours",
             "monthShort": "mois"
         },
         "benefits": {
-            "blue_badge": "Badge bleu SyncViet Premium sur les publications, commentaires, profils et messages",
+            "blue_badge": "Badge bleu SysNoxis Premium sur les publications, commentaires, profils et messages",
             "post_analytics": "Statistiques de portée et d'engagement des publications",
             "reduced_ads": "Réduction des contenus sponsorisés dans le fil",
-            "ad_free": "Navigation sans publicité sur tout SyncViet",
+            "ad_free": "Navigation sans publicité sur tout SysNoxis",
             "priority_support": "Traitement prioritaire par le support",
             "profile_highlights": "Présentation enrichie du profil et mises en avant de créateur"
         },
         "services": {
             "pageTitle": "Centre de services",
-            "eyebrow": "Services de monétisation SyncViet",
-            "heading": "Développez votre voix et votre marque sur SyncViet",
-            "subtitle": "Tarification transparente, confirmation manuelle des commandes et sécurité complète de modération. Les fonctionnalités sociales de base de SyncViet restent 100 % gratuites à vie.",
+            "eyebrow": "Services de monétisation SysNoxis",
+            "heading": "Développez votre voix et votre marque sur SysNoxis",
+            "subtitle": "Tarification transparente, confirmation manuelle des commandes et sécurité complète de modération. Les fonctionnalités sociales de base de SysNoxis restent 100 % gratuites à vie.",
             "freeCoreGuarantee": "Publier, commenter, réagir, suivre, rejoindre des communautés, rechercher et signaler restent toujours gratuits pour chaque membre.",
             "startingFrom": "À partir de",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "Abonnement à durée limitée avec badge bleu SyncViet, navigation allégée ou sans publicité et statistiques pour créateurs.",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "Abonnement à durée limitée avec badge bleu SysNoxis, navigation allégée ou sans publicité et statistiques pour créateurs.",
             "bannerTitle": "Bannières publicitaires",
             "bannerDesc": "Louez des emplacements de bannière à forte visibilité sur ordinateur et mobile à la semaine ou au mois, en exclusivité ou en rotation.",
             "boostTitle": "Booster une publication",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "Ouvrir l'espace publicitaire"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "Démarquez-vous avec SyncViet Premium",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "Démarquez-vous avec SysNoxis Premium",
             "subtitle": "Des abonnements prépayés simples et à durée limitée, sans renouvellement surprise. Passez à l'offre supérieure ou prolongez à tout moment sans perdre les jours restants.",
             "manageMyPlan": "Gérer mon Premium",
-            "activeBanner": "Votre abonnement SyncViet Premium est actif jusqu'au {date}.",
+            "activeBanner": "Votre abonnement SysNoxis Premium est actif jusqu'au {date}.",
             "extendPreservesDays": "Renouveler maintenant ajoute directement la durée à votre date d'expiration actuelle.",
             "paymentMethodLabel": "Choisir le mode de paiement",
             "noAutoAdBalanceDebit": "Premium est facturé directement au paiement et ne débite jamais automatiquement votre Solde publicitaire.",
@@ -2203,9 +2203,9 @@
             "buyButton": "Choisir l'offre",
             "extendButton": "Prolonger l'offre",
             "moderationRuleTitle": "Mêmes normes de sécurité et de modération",
-            "moderationRuleDesc": "Les membres Premium restent soumis à toutes les Règles de la communauté SyncViet, aux règles anti-spam et aux contrôles de sécurité.",
+            "moderationRuleDesc": "Les membres Premium restent soumis à toutes les Règles de la communauté SysNoxis, aux règles anti-spam et aux contrôles de sécurité.",
             "manualConfirmHint": "Aucune commande n'est jamais créée automatiquement. Vous vérifiez et confirmez toujours par Oui/Non avant la création d'une commande de paiement.",
-            "slogan": "Démarquez-vous et profitez d’une expérience SyncViet plus sereine.",
+            "slogan": "Démarquez-vous et profitez d’une expérience SysNoxis plus sereine.",
             "chooseDurationTitle": "Choisissez la durée de votre abonnement",
             "chooseDurationSubtitle": "Un seul abonnement prépayé — plus la durée est longue, plus vous économisez.",
             "bestValue": "Meilleure offre",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} jours",
             "adFreeTag": "Sans publicité",
             "reducedAdsTag": "Publicités réduites",
-            "benefitsHeading": "Inclus dans SyncViet Premium",
+            "benefitsHeading": "Inclus dans SysNoxis Premium",
             "adFreeUpgradeHint": "La formule {duration} offre une navigation totalement sans publicité au lieu de publicités réduites.",
             "switchToAdFree": "Choisir {duration}",
             "adFreeIncludedBadge": "Sans publicité inclus",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "Se connecter pour passer à Premium"
         },
         "accountPremium": {
-            "pageTitle": "Mon SyncViet Premium",
+            "pageTitle": "Mon SysNoxis Premium",
             "expiresOn": "Actif jusqu'au {date} ({days} jours restants)",
-            "inactiveNotice": "Vous n'avez actuellement aucun abonnement SyncViet Premium actif.",
+            "inactiveNotice": "Vous n'avez actuellement aucun abonnement SysNoxis Premium actif.",
             "historyTitle": "Historique des abonnements",
             "complimentary": "Offert / Attribution",
             "emptyHistory": "Aucun historique d'abonnement pour le moment."
         },
         "advertising": {
             "pageTitle": "Espace publicitaire",
-            "eyebrow": "Publicité SyncViet",
+            "eyebrow": "Publicité SysNoxis",
             "heading": "Touchez de vraies communautés avec une publicité transparente",
             "subtitle": "Choisissez des emplacements de bannière à durée déterminée pour une présence durable de marque ou des forfaits Booster une publication pour amplifier vos discussions clés."
         },
         "banner": {
             "pageTitle": "Bannières publicitaires",
-            "heading": "Louez des emplacements de bannière à fort impact sur SyncViet",
+            "heading": "Louez des emplacements de bannière à fort impact sur SysNoxis",
             "subtitle": "Tarifs hebdomadaires et mensuels transparents sur ordinateur et mobile. Chaque visuel est vérifié par notre équipe de modération.",
             "sponsoredLabel": "Sponsorisé",
             "adOptions": "Options de l'annonce",
             "adInfo": "À propos de cette annonce",
-            "adInfoDesc": "Il s'agit d'un emplacement de bannière direct payant vérifié par SyncViet. Vous pouvez masquer ou signaler des annonces à tout moment.",
+            "adInfoDesc": "Il s'agit d'un emplacement de bannière direct payant vérifié par SysNoxis. Vous pouvez masquer ou signaler des annonces à tout moment.",
             "hideAd": "Masquer cette annonce",
             "reportAd": "Signaler l'annonce",
             "placementsUnit": "emplacements",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "Booster une publication",
-            "heading": "Amplifiez vos publications publiques sur SyncViet",
+            "heading": "Amplifiez vos publications publiques sur SysNoxis",
             "subtitle": "Forfaits de promotion à durée fixe avec mention claire Sponsorisé. La durée ne démarre qu'après approbation par la modération et n'altère jamais le classement organique des Tendances.",
             "modalTitle": "Booster cette publication",
             "packagesUnit": "forfaits",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "Solde publicitaire",
-            "subtitle": "Solde publicitaire prépayé utilisé exclusivement pour Booster une publication et les campagnes publicitaires éligibles sur SyncViet.",
+            "subtitle": "Solde publicitaire prépayé utilisé exclusivement pour Booster une publication et les campagnes publicitaires éligibles sur SysNoxis.",
             "promoBalance": "Crédit promotionnel",
             "availableShort": "Solde publicitaire disponible",
             "topUpTitle": "Recharger le solde publicitaire",
-            "purposeDisclaimer": "Le Solde publicitaire est strictement réservé aux services publicitaires SyncViet. Aucun transfert entre particuliers, retrait en espèces ou intérêt."
+            "purposeDisclaimer": "Le Solde publicitaire est strictement réservé aux services publicitaires SysNoxis. Aucun transfert entre particuliers, retrait en espèces ou intérêt."
         },
         "payments": {
             "title": "Historique des paiements",
-            "subtitle": "Toutes vos commandes SyncViet Premium, Bannières publicitaires, Booster une publication et Solde publicitaire au même endroit.",
+            "subtitle": "Toutes vos commandes SysNoxis Premium, Bannières publicitaires, Booster une publication et Solde publicitaire au même endroit.",
             "openPendingLabel": "Commandes en attente ouvertes",
             "searchPlaceholder": "Rechercher par code de commande, référence ou passerelle...",
             "allServices": "Tous les services",
@@ -2332,7 +2332,7 @@
             "method": "Mode de paiement",
             "fee": "Frais de traitement",
             "total": "Total à payer",
-            "termsNotice": "En confirmant, vous acceptez les Conditions de paiement SyncViet ainsi que la politique applicable au service.",
+            "termsNotice": "En confirmant, vous acceptez les Conditions de paiement SysNoxis ainsi que la politique applicable au service.",
             "noButton": "Non, revenir",
             "yesButton": "Oui, créer la commande de paiement"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "Foire aux questions",
-            "q1": "Dois-je payer pour utiliser SyncViet ?",
+            "q1": "Dois-je payer pour utiliser SysNoxis ?",
             "a1": "Non. Publier, commenter, réagir, suivre, envoyer des messages et rejoindre des communautés est entièrement gratuit.",
-            "q2": "Le badge SyncViet Premium est-il identique à la Vérification d'identité ?",
-            "a2": "Non. La coche bleue indique un abonnement payant SyncViet Premium actif. La vérification d'identité et les badges du personnel sont strictement distincts.",
+            "q2": "Le badge SysNoxis Premium est-il identique à la Vérification d'identité ?",
+            "a2": "Non. La coche bleue indique un abonnement payant SysNoxis Premium actif. La vérification d'identité et les badges du personnel sont strictement distincts.",
             "q3": "Que se passe-t-il si je prolonge mon offre Premium avant son expiration ?",
             "a3": "La nouvelle durée s'ajoute directement à votre date d'expiration existante afin que vous ne perdiez aucun jour restant.",
             "q4": "Puis-je retirer ou transférer mon Solde publicitaire vers un autre utilisateur ?",
-            "a4": "Non. Le Solde publicitaire est strictement un crédit prépayé destiné aux services publicitaires SyncViet et ne peut être ni retiré ni transféré entre comptes."
+            "a4": "Non. Le Solde publicitaire est strictement un crédit prépayé destiné aux services publicitaires SysNoxis et ne peut être ni retiré ni transféré entre comptes."
         },
         "admin": {
             "revenueSubtitle": "Rapports bi-devises (VND et USD) séparant strictement les dépôts publicitaires prépayés des revenus directs reconnus pour les services.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Badge bleu Premium",
-                "desc": "Affichez le badge bleu SyncViet Premium à côté de votre nom sur les publications, commentaires, profils, recherches et messages."
+                "desc": "Affichez le badge bleu SysNoxis Premium à côté de votre nom sur les publications, commentaires, profils, recherches et messages."
             },
             "post_analytics": {
                 "title": "Statistiques de publications",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "Navigation sans publicité",
-                "desc": "Parcourez SyncViet et ses communautés entièrement sans annonces sponsorisées."
+                "desc": "Parcourez SysNoxis et ses communautés entièrement sans annonces sponsorisées."
             },
             "priority_support": {
                 "title": "Support prioritaire",
-                "desc": "Bénéficiez d’un traitement prioritaire et de réponses plus rapides de l’équipe SyncViet."
+                "desc": "Bénéficiez d’un traitement prioritaire et de réponses plus rapides de l’équipe SysNoxis."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "Bannières publicitaires SyncViet",
+            "badgeTitle": "Bannières publicitaires SysNoxis",
             "campaignStats": "{impressions} impressions · {clicks} clics ({ctr} % CTR)",
             "desktop": "Ordinateur",
             "mobile": "Mobile",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label} : {width}×{height} px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "Booster une publication SyncViet",
+            "boostBadgeTitle": "Booster une publication SysNoxis",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24 h",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "Titulaire du compte",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "E-mail PayPal",
             "serviceBanner": "Bannières publicitaires",
             "serviceBoost": "Booster une publication",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "Code QR de virement VietQR"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "Communautés associées"
         },
         "post": {
-            "guestCtaTitle": "Rejoignez la communauté SyncViet",
+            "guestCtaTitle": "Rejoignez la communauté SysNoxis",
             "guestCtaDesc": "Créez un compte gratuit pour commenter, enregistrer et échanger dans le monde entier.",
             "availableLanguages": "Langues disponibles",
             "relatedTopics": "Sujets et Communauté",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "Agent IA",
-            "defaultDisclosure": "Agent IA officiel SyncViet — Assistant automatisé transparent",
-            "profileBannerTitle": "Compte IA officiel SyncViet"
+            "defaultDisclosure": "Agent IA officiel SysNoxis — Assistant automatisé transparent",
+            "profileBannerTitle": "Compte IA officiel SysNoxis"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "Invitez des amis et gagnez Premium",
-            "heading": "Invitez des amis sur SyncViet",
-            "subtitle": "Partagez votre lien personnel de parrainage. Lorsque vos amis vérifient leur e-mail et participent sur SyncViet, vous cumulez automatiquement des jours de SyncViet Premium.",
+            "heading": "Invitez des amis sur SysNoxis",
+            "subtitle": "Partagez votre lien personnel de parrainage. Lorsque vos amis vérifient leur e-mail et participent sur SysNoxis, vous cumulez automatiquement des jours de SysNoxis Premium.",
             "viewPremium": "My Premium",
             "yourCode": "Votre code de parrainage",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "Lien de parrainage copié dans le presse-papiers.",
             "share": "Share",
-            "shareMessage": "Rejoignez-moi sur SyncViet — une communauté internationale dédiée au savoir et aux échanges ouverts :",
+            "shareMessage": "Rejoignez-moi sur SysNoxis — une communauté internationale dédiée au savoir et aux échanges ouverts :",
             "statTotal": "Total parrainés",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "Premium gagné",
             "progressTitle": "Paliers cumulés de Premium",
-            "progressSummary": "Vous avez {qualified} / {target} parrainages validés. Invitez encore {remaining} membres vérifiés pour atteindre {days} jours au total de SyncViet Premium.",
+            "progressSummary": "Vous avez {qualified} / {target} parrainages validés. Invitez encore {remaining} membres vérifiés pour atteindre {days} jours au total de SysNoxis Premium.",
             "verificationWindow": "Fenêtre de vérification de {hours}h",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "Total cumulé",
             "historyTitle": "Suivi des parrainages",
-            "emptyHistory": "Aucun membre invité pour le moment. Partagez votre lien pour commencer à gagner SyncViet Premium.",
+            "emptyHistory": "Aucun membre invité pour le moment. Partagez votre lien pour commencer à gagner SysNoxis Premium.",
             "rewardHistoryTitle": "Historique des récompenses"
         },
         "earlyMember": {
-            "title": "Membres Pionniers SyncViet (1 000 premiers)",
-            "description": "Les membres humains pionniers vérifiés reçoivent un badge permanent Membre Pionnier et SyncViet Premium offert tant que le programme est actif.",
+            "title": "Membres Pionniers SysNoxis (1 000 premiers)",
+            "description": "Les membres humains pionniers vérifiés reçoivent un badge permanent Membre Pionnier et SysNoxis Premium offert tant que le programme est actif.",
             "yourNumber": "Vous êtes le Membre Pionnier #{num} !",
             "openStatus": "Ouvert aux membres vérifiés éligibles",
             "pausedStatus": "Programme actuellement mis en pause par l’administrateur"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "E-mails facultatifs d’annonces produit (inscription volontaire)"
         },
         "onboarding": {
-            "pageTitle": "Bienvenue sur SyncViet",
-            "heading": "Personnalisez votre expérience SyncViet",
+            "pageTitle": "Bienvenue sur SysNoxis",
+            "heading": "Personnalisez votre expérience SysNoxis",
             "subtitle": "Choisissez votre langue préférée, vos sujets et vos communautés. Chaque étape est facultative et peut être ignorée à tout moment.",
             "skip": "Ignorer pour le moment",
             "languageStep": "1. Langue préférée",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. Comptes utiles à découvrir",
             "join": "Join",
             "joined": "Joined",
-            "finish": "Continuer vers SyncViet"
+            "finish": "Continuer vers SysNoxis"
         },
         "extra": {
             "daysShort": "{count}j",
@@ -2563,7 +2563,7 @@
             "updateProfile": "Mettre à jour le profil",
             "username": "Nom d'utilisateur"
         },
-        "checklistSubtitle": "Gardez votre compte SyncViet sécurisé et à jour.",
+        "checklistSubtitle": "Gardez votre compte SysNoxis sécurisé et à jour.",
         "checklistTitle": "Liste de contrôle de sécurité du compte",
         "editProfileButton": "Modifier le profil",
         "feedButton": "Fil d'actualité",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "Apparence",
-            "headingDescription": "Choisissez l'apparence de SyncViet sur cet appareil.",
+            "headingDescription": "Choisissez l'apparence de SysNoxis sur cet appareil.",
             "headingTitle": "Thème d'affichage",
             "pageTitle": "Paramètres d'apparence",
             "srHeading": "Paramètres d'apparence",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "Une fois votre compte supprimé, toutes les sessions actives seront révoquées et vos données personnelles ne pourront plus être récupérées. Saisissez votre mot de passe pour confirmer.",
             "confirmTitle": "Voulez-vous vraiment supprimer votre compte ?",
             "deleteButton": "Supprimer le compte",
-            "headingDescription": "Fermez définitivement votre compte SyncViet et révoquez les sessions actives.",
+            "headingDescription": "Fermez définitivement votre compte SysNoxis et révoquez les sessions actives.",
             "headingTitle": "Supprimer le compte",
             "passwordLabel": "Mot de passe actuel",
             "passwordPlaceholder": "Saisissez votre mot de passe pour confirmer",

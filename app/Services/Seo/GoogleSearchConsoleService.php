@@ -75,7 +75,7 @@ class GoogleSearchConsoleService
             'inspection_quota_used_today' => $todayUsage !== null ? $todayUsage->requests_count : 0,
             'inspection_quota_limit_daily' => $dailyLimit,
             'setup_required' => ! $conn->hasCredentials() && ! $conn->hasAccessToken(),
-            'indexing_api_note' => 'SyncViet strictly uses official Search Console APIs (Sites, Sitemaps, Search Analytics, URL Inspection) and NEVER abuses Google Indexing API for social posts.',
+            'indexing_api_note' => 'SysNoxis strictly uses official Search Console APIs (Sites, Sitemaps, Search Analytics, URL Inspection) and NEVER abuses Google Indexing API for social posts.',
         ];
     }
 

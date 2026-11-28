@@ -256,7 +256,7 @@
         "clearHistory": "清除",
         "errorLoadFailed": "暂时无法加载搜索结果，请稍后重试。",
         "exploreCategories": "按分类浏览",
-        "exploreHeading": "探索 SyncViet",
+        "exploreHeading": "探索 SysNoxis",
         "exploreMore": "发现活跃话题与社区",
         "exploreSubtitle": "发现精彩讨论、活跃社区、热门话题与优秀创作者。",
         "exploreTitle": "探索",
@@ -332,7 +332,7 @@
         "highlightSecurity": "支持邮箱验证与双重身份验证的多重账号安全防护。",
         "highlightCommunity": "倡导建设性、互相尊重的讨论氛围，并提供完善的隐私保护。",
         "confirmPassword": {
-            "layoutDescription": "这是 SyncViet 的安全区域。继续操作前，请先确认您的密码。",
+            "layoutDescription": "这是 SysNoxis 的安全区域。继续操作前，请先确认您的密码。",
             "layoutTitle": "确认您的密码",
             "pageTitle": "确认密码",
             "submit": "确认密码"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "使用 Google 继续",
             "forgotPassword": "忘记密码？",
-            "layoutDescription": "登录以加入 SyncViet 上的讨论、社区与国际话题。",
+            "layoutDescription": "登录以加入 SysNoxis 上的讨论、社区与国际话题。",
             "layoutTitle": "登录您的账号",
             "noAccount": "还没有账号？",
             "orDivider": "或",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "已有账号？",
             "continueWithGoogle": "使用 Google 注册",
-            "layoutDescription": "创建您的 SyncViet 账号，与全球社区建立连接。",
+            "layoutDescription": "创建您的 SysNoxis 账号，与全球社区建立连接。",
             "layoutTitle": "创建新账号",
             "loginLink": "登录",
             "orCreateAccount": "或使用邮箱注册",
@@ -386,7 +386,7 @@
             "pausedNotice": "出于安全维护考虑，新用户注册已暂停。已验证会员仍可正常登录。"
         },
         "resetPassword": {
-            "layoutDescription": "为您的 SyncViet 账号设置一个安全的新密码。",
+            "layoutDescription": "为您的 SysNoxis 账号设置一个安全的新密码。",
             "layoutTitle": "重置您的密码",
             "pageTitle": "重置密码",
             "submit": "更新密码"
@@ -564,7 +564,7 @@
         "title": "广告管理",
         "subtitle": "推广您的优质帖子，精准触达目标人群、提升互动并实现推广目标。",
         "guideButton": "使用指南",
-        "guideTitle": "SyncViet 广告投放说明",
+        "guideTitle": "SysNoxis 广告投放说明",
         "guidePoints": {
             "p1": "1. 选择您已发布且审核通过的公开帖子作为推广素材。",
             "p2": "2. 设置推广目标、兴趣主题、投放排期及整数 VND 预算。",
@@ -612,7 +612,7 @@
         "estReach": "预估触达人数",
         "estClicks": "预估点击量",
         "estAvgCpc": "参考单次点击成本 (CPC)",
-        "estimatesDisclaimer": "预估数据仅供参考，SyncViet 不承诺固定曝光量或点击量。",
+        "estimatesDisclaimer": "预估数据仅供参考，SysNoxis 不承诺固定曝光量或点击量。",
         "walletBoxTitle": "广告钱包余额",
         "topUpShort": "充值",
         "sufficientWallet": "余额充足（需预留 {amount}）",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "管理中心",
-        "backToSite": "返回 SyncViet",
+        "backToSite": "返回 SysNoxis",
         "collapseSidebar": "收起侧边栏",
         "expandSidebar": "展开侧边栏",
         "quickSearch": "快速搜索用户、帖子、日志...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Google 已索引",
             "notIndexed": "未索引",
             "kpiTechnicalScore": "技术健康评分",
-            "scoreDisclaimer": "SyncViet 内部技术健康分（并非 Google 排名评分）。",
+            "scoreDisclaimer": "SysNoxis 内部技术健康分（并非 Google 排名评分）。",
             "gscPerformance": "Google Search Console 表现",
             "gscHonestSubtitle": "来自 Search Console API 的真实点击、展示、CTR 和排名。",
             "gscNotConnected": "Google Search Console — 需要配置",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "创建新提示词模板",
             "savePromptBtn": "保存提示词模板",
             "contentTitle": "AI 内容工作流、人工审核队列与调度器",
-            "contentSubtitle": "生成结构化 JSON 草稿，检查质量门禁评分，经人工编辑与批准后通过标准 SyncViet 帖子与 SEO V2.0 流水线发布。",
+            "contentSubtitle": "生成结构化 JSON 草稿，检查质量门禁评分，经人工编辑与批准后通过标准 SysNoxis 帖子与 SEO V2.0 流水线发布。",
             "generateDraftHeading": "生成 AI 内容草稿",
             "topicLabel": "主题 / 编辑提纲",
             "generateBtn": "生成草稿",
@@ -2146,7 +2146,7 @@
         "previous": "上一个"
     },
     "pwa": {
-        "installApp": "安装 SyncViet 应用"
+        "installApp": "安装 SysNoxis 应用"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "管理后台"
         },
         "badge": {
-            "title": "SyncViet Premium 会员",
-            "tooltip": "此蓝色认证徽章专属于有效期内的高级付费会员 SyncViet Premium，与身份认证、官方机构或管理员身份严格区分。"
+            "title": "SysNoxis Premium 会员",
+            "tooltip": "此蓝色认证徽章专属于有效期内的高级付费会员 SysNoxis Premium，与身份认证、官方机构或管理员身份严格区分。"
         },
         "common": {
             "days": "天",
             "monthShort": "月"
         },
         "benefits": {
-            "blue_badge": "在帖子、评论、个人主页与私信中显示的 SyncViet Premium 蓝标徽章",
+            "blue_badge": "在帖子、评论、个人主页与私信中显示的 SysNoxis Premium 蓝标徽章",
             "post_analytics": "帖子触达与互动表现数据分析",
             "reduced_ads": "减少信息流中的赞助广告干扰",
-            "ad_free": "在 SyncViet 全站畅享无广告浏览体验",
+            "ad_free": "在 SysNoxis 全站畅享无广告浏览体验",
             "priority_support": "客服工单优先处理通道",
             "profile_highlights": "增强版个人主页展示与创作者亮点标识"
         },
         "services": {
             "pageTitle": "服务中心",
-            "eyebrow": "SyncViet 商业化服务",
-            "heading": "在 SyncViet 上扩大您的声音与品牌影响力",
-            "subtitle": "价格透明、人工确认下单、全程合规审核保障。SyncViet 的所有核心社交功能将永久 100% 免费。",
+            "eyebrow": "SysNoxis 商业化服务",
+            "heading": "在 SysNoxis 上扩大您的声音与品牌影响力",
+            "subtitle": "价格透明、人工确认下单、全程合规审核保障。SysNoxis 的所有核心社交功能将永久 100% 免费。",
             "freeCoreGuarantee": "发帖、评论、互动表态、关注、加入社区、搜索及举报对所有成员永久免费。",
             "startingFrom": "起价",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "限时周期会员服务，尊享 SyncViet 蓝标、减少或免除广告浏览以及创作者数据分析。",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "限时周期会员服务，尊享 SysNoxis 蓝标、减少或免除广告浏览以及创作者数据分析。",
             "bannerTitle": "横幅广告",
             "bannerDesc": "按周或按月租用桌面端与移动端高曝光横幅广告位，支持品牌独占或公平轮播模式。",
             "boostTitle": "帖子助推（Boost Post）",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "打开广告中心"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "加入 SyncViet Premium，脱颖而出",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "加入 SysNoxis Premium，脱颖而出",
             "subtitle": "简单明了的预付费周期会员，绝无意外自动扣费。随时升级或续期，绝不损失剩余天数。",
             "manageMyPlan": "管理我的 Premium",
-            "activeBanner": "您的 SyncViet Premium 会员有效期至 {date}。",
+            "activeBanner": "您的 SysNoxis Premium 会员有效期至 {date}。",
             "extendPreservesDays": "现在续费会将新时长直接累加至您当前的到期时间。",
             "paymentMethodLabel": "选择支付方式",
             "noAutoAdBalanceDebit": "Premium 通过结账页面直接付款，绝不会自动扣除您的广告余额。",
@@ -2203,9 +2203,9 @@
             "buyButton": "选择套餐",
             "extendButton": "续期套餐",
             "moderationRuleTitle": "平等的安全与审核标准",
-            "moderationRuleDesc": "Premium 会员仍需严格遵守 SyncViet 社区准则、反垃圾信息规则及所有安全检查。",
+            "moderationRuleDesc": "Premium 会员仍需严格遵守 SysNoxis 社区准则、反垃圾信息规则及所有安全检查。",
             "manualConfirmHint": "系统绝不会自动生成订单。在生成任何付款订单前，您都必须先核对详情并点击“是/否”确认。",
-            "slogan": "脱颖而出，畅享更专注清爽的 SyncViet 体验。",
+            "slogan": "脱颖而出，畅享更专注清爽的 SysNoxis 体验。",
             "chooseDurationTitle": "选择会员时长",
             "chooseDurationSubtitle": "统一预付费会员方案，时长越长，平均每月越优惠。",
             "bestValue": "超值推荐",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} 天",
             "adFreeTag": "全程免广告",
             "reducedAdsTag": "减少广告展示",
-            "benefitsHeading": "SyncViet Premium 会员权益",
+            "benefitsHeading": "SysNoxis Premium 会员权益",
             "adFreeUpgradeHint": "{duration}方案将“减少广告”升级为全程免广告浏览体验。",
             "switchToAdFree": "选择 {duration}",
             "adFreeIncludedBadge": "含全程免广告",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "登录后升级"
         },
         "accountPremium": {
-            "pageTitle": "我的 SyncViet Premium",
+            "pageTitle": "我的 SysNoxis Premium",
             "expiresOn": "有效期至 {date}（剩余 {days} 天）",
-            "inactiveNotice": "您当前尚未开通有效的 SyncViet Premium 订阅。",
+            "inactiveNotice": "您当前尚未开通有效的 SysNoxis Premium 订阅。",
             "historyTitle": "订阅历史记录",
             "complimentary": "赠送 / 官方授予",
             "emptyHistory": "暂无订阅记录。"
         },
         "advertising": {
             "pageTitle": "广告中心",
-            "eyebrow": "SyncViet 广告",
+            "eyebrow": "SysNoxis 广告",
             "heading": "通过透明广告触达真实社区",
             "subtitle": "选择按时间计费的横幅广告位打造持续品牌曝光，或选用固定时长的帖子助推套餐放大高价值讨论。"
         },
         "banner": {
             "pageTitle": "横幅广告",
-            "heading": "租用高影响力 SyncViet 横幅广告位",
+            "heading": "租用高影响力 SysNoxis 横幅广告位",
             "subtitle": "桌面端与移动端广告位均采用透明的周租与月租定价。所有广告素材均需经过审核团队安全审查。",
             "sponsoredLabel": "赞助广告",
             "adOptions": "广告选项",
             "adInfo": "关于此广告",
-            "adInfoDesc": "这是经过 SyncViet 审核的付费直投横幅广告位。您可以随时隐藏或举报此广告。",
+            "adInfoDesc": "这是经过 SysNoxis 审核的付费直投横幅广告位。您可以随时隐藏或举报此广告。",
             "hideAd": "隐藏此广告",
             "reportAd": "举报广告",
             "placementsUnit": "个广告位",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "帖子助推",
-            "heading": "放大您的 SyncViet 公开帖子影响力",
+            "heading": "放大您的 SysNoxis 公开帖子影响力",
             "subtitle": "固定时长的推广套餐，带有清晰的“赞助”徽章。推广周期仅在审核通过后开始计算，绝不操纵自然热门榜单排名。",
             "modalTitle": "助推此帖子",
             "packagesUnit": "个套餐",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "广告余额",
-            "subtitle": "专用于 SyncViet 帖子助推及符合条件广告活动的预付费广告余额。",
+            "subtitle": "专用于 SysNoxis 帖子助推及符合条件广告活动的预付费广告余额。",
             "promoBalance": "赠送额度",
             "availableShort": "可用广告余额",
             "topUpTitle": "充值广告余额",
-            "purposeDisclaimer": "广告余额仅限用于 SyncViet 广告服务，不支持用户间转账、现金提现或产生利息。"
+            "purposeDisclaimer": "广告余额仅限用于 SysNoxis 广告服务，不支持用户间转账、现金提现或产生利息。"
         },
         "payments": {
             "title": "支付历史",
-            "subtitle": "一站式管理您的 SyncViet Premium、横幅广告、帖子助推及广告余额充值订单。",
+            "subtitle": "一站式管理您的 SysNoxis Premium、横幅广告、帖子助推及广告余额充值订单。",
             "openPendingLabel": "待支付订单",
             "searchPlaceholder": "按订单编号、流水号或支付渠道搜索...",
             "allServices": "全部服务",
@@ -2332,7 +2332,7 @@
             "method": "支付方式",
             "fee": "手续费",
             "total": "应付总额",
-            "termsNotice": "点击确认即表示您同意 SyncViet 支付条款及相应的服务政策。",
+            "termsNotice": "点击确认即表示您同意 SysNoxis 支付条款及相应的服务政策。",
             "noButton": "否，返回",
             "yesButton": "是，创建付款订单"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "常见问题",
-            "q1": "使用 SyncViet 需要付费吗？",
+            "q1": "使用 SysNoxis 需要付费吗？",
             "a1": "不需要。发帖、评论、互动、关注、发送私信以及加入社区完全免费。",
-            "q2": "SyncViet Premium 徽章等同于身份认证吗？",
-            "a2": "不是。蓝色对勾仅代表有效付费期内的 SyncViet Premium 会员身份，与身份认证徽章和官方工作人员标识严格独立。",
+            "q2": "SysNoxis Premium 徽章等同于身份认证吗？",
+            "a2": "不是。蓝色对勾仅代表有效付费期内的 SysNoxis Premium 会员身份，与身份认证徽章和官方工作人员标识严格独立。",
             "q3": "如果在到期前续费 Premium 套餐会怎样？",
             "a3": "新购买的时长会直接叠加到您原有的到期时间点之后，您不会损失任何一天剩余有效期。",
             "q4": "我可以将广告余额提现或转账给其他用户吗？",
-            "a4": "不可以。广告余额仅限于购买 SyncViet 广告服务的预付费额度，不支持提现或在账号之间转移。"
+            "a4": "不可以。广告余额仅限于购买 SysNoxis 广告服务的预付费额度，不支持提现或在账号之间转移。"
         },
         "admin": {
             "revenueSubtitle": "双币种（VND 与 USD）财务报表，严格区分预付广告充值资金与已确认的直接服务营收。",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Premium 蓝标徽章",
-                "desc": "在帖子、评论、个人资料、搜索与私信中于姓名旁展示专属 SyncViet Premium 蓝标。"
+                "desc": "在帖子、评论、个人资料、搜索与私信中于姓名旁展示专属 SysNoxis Premium 蓝标。"
             },
             "post_analytics": {
                 "title": "帖子表现数据统计",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "纯净免广告体验",
-                "desc": "在 SyncViet 信息流与社区中享受完全无赞助广告的浏览环境。"
+                "desc": "在 SysNoxis 信息流与社区中享受完全无赞助广告的浏览环境。"
             },
             "priority_support": {
                 "title": "优先客服支持",
-                "desc": "您的账号支持请求将获得 SyncViet 团队优先受理与更快响应。"
+                "desc": "您的账号支持请求将获得 SysNoxis 团队优先受理与更快响应。"
             }
         },
         "bookingExtra": {
-            "badgeTitle": "SyncViet 横幅广告",
+            "badgeTitle": "SysNoxis 横幅广告",
             "campaignStats": "{impressions} 次展示 · {clicks} 次点击（CTR {ctr}%）",
             "desktop": "桌面端",
             "mobile": "移动端",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}：{width}×{height}px（{mode}）"
         },
         "checkout": {
-            "boostBadgeTitle": "SyncViet 帖子助推",
+            "boostBadgeTitle": "SysNoxis 帖子助推",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24 小时",
-            "premiumPlanTitle": "SyncViet Premium（{duration}）"
+            "premiumPlanTitle": "SysNoxis Premium（{duration}）"
         },
         "paymentsExtra": {
             "accountHolder": "开户人姓名",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "PayPal 邮箱",
             "serviceBanner": "横幅广告",
             "serviceBoost": "帖子助推",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "VietQR 转账二维码"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "相关社区"
         },
         "post": {
-            "guestCtaTitle": "加入 SyncViet 社区",
+            "guestCtaTitle": "加入 SysNoxis 社区",
             "guestCtaDesc": "免费创建账号即可回复、收藏、关注作者并参与全球讨论。",
             "availableLanguages": "可用语言",
             "relatedTopics": "话题与社区",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "AI 助手",
-            "defaultDisclosure": "SyncViet 官方 AI 账号 — 透明自动化助手",
-            "profileBannerTitle": "SyncViet 官方 AI 账号"
+            "defaultDisclosure": "SysNoxis 官方 AI 账号 — 透明自动化助手",
+            "profileBannerTitle": "SysNoxis 官方 AI 账号"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "邀请好友赚取 Premium",
-            "heading": "邀请好友加入 SyncViet",
-            "subtitle": "分享您的专属推荐链接。当好友验证邮箱并参与 SyncViet 社区互动后，您将自动获得累计 SyncViet Premium 天数。",
+            "heading": "邀请好友加入 SysNoxis",
+            "subtitle": "分享您的专属推荐链接。当好友验证邮箱并参与 SysNoxis 社区互动后，您将自动获得累计 SysNoxis Premium 天数。",
             "viewPremium": "My Premium",
             "yourCode": "您的推荐码",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "推荐链接已复制到剪贴板。",
             "share": "Share",
-            "shareMessage": "欢迎与我一起加入 SyncViet——一个面向知识交流与开放讨论的国际社区：",
+            "shareMessage": "欢迎与我一起加入 SysNoxis——一个面向知识交流与开放讨论的国际社区：",
             "statTotal": "累计推荐人数",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "已获 Premium",
             "progressTitle": "累计 Premium 里程碑",
-            "progressSummary": "您当前已有 {qualified} / {target} 位有效推荐。再邀请 {remaining} 位已验证成员即可累计获得 {days} 天 SyncViet Premium。",
+            "progressSummary": "您当前已有 {qualified} / {target} 位有效推荐。再邀请 {remaining} 位已验证成员即可累计获得 {days} 天 SysNoxis Premium。",
             "verificationWindow": "{hours} 小时核验观察期",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "累计总计",
             "historyTitle": "推荐进度",
-            "emptyHistory": "暂无受邀成员。分享您的专属链接，立即开始赚取 SyncViet Premium。",
+            "emptyHistory": "暂无受邀成员。分享您的专属链接，立即开始赚取 SysNoxis Premium。",
             "rewardHistoryTitle": "奖励记录"
         },
         "earlyMember": {
-            "title": "SyncViet 早期成员（前 1,000 名）",
-            "description": "在活动开放期间，完成验证的早期先锋人类成员将获颁永久早期成员徽章及免费 SyncViet Premium 权益。",
+            "title": "SysNoxis 早期成员（前 1,000 名）",
+            "description": "在活动开放期间，完成验证的早期先锋人类成员将获颁永久早期成员徽章及免费 SysNoxis Premium 权益。",
             "yourNumber": "您是第 #{num} 号早期成员！",
             "openStatus": "面向符合条件的已验证成员开放",
             "pausedStatus": "管理员当前已暂停该计划"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "可选产品公告邮件（需主动订阅）"
         },
         "onboarding": {
-            "pageTitle": "欢迎来到 SyncViet",
-            "heading": "个性化您的 SyncViet 体验",
+            "pageTitle": "欢迎来到 SysNoxis",
+            "heading": "个性化您的 SysNoxis 体验",
             "subtitle": "选择您偏好的语言、感兴趣的话题和社区。每一步均为可选项，可随时跳过。",
             "skip": "暂时跳过",
             "languageStep": "1. 首选语言",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. 值得关注的有益账号",
             "join": "Join",
             "joined": "Joined",
-            "finish": "继续前往 SyncViet"
+            "finish": "继续前往 SysNoxis"
         },
         "extra": {
             "daysShort": "{count} 天",
@@ -2563,7 +2563,7 @@
             "updateProfile": "更新个人资料",
             "username": "用户名"
         },
-        "checklistSubtitle": "保持您的 SyncViet 账号安全且信息准确。",
+        "checklistSubtitle": "保持您的 SysNoxis 账号安全且信息准确。",
         "checklistTitle": "账号安全检查清单",
         "editProfileButton": "编辑资料",
         "feedButton": "信息流",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "外观",
-            "headingDescription": "选择 SyncViet 在此设备上的显示外观。",
+            "headingDescription": "选择 SysNoxis 在此设备上的显示外观。",
             "headingTitle": "显示主题",
             "pageTitle": "外观设置",
             "srHeading": "外观设置",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "账号删除后，所有活跃会话将被立即吊销，您的个人数据将无法恢复。请输入密码以确认。",
             "confirmTitle": "确定要删除您的账号吗？",
             "deleteButton": "删除账号",
-            "headingDescription": "永久注销您的 SyncViet 账号并吊销所有活跃会话。",
+            "headingDescription": "永久注销您的 SysNoxis 账号并吊销所有活跃会话。",
             "headingTitle": "删除账号",
             "passwordLabel": "当前密码",
             "passwordPlaceholder": "输入您的密码以确认",

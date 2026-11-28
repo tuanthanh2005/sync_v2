@@ -69,7 +69,7 @@ const { t } = useI18n();
 const agentForm = useForm({
     display_name: '',
     username: '',
-    ai_disclosure: 'Official SyncViet AI Agent — Automated Assistant',
+    ai_disclosure: 'Official SysNoxis AI Agent — Automated Assistant',
     expertise: '',
     default_language: 'en',
     preferred_model_id: props.models.find((m) => m.is_enabled)?.id ?? null,
@@ -79,7 +79,7 @@ const agentForm = useForm({
     daily_comment_limit: 5,
     monthly_token_budget: 500000,
     system_prompt:
-        'You are an official transparent SyncViet AI Agent. Provide accurate, educational content and never claim to be a human.',
+        'You are an official transparent SysNoxis AI Agent. Provide accurate, educational content and never claim to be a human.',
 });
 
 const promptForm = useForm({
@@ -87,7 +87,7 @@ const promptForm = useForm({
     prompt_type: 'generate_post',
     agent_id: null as number | null,
     system_instruction:
-        'Write clear, original, fact-checked educational community content for SyncViet.',
+        'Write clear, original, fact-checked educational community content for SysNoxis.',
     user_template:
         'Topic: {{topic}}\nLanguage: {{target_language}}\nStyle: {{writing_style}}\nSource Material:\n{{source_material}}',
     changelog: 'Initial version',

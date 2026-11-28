@@ -129,7 +129,7 @@ class AuthSecurityEventService
                 titleVi: "Cảnh báo bảo mật xác thực: phát hiện {$recentCount} sự kiện {$eventType} trong 10 phút qua.",
                 titleEn: "Authentication security alert: {$recentCount} {$eventType} events detected in the last 10 minutes.",
                 url: '/admin/security?tab=protection',
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'security',
                 titleKey: 'Authentication security alert: :count :event events detected in the last 10 minutes.',
                 titleParams: ['count' => $recentCount, 'event' => $eventType],

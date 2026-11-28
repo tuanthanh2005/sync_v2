@@ -148,7 +148,7 @@ class PolicySanitizer
     }
 
     /**
-     * Allow <img> ONLY for internal SyncViet storage or configured R2/CDN URLs (zero external hotlinking).
+     * Allow <img> ONLY for internal SysNoxis storage or configured R2/CDN URLs (zero external hotlinking).
      */
     private function sanitizeImageElement(DOMElement $element): bool
     {

@@ -25,7 +25,7 @@ class SeoAuditService
 
     /**
      * Execute comprehensive automated technical SEO audit checks.
-     * Note: technical_health_score measures internal SyncViet technical hygiene ONLY — NOT Google Ranking Score.
+     * Note: technical_health_score measures internal SysNoxis technical hygiene ONLY — NOT Google Ranking Score.
      */
     public function runAudit(string $triggerType = 'manual', ?User $actor = null): SeoAuditRun
     {
@@ -256,7 +256,7 @@ class SeoAuditService
                 'url' => $row->url,
                 'locale' => $row->locale,
                 'title' => 'Google selected a different canonical URL',
-                'description' => "URL Inspection reported Google's canonical differs from SyncViet's declared canonical for {$row->url}.",
+                'description' => "URL Inspection reported Google's canonical differs from SysNoxis's declared canonical for {$row->url}.",
                 'recommendation' => 'Consolidate internal links and redirects toward a single preferred canonical URL.',
             ];
         }
@@ -303,7 +303,7 @@ class SeoAuditService
             'low_count' => $counts['low'],
             'info_count' => $counts['info'],
             'summary' => [
-                'disclaimer' => 'Internal SyncViet Technical SEO Hygiene Score (NOT a Google Ranking Score).',
+                'disclaimer' => 'Internal SysNoxis Technical SEO Hygiene Score (NOT a Google Ranking Score).',
                 'hreflang_groups_checked' => $hreflangValidation['checked_groups'],
                 'hreflang_groups_valid' => $hreflangValidation['valid_groups'],
             ],
@@ -327,7 +327,7 @@ class SeoAuditService
                 titleVi: "SEO Audit #{$run->id} phát hiện {$criticalCount} lỗi nghiêm trọng cần kiểm tra.",
                 titleEn: "SEO Audit #{$run->id} detected {$criticalCount} critical technical issue(s).",
                 url: '/admin/seo/audit',
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'seo-engine',
             ));
         }

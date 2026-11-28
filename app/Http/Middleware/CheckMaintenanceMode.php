@@ -36,7 +36,7 @@ class CheckMaintenanceMode
 
         $message = (string) $this->settings->get(
             'maintenance_message',
-            'SyncViet is undergoing scheduled maintenance. Please check back shortly.',
+            'SysNoxis is undergoing scheduled maintenance. Please check back shortly.',
         );
 
         return response($message, 503, [

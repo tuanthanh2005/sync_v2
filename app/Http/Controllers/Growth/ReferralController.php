@@ -150,7 +150,7 @@ class ReferralController extends Controller
         if (! empty($validated['complete']) || ! empty($validated['skip'])) {
             $target = $this->referralService->sanitizeInternalReturnPath($progress->return_to_url) ?? route('home', [], false);
 
-            return redirect()->to($target)->with('status', __('Welcome to SyncViet! Your feed preferences are saved.'));
+            return redirect()->to($target)->with('status', __('Welcome to SysNoxis! Your feed preferences are saved.'));
         }
 
         return back()->with('status', __('Onboarding preferences saved.'));

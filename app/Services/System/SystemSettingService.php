@@ -23,7 +23,7 @@ class SystemSettingService
     {
         return [
             // General & Branding
-            'site_name' => ['group' => 'general', 'type' => 'string', 'value' => config('app.name', 'SyncViet'), 'is_public' => true],
+            'site_name' => ['group' => 'general', 'type' => 'string', 'value' => config('app.name', 'SysNoxis'), 'is_public' => true],
             'site_slogan' => ['group' => 'general', 'type' => 'string', 'value' => 'Global Social Community', 'is_public' => true],
             'site_description' => ['group' => 'general', 'type' => 'string', 'value' => 'Connect without boundaries. Discover ideas, share stories, and build trusted communities.', 'is_public' => true],
             'contact_email' => ['group' => 'general', 'type' => 'string', 'value' => '', 'is_public' => true],
@@ -56,7 +56,7 @@ class SystemSettingService
             'feature_adsense' => ['group' => 'features', 'type' => 'boolean', 'value' => false, 'is_public' => true],
             'feature_require_email_verification' => ['group' => 'features', 'type' => 'boolean', 'value' => true, 'is_public' => false],
             'maintenance_enabled' => ['group' => 'features', 'type' => 'boolean', 'value' => false, 'is_public' => true],
-            'maintenance_message' => ['group' => 'features', 'type' => 'string', 'value' => 'SyncViet is undergoing scheduled maintenance. Please check back shortly.', 'is_public' => true],
+            'maintenance_message' => ['group' => 'features', 'type' => 'string', 'value' => 'SysNoxis is undergoing scheduled maintenance. Please check back shortly.', 'is_public' => true],
 
             // Content & Image Upload Policy Settings (Admin may lower caps, NEVER exceed 40 MB)
             'content_post_max_length' => ['group' => 'content', 'type' => 'integer', 'value' => 3000, 'is_public' => true],
@@ -83,8 +83,8 @@ class SystemSettingService
             'ad_click_cost_vnd' => ['group' => 'ads', 'type' => 'integer', 'value' => (int) config('syncviet.ad_pricing.click_cost_vnd', 1_250), 'is_public' => false],
 
             // SEO Settings
-            'seo_title_suffix' => ['group' => 'seo', 'type' => 'string', 'value' => config('app.name', 'SyncViet'), 'is_public' => true],
-            'seo_meta_description' => ['group' => 'seo', 'type' => 'string', 'value' => 'SyncViet global community platform for ideas, discussions, and communities.', 'is_public' => true],
+            'seo_title_suffix' => ['group' => 'seo', 'type' => 'string', 'value' => config('app.name', 'SysNoxis'), 'is_public' => true],
+            'seo_meta_description' => ['group' => 'seo', 'type' => 'string', 'value' => 'SysNoxis global community platform for ideas, discussions, and communities.', 'is_public' => true],
             'seo_robots_index' => ['group' => 'seo', 'type' => 'boolean', 'value' => true, 'is_public' => true],
 
             // Post View Tracking V2.0 Settings (Social News Feed Standard)

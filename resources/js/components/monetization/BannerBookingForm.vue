@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
 });
 
 const previewAlt = computed(() => bookingForm.alt_text || 'Preview');
-const previewBusiness = computed(() => bookingForm.business_name || 'SyncViet');
+const previewBusiness = computed(() => bookingForm.business_name || 'SysNoxis');
 const previewHeadline = computed(
     () =>
         bookingForm.headline ||

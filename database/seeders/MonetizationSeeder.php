@@ -52,7 +52,7 @@ class MonetizationSeeder extends Seeder
             [
                 'slug' => 'premium-1m',
                 'name' => 'Premium 1 Month',
-                'description' => 'Monthly SyncViet Premium membership with blue verified member badge and reduced feed ads.',
+                'description' => 'Monthly SysNoxis Premium membership with blue verified member badge and reduced feed ads.',
                 'duration_days' => 30,
                 'price_usd_cents' => 299,
                 'price_vnd' => 79_000,
@@ -73,7 +73,7 @@ class MonetizationSeeder extends Seeder
             [
                 'slug' => 'premium-3m',
                 'name' => 'Premium 3 Months',
-                'description' => 'Quarterly SyncViet Premium membership with savings over monthly billing.',
+                'description' => 'Quarterly SysNoxis Premium membership with savings over monthly billing.',
                 'duration_days' => 90,
                 'price_usd_cents' => 799,
                 'price_vnd' => 199_000,
@@ -94,7 +94,7 @@ class MonetizationSeeder extends Seeder
             [
                 'slug' => 'premium-6m',
                 'name' => 'Premium 6 Months',
-                'description' => 'Semi-annual SyncViet Premium membership for active creators and community builders.',
+                'description' => 'Semi-annual SysNoxis Premium membership for active creators and community builders.',
                 'duration_days' => 180,
                 'price_usd_cents' => 1499,
                 'price_vnd' => 389_000,
@@ -115,7 +115,7 @@ class MonetizationSeeder extends Seeder
             [
                 'slug' => 'premium-12m',
                 'name' => 'Premium 12 Months',
-                'description' => 'Best value annual SyncViet Premium membership with ad-free browsing experience.',
+                'description' => 'Best value annual SysNoxis Premium membership with ad-free browsing experience.',
                 'duration_days' => 365,
                 'price_usd_cents' => 2499,
                 'price_vnd' => 649_000,
@@ -349,7 +349,7 @@ class MonetizationSeeder extends Seeder
             [
                 'slug' => 'boost-3d',
                 'name' => 'Boost 3 Days',
-                'description' => 'Promote your post across the SyncViet feed for 3 consecutive days.',
+                'description' => 'Promote your post across the SysNoxis feed for 3 consecutive days.',
                 'duration_hours' => 72,
                 'price_usd_cents' => 299,
                 'price_vnd' => 75_000,
@@ -423,7 +423,7 @@ class MonetizationSeeder extends Seeder
                     'bank_name' => 'Configure in Admin Payment Settings',
                     'account_number' => '',
                     'account_holder' => '',
-                    'note_prefix' => 'SYNCVIET',
+                    'note_prefix' => 'SYSNOXIS',
                 ],
                 'sort_order' => 10,
             ],
@@ -442,7 +442,7 @@ class MonetizationSeeder extends Seeder
                     'bank_name' => 'Configure in Admin Payment Settings',
                     'account_number' => '',
                     'account_holder' => '',
-                    'note_prefix' => 'SYNCVIET',
+                    'note_prefix' => 'SYSNOXIS',
                 ],
                 'sort_order' => 20,
             ],

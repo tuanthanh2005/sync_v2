@@ -124,12 +124,12 @@ class RetentionAndDigestService
 
             $user->notify(new SocialActivityNotification(
                 eventKey: "growth.reengagement.stage_{$requiredDays}d",
-                titleVi: 'Có nhiều thảo luận mới phù hợp với chủ đề bạn quan tâm trên SyncViet.',
-                titleEn: 'New discussions matching your topics and communities are waiting on SyncViet.',
+                titleVi: 'Có nhiều thảo luận mới phù hợp với chủ đề bạn quan tâm trên SysNoxis.',
+                titleEn: 'New discussions matching your topics and communities are waiting on SysNoxis.',
                 url: route('home', [], false),
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'system',
-                titleKey: 'New discussions matching your topics and communities are waiting on SyncViet.',
+                titleKey: 'New discussions matching your topics and communities are waiting on SysNoxis.',
             ));
 
             $user->forceFill([
@@ -192,19 +192,19 @@ class RetentionAndDigestService
             $joinedCount = CommunityMember::query()->where('user_id', $user->id)->count();
 
             $digestKey = $joinedCount > 0
-                ? 'Weekly digest: :count new discussions across SyncViet communities.'
-                : 'Explore :count trending discussions this week on SyncViet.';
+                ? 'Weekly digest: :count new discussions across SysNoxis communities.'
+                : 'Explore :count trending discussions this week on SysNoxis.';
 
             $user->notify(new SocialActivityNotification(
                 eventKey: 'growth.weekly_digest',
                 titleVi: $joinedCount > 0
-                    ? "Tóm tắt tuần: {$recentPostsCount} bài viết mới từ cộng đồng SyncViet."
-                    : "Khám phá {$recentPostsCount} thảo luận nổi bật tuần này trên SyncViet.",
+                    ? "Tóm tắt tuần: {$recentPostsCount} bài viết mới từ cộng đồng SysNoxis."
+                    : "Khám phá {$recentPostsCount} thảo luận nổi bật tuần này trên SysNoxis.",
                 titleEn: $joinedCount > 0
-                    ? "Weekly digest: {$recentPostsCount} new discussions across SyncViet communities."
-                    : "Explore {$recentPostsCount} trending discussions this week on SyncViet.",
+                    ? "Weekly digest: {$recentPostsCount} new discussions across SysNoxis communities."
+                    : "Explore {$recentPostsCount} trending discussions this week on SysNoxis.",
                 url: route('home', [], false),
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'system',
                 titleKey: $digestKey,
                 titleParams: ['count' => $recentPostsCount],

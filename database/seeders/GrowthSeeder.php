@@ -64,8 +64,8 @@ class GrowthSeeder extends Seeder
         $referralCampaign = GrowthCampaign::query()->firstOrCreate(
             ['slug' => 'syncviet-referral-v1'],
             [
-                'name' => 'SyncViet Member Referral Program',
-                'description' => 'Invite real friends to SyncViet and earn cumulative SyncViet Premium days when referrals verify email and complete onboarding.',
+                'name' => 'SysNoxis Member Referral Program',
+                'description' => 'Invite real friends to SysNoxis and earn cumulative SysNoxis Premium days when referrals verify email and complete onboarding.',
                 'type' => 'referral',
                 'status' => GrowthCampaignStatus::Draft,
                 'target_audience' => 'human_members',
@@ -99,8 +99,8 @@ class GrowthSeeder extends Seeder
         GrowthCampaign::query()->firstOrCreate(
             ['slug' => 'syncviet-early-members-1000'],
             [
-                'name' => 'SyncViet Early Members (First 1,000)',
-                'description' => 'Permanent Early Member Badge and 30 days of complimentary SyncViet Premium for the first 1,000 verified human members.',
+                'name' => 'SysNoxis Early Members (First 1,000)',
+                'description' => 'Permanent Early Member Badge and 30 days of complimentary SysNoxis Premium for the first 1,000 verified human members.',
                 'type' => 'early_member',
                 'status' => GrowthCampaignStatus::Draft,
                 'target_audience' => 'first_1000_verified_humans',
@@ -121,7 +121,7 @@ class GrowthSeeder extends Seeder
         GrowthCampaign::query()->firstOrCreate(
             ['slug' => 'syncviet-founding-members'],
             [
-                'name' => 'SyncViet Founding Members',
+                'name' => 'SysNoxis Founding Members',
                 'description' => 'Limited early supporter campaign granting the permanent Founding Member Badge with an annual Premium plan.',
                 'type' => 'founding_member',
                 'status' => GrowthCampaignStatus::Draft,
@@ -166,13 +166,13 @@ class GrowthSeeder extends Seeder
 
         // Meaningful Value-Driven Achievements (PHẦN 12 — never raw spam counts)
         $achievements = [
-            ['slug' => 'first-post', 'name' => 'First Post', 'desc' => 'Published your first approved public post on SyncViet.', 'icon' => 'pen-line', 'color' => 'indigo', 'type' => 'first_post', 'badge' => null, 'sort' => 1],
+            ['slug' => 'first-post', 'name' => 'First Post', 'desc' => 'Published your first approved public post on SysNoxis.', 'icon' => 'pen-line', 'color' => 'indigo', 'type' => 'first_post', 'badge' => null, 'sort' => 1],
             ['slug' => 'first-community-joined', 'name' => 'First Community Joined', 'desc' => 'Joined your first community to connect around shared interests.', 'icon' => 'users', 'color' => 'emerald', 'type' => 'first_community_joined', 'badge' => null, 'sort' => 2],
             ['slug' => 'first-helpful-reply', 'name' => 'First Helpful Reply', 'desc' => 'Contributed a thoughtful comment on another member\'s discussion.', 'icon' => 'message-circle', 'color' => 'sky', 'type' => 'first_helpful_reply', 'badge' => null, 'sort' => 3],
             ['slug' => 'community-contributor', 'name' => 'Community Contributor', 'desc' => 'Completed onboarding, joined a community, and participated constructively.', 'icon' => 'sparkles', 'color' => 'violet', 'type' => 'community_contributor', 'badge' => null, 'sort' => 4],
             ['slug' => 'knowledge-contributor', 'name' => 'Knowledge Contributor', 'desc' => 'Shared multiple substantial approved guides or discussions.', 'icon' => 'book-open', 'color' => 'blue', 'type' => 'knowledge_contributor', 'badge' => null, 'sort' => 5],
-            ['slug' => 'early-member', 'name' => 'Early Member', 'desc' => 'Recognized among the first 1,000 verified pioneer members of SyncViet.', 'icon' => 'award', 'color' => 'amber', 'type' => 'early_member', 'badge' => 'early_member', 'sort' => 6],
-            ['slug' => 'referral-ambassador', 'name' => 'Referral Ambassador', 'desc' => 'Successfully invited at least 5 verified real members to SyncViet.', 'icon' => 'gift', 'color' => 'indigo', 'type' => 'referral_ambassador', 'badge' => 'referral_ambassador', 'sort' => 7],
+            ['slug' => 'early-member', 'name' => 'Early Member', 'desc' => 'Recognized among the first 1,000 verified pioneer members of SysNoxis.', 'icon' => 'award', 'color' => 'amber', 'type' => 'early_member', 'badge' => 'early_member', 'sort' => 6],
+            ['slug' => 'referral-ambassador', 'name' => 'Referral Ambassador', 'desc' => 'Successfully invited at least 5 verified real members to SysNoxis.', 'icon' => 'gift', 'color' => 'indigo', 'type' => 'referral_ambassador', 'badge' => 'referral_ambassador', 'sort' => 7],
             ['slug' => 'community-builder', 'name' => 'Community Builder', 'desc' => 'Created an active community welcoming verified real members.', 'icon' => 'crown', 'color' => 'amber', 'type' => 'community_builder', 'badge' => 'community_builder', 'sort' => 8],
         ];
 

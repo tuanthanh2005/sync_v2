@@ -26,7 +26,7 @@ class AuthOtpVerificationNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
 
         $subject = match ($this->purpose) {
             AuthVerificationChallenge::PURPOSE_CHANGE_EMAIL => __(':app — Confirm your new email address', ['app' => $appName]),

@@ -24,7 +24,7 @@ class RobotsAndRedirectService
 
         if (! $this->config->isIndexingAllowed()) {
             return implode("\n", [
-                '# SyncViet Non-Production / Indexing Disabled Guard',
+                '# SysNoxis Non-Production / Indexing Disabled Guard',
                 'User-agent: *',
                 'Disallow: /',
                 '',
@@ -32,7 +32,7 @@ class RobotsAndRedirectService
         }
 
         $lines = [
-            '# SyncViet International SEO Engine — Dynamic robots.txt',
+            '# SysNoxis International SEO Engine — Dynamic robots.txt',
             'User-agent: *',
             'Allow: /',
             'Disallow: /admin',

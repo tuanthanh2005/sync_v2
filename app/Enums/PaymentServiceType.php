@@ -13,7 +13,7 @@ enum PaymentServiceType: string
     {
         return match ($this) {
             self::TopUp => __('Advertising Balance Top-Up'),
-            self::Premium => __('SyncViet Premium'),
+            self::Premium => __('SysNoxis Premium'),
             self::Banner => __('Banner Advertising'),
             self::Boost => __('Boost Post'),
         };

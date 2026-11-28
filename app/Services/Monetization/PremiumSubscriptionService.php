@@ -48,7 +48,7 @@ class PremiumSubscriptionService
     }
 
     /**
-     * Create a direct checkout payment order for a SyncViet Premium plan.
+     * Create a direct checkout payment order for a SysNoxis Premium plan.
      * Premium is NEVER auto-deducted from Advertising Balance.
      */
     public function createPurchaseOrder(
@@ -61,7 +61,7 @@ class PremiumSubscriptionService
     ): Payment {
         if (! $this->settings->featureEnabled('feature_premium')) {
             throw ValidationException::withMessages([
-                'plan_id' => [__('SyncViet Premium subscriptions are currently disabled.')],
+                'plan_id' => [__('SysNoxis Premium subscriptions are currently disabled.')],
             ]);
         }
 
@@ -185,17 +185,17 @@ class PremiumSubscriptionService
             $lockedUser->notify(new SocialActivityNotification(
                 eventKey: 'premium_activated',
                 titleVi: $hasActiveTime
-                    ? "Đã gia hạn SyncViet Premium thêm {$plan->duration_days} ngày (hết hạn {$newExpiresAt->format('d/m/Y')})."
-                    : "SyncViet Premium ({$plan->name}) đã được kích hoạt đến {$newExpiresAt->format('d/m/Y')}.",
+                    ? "Đã gia hạn SysNoxis Premium thêm {$plan->duration_days} ngày (hết hạn {$newExpiresAt->format('d/m/Y')})."
+                    : "SysNoxis Premium ({$plan->name}) đã được kích hoạt đến {$newExpiresAt->format('d/m/Y')}.",
                 titleEn: $hasActiveTime
-                    ? "Your SyncViet Premium was extended by {$plan->duration_days} days (expires {$newExpiresAt->format('Y-m-d')})."
-                    : "SyncViet Premium ({$plan->name}) is now active until {$newExpiresAt->format('Y-m-d')}.",
+                    ? "Your SysNoxis Premium was extended by {$plan->duration_days} days (expires {$newExpiresAt->format('Y-m-d')})."
+                    : "SysNoxis Premium ({$plan->name}) is now active until {$newExpiresAt->format('Y-m-d')}.",
                 url: route('account.premium'),
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'system',
                 titleKey: $hasActiveTime
-                    ? 'Your SyncViet Premium was extended by :days days (expires :date).'
-                    : 'SyncViet Premium (:plan) is now active until :date.',
+                    ? 'Your SysNoxis Premium was extended by :days days (expires :date).'
+                    : 'SysNoxis Premium (:plan) is now active until :date.',
                 titleParams: $hasActiveTime
                     ? ['days' => $plan->duration_days, 'date' => $newExpiresAt->format('Y-m-d')]
                     : ['plan' => $plan->name, 'date' => $newExpiresAt->format('Y-m-d')],
@@ -298,12 +298,12 @@ class PremiumSubscriptionService
 
             $lockedUser->notify(new SocialActivityNotification(
                 eventKey: 'premium_reward_granted',
-                titleVi: "Bạn nhận được +{$days} ngày SyncViet Premium miễn phí ({$reason}).",
-                titleEn: "You received +{$days} complimentary days of SyncViet Premium ({$reason}).",
+                titleVi: "Bạn nhận được +{$days} ngày SysNoxis Premium miễn phí ({$reason}).",
+                titleEn: "You received +{$days} complimentary days of SysNoxis Premium ({$reason}).",
                 url: route('account.premium'),
-                actorName: (string) config('app.name', 'SyncViet'),
+                actorName: (string) config('app.name', 'SysNoxis'),
                 actorUsername: 'system',
-                titleKey: 'You received +:days complimentary days of SyncViet Premium (:reason).',
+                titleKey: 'You received +:days complimentary days of SysNoxis Premium (:reason).',
                 titleParams: ['days' => $days, 'reason' => $reason],
             ));
 
@@ -638,12 +638,12 @@ class PremiumSubscriptionService
                         $sub->user->forceFill(['premium_until' => null])->save();
                         $sub->user->notify(new SocialActivityNotification(
                             eventKey: 'premium_expired',
-                            titleVi: 'Gói SyncViet Premium của bạn đã hết hạn. Gia hạn ngay để giữ huy hiệu thành viên Premium.',
-                            titleEn: 'Your SyncViet Premium membership has expired. Renew anytime to restore your blue badge.',
+                            titleVi: 'Gói SysNoxis Premium của bạn đã hết hạn. Gia hạn ngay để giữ huy hiệu thành viên Premium.',
+                            titleEn: 'Your SysNoxis Premium membership has expired. Renew anytime to restore your blue badge.',
                             url: route('monetization.premium'),
-                            actorName: (string) config('app.name', 'SyncViet'),
+                            actorName: (string) config('app.name', 'SysNoxis'),
                             actorUsername: 'system',
-                            titleKey: 'Your SyncViet Premium membership has expired. Renew anytime to restore your blue badge.',
+                            titleKey: 'Your SysNoxis Premium membership has expired. Renew anytime to restore your blue badge.',
                         ));
                     }
 
@@ -675,12 +675,12 @@ class PremiumSubscriptionService
                         if ($sub->user !== null) {
                             $sub->user->notify(new SocialActivityNotification(
                                 eventKey: "premium_reminder_{$days}d",
-                                titleVi: "SyncViet Premium của bạn sẽ hết hạn sau {$days} ngày.",
-                                titleEn: "Your SyncViet Premium membership expires in {$days} day(s).",
+                                titleVi: "SysNoxis Premium của bạn sẽ hết hạn sau {$days} ngày.",
+                                titleEn: "Your SysNoxis Premium membership expires in {$days} day(s).",
                                 url: route('account.premium'),
-                                actorName: (string) config('app.name', 'SyncViet'),
+                                actorName: (string) config('app.name', 'SysNoxis'),
                                 actorUsername: 'system',
-                                titleKey: 'Your SyncViet Premium membership expires in :days day(s).',
+                                titleKey: 'Your SysNoxis Premium membership expires in :days day(s).',
                                 titleParams: ['days' => $days],
                             ));
                         }

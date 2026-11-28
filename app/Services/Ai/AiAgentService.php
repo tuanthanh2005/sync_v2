@@ -57,7 +57,7 @@ class AiAgentService
             ]);
         }
 
-        $disclosure = trim((string) ($data['ai_disclosure'] ?? 'Official SyncViet AI Agent — Automated Assistant'));
+        $disclosure = trim((string) ($data['ai_disclosure'] ?? 'Official SysNoxis AI Agent — Automated Assistant'));
 
         return DB::transaction(function () use ($data, $actor, $username, $disclosure): AiAgent {
             // Strictly standard UserRole::User, AccountType::AiAgent, zero admin privileges, zero Premium Blue Badge impersonation
@@ -116,19 +116,19 @@ class AiAgentService
     }
 
     /**
-     * Provision the 7 recommended starter official SyncViet AI Agents idempotently.
+     * Provision the 7 recommended starter official SysNoxis AI Agents idempotently.
      */
     public function seedStarterAgents(User $actor): int
     {
         $starters = [
             [
-                'display_name' => 'SyncViet Assistant',
+                'display_name' => 'SysNoxis Assistant',
                 'username' => 'syncviet_assistant',
-                'expertise' => 'SyncViet platform onboarding, community features, and help guides',
+                'expertise' => 'SysNoxis platform onboarding, community features, and help guides',
                 'personality' => 'Friendly, clear, transparent official AI assistant',
                 'writing_style' => 'Concise, structured, step-by-step',
-                'allowed_topics' => ['SyncViet Guides', 'Community Tips', 'Getting Started'],
-                'system_prompt' => 'You are SyncViet Assistant, an official transparent AI Agent helping members learn SyncViet features. Never claim to be human or promise financial/policy overrides.',
+                'allowed_topics' => ['SysNoxis Guides', 'Community Tips', 'Getting Started'],
+                'system_prompt' => 'You are SysNoxis Assistant, an official transparent AI Agent helping members learn SysNoxis features. Never claim to be human or promise financial/policy overrides.',
             ],
             [
                 'display_name' => 'AI Explorer',

@@ -256,7 +256,7 @@
         "clearHistory": "지우기",
         "errorLoadFailed": "지금은 검색 결과를 불러올 수 없습니다. 다시 시도해 주세요.",
         "exploreCategories": "카테고리별 탐색",
-        "exploreHeading": "SyncViet 탐색",
+        "exploreHeading": "SysNoxis 탐색",
         "exploreMore": "활발한 주제와 커뮤니티를 발견해 보세요",
         "exploreSubtitle": "다양한 토론, 활발한 커뮤니티, 주제 및 주목할 만한 멤버를 발견해 보세요.",
         "exploreTitle": "탐색",
@@ -332,7 +332,7 @@
         "highlightSecurity": "이메일 인증과 2단계 인증을 통한 다층 계정 보안.",
         "highlightCommunity": "강력한 개인정보 보호와 함께하는 건설적이고 존중하는 토론 문화.",
         "confirmPassword": {
-            "layoutDescription": "SyncViet의 보안 영역입니다. 계속하기 전에 비밀번호를 확인해 주세요.",
+            "layoutDescription": "SysNoxis의 보안 영역입니다. 계속하기 전에 비밀번호를 확인해 주세요.",
             "layoutTitle": "비밀번호 확인",
             "pageTitle": "비밀번호 확인",
             "submit": "비밀번호 확인"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Google로 계속하기",
             "forgotPassword": "비밀번호를 잊으셨나요?",
-            "layoutDescription": "로그인하여 SyncViet의 토론, 커뮤니티 및 글로벌 토픽에 참여하세요.",
+            "layoutDescription": "로그인하여 SysNoxis의 토론, 커뮤니티 및 글로벌 토픽에 참여하세요.",
             "layoutTitle": "계정에 로그인",
             "noAccount": "계정이 없으신가요?",
             "orDivider": "또는",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "이미 계정이 있으신가요?",
             "continueWithGoogle": "Google로 가입하기",
-            "layoutDescription": "SyncViet 계정을 만들고 전 세계 커뮤니티와 연결해 보세요.",
+            "layoutDescription": "SysNoxis 계정을 만들고 전 세계 커뮤니티와 연결해 보세요.",
             "layoutTitle": "새 계정 만들기",
             "loginLink": "로그인",
             "orCreateAccount": "또는 이메일로 가입",
@@ -386,7 +386,7 @@
             "pausedNotice": "보안 점검으로 신규 가입이 일시 중단되었습니다. 인증된 회원은 정상 로그인할 수 있습니다."
         },
         "resetPassword": {
-            "layoutDescription": "SyncViet 계정에 사용할 안전하고 새로운 비밀번호를 설정하세요.",
+            "layoutDescription": "SysNoxis 계정에 사용할 안전하고 새로운 비밀번호를 설정하세요.",
             "layoutTitle": "비밀번호 재설정",
             "pageTitle": "비밀번호 재설정",
             "submit": "비밀번호 변경"
@@ -564,7 +564,7 @@
         "title": "광고 관리자",
         "subtitle": "게시물을 홍보하여 타겟 오디언스에게 도달하고 참여도를 높여 목표를 달성하세요.",
         "guideButton": "사용 가이드",
-        "guideTitle": "SyncViet 광고 운영 방식",
+        "guideTitle": "SysNoxis 광고 운영 방식",
         "guidePoints": {
             "p1": "1. 승인된 본인 공개 게시물 중 홍보할 콘텐츠를 선택합니다.",
             "p2": "2. 목표, 타겟 주제, 일정 및 정수 VND 예산을 선택합니다.",
@@ -612,7 +612,7 @@
         "estReach": "예상 도달 수",
         "estClicks": "예상 클릭 수",
         "estAvgCpc": "참고 CPC",
-        "estimatesDisclaimer": "예상 수치는 참고용이며, SyncViet은 고정된 노출 수나 클릭 수를 보장하지 않습니다.",
+        "estimatesDisclaimer": "예상 수치는 참고용이며, SysNoxis은 고정된 노출 수나 클릭 수를 보장하지 않습니다.",
         "walletBoxTitle": "광고 지갑 잔액",
         "topUpShort": "충전",
         "sufficientWallet": "잔액 충분 (필요 금액: {amount})",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "관리 센터",
-        "backToSite": "SyncViet으로 돌아가기",
+        "backToSite": "SysNoxis으로 돌아가기",
         "collapseSidebar": "사이드바 접기",
         "expandSidebar": "사이드바 펼치기",
         "quickSearch": "사용자, 게시물, 로그 빠른 검색...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Google 색인 완료",
             "notIndexed": "미색인",
             "kpiTechnicalScore": "기술 건강 점수",
-            "scoreDisclaimer": "SyncViet 내부 기술 점검 점수입니다 (Google 순위 점수가 아님).",
+            "scoreDisclaimer": "SysNoxis 내부 기술 점검 점수입니다 (Google 순위 점수가 아님).",
             "gscPerformance": "Google Search Console 성과",
             "gscHonestSubtitle": "Search Console API 기반 실제 클릭, 노출, CTR 및 평균 순위.",
             "gscNotConnected": "Google Search Console — 설정 필요",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "새 프롬프트 템플릿 만들기",
             "savePromptBtn": "프롬프트 템플릿 저장",
             "contentTitle": "AI 콘텐츠 워크플로, 사람 검토 대기열 및 스케줄러",
-            "contentSubtitle": "구조화된 JSON 초안을 생성하고 품질 게이트 점수를 확인한 뒤 편집·승인하여 표준 SyncViet 게시물 및 SEO V2.0 파이프라인으로 게시합니다.",
+            "contentSubtitle": "구조화된 JSON 초안을 생성하고 품질 게이트 점수를 확인한 뒤 편집·승인하여 표준 SysNoxis 게시물 및 SEO V2.0 파이프라인으로 게시합니다.",
             "generateDraftHeading": "AI 콘텐츠 초안 생성",
             "topicLabel": "주제 / 편집 브리프",
             "generateBtn": "초안 생성",
@@ -2146,7 +2146,7 @@
         "previous": "이전"
     },
     "pwa": {
-        "installApp": "SyncViet 앱 설치"
+        "installApp": "SysNoxis 앱 설치"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "관리"
         },
         "badge": {
-            "title": "SyncViet Premium 회원",
-            "tooltip": "이 파란색 체크 배지는 활성 상태인 SyncViet Premium 유료 멤버십에 부여됩니다. 본인 인증, 공식 기관 또는 관리자 역할과는 명확히 구분됩니다."
+            "title": "SysNoxis Premium 회원",
+            "tooltip": "이 파란색 체크 배지는 활성 상태인 SysNoxis Premium 유료 멤버십에 부여됩니다. 본인 인증, 공식 기관 또는 관리자 역할과는 명확히 구분됩니다."
         },
         "common": {
             "days": "일",
             "monthShort": "개월"
         },
         "benefits": {
-            "blue_badge": "게시물, 댓글, 프로필, 메시지에 표시되는 SyncViet Premium 블루 배지",
+            "blue_badge": "게시물, 댓글, 프로필, 메시지에 표시되는 SysNoxis Premium 블루 배지",
             "post_analytics": "게시물 도달률 및 참여 성과 분석",
             "reduced_ads": "피드 내 스폰서 광고 노출 감소",
-            "ad_free": "SyncViet 전역 광고 없는 탐색 환경",
+            "ad_free": "SysNoxis 전역 광고 없는 탐색 환경",
             "priority_support": "우선 지원 접수 및 처리",
             "profile_highlights": "향상된 프로필 표시 및 크리에이터 하이라이트"
         },
         "services": {
             "pageTitle": "서비스 센터",
-            "eyebrow": "SyncViet 수익화 서비스",
-            "heading": "SyncViet에서 영향력과 브랜드를 성장시키세요",
-            "subtitle": "투명한 요금제, 수동 주문 확인 및 철저한 운영 안전성. SyncViet의 핵심 소셜 기능은 앞으로도 영구히 100% 무료로 제공됩니다.",
+            "eyebrow": "SysNoxis 수익화 서비스",
+            "heading": "SysNoxis에서 영향력과 브랜드를 성장시키세요",
+            "subtitle": "투명한 요금제, 수동 주문 확인 및 철저한 운영 안전성. SysNoxis의 핵심 소셜 기능은 앞으로도 영구히 100% 무료로 제공됩니다.",
             "freeCoreGuarantee": "게시물 작성, 댓글, 반응, 팔로우, 커뮤니티 가입, 검색 및 신고는 모든 회원에게 항상 무료입니다.",
             "startingFrom": "시작 가격",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "SyncViet 블루 배지, 광고 축소 또는 광고 제거, 크리에이터 분석을 제공하는 기간제 멤버십입니다.",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "SysNoxis 블루 배지, 광고 축소 또는 광고 제거, 크리에이터 분석을 제공하는 기간제 멤버십입니다.",
             "bannerTitle": "배너 광고",
             "bannerDesc": "주간 또는 월간 단위로 데스크톱 및 모바일 고가시성 배너 지면을 독점 또는 순환 슬롯으로 임대하세요.",
             "boostTitle": "게시물 부스트",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "광고 허브 열기"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "SyncViet Premium으로 돋보이세요",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "SysNoxis Premium으로 돋보이세요",
             "subtitle": "예기치 않은 자동 갱신이 없는 간편한 기간제 선불 멤버십입니다. 남은 일수를 잃지 않고 언제든 업그레이드하거나 연장할 수 있습니다.",
             "manageMyPlan": "내 Premium 관리",
-            "activeBanner": "SyncViet Premium 멤버십이 {date}까지 활성 상태입니다.",
+            "activeBanner": "SysNoxis Premium 멤버십이 {date}까지 활성 상태입니다.",
             "extendPreservesDays": "지금 갱신하면 현재 만료일에 기간이 바로 합산됩니다.",
             "paymentMethodLabel": "결제 수단 선택",
             "noAutoAdBalanceDebit": "Premium은 체크아웃을 통해 직접 결제되며 광고 잔액에서 자동으로 차감되지 않습니다.",
@@ -2203,9 +2203,9 @@
             "buyButton": "요금제 선택",
             "extendButton": "요금제 연장",
             "moderationRuleTitle": "동일한 안전 및 운영 기준",
-            "moderationRuleDesc": "Premium 회원도 모든 SyncViet 커뮤니티 가이드라인, 스팸 방지 규칙 및 보안 검사를 동일하게 준수해야 합니다.",
+            "moderationRuleDesc": "Premium 회원도 모든 SysNoxis 커뮤니티 가이드라인, 스팸 방지 규칙 및 보안 검사를 동일하게 준수해야 합니다.",
             "manualConfirmHint": "주문은 자동으로 생성되지 않습니다. 결제 주문이 생성되기 전에 항상 세부 정보를 확인하고 예/아니오로 직접 확정하게 됩니다.",
-            "slogan": "더 선명한 존재감과 쾌적한 SyncViet 경험을 만나보세요.",
+            "slogan": "더 선명한 존재감과 쾌적한 SysNoxis 경험을 만나보세요.",
             "chooseDurationTitle": "멤버십 기간 선택",
             "chooseDurationSubtitle": "하나의 선불 멤버십으로 원하는 기간을 선택하세요. 기간이 길수록 할인율이 높아집니다.",
             "bestValue": "최고의 혜택",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count}일",
             "adFreeTag": "광고 완전 제거",
             "reducedAdsTag": "광고 축소",
-            "benefitsHeading": "SyncViet Premium 포함 혜택",
+            "benefitsHeading": "SysNoxis Premium 포함 혜택",
             "adFreeUpgradeHint": "{duration} 플랜은 광고 축소 대신 광고가 전혀 표시되지 않는 환경을 제공합니다.",
             "switchToAdFree": "{duration} 선택",
             "adFreeIncludedBadge": "광고 없음 포함",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "로그인하여 업그레이드"
         },
         "accountPremium": {
-            "pageTitle": "내 SyncViet Premium",
+            "pageTitle": "내 SysNoxis Premium",
             "expiresOn": "{date}까지 활성 ({days}일 남음)",
-            "inactiveNotice": "현재 활성화된 SyncViet Premium 구독이 없습니다.",
+            "inactiveNotice": "현재 활성화된 SysNoxis Premium 구독이 없습니다.",
             "historyTitle": "구독 내역",
             "complimentary": "무상 제공 / 증정",
             "emptyHistory": "아직 구독 기록이 없습니다."
         },
         "advertising": {
             "pageTitle": "광고 센터",
-            "eyebrow": "SyncViet 광고",
+            "eyebrow": "SysNoxis 광고",
             "heading": "투명한 광고로 실제 커뮤니티에 도달하세요",
             "subtitle": "지속적인 브랜드 노출을 위한 기간제 배너 지면 또는 가치 있는 게시물을 확산하는 고정 기간 게시물 부스트 패키지를 선택하세요."
         },
         "banner": {
             "pageTitle": "배너 광고",
-            "heading": "효과적인 SyncViet 배너 지면 임대",
+            "heading": "효과적인 SysNoxis 배너 지면 임대",
             "subtitle": "데스크톱 및 모바일 지면에 적용되는 투명한 주간·월간 임대 요금. 모든 광고 소재는 운영팀의 심사를 거칩니다.",
             "sponsoredLabel": "스폰서",
             "adOptions": "광고 옵션",
             "adInfo": "이 광고 정보",
-            "adInfoDesc": "SyncViet의 심사를 거친 유료 직접 배너 광고입니다. 언제든지 광고를 숨기거나 신고할 수 있습니다.",
+            "adInfoDesc": "SysNoxis의 심사를 거친 유료 직접 배너 광고입니다. 언제든지 광고를 숨기거나 신고할 수 있습니다.",
             "hideAd": "이 광고 숨기기",
             "reportAd": "광고 신고",
             "placementsUnit": "지면",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "게시물 부스트",
-            "heading": "SyncViet 공개 게시물의 도달 범위 넓히기",
+            "heading": "SysNoxis 공개 게시물의 도달 범위 넓히기",
             "subtitle": "명확한 스폰서 배지가 표시되는 고정 기간 홍보 패키지입니다. 기간은 운영 승인 후에만 시작되며 오가닉 인기 순위를 조작하지 않습니다.",
             "modalTitle": "이 게시물 부스트하기",
             "packagesUnit": "패키지",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "광고 잔액",
-            "subtitle": "SyncViet 게시물 부스트 및 대상 광고 캠페인 전용 선불 광고 잔액입니다.",
+            "subtitle": "SysNoxis 게시물 부스트 및 대상 광고 캠페인 전용 선불 광고 잔액입니다.",
             "promoBalance": "프로모션 크레딧",
             "availableShort": "사용 가능한 광고 잔액",
             "topUpTitle": "광고 잔액 충전",
-            "purposeDisclaimer": "광고 잔액은 SyncViet 광고 서비스 전용입니다. 사용자 간 이체, 현금 출금 또는 이자 지급은 지원되지 않습니다."
+            "purposeDisclaimer": "광고 잔액은 SysNoxis 광고 서비스 전용입니다. 사용자 간 이체, 현금 출금 또는 이자 지급은 지원되지 않습니다."
         },
         "payments": {
             "title": "결제 내역",
-            "subtitle": "SyncViet Premium, 배너 광고, 게시물 부스트 및 광고 잔액 주문을 한곳에서 확인하세요.",
+            "subtitle": "SysNoxis Premium, 배너 광고, 게시물 부스트 및 광고 잔액 주문을 한곳에서 확인하세요.",
             "openPendingLabel": "대기 중인 주문",
             "searchPlaceholder": "주문 코드, 참조 번호 또는 결제 게이트웨이 검색...",
             "allServices": "모든 서비스",
@@ -2332,7 +2332,7 @@
             "method": "결제 수단",
             "fee": "결제 수수료",
             "total": "총 결제 금액",
-            "termsNotice": "확인하면 SyncViet 결제 약관 및 해당 서비스 정책에 동의하게 됩니다.",
+            "termsNotice": "확인하면 SysNoxis 결제 약관 및 해당 서비스 정책에 동의하게 됩니다.",
             "noButton": "아니오, 돌아가기",
             "yesButton": "예, 결제 주문 생성"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "자주 묻는 질문",
-            "q1": "SyncViet을 이용하려면 비용을 내야 하나요?",
+            "q1": "SysNoxis을 이용하려면 비용을 내야 하나요?",
             "a1": "아니요. 게시물 작성, 댓글, 반응, 팔로우, 메시지 및 커뮤니티 가입은 모두 완전 무료입니다.",
-            "q2": "SyncViet Premium 배지는 본인 인증과 같은 것인가요?",
-            "a2": "아니요. 파란색 체크 표시는 활성화된 유료 SyncViet Premium 멤버십을 나타냅니다. 본인 인증 및 운영진 배지와는 엄격히 구분됩니다.",
+            "q2": "SysNoxis Premium 배지는 본인 인증과 같은 것인가요?",
+            "a2": "아니요. 파란색 체크 표시는 활성화된 유료 SysNoxis Premium 멤버십을 나타냅니다. 본인 인증 및 운영진 배지와는 엄격히 구분됩니다.",
             "q3": "만료 전에 Premium 요금제를 연장하면 어떻게 되나요?",
             "a3": "새 기간이 기존 만료 일시에 바로 합산되므로 남은 일수를 단 하루도 잃지 않습니다.",
             "q4": "광고 잔액을 출금하거나 다른 사용자에게 이체할 수 있나요?",
-            "a4": "아니요. 광고 잔액은 SyncViet 광고 서비스 전용 선불 크레딧이며 계정 간 이체나 출금이 불가능합니다."
+            "a4": "아니요. 광고 잔액은 SysNoxis 광고 서비스 전용 선불 크레딧이며 계정 간 이체나 출금이 불가능합니다."
         },
         "admin": {
             "revenueSubtitle": "선불 광고 예치금과 확정된 직접 서비스 수익을 엄격히 구분하여 집계하는 이중 통화(VND 및 USD) 리포트입니다.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Premium 블루 배지",
-                "desc": "게시물, 댓글, 프로필, 검색 결과, 메시지에서 이름 옆에 SyncViet Premium 블루 배지를 표시합니다."
+                "desc": "게시물, 댓글, 프로필, 검색 결과, 메시지에서 이름 옆에 SysNoxis Premium 블루 배지를 표시합니다."
             },
             "post_analytics": {
                 "title": "게시물 성과 분석",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "광고 없는 브라우징",
-                "desc": "SyncViet 피드와 커뮤니티를 스폰서 광고 없이 완전히 쾌적하게 이용하세요."
+                "desc": "SysNoxis 피드와 커뮤니티를 스폰서 광고 없이 완전히 쾌적하게 이용하세요."
             },
             "priority_support": {
                 "title": "우선 고객 지원",
-                "desc": "계정 관련 문의를 SyncViet 지원팀이 우선적으로 검토하고 빠르게 응답합니다."
+                "desc": "계정 관련 문의를 SysNoxis 지원팀이 우선적으로 검토하고 빠르게 응답합니다."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "SyncViet 배너 광고",
+            "badgeTitle": "SysNoxis 배너 광고",
             "campaignStats": "{impressions} 노출 · {clicks} 클릭 (CTR {ctr}%)",
             "desktop": "데스크톱",
             "mobile": "모바일",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}: {width}×{height}px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "SyncViet 게시물 부스트",
+            "boostBadgeTitle": "SysNoxis 게시물 부스트",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24시간",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "예금주",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "PayPal 이메일",
             "serviceBanner": "배너 광고",
             "serviceBoost": "게시물 부스트",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "VietQR 이체 QR 코드"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "관련 커뮤니티"
         },
         "post": {
-            "guestCtaTitle": "SyncViet 커뮤니티에 참여하세요",
+            "guestCtaTitle": "SysNoxis 커뮤니티에 참여하세요",
             "guestCtaDesc": "무료 계정을 만들어 댓글 작성, 북마크, 글로벌 토론에 참여하세요.",
             "availableLanguages": "지원 언어",
             "relatedTopics": "토픽 & 커뮤니티",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "AI 에이전트",
-            "defaultDisclosure": "공식 SyncViet AI 에이전트 — 투명한 자동화 도우미",
-            "profileBannerTitle": "공식 SyncViet AI 계정"
+            "defaultDisclosure": "공식 SysNoxis AI 에이전트 — 투명한 자동화 도우미",
+            "profileBannerTitle": "공식 SysNoxis AI 계정"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "친구 초대하고 Premium 받기",
-            "heading": "SyncViet에 친구 초대하기",
-            "subtitle": "나만의 추천 링크를 공유하세요. 친구가 이메일 인증을 완료하고 SyncViet에서 활동하면 누적 SyncViet Premium 일수가 자동으로 적립됩니다.",
+            "heading": "SysNoxis에 친구 초대하기",
+            "subtitle": "나만의 추천 링크를 공유하세요. 친구가 이메일 인증을 완료하고 SysNoxis에서 활동하면 누적 SysNoxis Premium 일수가 자동으로 적립됩니다.",
             "viewPremium": "My Premium",
             "yourCode": "나의 추천 코드",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "추천 링크가 클립보드에 복사되었습니다.",
             "share": "Share",
-            "shareMessage": "지식과 열린 토론을 위한 글로벌 커뮤니티 SyncViet에 함께 참여하세요:",
+            "shareMessage": "지식과 열린 토론을 위한 글로벌 커뮤니티 SysNoxis에 함께 참여하세요:",
             "statTotal": "총 추천 수",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "획득한 Premium",
             "progressTitle": "누적 Premium 마일스톤",
-            "progressSummary": "현재 적격 추천이 {qualified} / {target}건 있습니다. 인증된 회원 {remaining}명을 더 초대하면 총 {days}일의 SyncViet Premium을 달성합니다.",
+            "progressSummary": "현재 적격 추천이 {qualified} / {target}건 있습니다. 인증된 회원 {remaining}명을 더 초대하면 총 {days}일의 SysNoxis Premium을 달성합니다.",
             "verificationWindow": "{hours}시간 검증 대기 기간",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "누적 합계",
             "historyTitle": "추천 진행 현황",
-            "emptyHistory": "아직 초대한 회원이 없습니다. 링크를 공유하여 SyncViet Premium 적립을 시작해 보세요.",
+            "emptyHistory": "아직 초대한 회원이 없습니다. 링크를 공유하여 SysNoxis Premium 적립을 시작해 보세요.",
             "rewardHistoryTitle": "보상 내역"
         },
         "earlyMember": {
-            "title": "SyncViet 얼리 멤버 (선착순 1,000명)",
-            "description": "프로그램이 활성화된 기간 동안 인증된 초기 개척자 인간 회원에게는 영구 얼리 멤버 배지와 무료 SyncViet Premium 혜택이 제공됩니다.",
+            "title": "SysNoxis 얼리 멤버 (선착순 1,000명)",
+            "description": "프로그램이 활성화된 기간 동안 인증된 초기 개척자 인간 회원에게는 영구 얼리 멤버 배지와 무료 SysNoxis Premium 혜택이 제공됩니다.",
             "yourNumber": "회원님은 얼리 멤버 #{num}번입니다!",
             "openStatus": "자격 요건을 충족한 인증 회원에게 열려 있음",
             "pausedStatus": "현재 관리자에 의해 일시 중지된 프로그램"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "선택적 제품 소식 이메일 (수신 동의)"
         },
         "onboarding": {
-            "pageTitle": "SyncViet에 오신 것을 환영합니다",
-            "heading": "나만의 SyncViet 경험 맞춤 설정",
+            "pageTitle": "SysNoxis에 오신 것을 환영합니다",
+            "heading": "나만의 SysNoxis 경험 맞춤 설정",
             "subtitle": "선호하는 언어, 관심 주제 및 커뮤니티를 선택해 보세요. 모든 단계는 선택 사항이며 언제든 건너뛸 수 있습니다.",
             "skip": "지금은 건너뛰기",
             "languageStep": "1. 선호 언어",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. 둘러볼 만한 유용한 계정",
             "join": "Join",
             "joined": "Joined",
-            "finish": "SyncViet 계속하기"
+            "finish": "SysNoxis 계속하기"
         },
         "extra": {
             "daysShort": "{count}일",
@@ -2563,7 +2563,7 @@
             "updateProfile": "프로필 업데이트",
             "username": "사용자 이름"
         },
-        "checklistSubtitle": "SyncViet 계정을 안전하고 최신 상태로 유지하세요.",
+        "checklistSubtitle": "SysNoxis 계정을 안전하고 최신 상태로 유지하세요.",
         "checklistTitle": "계정 보안 체크리스트",
         "editProfileButton": "프로필 편집",
         "feedButton": "뉴스 피드",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "화면 테마",
-            "headingDescription": "이 기기에서 SyncViet을 표시할 방식을 선택하세요.",
+            "headingDescription": "이 기기에서 SysNoxis을 표시할 방식을 선택하세요.",
             "headingTitle": "화면 테마",
             "pageTitle": "화면 테마 설정",
             "srHeading": "화면 테마 설정",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "계정을 삭제하면 모든 활성 세션이 만료되며 개인 데이터는 복구할 수 없습니다. 확인을 위해 비밀번호를 입력하세요.",
             "confirmTitle": "정말로 계정을 삭제하시겠습니까?",
             "deleteButton": "계정 삭제",
-            "headingDescription": "SyncViet 계정을 영구적으로 해지하고 활성 세션을 종료합니다.",
+            "headingDescription": "SysNoxis 계정을 영구적으로 해지하고 활성 세션을 종료합니다.",
             "headingTitle": "계정 삭제",
             "passwordLabel": "현재 비밀번호",
             "passwordPlaceholder": "확인을 위해 비밀번호 입력",

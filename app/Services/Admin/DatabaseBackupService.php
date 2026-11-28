@@ -43,7 +43,7 @@ class DatabaseBackupService
         }
 
         try {
-            gzwrite($gz, "-- SyncViet Logical Database Backup\n");
+            gzwrite($gz, "-- SysNoxis Logical Database Backup\n");
             gzwrite($gz, '-- Generated At: '.now()->toIso8601String()."\n");
             gzwrite($gz, "-- Driver: {$driver}\n");
             gzwrite($gz, "SET FOREIGN_KEY_CHECKS=0;\n");

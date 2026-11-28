@@ -100,7 +100,7 @@ class InternalLinkingService
                     'excerpt' => Str::limit(trim(strip_tags($item->content)), 120),
                     'path' => $path,
                     'url' => $this->canonicalUrls->absoluteUrl($path),
-                    'author_name' => $item->author !== null ? $item->author->name : 'SyncViet Member',
+                    'author_name' => $item->author !== null ? $item->author->name : 'SysNoxis Member',
                     'created_at' => $item->published_at?->toIso8601String() ?? $item->created_at?->toIso8601String(),
                 ];
             })->all()),

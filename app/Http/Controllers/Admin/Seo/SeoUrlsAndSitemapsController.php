@@ -291,7 +291,7 @@ class SeoUrlsAndSitemapsController extends Controller
             });
 
             fclose($out);
-        }, 'syncviet-seo-url-registry-'.now()->format('Ymd-His').'.csv', [
+        }, 'sysnoxis-seo-url-registry-'.now()->format('Ymd-His').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }

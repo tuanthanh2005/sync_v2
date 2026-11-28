@@ -428,7 +428,7 @@ class AiContentWorkflowController extends Controller
                 ]);
             }
             fclose($out);
-        }, 'syncviet-ai-drafts-'.now()->format('Ymd-His').'.csv', [
+        }, 'sysnoxis-ai-drafts-'.now()->format('Ymd-His').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }

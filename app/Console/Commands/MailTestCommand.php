@@ -56,7 +56,7 @@ class MailTestCommand extends Command
         }
 
         try {
-            $appName = (string) config('app.name', 'SyncViet');
+            $appName = (string) config('app.name', 'SysNoxis');
             Mail::raw(
                 "This is a live SMTP delivery test from {$appName} (".config('app.url').') sent at '.now()->toIso8601String().'.',
                 static function ($message) use ($recipient, $appName): void {

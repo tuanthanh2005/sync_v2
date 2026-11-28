@@ -256,7 +256,7 @@
         "clearHistory": "Temizle",
         "errorLoadFailed": "Arama sonuçları şu anda yüklenemiyor. Lütfen tekrar deneyin.",
         "exploreCategories": "Kategoriye göre göz at",
-        "exploreHeading": "SyncViet'i Keşfet",
+        "exploreHeading": "SysNoxis'i Keşfet",
         "exploreMore": "Aktif konuları ve toplulukları keşfet",
         "exploreSubtitle": "Sohbetleri, aktif toplulukları, konuları ve öne çıkan isimleri keşfedin.",
         "exploreTitle": "Keşfet",
@@ -332,7 +332,7 @@
         "highlightSecurity": "E-posta doğrulaması ve iki faktörlü kimlik doğrulama ile çok katmanlı hesap koruması.",
         "highlightCommunity": "Güçlü gizlilik önlemleriyle yapıcı ve saygılı tartışmalar.",
         "confirmPassword": {
-            "layoutDescription": "Burası SyncViet'in güvenli bir alanıdır. Devam etmeden önce lütfen şifrenizi doğrulayın.",
+            "layoutDescription": "Burası SysNoxis'in güvenli bir alanıdır. Devam etmeden önce lütfen şifrenizi doğrulayın.",
             "layoutTitle": "Şifrenizi doğrulayın",
             "pageTitle": "Şifreyi Doğrula",
             "submit": "Şifreyi Doğrula"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Google ile devam et",
             "forgotPassword": "Şifrenizi mi unuttunuz?",
-            "layoutDescription": "SyncViet'teki tartışmalara, topluluklara ve uluslararası konulara katılmak için giriş yapın.",
+            "layoutDescription": "SysNoxis'teki tartışmalara, topluluklara ve uluslararası konulara katılmak için giriş yapın.",
             "layoutTitle": "Hesabınıza giriş yapın",
             "noAccount": "Hesabınız yok mu?",
             "orDivider": "veya",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "Zaten hesabınız var mı?",
             "continueWithGoogle": "Google ile kayıt ol",
-            "layoutDescription": "Küresel topluluklarla bağlantı kurmak için SyncViet hesabınızı oluşturun.",
+            "layoutDescription": "Küresel topluluklarla bağlantı kurmak için SysNoxis hesabınızı oluşturun.",
             "layoutTitle": "Yeni hesap oluştur",
             "loginLink": "Giriş yap",
             "orCreateAccount": "veya e-posta ile oluştur",
@@ -386,7 +386,7 @@
             "pausedNotice": "Yeni kayıtlar güvenlik nedeniyle geçici olarak duraklatıldı. Doğrulanmış üyeler giriş yapabilir."
         },
         "resetPassword": {
-            "layoutDescription": "SyncViet hesabınız için yeni ve güvenli bir şifre belirleyin.",
+            "layoutDescription": "SysNoxis hesabınız için yeni ve güvenli bir şifre belirleyin.",
             "layoutTitle": "Şifrenizi sıfırlayın",
             "pageTitle": "Şifre Sıfırla",
             "submit": "Şifreyi güncelle"
@@ -564,7 +564,7 @@
         "title": "Reklam Yöneticisi",
         "subtitle": "Hedef kitlelere ulaşmak, etkileşimi artırmak ve hedeflerinize erişmek için gönderilerinizi öne çıkarın.",
         "guideButton": "Kullanım rehberi",
-        "guideTitle": "SyncViet Reklamcılığı Nasıl Çalışır?",
+        "guideTitle": "SysNoxis Reklamcılığı Nasıl Çalışır?",
         "guidePoints": {
             "p1": "1. Öne çıkarılacak içerik olarak herkese açık ve onaylı gönderilerinizden birini seçin.",
             "p2": "2. Hedefinizi, ilgili konuları, zamanlamayı ve tam sayı VND bütçenizi belirleyin.",
@@ -612,7 +612,7 @@
         "estReach": "Tahmini erişim",
         "estClicks": "Tahmini tıklama",
         "estAvgCpc": "Referans CPC",
-        "estimatesDisclaimer": "Tahminler yalnızca referans amaçlıdır; SyncViet sabit gösterim veya tıklama garantisi vermez.",
+        "estimatesDisclaimer": "Tahminler yalnızca referans amaçlıdır; SysNoxis sabit gösterim veya tıklama garantisi vermez.",
         "walletBoxTitle": "Reklam Cüzdanı Bakiyesi",
         "topUpShort": "Yükle",
         "sufficientWallet": "Yeterli bakiye (gerekli: {amount})",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "Yönetim Merkezi",
-        "backToSite": "SyncViet'e dön",
+        "backToSite": "SysNoxis'e dön",
         "collapseSidebar": "Kenar çubuğunu daralt",
         "expandSidebar": "Kenar çubuğunu genişlet",
         "quickSearch": "Kullanıcı, gönderi, günlüklerde hızlı ara...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Google Dizinli",
             "notIndexed": "Dizinlenmedi",
             "kpiTechnicalScore": "Teknik Sağlık Puanı",
-            "scoreDisclaimer": "Dahili SyncViet teknik puanı (Google Sıralama Puanı DEĞİLDİR).",
+            "scoreDisclaimer": "Dahili SysNoxis teknik puanı (Google Sıralama Puanı DEĞİLDİR).",
             "gscPerformance": "Google Search Console Performansı",
             "gscHonestSubtitle": "Search Console API kaynaklı gerçek tıklama, gösterim, TO ve sıralama.",
             "gscNotConnected": "Google Search Console — Kurulum Gerekli",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "Yeni İstem Şablonu Oluştur",
             "savePromptBtn": "İstem Şablonunu Kaydet",
             "contentTitle": "YZ İçerik İş Akışı, İnsan İnceleme Kuyruğu ve Zamanlayıcı",
-            "contentSubtitle": "Yapılandırılmış JSON taslakları üretin, Kalite Kapısı puanlarını inceleyin ve standart SyncViet Gönderi ve SEO V2.0 hattı üzerinden yayımlamadan önce düzenleyip onaylayın.",
+            "contentSubtitle": "Yapılandırılmış JSON taslakları üretin, Kalite Kapısı puanlarını inceleyin ve standart SysNoxis Gönderi ve SEO V2.0 hattı üzerinden yayımlamadan önce düzenleyip onaylayın.",
             "generateDraftHeading": "YZ İçerik Taslağı Üret",
             "topicLabel": "Konu / Editoryal Özet",
             "generateBtn": "Taslak Üret",
@@ -2146,7 +2146,7 @@
         "previous": "Önceki"
     },
     "pwa": {
-        "installApp": "SyncViet Uygulamasını Yükle"
+        "installApp": "SysNoxis Uygulamasını Yükle"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "Yönetim"
         },
         "badge": {
-            "title": "SyncViet Premium Üyesi",
-            "tooltip": "Bu mavi onay işareti aktif bir ücretli SyncViet Premium üyeliğine aittir. Kimlik Doğrulama, Resmi Kuruluş veya Yönetici rollerinden tamamen ayrıdır."
+            "title": "SysNoxis Premium Üyesi",
+            "tooltip": "Bu mavi onay işareti aktif bir ücretli SysNoxis Premium üyeliğine aittir. Kimlik Doğrulama, Resmi Kuruluş veya Yönetici rollerinden tamamen ayrıdır."
         },
         "common": {
             "days": "gün",
             "monthShort": "ay"
         },
         "benefits": {
-            "blue_badge": "Gönderiler, yorumlar, profiller ve mesajlarda SyncViet Premium mavi rozeti",
+            "blue_badge": "Gönderiler, yorumlar, profiller ve mesajlarda SysNoxis Premium mavi rozeti",
             "post_analytics": "Gönderi erişimi ve etkileşim performansı analizleri",
             "reduced_ads": "Akışta daha az sponsorlu içerik gösterimi",
-            "ad_free": "SyncViet genelinde reklamsız gezinme deneyimi",
+            "ad_free": "SysNoxis genelinde reklamsız gezinme deneyimi",
             "priority_support": "Öncelikli destek talebi değerlendirmesi",
             "profile_highlights": "Gelişmiş profil görünümü ve içerik üreticisi vurguları"
         },
         "services": {
             "pageTitle": "Hizmet Merkezi",
-            "eyebrow": "SyncViet Gelir ve Tanıtım Hizmetleri",
-            "heading": "SyncViet üzerinde sesinizi ve markanızı büyütün",
-            "subtitle": "Şeffaf fiyatlandırma, manuel sipariş onayı ve tam moderasyon güvenliği. SyncViet üzerindeki temel sosyal özellikler sonsuza kadar %100 ücretsiz kalır.",
+            "eyebrow": "SysNoxis Gelir ve Tanıtım Hizmetleri",
+            "heading": "SysNoxis üzerinde sesinizi ve markanızı büyütün",
+            "subtitle": "Şeffaf fiyatlandırma, manuel sipariş onayı ve tam moderasyon güvenliği. SysNoxis üzerindeki temel sosyal özellikler sonsuza kadar %100 ücretsiz kalır.",
             "freeCoreGuarantee": "Gönderi paylaşma, yorum yapma, tepki verme, takip etme, topluluklara katılma, arama ve bildirimde bulunma her üye için her zaman ücretsizdir.",
             "startingFrom": "Başlangıç fiyatı",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "SyncViet mavi rozeti, azaltılmış veya reklamsız gezinme ve içerik üreticisi analizleri sunan süreli üyelik.",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "SysNoxis mavi rozeti, azaltılmış veya reklamsız gezinme ve içerik üreticisi analizleri sunan süreli üyelik.",
             "bannerTitle": "Banner Reklamları",
             "bannerDesc": "Özel veya dönüşümlü slotlarla masaüstü ve mobilde yüksek görünürlüklü banner alanlarını haftalık veya aylık kiralayın.",
             "boostTitle": "Gönderi Öne Çıkarma (Boost Post)",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "Reklam Merkezini Aç"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "SyncViet Premium ile öne çıkın",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "SysNoxis Premium ile öne çıkın",
             "subtitle": "Sürpriz yenilemeler içermeyen sade, süreli ön ödemeli üyelikler. Kalan günlerinizi kaybetmeden istediğiniz zaman yükseltin veya uzatın.",
             "manageMyPlan": "Premium Planımı Yönet",
-            "activeBanner": "SyncViet Premium üyeliğiniz {date} tarihine kadar aktiftir.",
+            "activeBanner": "SysNoxis Premium üyeliğiniz {date} tarihine kadar aktiftir.",
             "extendPreservesDays": "Şimdi yenilemek, süreyi doğrudan mevcut bitiş tarihinizin üzerine ekler.",
             "paymentMethodLabel": "Ödeme Yöntemi Seçin",
             "noAutoAdBalanceDebit": "Premium doğrudan ödeme sayfası üzerinden faturalandırılır ve hiçbir zaman Reklam Bakiyenizden otomatik düşülmez.",
@@ -2203,9 +2203,9 @@
             "buyButton": "Planı Seç",
             "extendButton": "Planı Uzat",
             "moderationRuleTitle": "Eşit Güvenlik ve Moderasyon Standartları",
-            "moderationRuleDesc": "Premium üyeler de tüm SyncViet Topluluk Kurallarına, spam önleme kurallarına ve güvenlik kontrollerine tabidir.",
+            "moderationRuleDesc": "Premium üyeler de tüm SysNoxis Topluluk Kurallarına, spam önleme kurallarına ve güvenlik kontrollerine tabidir.",
             "manualConfirmHint": "Siparişler hiçbir zaman otomatik oluşturulmaz. Herhangi bir ödeme siparişi oluşturulmadan önce ayrıntıları her zaman inceleyip Evet/Hayır ile onaylarsınız.",
-            "slogan": "SyncViet’te net bir şekilde öne çıkın ve daha sade bir deneyim yaşayın.",
+            "slogan": "SysNoxis’te net bir şekilde öne çıkın ve daha sade bir deneyim yaşayın.",
             "chooseDurationTitle": "Üyelik süresini seçin",
             "chooseDurationSubtitle": "Tek ön ödemeli üyelik — daha uzun süreler daha yüksek tasarruf sağlar.",
             "bestValue": "En Avantajlı",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} gün",
             "adFreeTag": "Reklamsız deneyim",
             "reducedAdsTag": "Daha az reklam",
-            "benefitsHeading": "SyncViet Premium ayrıcalıkları",
+            "benefitsHeading": "SysNoxis Premium ayrıcalıkları",
             "adFreeUpgradeHint": "{duration} planı, daha az reklam yerine tamamen reklamsız gezinme deneyimi sunar.",
             "switchToAdFree": "{duration} seç",
             "adFreeIncludedBadge": "Reklamsız dahil",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "Yükseltmek için Giriş Yap"
         },
         "accountPremium": {
-            "pageTitle": "SyncViet Premium Üyeliğim",
+            "pageTitle": "SysNoxis Premium Üyeliğim",
             "expiresOn": "{date} tarihine kadar aktif ({days} gün kaldı)",
-            "inactiveNotice": "Şu anda aktif bir SyncViet Premium aboneliğiniz bulunmuyor.",
+            "inactiveNotice": "Şu anda aktif bir SysNoxis Premium aboneliğiniz bulunmuyor.",
             "historyTitle": "Abonelik Geçmişi",
             "complimentary": "Hediye / Tanımlama",
             "emptyHistory": "Henüz abonelik kaydı yok."
         },
         "advertising": {
             "pageTitle": "Reklam Merkezi",
-            "eyebrow": "SyncViet Reklamcılık",
+            "eyebrow": "SysNoxis Reklamcılık",
             "heading": "Şeffaf reklamlarla gerçek topluluklara ulaşın",
             "subtitle": "Sürekli marka görünürlüğü için zamana dayalı Banner alanlarını veya değerli tartışmaları öne çıkarmak için sabit süreli Gönderi Öne Çıkarma paketlerini seçin."
         },
         "banner": {
             "pageTitle": "Banner Reklamları",
-            "heading": "Yüksek etkili SyncViet banner alanları kiralayın",
+            "heading": "Yüksek etkili SysNoxis banner alanları kiralayın",
             "subtitle": "Masaüstü ve mobil yüzeylerde şeffaf haftalık ve aylık kiralama ücretleri. Her görsel moderasyon ekibimiz tarafından incelenir.",
             "sponsoredLabel": "Sponsorlu",
             "adOptions": "Reklam seçenekleri",
             "adInfo": "Bu reklam hakkında",
-            "adInfoDesc": "Bu, SyncViet tarafından incelenmiş ücretli doğrudan bir banner yerleşimidir. Reklamları istediğiniz zaman gizleyebilir veya bildirebilirsiniz.",
+            "adInfoDesc": "Bu, SysNoxis tarafından incelenmiş ücretli doğrudan bir banner yerleşimidir. Reklamları istediğiniz zaman gizleyebilir veya bildirebilirsiniz.",
             "hideAd": "Bu reklamı gizle",
             "reportAd": "Reklamı bildir",
             "placementsUnit": "alan",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "Gönderi Öne Çıkarma",
-            "heading": "Herkese açık SyncViet gönderilerinizi daha geniş kitlelere ulaştırın",
+            "heading": "Herkese açık SysNoxis gönderilerinizi daha geniş kitlelere ulaştırın",
             "subtitle": "Net Sponsorlu rozetlerine sahip sabit süreli tanıtım paketleri. Süre yalnızca moderasyon onayından sonra başlar ve organik Popüler sıralamalarını asla manipüle etmez.",
             "modalTitle": "Bu gönderiyi öne çıkar",
             "packagesUnit": "paket",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "Reklam Bakiyesi",
-            "subtitle": "Yalnızca SyncViet Gönderi Öne Çıkarma ve uygun reklam kampanyaları için kullanılan ön ödemeli reklam bakiyesi.",
+            "subtitle": "Yalnızca SysNoxis Gönderi Öne Çıkarma ve uygun reklam kampanyaları için kullanılan ön ödemeli reklam bakiyesi.",
             "promoBalance": "Promosyon kredisi",
             "availableShort": "Kullanılabilir Reklam Bakiyesi",
             "topUpTitle": "Reklam Bakiyesi Yükle",
-            "purposeDisclaimer": "Reklam Bakiyesi yalnızca SyncViet reklam hizmetleri içindir. Kişiden kişiye transfer, nakit çekim veya faiz uygulanmaz."
+            "purposeDisclaimer": "Reklam Bakiyesi yalnızca SysNoxis reklam hizmetleri içindir. Kişiden kişiye transfer, nakit çekim veya faiz uygulanmaz."
         },
         "payments": {
             "title": "Ödeme Geçmişi",
-            "subtitle": "Tüm SyncViet Premium, Banner Reklamları, Gönderi Öne Çıkarma ve Reklam Bakiyesi siparişleriniz tek bir yerde.",
+            "subtitle": "Tüm SysNoxis Premium, Banner Reklamları, Gönderi Öne Çıkarma ve Reklam Bakiyesi siparişleriniz tek bir yerde.",
             "openPendingLabel": "Açık Bekleyen Siparişler",
             "searchPlaceholder": "Sipariş kodu, referans veya ödeme sağlayıcısına göre ara...",
             "allServices": "Tüm Hizmetler",
@@ -2332,7 +2332,7 @@
             "method": "Ödeme Yöntemi",
             "fee": "İşlem Ücreti",
             "total": "Ödenecek Toplam",
-            "termsNotice": "Onaylayarak SyncViet Ödeme Koşullarını ve ilgili hizmet politikasını kabul etmiş olursunuz.",
+            "termsNotice": "Onaylayarak SysNoxis Ödeme Koşullarını ve ilgili hizmet politikasını kabul etmiş olursunuz.",
             "noButton": "Hayır, Geri Dön",
             "yesButton": "Evet, Ödeme Siparişi Oluştur"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "Sıkça Sorulan Sorular",
-            "q1": "SyncViet kullanmak için ödeme yapmam gerekiyor mu?",
+            "q1": "SysNoxis kullanmak için ödeme yapmam gerekiyor mu?",
             "a1": "Hayır. Gönderi paylaşmak, yorum yapmak, tepki vermek, takip etmek, mesajlaşmak ve topluluklara katılmak tamamen ücretsizdir.",
-            "q2": "SyncViet Premium rozeti Kimlik Doğrulama ile aynı şey mi?",
-            "a2": "Hayır. Mavi onay işareti aktif ücretli bir SyncViet Premium üyeliğini gösterir. Kimlik doğrulama ve personel rozetleri tamamen ayrıdır.",
+            "q2": "SysNoxis Premium rozeti Kimlik Doğrulama ile aynı şey mi?",
+            "a2": "Hayır. Mavi onay işareti aktif ücretli bir SysNoxis Premium üyeliğini gösterir. Kimlik doğrulama ve personel rozetleri tamamen ayrıdır.",
             "q3": "Süresi dolmadan önce Premium planımı uzatırsam ne olur?",
             "a3": "Yeni süreniz doğrudan mevcut bitiş zaman damganızın üzerine eklenir; böylece tek bir kalan gününüzü bile kaybetmezsiniz.",
             "q4": "Reklam Bakiyemi çekebilir veya başka bir kullanıcıya aktarabilir miyim?",
-            "a4": "Hayır. Reklam Bakiyesi yalnızca SyncViet reklam hizmetleri için kullanılan ön ödemeli bir kredidir; çekilemez ve hesaplar arasında aktarılamaz."
+            "a4": "Hayır. Reklam Bakiyesi yalnızca SysNoxis reklam hizmetleri için kullanılan ön ödemeli bir kredidir; çekilemez ve hesaplar arasında aktarılamaz."
         },
         "admin": {
             "revenueSubtitle": "Ön ödemeli reklam yüklemelerini muhasebeleştirilmiş doğrudan hizmet gelirinden kesin olarak ayıran çift para birimli (VND ve USD) raporlama.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Premium Mavi Rozet",
-                "desc": "Gönderiler, yorumlar, profil, arama ve mesajlarda adınızın yanında SyncViet Premium mavi rozetini gösterin."
+                "desc": "Gönderiler, yorumlar, profil, arama ve mesajlarda adınızın yanında SysNoxis Premium mavi rozetini gösterin."
             },
             "post_analytics": {
                 "title": "Gönderi Performans Analitiği",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "Reklamsız Deneyim",
-                "desc": "SyncViet akışını ve topluluklarını sponsorlu reklamlar olmadan gezin."
+                "desc": "SysNoxis akışını ve topluluklarını sponsorlu reklamlar olmadan gezin."
             },
             "priority_support": {
                 "title": "Öncelikli Destek",
-                "desc": "Hesap destek talepleriniz SyncViet ekibi tarafından öncelikli olarak yanıtlanır."
+                "desc": "Hesap destek talepleriniz SysNoxis ekibi tarafından öncelikli olarak yanıtlanır."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "SyncViet Banner Reklamları",
+            "badgeTitle": "SysNoxis Banner Reklamları",
             "campaignStats": "{impressions} gösterim · {clicks} tıklama (%{ctr} CTR)",
             "desktop": "Masaüstü",
             "mobile": "Mobil",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}: {width}×{height}px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "SyncViet Gönderi Öne Çıkarma",
+            "boostBadgeTitle": "SysNoxis Gönderi Öne Çıkarma",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24s",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "Hesap sahibi",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "PayPal e-postası",
             "serviceBanner": "Banner Reklamcılığı",
             "serviceBoost": "Gönderi Öne Çıkarma",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "VietQR havale QR kodu"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "İlgili Topluluklar"
         },
         "post": {
-            "guestCtaTitle": "SyncViet topluluğuna katıl",
+            "guestCtaTitle": "SysNoxis topluluğuna katıl",
             "guestCtaDesc": "Yanıtlamak, kaydetmek, yazarları takip etmek ve küresel tartışmalara katılmak için ücretsiz hesap oluşturun.",
             "availableLanguages": "Mevcut diller",
             "relatedTopics": "Konular ve Topluluk",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "YZ Ajanı",
-            "defaultDisclosure": "Resmi SyncViet Yapay Zeka Ajanı — Şeffaf otomatik asistan",
-            "profileBannerTitle": "Resmi SyncViet Yapay Zeka Hesabı"
+            "defaultDisclosure": "Resmi SysNoxis Yapay Zeka Ajanı — Şeffaf otomatik asistan",
+            "profileBannerTitle": "Resmi SysNoxis Yapay Zeka Hesabı"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "Arkadaşlarını Davet Et ve Premium Kazan",
-            "heading": "Arkadaşlarını SyncViet'e Davet Et",
-            "subtitle": "Kişisel davet bağlantını paylaş. Arkadaşların e-postalarını doğrulayıp SyncViet'te etkileşim kurduğunda otomatik olarak kümülatif SyncViet Premium günleri kazanırsın.",
+            "heading": "Arkadaşlarını SysNoxis'e Davet Et",
+            "subtitle": "Kişisel davet bağlantını paylaş. Arkadaşların e-postalarını doğrulayıp SysNoxis'te etkileşim kurduğunda otomatik olarak kümülatif SysNoxis Premium günleri kazanırsın.",
             "viewPremium": "My Premium",
             "yourCode": "Davet Kodunuz",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "Davet bağlantısı panoya kopyalandı.",
             "share": "Share",
-            "shareMessage": "Bilgi ve açık tartışmalar için uluslararası bir topluluk olan SyncViet'te bana katıl:",
+            "shareMessage": "Bilgi ve açık tartışmalar için uluslararası bir topluluk olan SysNoxis'te bana katıl:",
             "statTotal": "Toplam Davet",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "Kazanılan Premium",
             "progressTitle": "Kümülatif Premium Aşamaları",
-            "progressSummary": "{qualified} / {target} nitelikli davetiniz var. Toplam {days} gün SyncViet Premium'a ulaşmak için {remaining} doğrulanmış üye daha davet edin.",
+            "progressSummary": "{qualified} / {target} nitelikli davetiniz var. Toplam {days} gün SysNoxis Premium'a ulaşmak için {remaining} doğrulanmış üye daha davet edin.",
             "verificationWindow": "{hours} saatlik doğrulama penceresi",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "Kümülatif toplam",
             "historyTitle": "Davet İlerlemesi",
-            "emptyHistory": "Henüz davet edilen üye yok. SyncViet Premium kazanmaya başlamak için bağlantınızı paylaşın.",
+            "emptyHistory": "Henüz davet edilen üye yok. SysNoxis Premium kazanmaya başlamak için bağlantınızı paylaşın.",
             "rewardHistoryTitle": "Ödül Geçmişi"
         },
         "earlyMember": {
-            "title": "SyncViet Erken Üyeleri (İlk 1.000)",
-            "description": "Doğrulanmış öncü insan üyeler, program aktif olduğunda kalıcı Erken Üye Rozeti ve ücretsiz SyncViet Premium kazanır.",
+            "title": "SysNoxis Erken Üyeleri (İlk 1.000)",
+            "description": "Doğrulanmış öncü insan üyeler, program aktif olduğunda kalıcı Erken Üye Rozeti ve ücretsiz SysNoxis Premium kazanır.",
             "yourNumber": "#{num} numaralı Erken Üye sizsiniz!",
             "openStatus": "Uygun doğrulanmış üyelere açık",
             "pausedStatus": "Program şu anda yönetici tarafından duraklatıldı"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "İsteğe bağlı ürün duyuru e-postaları (açık onaylı)"
         },
         "onboarding": {
-            "pageTitle": "SyncViet'e Hoş Geldiniz",
-            "heading": "SyncViet deneyiminizi kişiselleştirin",
+            "pageTitle": "SysNoxis'e Hoş Geldiniz",
+            "heading": "SysNoxis deneyiminizi kişiselleştirin",
             "subtitle": "Tercih ettiğiniz dili, konuları ve toplulukları seçin. Her adım isteğe bağlıdır ve istediğiniz zaman atlanabilir.",
             "skip": "Şimdilik atla",
             "languageStep": "1. Tercih Edilen Dil",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. Keşfedebileceğiniz Yararlı Hesaplar",
             "join": "Join",
             "joined": "Joined",
-            "finish": "SyncViet'e Devam Et"
+            "finish": "SysNoxis'e Devam Et"
         },
         "extra": {
             "daysShort": "{count}g",
@@ -2563,7 +2563,7 @@
             "updateProfile": "Profili güncelleyin",
             "username": "Kullanıcı adı"
         },
-        "checklistSubtitle": "SyncViet hesabınızı güvende ve güncel tutun.",
+        "checklistSubtitle": "SysNoxis hesabınızı güvende ve güncel tutun.",
         "checklistTitle": "Hesap Güvenliği Kontrol Listesi",
         "editProfileButton": "Profili Düzenle",
         "feedButton": "Haber Akışı",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "Görünüm",
-            "headingDescription": "SyncViet'in bu cihazda nasıl görüneceğini seçin.",
+            "headingDescription": "SysNoxis'in bu cihazda nasıl görüneceğini seçin.",
             "headingTitle": "Görünüm Teması",
             "pageTitle": "Görünüm Ayarları",
             "srHeading": "Görünüm Ayarları",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "Hesabınız silindiğinde tüm aktif oturumlar sonlandırılacak ve kişisel verileriniz kurtarılamayacaktır. Onaylamak için şifrenizi girin.",
             "confirmTitle": "Hesabınızı silmek istediğinizden emin misiniz?",
             "deleteButton": "Hesabı sil",
-            "headingDescription": "SyncViet hesabınızı kalıcı olarak kapatın ve aktif oturumları sonlandırın.",
+            "headingDescription": "SysNoxis hesabınızı kalıcı olarak kapatın ve aktif oturumları sonlandırın.",
             "headingTitle": "Hesabı Sil",
             "passwordLabel": "Mevcut şifre",
             "passwordPlaceholder": "Onaylamak için şifrenizi girin",

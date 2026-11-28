@@ -29,7 +29,7 @@ class PremiumController extends Controller
             'platformCapabilities' => $this->platformService->capabilitiesForRequest($request),
         ])->withViewData([
             'seo' => [
-                'title' => __('My SyncViet Premium').' - '.config('app.name'),
+                'title' => __('My SysNoxis Premium').' - '.config('app.name'),
                 'noindex' => true,
             ],
         ]);

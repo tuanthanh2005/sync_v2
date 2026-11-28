@@ -144,7 +144,7 @@ const minBoostPrice = computed(() => {
 
         <!-- Three Core Monetization Pillars -->
         <section class="grid gap-4 md:grid-cols-3">
-            <!-- 1. SyncViet Premium -->
+            <!-- 1. SysNoxis Premium -->
             <article
                 class="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs"
             >
@@ -220,7 +220,7 @@ const minBoostPrice = computed(() => {
                 </div>
             </article>
 
-            <!-- 2. SyncViet Banner Ads -->
+            <!-- 2. SysNoxis Banner Ads -->
             <article
                 class="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs"
             >
@@ -303,7 +303,7 @@ const minBoostPrice = computed(() => {
                 </div>
             </article>
 
-            <!-- 3. SyncViet Boost Post -->
+            <!-- 3. SysNoxis Boost Post -->
             <article
                 class="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs"
             >

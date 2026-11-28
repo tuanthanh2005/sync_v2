@@ -52,7 +52,7 @@ class LocalizationAuditCommand extends Command
             return ($strict && ! $report['summary']['strict_passed']) ? self::FAILURE : self::SUCCESS;
         }
 
-        $this->info('SyncViet Global Localization Audit');
+        $this->info('SysNoxis Global Localization Audit');
         $this->line(sprintf(
             'Default: %s | Fallback: %s | Frontend Keys: %d | Backend JSON Keys: %d | PHP Lang Keys: %d',
             $report['default_locale'],

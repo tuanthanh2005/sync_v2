@@ -131,7 +131,7 @@ const shareLinks = computed(() => ({
     x: `https://twitter.com/intent/tweet?text=${shareMessage.value}`,
     telegram: `https://t.me/share/url?url=${encodedLink.value}&text=${encodeURIComponent(t('growth.referral.shareMessage'))}`,
     whatsapp: `https://wa.me/?text=${shareMessage.value}`,
-    email: `mailto:?subject=${encodeURIComponent('SyncViet')}&body=${shareMessage.value}`,
+    email: `mailto:?subject=${encodeURIComponent('SysNoxis')}&body=${shareMessage.value}`,
 }));
 
 // Deterministic local visual matrix derived from referral code (zero external QR CDN tracking!)
@@ -184,7 +184,7 @@ async function nativeShare(): Promise<void> {
     if (typeof navigator !== 'undefined' && 'share' in navigator) {
         try {
             await navigator.share({
-                title: 'SyncViet',
+                title: 'SysNoxis',
                 text: t('growth.referral.shareMessage'),
                 url: props.referral.referralLink,
             });

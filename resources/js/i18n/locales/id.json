@@ -256,7 +256,7 @@
         "clearHistory": "Hapus",
         "errorLoadFailed": "Tidak dapat memuat hasil pencarian saat ini. Silakan coba lagi.",
         "exploreCategories": "Jelajahi menurut kategori",
-        "exploreHeading": "Jelajahi SyncViet",
+        "exploreHeading": "Jelajahi SysNoxis",
         "exploreMore": "Temukan topik dan komunitas aktif",
         "exploreSubtitle": "Temukan percakapan, komunitas aktif, topik, dan tokoh berpengaruh.",
         "exploreTitle": "Jelajahi",
@@ -332,7 +332,7 @@
         "highlightSecurity": "Perlindungan akun berlapis dengan verifikasi email dan autentikasi dua faktor.",
         "highlightCommunity": "Diskusi yang konstruktif dan saling menghormati dengan perlindungan privasi yang kuat.",
         "confirmPassword": {
-            "layoutDescription": "Ini adalah area aman SyncViet. Harap konfirmasikan kata sandi Anda sebelum melanjutkan.",
+            "layoutDescription": "Ini adalah area aman SysNoxis. Harap konfirmasikan kata sandi Anda sebelum melanjutkan.",
             "layoutTitle": "Konfirmasikan kata sandi Anda",
             "pageTitle": "Konfirmasi Kata Sandi",
             "submit": "Konfirmasi Kata Sandi"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Lanjutkan dengan Google",
             "forgotPassword": "Lupa kata sandi?",
-            "layoutDescription": "Masuk untuk bergabung dalam diskusi, komunitas, dan topik internasional di SyncViet.",
+            "layoutDescription": "Masuk untuk bergabung dalam diskusi, komunitas, dan topik internasional di SysNoxis.",
             "layoutTitle": "Masuk ke akun Anda",
             "noAccount": "Belum punya akun?",
             "orDivider": "atau",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "Sudah punya akun?",
             "continueWithGoogle": "Daftar dengan Google",
-            "layoutDescription": "Buat akun SyncViet Anda untuk terhubung dengan komunitas global.",
+            "layoutDescription": "Buat akun SysNoxis Anda untuk terhubung dengan komunitas global.",
             "layoutTitle": "Buat akun baru",
             "loginLink": "Masuk",
             "orCreateAccount": "atau buat dengan email",
@@ -386,7 +386,7 @@
             "pausedNotice": "Pendaftaran akun baru dijeda sementara untuk keamanan. Anggota terverifikasi tetap dapat masuk."
         },
         "resetPassword": {
-            "layoutDescription": "Pilih kata sandi baru yang aman untuk akun SyncViet Anda.",
+            "layoutDescription": "Pilih kata sandi baru yang aman untuk akun SysNoxis Anda.",
             "layoutTitle": "Atur ulang kata sandi Anda",
             "pageTitle": "Atur Ulang Kata Sandi",
             "submit": "Perbarui kata sandi"
@@ -564,7 +564,7 @@
         "title": "Pengelola Iklan",
         "subtitle": "Promosikan postingan Anda untuk menjangkau audiens tertarget, meningkatkan interaksi, dan mencapai tujuan Anda.",
         "guideButton": "Panduan penggunaan",
-        "guideTitle": "Cara Kerja Periklanan SyncViet",
+        "guideTitle": "Cara Kerja Periklanan SysNoxis",
         "guidePoints": {
             "p1": "1. Pilih salah satu postingan publik Anda yang disetujui sebagai materi promosi.",
             "p2": "2. Pilih tujuan, topik target, jadwal, dan anggaran VND bilangan bulat Anda.",
@@ -612,7 +612,7 @@
         "estReach": "Perkiraan jangkauan",
         "estClicks": "Perkiraan klik",
         "estAvgCpc": "CPC referensi",
-        "estimatesDisclaimer": "Estimasi hanya sebagai referensi; SyncViet tidak menjamin jumlah tayangan atau klik tetap.",
+        "estimatesDisclaimer": "Estimasi hanya sebagai referensi; SysNoxis tidak menjamin jumlah tayangan atau klik tetap.",
         "walletBoxTitle": "Saldo Dompet Iklan",
         "topUpShort": "Isi saldo",
         "sufficientWallet": "Saldo mencukupi (memerlukan {amount})",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "Pusat Administrasi",
-        "backToSite": "Kembali ke SyncViet",
+        "backToSite": "Kembali ke SysNoxis",
         "collapseSidebar": "Ciutkan bilah sisi",
         "expandSidebar": "Perluas bilah sisi",
         "quickSearch": "Cari cepat pengguna, postingan, log...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Terindeks Google",
             "notIndexed": "Belum terindeks",
             "kpiTechnicalScore": "Skor Kesehatan Teknis",
-            "scoreDisclaimer": "Skor teknis internal SyncViet (BUKAN Skor Peringkat Google).",
+            "scoreDisclaimer": "Skor teknis internal SysNoxis (BUKAN Skor Peringkat Google).",
             "gscPerformance": "Performa Google Search Console",
             "gscHonestSubtitle": "Klik, tayangan, CTR, dan posisi asli dari API Search Console.",
             "gscNotConnected": "Google Search Console — Perlu Pengaturan",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "Buat Templat Prompt Baru",
             "savePromptBtn": "Simpan Templat Prompt",
             "contentTitle": "Alur Kerja Konten AI, Antrean Tinjauan Manusia & Penjadwal",
-            "contentSubtitle": "Buat draf JSON terstruktur, periksa skor Gerbang Kualitas, edit & setujui sebelum diterbitkan melalui alur standar SyncViet Post & SEO V2.0.",
+            "contentSubtitle": "Buat draf JSON terstruktur, periksa skor Gerbang Kualitas, edit & setujui sebelum diterbitkan melalui alur standar SysNoxis Post & SEO V2.0.",
             "generateDraftHeading": "Buat Draf Konten AI",
             "topicLabel": "Topik / Ringkasan Editorial",
             "generateBtn": "Buat Draf",
@@ -1271,7 +1271,7 @@
             "settingsTitle": "Sakelar & Batasan Program Pertumbuhan",
             "activityLogs": "Log Audit Tata Kelola Pertumbuhan",
             "referralsTitle": "Referral, Hadiah Kumulatif & Tinjauan Penipuan",
-            "referralsSubtitle": "Verifikasi referral setelah masa tunggu, selesaikan tinjauan penipuan multisinyal secara manual, kelola pencapaian SyncViet Premium kumulatif, dan tangani pencabutan yang aman.",
+            "referralsSubtitle": "Verifikasi referral setelah masa tunggu, selesaikan tinjauan penipuan multisinyal secara manual, kelola pencapaian SysNoxis Premium kumulatif, dan tangani pencabutan yang aman.",
             "campaignsTitle": "Kampanye Pertumbuhan, Anggota Awal, Lencana & Pencapaian",
             "campaignsSubtitle": "Kelola kampanye peluncuran/referral/anggota awal/pendiri, pelacakan perintis 1.000 slot nyata, lencana anggota yang jelas, dan pencapaian bernilai."
         },
@@ -2146,7 +2146,7 @@
         "previous": "Sebelumnya"
     },
     "pwa": {
-        "installApp": "Pasang Aplikasi SyncViet"
+        "installApp": "Pasang Aplikasi SysNoxis"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "Administrasi"
         },
         "badge": {
-            "title": "Anggota SyncViet Premium",
-            "tooltip": "Centang biru ini menandakan keanggotaan berbayar SyncViet Premium yang aktif. Ini berbeda dari Verifikasi Identitas, Organisasi Resmi, atau peran Administrator."
+            "title": "Anggota SysNoxis Premium",
+            "tooltip": "Centang biru ini menandakan keanggotaan berbayar SysNoxis Premium yang aktif. Ini berbeda dari Verifikasi Identitas, Organisasi Resmi, atau peran Administrator."
         },
         "common": {
             "days": "hari",
             "monthShort": "bln"
         },
         "benefits": {
-            "blue_badge": "Lencana biru SyncViet Premium di postingan, komentar, profil, dan pesan",
+            "blue_badge": "Lencana biru SysNoxis Premium di postingan, komentar, profil, dan pesan",
             "post_analytics": "Analitik jangkauan & performa interaksi postingan",
             "reduced_ads": "Lebih sedikit tampilan konten bersponsor di beranda",
-            "ad_free": "Pengalaman menjelajah bebas iklan di seluruh SyncViet",
+            "ad_free": "Pengalaman menjelajah bebas iklan di seluruh SysNoxis",
             "priority_support": "Penanganan dukungan prioritas",
             "profile_highlights": "Tampilan profil yang disempurnakan & sorotan kreator"
         },
         "services": {
             "pageTitle": "Pusat Layanan",
-            "eyebrow": "Layanan Monetisasi SyncViet",
-            "heading": "Kembangkan suara & merek Anda di SyncViet",
-            "subtitle": "Harga transparan, konfirmasi pesanan manual, dan keamanan moderasi penuh. Fitur sosial inti di SyncViet tetap 100% gratis selamanya.",
+            "eyebrow": "Layanan Monetisasi SysNoxis",
+            "heading": "Kembangkan suara & merek Anda di SysNoxis",
+            "subtitle": "Harga transparan, konfirmasi pesanan manual, dan keamanan moderasi penuh. Fitur sosial inti di SysNoxis tetap 100% gratis selamanya.",
             "freeCoreGuarantee": "Memposting, berkomentar, memberi reaksi, mengikuti, bergabung dengan komunitas, mencari, dan melaporkan selalu gratis untuk setiap anggota.",
             "startingFrom": "Mulai dari",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "Keanggotaan berjangka waktu dengan lencana biru SyncViet, penjelajahan dengan iklan lebih sedikit atau bebas iklan, dan analitik kreator.",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "Keanggotaan berjangka waktu dengan lencana biru SysNoxis, penjelajahan dengan iklan lebih sedikit atau bebas iklan, dan analitik kreator.",
             "bannerTitle": "Iklan Banner",
             "bannerDesc": "Sewa penempatan banner bervisibilitas tinggi di desktop dan seluler per minggu atau bulan dengan slot eksklusif atau bergilir.",
             "boostTitle": "Boost Postingan",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "Buka Pusat Periklanan"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "Tampil menonjol dengan SyncViet Premium",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "Tampil menonjol dengan SysNoxis Premium",
             "subtitle": "Keanggotaan prabayar berjangka waktu yang sederhana tanpa perpanjangan mendadak. Tingkatkan atau perpanjang kapan saja tanpa kehilangan sisa hari.",
             "manageMyPlan": "Kelola Premium Saya",
-            "activeBanner": "Keanggotaan SyncViet Premium Anda aktif hingga {date}.",
+            "activeBanner": "Keanggotaan SysNoxis Premium Anda aktif hingga {date}.",
             "extendPreservesDays": "Memperpanjang sekarang akan menambahkan waktu langsung ke tanggal kedaluwarsa Anda saat ini.",
             "paymentMethodLabel": "Pilih Metode Pembayaran",
             "noAutoAdBalanceDebit": "Premium ditagih langsung melalui checkout dan tidak pernah memotong Saldo Iklan Anda secara otomatis.",
@@ -2203,9 +2203,9 @@
             "buyButton": "Pilih Paket",
             "extendButton": "Perpanjang Paket",
             "moderationRuleTitle": "Standar Keamanan & Moderasi yang Setara",
-            "moderationRuleDesc": "Anggota Premium tetap tunduk pada seluruh Pedoman Komunitas SyncViet, aturan anti-spam, dan pemeriksaan keamanan.",
+            "moderationRuleDesc": "Anggota Premium tetap tunduk pada seluruh Pedoman Komunitas SysNoxis, aturan anti-spam, dan pemeriksaan keamanan.",
             "manualConfirmHint": "Pesanan tidak pernah dibuat secara otomatis. Anda akan selalu meninjau dan mengonfirmasi Ya/Tidak sebelum pesanan pembayaran dibuat.",
-            "slogan": "Tampil lebih menonjol dengan pengalaman SyncViet yang lebih nyaman.",
+            "slogan": "Tampil lebih menonjol dengan pengalaman SysNoxis yang lebih nyaman.",
             "chooseDurationTitle": "Pilih durasi keanggotaan",
             "chooseDurationSubtitle": "Satu keanggotaan prabayar yang fleksibel — durasi lebih panjang lebih hemat.",
             "bestValue": "Paling Hemat",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} hari",
             "adFreeTag": "Bebas iklan",
             "reducedAdsTag": "Iklan lebih sedikit",
-            "benefitsHeading": "Keuntungan SyncViet Premium",
+            "benefitsHeading": "Keuntungan SysNoxis Premium",
             "adFreeUpgradeHint": "Paket {duration} menghadirkan pengalaman bebas iklan sepenuhnya, bukan sekadar pengurangan iklan.",
             "switchToAdFree": "Pilih {duration}",
             "adFreeIncludedBadge": "Termasuk bebas iklan",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "Masuk untuk Upgrade"
         },
         "accountPremium": {
-            "pageTitle": "SyncViet Premium Saya",
+            "pageTitle": "SysNoxis Premium Saya",
             "expiresOn": "Aktif hingga {date} (tersisa {days} hari)",
-            "inactiveNotice": "Saat ini Anda belum memiliki langganan SyncViet Premium yang aktif.",
+            "inactiveNotice": "Saat ini Anda belum memiliki langganan SysNoxis Premium yang aktif.",
             "historyTitle": "Riwayat Langganan",
             "complimentary": "Gratis / Pemberian",
             "emptyHistory": "Belum ada catatan langganan."
         },
         "advertising": {
             "pageTitle": "Pusat Periklanan",
-            "eyebrow": "Periklanan SyncViet",
+            "eyebrow": "Periklanan SysNoxis",
             "heading": "Jangkau komunitas nyata dengan iklan yang transparan",
             "subtitle": "Pilih penempatan Banner berbasis waktu untuk kehadiran merek berkelanjutan atau paket Boost Postingan berdurasi tetap untuk memperkuat diskusi bernilai tinggi."
         },
         "banner": {
             "pageTitle": "Iklan Banner",
-            "heading": "Sewa penempatan banner SyncViet berdampak tinggi",
+            "heading": "Sewa penempatan banner SysNoxis berdampak tinggi",
             "subtitle": "Tarif sewa mingguan dan bulanan yang transparan di tampilan desktop dan seluler. Setiap materi iklan ditinjau oleh tim moderasi kami.",
             "sponsoredLabel": "Bersponsor",
             "adOptions": "Opsi iklan",
             "adInfo": "Tentang iklan ini",
-            "adInfoDesc": "Ini adalah penempatan banner langsung berbayar yang telah ditinjau oleh SyncViet. Anda dapat menyembunyikan atau melaporkan iklan kapan saja.",
+            "adInfoDesc": "Ini adalah penempatan banner langsung berbayar yang telah ditinjau oleh SysNoxis. Anda dapat menyembunyikan atau melaporkan iklan kapan saja.",
             "hideAd": "Sembunyikan iklan ini",
             "reportAd": "Laporkan iklan",
             "placementsUnit": "penempatan",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "Boost Postingan",
-            "heading": "Perkuat jangkauan postingan publik SyncViet Anda",
+            "heading": "Perkuat jangkauan postingan publik SysNoxis Anda",
             "subtitle": "Paket promosi berdurasi tetap dengan lencana Bersponsor yang jelas. Durasi baru berjalan setelah disetujui moderasi dan tidak pernah memanipulasi peringkat Populer organik.",
             "modalTitle": "Boost postingan ini",
             "packagesUnit": "paket",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "Saldo Iklan",
-            "subtitle": "Saldo iklan prabayar yang digunakan khusus untuk Boost Postingan SyncViet dan kampanye iklan yang memenuhi syarat.",
+            "subtitle": "Saldo iklan prabayar yang digunakan khusus untuk Boost Postingan SysNoxis dan kampanye iklan yang memenuhi syarat.",
             "promoBalance": "Kredit promo",
             "availableShort": "Saldo Iklan Tersedia",
             "topUpTitle": "Isi Ulang Saldo Iklan",
-            "purposeDisclaimer": "Saldo Iklan khusus untuk layanan periklanan SyncViet. Tidak ada transfer P2P, penarikan tunai, atau bunga."
+            "purposeDisclaimer": "Saldo Iklan khusus untuk layanan periklanan SysNoxis. Tidak ada transfer P2P, penarikan tunai, atau bunga."
         },
         "payments": {
             "title": "Riwayat Pembayaran",
-            "subtitle": "Semua pesanan SyncViet Premium, Iklan Banner, Boost Postingan, dan Saldo Iklan Anda di satu tempat.",
+            "subtitle": "Semua pesanan SysNoxis Premium, Iklan Banner, Boost Postingan, dan Saldo Iklan Anda di satu tempat.",
             "openPendingLabel": "Pesanan Tertunda Aktif",
             "searchPlaceholder": "Cari berdasarkan kode pesanan, referensi, atau gateway...",
             "allServices": "Semua Layanan",
@@ -2332,7 +2332,7 @@
             "method": "Metode Pembayaran",
             "fee": "Biaya Pemrosesan",
             "total": "Total yang Harus Dibayar",
-            "termsNotice": "Dengan mengonfirmasi, Anda menyetujui Ketentuan Pembayaran SyncViet dan kebijakan layanan yang berlaku.",
+            "termsNotice": "Dengan mengonfirmasi, Anda menyetujui Ketentuan Pembayaran SysNoxis dan kebijakan layanan yang berlaku.",
             "noButton": "Tidak, Kembali",
             "yesButton": "Ya, Buat Pesanan Pembayaran"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "Pertanyaan yang Sering Diajukan",
-            "q1": "Apakah saya harus membayar untuk menggunakan SyncViet?",
+            "q1": "Apakah saya harus membayar untuk menggunakan SysNoxis?",
             "a1": "Tidak. Memposting, berkomentar, memberi reaksi, mengikuti, berkirim pesan, dan bergabung dengan komunitas sepenuhnya gratis.",
-            "q2": "Apakah lencana SyncViet Premium sama dengan Verifikasi Identitas?",
-            "a2": "Tidak. Centang biru menunjukkan keanggotaan berbayar SyncViet Premium yang aktif. Verifikasi identitas dan lencana staf terpisah sepenuhnya.",
+            "q2": "Apakah lencana SysNoxis Premium sama dengan Verifikasi Identitas?",
+            "a2": "Tidak. Centang biru menunjukkan keanggotaan berbayar SysNoxis Premium yang aktif. Verifikasi identitas dan lencana staf terpisah sepenuhnya.",
             "q3": "Apa yang terjadi jika saya memperpanjang paket Premium sebelum kedaluwarsa?",
             "a3": "Durasi baru Anda ditambahkan langsung ke waktu kedaluwarsa yang ada sehingga Anda tidak akan kehilangan satu hari pun yang tersisa.",
             "q4": "Dapatkah saya menarik atau mentransfer Saldo Iklan saya ke pengguna lain?",
-            "a4": "Tidak. Saldo Iklan khusus merupakan saldo kredit prabayar untuk layanan periklanan SyncViet dan tidak dapat ditarik atau ditransfer antar-akun."
+            "a4": "Tidak. Saldo Iklan khusus merupakan saldo kredit prabayar untuk layanan periklanan SysNoxis dan tidak dapat ditarik atau ditransfer antar-akun."
         },
         "admin": {
             "revenueSubtitle": "Pelaporan dua mata uang (VND & USD) yang memisahkan secara ketat setoran iklan prabayar dari pendapatan layanan langsung yang diakui.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Lencana Biru Premium",
-                "desc": "Tampilkan centang biru SyncViet Premium di samping nama Anda pada postingan, komentar, profil, pencarian, dan pesan."
+                "desc": "Tampilkan centang biru SysNoxis Premium di samping nama Anda pada postingan, komentar, profil, pencarian, dan pesan."
             },
             "post_analytics": {
                 "title": "Analitik Performa Postingan",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "Pengalaman Bebas Iklan",
-                "desc": "Jelajahi beranda dan komunitas SyncViet sepenuhnya tanpa iklan bersponsor."
+                "desc": "Jelajahi beranda dan komunitas SysNoxis sepenuhnya tanpa iklan bersponsor."
             },
             "priority_support": {
                 "title": "Dukungan Prioritas",
-                "desc": "Permintaan bantuan akun Anda diprioritaskan oleh tim dukungan SyncViet."
+                "desc": "Permintaan bantuan akun Anda diprioritaskan oleh tim dukungan SysNoxis."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "Iklan Spanduk SyncViet",
+            "badgeTitle": "Iklan Spanduk SysNoxis",
             "campaignStats": "{impressions} tayangan · {clicks} klik ({ctr}% CTR)",
             "desktop": "Desktop",
             "mobile": "Seluler",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}: {width}×{height}px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "SyncViet Boost Post",
+            "boostBadgeTitle": "SysNoxis Boost Post",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24 jam",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "Pemilik rekening",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "Email PayPal",
             "serviceBanner": "Iklan Spanduk",
             "serviceBoost": "Boost Postingan",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "Kode QR transfer VietQR"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "Komunitas Terkait"
         },
         "post": {
-            "guestCtaTitle": "Bergabung dengan komunitas SyncViet",
+            "guestCtaTitle": "Bergabung dengan komunitas SysNoxis",
             "guestCtaDesc": "Buat akun gratis untuk membalas, menyimpan, dan berdiskusi secara global.",
             "availableLanguages": "Bahasa tersedia",
             "relatedTopics": "Topik & Komunitas",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "Agen AI",
-            "defaultDisclosure": "Agen AI resmi SyncViet — Asisten otomatis transparan",
-            "profileBannerTitle": "Akun AI Resmi SyncViet"
+            "defaultDisclosure": "Agen AI resmi SysNoxis — Asisten otomatis transparan",
+            "profileBannerTitle": "Akun AI Resmi SysNoxis"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "Undang Teman & Dapatkan Premium",
-            "heading": "Undang Teman ke SyncViet",
-            "subtitle": "Bagikan tautan referral pribadi Anda. Saat teman memverifikasi email dan berpartisipasi di SyncViet, Anda mendapatkan hari SyncViet Premium kumulatif secara otomatis.",
+            "heading": "Undang Teman ke SysNoxis",
+            "subtitle": "Bagikan tautan referral pribadi Anda. Saat teman memverifikasi email dan berpartisipasi di SysNoxis, Anda mendapatkan hari SysNoxis Premium kumulatif secara otomatis.",
             "viewPremium": "My Premium",
             "yourCode": "Kode Referral Anda",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "Tautan referral disalin ke papan klip.",
             "share": "Share",
-            "shareMessage": "Gabung bersama saya di SyncViet — komunitas internasional untuk pengetahuan dan diskusi terbuka:",
+            "shareMessage": "Gabung bersama saya di SysNoxis — komunitas internasional untuk pengetahuan dan diskusi terbuka:",
             "statTotal": "Total Diundang",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "Premium Diperoleh",
             "progressTitle": "Pencapaian Premium Kumulatif",
-            "progressSummary": "Anda memiliki {qualified} / {target} referral yang memenuhi syarat. Undang {remaining} anggota terverifikasi lagi untuk mencapai total {days} hari SyncViet Premium.",
+            "progressSummary": "Anda memiliki {qualified} / {target} referral yang memenuhi syarat. Undang {remaining} anggota terverifikasi lagi untuk mencapai total {days} hari SysNoxis Premium.",
             "verificationWindow": "Jendela verifikasi {hours} jam",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "Total kumulatif",
             "historyTitle": "Progres Referral",
-            "emptyHistory": "Belum ada anggota yang diundang. Bagikan tautan Anda untuk mulai mendapatkan SyncViet Premium.",
+            "emptyHistory": "Belum ada anggota yang diundang. Bagikan tautan Anda untuk mulai mendapatkan SysNoxis Premium.",
             "rewardHistoryTitle": "Riwayat Hadiah"
         },
         "earlyMember": {
-            "title": "Anggota Awal SyncViet (1.000 Pertama)",
-            "description": "Anggota manusia perintis yang terverifikasi menerima Lencana Anggota Awal permanen dan SyncViet Premium gratis saat program aktif.",
+            "title": "Anggota Awal SysNoxis (1.000 Pertama)",
+            "description": "Anggota manusia perintis yang terverifikasi menerima Lencana Anggota Awal permanen dan SysNoxis Premium gratis saat program aktif.",
             "yourNumber": "Anda adalah Anggota Awal #{num}!",
             "openStatus": "Terbuka untuk anggota terverifikasi yang memenuhi syarat",
             "pausedStatus": "Program sedang dijeda oleh administrator"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "Email pengumuman produk opsional (persetujuan aktif)"
         },
         "onboarding": {
-            "pageTitle": "Selamat Datang di SyncViet",
-            "heading": "Personalisasikan pengalaman SyncViet Anda",
+            "pageTitle": "Selamat Datang di SysNoxis",
+            "heading": "Personalisasikan pengalaman SysNoxis Anda",
             "subtitle": "Pilih bahasa, topik, dan komunitas pilihan Anda. Setiap langkah bersifat opsional dan dapat dilewati kapan saja.",
             "skip": "Lewati untuk sekarang",
             "languageStep": "1. Bahasa Pilihan",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. Akun Bermanfaat untuk Dijelajahi",
             "join": "Join",
             "joined": "Joined",
-            "finish": "Lanjutkan ke SyncViet"
+            "finish": "Lanjutkan ke SysNoxis"
         },
         "extra": {
             "daysShort": "{count}h",
@@ -2563,7 +2563,7 @@
             "updateProfile": "Perbarui profil",
             "username": "Nama pengguna"
         },
-        "checklistSubtitle": "Jaga keamanan dan keterkinian akun SyncViet Anda.",
+        "checklistSubtitle": "Jaga keamanan dan keterkinian akun SysNoxis Anda.",
         "checklistTitle": "Daftar Periksa Keamanan Akun",
         "editProfileButton": "Sunting Profil",
         "feedButton": "Linimasa Berita",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "Tampilan",
-            "headingDescription": "Pilih tampilan SyncViet di perangkat ini.",
+            "headingDescription": "Pilih tampilan SysNoxis di perangkat ini.",
             "headingTitle": "Tema Tampilan",
             "pageTitle": "Pengaturan Tampilan",
             "srHeading": "Pengaturan Tampilan",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "Setelah akun Anda dihapus, semua sesi aktif akan dicabut dan data pribadi Anda tidak dapat dipulihkan. Masukkan kata sandi Anda untuk mengonfirmasi.",
             "confirmTitle": "Apakah Anda yakin ingin menghapus akun Anda?",
             "deleteButton": "Hapus akun",
-            "headingDescription": "Tutup akun SyncViet Anda secara permanen dan cabut sesi aktif.",
+            "headingDescription": "Tutup akun SysNoxis Anda secara permanen dan cabut sesi aktif.",
             "headingTitle": "Hapus Akun",
             "passwordLabel": "Kata sandi saat ini",
             "passwordPlaceholder": "Masukkan kata sandi Anda untuk konfirmasi",

@@ -1,4 +1,4 @@
-const STATIC_CACHE = 'syncviet-static-v1';
+const STATIC_CACHE = 'syncviet-static-v2';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [

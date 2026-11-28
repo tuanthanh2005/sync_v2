@@ -327,7 +327,7 @@ class GrowthReferralsAndFraudController extends Controller
                 ]);
             }
             fclose($out);
-        }, 'syncviet-referrals-'.now()->format('Ymd-His').'.csv', [
+        }, 'sysnoxis-referrals-'.now()->format('Ymd-His').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     }

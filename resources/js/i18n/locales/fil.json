@@ -256,7 +256,7 @@
         "clearHistory": "Burahin",
         "errorLoadFailed": "Hindi ma-load ang mga resulta ng paghahanap sa ngayon. Pakisubukang muli.",
         "exploreCategories": "Mag-browse ayon sa kategorya",
-        "exploreHeading": "Tuklasin ang SyncViet",
+        "exploreHeading": "Tuklasin ang SysNoxis",
         "exploreMore": "Tumuklas ng mga aktibong paksa at komunidad",
         "exploreSubtitle": "Tumuklas ng mga usapan, aktibong komunidad, paksa, at kilalang boses.",
         "exploreTitle": "Tuklasin",
@@ -332,7 +332,7 @@
         "highlightSecurity": "Maraming patong na proteksyon ng account na may beripikasyon sa email at two-factor authentication.",
         "highlightCommunity": "Maayos at magalang na talakayan na may matibay na pangangalaga sa privacy.",
         "confirmPassword": {
-            "layoutDescription": "Isa itong ligtas na bahagi ng SyncViet. Mangyaring kumpirmahin ang iyong password bago magpatuloy.",
+            "layoutDescription": "Isa itong ligtas na bahagi ng SysNoxis. Mangyaring kumpirmahin ang iyong password bago magpatuloy.",
             "layoutTitle": "Kumpirmahin ang iyong password",
             "pageTitle": "Kumpirmahin ang Password",
             "submit": "Kumpirmahin ang Password"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Magpatuloy gamit ang Google",
             "forgotPassword": "Nakalimutan ang password?",
-            "layoutDescription": "Mag-sign in upang makasali sa mga talakayan, komunidad, at pandaigdigang paksa sa SyncViet.",
+            "layoutDescription": "Mag-sign in upang makasali sa mga talakayan, komunidad, at pandaigdigang paksa sa SysNoxis.",
             "layoutTitle": "Mag-sign in sa iyong account",
             "noAccount": "Wala ka pang account?",
             "orDivider": "o",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "May account ka na ba?",
             "continueWithGoogle": "Mag-sign up gamit ang Google",
-            "layoutDescription": "Gumawa ng iyong SyncViet account upang makipag-ugnayan sa mga pandaigdigang komunidad.",
+            "layoutDescription": "Gumawa ng iyong SysNoxis account upang makipag-ugnayan sa mga pandaigdigang komunidad.",
             "layoutTitle": "Gumawa ng bagong account",
             "loginLink": "Mag-sign in",
             "orCreateAccount": "o gumawa gamit ang email",
@@ -386,7 +386,7 @@
             "pausedNotice": "Pansamantalang naka-pause ang bagong pagpaparehistro para sa seguridad. Makakapasok pa rin ang mga beripikadong miyembro."
         },
         "resetPassword": {
-            "layoutDescription": "Pumili ng bagong ligtas na password para sa iyong SyncViet account.",
+            "layoutDescription": "Pumili ng bagong ligtas na password para sa iyong SysNoxis account.",
             "layoutTitle": "I-reset ang iyong password",
             "pageTitle": "I-reset ang Password",
             "submit": "I-update ang password"
@@ -564,7 +564,7 @@
         "title": "Tagapamahala ng Anunsyo",
         "subtitle": "Itaguyod ang iyong mga paskil upang maabot ang puntiryang tagapakinig, palakasin ang pakikipag-ugnayan, at makamit ang iyong mga layunin.",
         "guideButton": "Gabay sa paggamit",
-        "guideTitle": "Paano Gumagana ang Pag-aanunsyo sa SyncViet",
+        "guideTitle": "Paano Gumagana ang Pag-aanunsyo sa SysNoxis",
         "guidePoints": {
             "p1": "1. Pumili ng isa sa iyong mga aprubadong pampublikong paskil bilang materyal ng anunsyo.",
             "p2": "2. Piliin ang iyong layunin, puntiryang mga paksa, iskedyul, at buong bilang na badyet sa VND.",
@@ -612,7 +612,7 @@
         "estReach": "Tinatayang abot",
         "estClicks": "Tinatayang mga klik",
         "estAvgCpc": "Sangguniang CPC",
-        "estimatesDisclaimer": "Ang mga pagtataya ay sanggunian lamang; hindi ginagarantiyahan ng SyncViet ang nakapirming bilang ng pagtingin o klik.",
+        "estimatesDisclaimer": "Ang mga pagtataya ay sanggunian lamang; hindi ginagarantiyahan ng SysNoxis ang nakapirming bilang ng pagtingin o klik.",
         "walletBoxTitle": "Balanse ng Pitaka sa Anunsyo",
         "topUpShort": "Magdagdag",
         "sufficientWallet": "Sapat ang balanse (kailangan ng {amount})",
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "Sentro ng Administrasyon",
-        "backToSite": "Bumalik sa SyncViet",
+        "backToSite": "Bumalik sa SysNoxis",
         "collapseSidebar": "Itiklop ang gilid na panel",
         "expandSidebar": "Palawakin ang gilid na panel",
         "quickSearch": "Mabilisang paghahanap ng mga user, paskil, log...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Na-index ng Google",
             "notIndexed": "Hindi pa na-index",
             "kpiTechnicalScore": "Teknikal na Kalusugan",
-            "scoreDisclaimer": "Panloob na teknikal na marka ng SyncViet (HINDI Google Ranking Score).",
+            "scoreDisclaimer": "Panloob na teknikal na marka ng SysNoxis (HINDI Google Ranking Score).",
             "gscPerformance": "Performance ng Google Search Console",
             "gscHonestSubtitle": "Totoong clicks, impressions, CTR, at posisyon mula sa Search Console API.",
             "gscNotConnected": "Google Search Console — Kailangan ng Setup",
@@ -1238,7 +1238,7 @@
             "newPromptHeading": "Gumawa ng Bagong Template ng Prompt",
             "savePromptBtn": "I-save ang Template ng Prompt",
             "contentTitle": "Daloy ng Trabaho ng Nilalaman ng AI, Pila ng Pagsusuri ng Tao at Tagapag-iskedyul",
-            "contentSubtitle": "Gumawa ng nakabalangkas na JSON draft, suriin ang mga marka ng Quality Gate, i-edit at aprubahan bago ilathala sa pamamagitan ng karaniwang pipeline ng SyncViet Post at SEO V2.0.",
+            "contentSubtitle": "Gumawa ng nakabalangkas na JSON draft, suriin ang mga marka ng Quality Gate, i-edit at aprubahan bago ilathala sa pamamagitan ng karaniwang pipeline ng SysNoxis Post at SEO V2.0.",
             "generateDraftHeading": "Gumawa ng AI Content Draft",
             "topicLabel": "Paksa / Maikling Gabay sa Editoryal",
             "generateBtn": "Gumawa ng Draft",
@@ -2146,7 +2146,7 @@
         "previous": "Nakaraan"
     },
     "pwa": {
-        "installApp": "I-install ang SyncViet App"
+        "installApp": "I-install ang SysNoxis App"
     },
     "monetization": {
         "sidebar": {
@@ -2157,30 +2157,30 @@
             "admin": "Administrasyon"
         },
         "badge": {
-            "title": "Kasaping SyncViet Premium",
-            "tooltip": "Ang asul na tsek na ito ay pagmamay-ari ng isang aktibong bayad na kasaping SyncViet Premium. Iba ito sa Beripikasyon ng Pagkakakilanlan, Opisyal na Organisasyon, o mga tungkuling Administrador."
+            "title": "Kasaping SysNoxis Premium",
+            "tooltip": "Ang asul na tsek na ito ay pagmamay-ari ng isang aktibong bayad na kasaping SysNoxis Premium. Iba ito sa Beripikasyon ng Pagkakakilanlan, Opisyal na Organisasyon, o mga tungkuling Administrador."
         },
         "common": {
             "days": "araw",
             "monthShort": "buwan"
         },
         "benefits": {
-            "blue_badge": "SyncViet Premium blue badge sa mga post, komento, profile, at mensahe",
+            "blue_badge": "SysNoxis Premium blue badge sa mga post, komento, profile, at mensahe",
             "post_analytics": "Pagsusuri sa abot at pakikipag-ugnayan ng paskil",
             "reduced_ads": "Mas kaunting nakakagambalang mga naka-sponsor na paskil sa daloy",
-            "ad_free": "Walang anunsyong karanasan sa pag-browse sa buong SyncViet",
+            "ad_free": "Walang anunsyong karanasan sa pag-browse sa buong SysNoxis",
             "priority_support": "Priyoridad na pagtugon ng suporta",
             "profile_highlights": "Pinahusay na pagpapakita ng propayl at tampok ng tagalikha"
         },
         "services": {
             "pageTitle": "Sentro ng mga Serbisyo",
-            "eyebrow": "Mga Serbisyo sa Monetisasyon ng SyncViet",
-            "heading": "Palaguin ang iyong boses at tatak sa SyncViet",
-            "subtitle": "Malinaw na presyo, manu-manong kumpirmasyon ng order, at ganap na kaligtasan sa moderasyon. Ang mga pangunahing tampok ng pakikipag-ugnayan sa SyncViet ay mananatiling 100% libre magpakailanman.",
+            "eyebrow": "Mga Serbisyo sa Monetisasyon ng SysNoxis",
+            "heading": "Palaguin ang iyong boses at tatak sa SysNoxis",
+            "subtitle": "Malinaw na presyo, manu-manong kumpirmasyon ng order, at ganap na kaligtasan sa moderasyon. Ang mga pangunahing tampok ng pakikipag-ugnayan sa SysNoxis ay mananatiling 100% libre magpakailanman.",
             "freeCoreGuarantee": "Ang pagpapaskil, pagkokomento, pagbibigay ng reaksyon, pagsubaybay, pagsali sa mga komunidad, paghahanap, at pag-uulat ay palaging libre para sa bawat kasapi.",
             "startingFrom": "Nagsisimula sa",
-            "premiumTitle": "SyncViet Premium",
-            "premiumDesc": "May takdang-panahong pagiging kasapi na may asul na badge ng SyncViet, bawas o walang anunsyong pag-browse, at pagsusuri para sa tagalikha.",
+            "premiumTitle": "SysNoxis Premium",
+            "premiumDesc": "May takdang-panahong pagiging kasapi na may asul na badge ng SysNoxis, bawas o walang anunsyong pag-browse, at pagsusuri para sa tagalikha.",
             "bannerTitle": "Pag-aanunsyo sa Banner",
             "bannerDesc": "Magrenta ng mga kapansin-pansing puwesto ng banner sa desktop at mobile bawat linggo o buwan na may eksklusibo o umiikot na slot.",
             "boostTitle": "I-boost ang Paskil",
@@ -2191,11 +2191,11 @@
             "advertisingHubLink": "Buksan ang Sentro ng Pag-aanunsyo"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "Mamukod-tangi gamit ang SyncViet Premium",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "Mamukod-tangi gamit ang SysNoxis Premium",
             "subtitle": "Simple at may takdang-panahong prepaid na pagiging kasapi na walang biglaang pagbabawas sa pag-renew. Mag-upgrade o magpahaba anumang oras nang hindi nawawala ang mga natitirang araw.",
             "manageMyPlan": "Pamahalaan ang Aking Premium",
-            "activeBanner": "Aktibo ang iyong pagiging kasapi sa SyncViet Premium hanggang {date}.",
+            "activeBanner": "Aktibo ang iyong pagiging kasapi sa SysNoxis Premium hanggang {date}.",
             "extendPreservesDays": "Ang pag-renew ngayon ay direktang magdaragdag ng oras sa iyong kasalukuyang petsa ng pagtatapos.",
             "paymentMethodLabel": "Pumili ng Paraan ng Pagbabayad",
             "noAutoAdBalanceDebit": "Direktang sinisingil ang Premium sa checkout at hindi kailanman awtomatikong ibabawas sa iyong Balanse sa Pag-aanunsyo.",
@@ -2203,9 +2203,9 @@
             "buyButton": "Piliin ang Plan",
             "extendButton": "Pahabain ang Plan",
             "moderationRuleTitle": "Pantay na Pamantayan sa Kaligtasan at Moderasyon",
-            "moderationRuleDesc": "Ang mga kasaping Premium ay saklaw pa rin ng lahat ng Alituntunin ng Komunidad ng SyncViet, mga panuntunan laban sa spam, at mga pagsusuri sa seguridad.",
+            "moderationRuleDesc": "Ang mga kasaping Premium ay saklaw pa rin ng lahat ng Alituntunin ng Komunidad ng SysNoxis, mga panuntunan laban sa spam, at mga pagsusuri sa seguridad.",
             "manualConfirmHint": "Hindi kailanman awtomatikong ginagawa ang mga order. Palagi mong susuriin at kukumpirmahin ang Oo/Hindi bago makagawa ng anumang order sa pagbabayad.",
-            "slogan": "Mangibabaw nang may linaw at mas payapang karanasan sa SyncViet.",
+            "slogan": "Mangibabaw nang may linaw at mas payapang karanasan sa SysNoxis.",
             "chooseDurationTitle": "Piliin ang tagal ng iyong membership",
             "chooseDurationSubtitle": "Isang prepaid na membership — mas mahabang tagal, mas malaking tipid.",
             "bestValue": "Pinakasulit",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} araw",
             "adFreeTag": "Walang ads",
             "reducedAdsTag": "Mas kaunting ads",
-            "benefitsHeading": "Mga kasama sa SyncViet Premium",
+            "benefitsHeading": "Mga kasama sa SysNoxis Premium",
             "adFreeUpgradeHint": "Kasama sa {duration} plan ang ganap na ad-free na karanasan sa halip na mas kaunting ads lamang.",
             "switchToAdFree": "Piliin ang {duration}",
             "adFreeIncludedBadge": "Kasama ang walang ads",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "Mag-sign in upang mag-upgrade"
         },
         "accountPremium": {
-            "pageTitle": "Aking SyncViet Premium",
+            "pageTitle": "Aking SysNoxis Premium",
             "expiresOn": "Aktibo hanggang {date} ({days} araw ang natitira)",
-            "inactiveNotice": "Wala ka pang aktibong subskripsyon sa SyncViet Premium sa ngayon.",
+            "inactiveNotice": "Wala ka pang aktibong subskripsyon sa SysNoxis Premium sa ngayon.",
             "historyTitle": "Kasaysayan ng Subskripsyon",
             "complimentary": "Libre / Kaloob",
             "emptyHistory": "Wala pang tala ng subskripsyon."
         },
         "advertising": {
             "pageTitle": "Sentro ng Pag-aanunsyo",
-            "eyebrow": "Pag-aanunsyo sa SyncViet",
+            "eyebrow": "Pag-aanunsyo sa SysNoxis",
             "heading": "Abutin ang totoong mga komunidad sa pamamagitan ng malinaw na pag-aanunsyo",
             "subtitle": "Pumili ng nakabase sa oras na mga puwesto ng Banner para sa tuloy-tuloy na presensya ng tatak o mga nakatakdang-tagal na pakete ng Boost Post upang palakasin ang mahahalagang talakayan."
         },
         "banner": {
             "pageTitle": "Pag-aanunsyo sa Banner",
-            "heading": "Magrenta ng mga epektibong puwesto ng banner sa SyncViet",
+            "heading": "Magrenta ng mga epektibong puwesto ng banner sa SysNoxis",
             "subtitle": "Malinaw na lingguhan at buwanang singil sa renta sa desktop at mobile. Ang bawat materyal ng anunsyo ay sinusuri ng aming pangkat sa moderasyon.",
             "sponsoredLabel": "Naka-sponsor",
             "adOptions": "Mga opsyon sa anunsyo",
             "adInfo": "Tungkol sa anunsyong ito",
-            "adInfoDesc": "Isa itong bayad na direktang puwesto ng banner na sinuri ng SyncViet. Maaari mong itago o iulat ang mga anunsyo anumang oras.",
+            "adInfoDesc": "Isa itong bayad na direktang puwesto ng banner na sinuri ng SysNoxis. Maaari mong itago o iulat ang mga anunsyo anumang oras.",
             "hideAd": "Itago ang anunsyong ito",
             "reportAd": "Iulat ang anunsyo",
             "placementsUnit": "mga puwesto",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "I-boost ang Paskil",
-            "heading": "Palakasin ang iyong mga pampublikong paskil sa SyncViet",
+            "heading": "Palakasin ang iyong mga pampublikong paskil sa SysNoxis",
             "subtitle": "Mga nakatakdang-tagal na pakete ng promosyon na may malinaw na badge na Naka-sponsor. Magsisimula lamang ang tagal pagkatapos maaprubahan sa moderasyon at hindi kailanman minamanipula ang natural na ranggo ng Sikat.",
             "modalTitle": "I-boost ang paskil na ito",
             "packagesUnit": "mga pakete",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "Balanse sa Pag-aanunsyo",
-            "subtitle": "Prepaid na balanse sa pag-aanunsyo na eksklusibong ginagamit para sa SyncViet Boost Post at mga kwalipikadong kampanya ng anunsyo.",
+            "subtitle": "Prepaid na balanse sa pag-aanunsyo na eksklusibong ginagamit para sa SysNoxis Boost Post at mga kwalipikadong kampanya ng anunsyo.",
             "promoBalance": "Promo credit",
             "availableShort": "Magagamit na Balanse sa Pag-aanunsyo",
             "topUpTitle": "Mag-top Up ng Balanse sa Pag-aanunsyo",
-            "purposeDisclaimer": "Ang Balanse sa Pag-aanunsyo ay para lamang sa mga serbisyo sa pag-aanunsyo ng SyncViet. Walang P2P na paglilipat, pag-withdraw ng pera, o interes."
+            "purposeDisclaimer": "Ang Balanse sa Pag-aanunsyo ay para lamang sa mga serbisyo sa pag-aanunsyo ng SysNoxis. Walang P2P na paglilipat, pag-withdraw ng pera, o interes."
         },
         "payments": {
             "title": "Kasaysayan ng Pagbabayad",
-            "subtitle": "Lahat ng iyong order para sa SyncViet Premium, Pag-aanunsyo sa Banner, Boost Post, at Balanse sa Pag-aanunsyo sa isang lugar.",
+            "subtitle": "Lahat ng iyong order para sa SysNoxis Premium, Pag-aanunsyo sa Banner, Boost Post, at Balanse sa Pag-aanunsyo sa isang lugar.",
             "openPendingLabel": "Mga Bukas na Nakabinbing Order",
             "searchPlaceholder": "Maghanap ayon sa code ng order, reference, o gateway...",
             "allServices": "Lahat ng Serbisyo",
@@ -2332,7 +2332,7 @@
             "method": "Paraan ng Pagbabayad",
             "fee": "Bayad sa Pagproseso",
             "total": "Kabuuang Babayaran",
-            "termsNotice": "Sa pagkumpirma, sumasang-ayon ka sa Mga Tuntunin sa Pagbabayad ng SyncViet at naaangkop na patakaran ng serbisyo.",
+            "termsNotice": "Sa pagkumpirma, sumasang-ayon ka sa Mga Tuntunin sa Pagbabayad ng SysNoxis at naaangkop na patakaran ng serbisyo.",
             "noButton": "Hindi, Bumalik",
             "yesButton": "Oo, Gumawa ng Order ng Pagbabayad"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "Mga Madalas Itanong",
-            "q1": "Kailangan ko bang magbayad para magamit ang SyncViet?",
+            "q1": "Kailangan ko bang magbayad para magamit ang SysNoxis?",
             "a1": "Hindi. Ang pagpapaskil, pagkokomento, pagbibigay ng reaksyon, pagsubaybay, pagmemensahe, at pagsali sa mga komunidad ay ganap na libre.",
-            "q2": "Pareho ba ang badge ng SyncViet Premium sa Beripikasyon ng Pagkakakilanlan?",
-            "a2": "Hindi. Ang asul na tsek ay nagpapahiwatig ng aktibong bayad na kasaping SyncViet Premium. Ganap na magkahiwalay ang beripikasyon ng pagkakakilanlan at mga badge ng kawani.",
+            "q2": "Pareho ba ang badge ng SysNoxis Premium sa Beripikasyon ng Pagkakakilanlan?",
+            "a2": "Hindi. Ang asul na tsek ay nagpapahiwatig ng aktibong bayad na kasaping SysNoxis Premium. Ganap na magkahiwalay ang beripikasyon ng pagkakakilanlan at mga badge ng kawani.",
             "q3": "Ano ang mangyayari kapag pinahaba ko ang aking Premium plan bago ito mag-expire?",
             "a3": "Direktang idinaragdag ang iyong bagong tagal sa kasalukuyang petsa at oras ng pagtatapos upang hindi ka mawalan ng kahit isang natitirang araw.",
             "q4": "Maaari ko bang i-withdraw o ilipat ang aking Balanse sa Pag-aanunsyo sa ibang user?",
-            "a4": "Hindi. Ang Balanse sa Pag-aanunsyo ay eksklusibong prepaid na credit balance para sa mga serbisyo sa pag-aanunsyo ng SyncViet at hindi maaaring i-withdraw o ilipat sa ibang account."
+            "a4": "Hindi. Ang Balanse sa Pag-aanunsyo ay eksklusibong prepaid na credit balance para sa mga serbisyo sa pag-aanunsyo ng SysNoxis at hindi maaaring i-withdraw o ilipat sa ibang account."
         },
         "admin": {
             "revenueSubtitle": "Dalawahang-salaping pag-uulat (VND at USD) na mahigpit na naghihiwalay sa mga prepaid na deposito sa pag-aanunsyo mula sa kinikilalang direktang kita ng serbisyo.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Premium Blue Badge",
-                "desc": "Ipakita ang asul na badge ng SyncViet Premium sa tabi ng iyong pangalan sa mga post, komento, profile, paghahanap, at mensahe."
+                "desc": "Ipakita ang asul na badge ng SysNoxis Premium sa tabi ng iyong pangalan sa mga post, komento, profile, paghahanap, at mensahe."
             },
             "post_analytics": {
                 "title": "Analytics ng Performance ng Post",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "Karanasang Walang Ads",
-                "desc": "Mag-browse sa feed at mga komunidad ng SyncViet nang ganap na walang sponsored ads."
+                "desc": "Mag-browse sa feed at mga komunidad ng SysNoxis nang ganap na walang sponsored ads."
             },
             "priority_support": {
                 "title": "Priyoridad na Suporta",
-                "desc": "Makatanggap ng mas mabilis na pagsusuri at tulong mula sa koponan ng SyncViet."
+                "desc": "Makatanggap ng mas mabilis na pagsusuri at tulong mula sa koponan ng SysNoxis."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "Mga Banner Ad ng SyncViet",
+            "badgeTitle": "Mga Banner Ad ng SysNoxis",
             "campaignStats": "{impressions} impresyon · {clicks} klik ({ctr}% CTR)",
             "desktop": "Desktop",
             "mobile": "Mobile",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}: {width}×{height}px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "SyncViet Boost Post",
+            "boostBadgeTitle": "SysNoxis Boost Post",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24o",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "May-ari ng account",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "PayPal email",
             "serviceBanner": "Pag-aanunsyo sa Banner",
             "serviceBoost": "Pag-boost ng Paskil",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "QR code ng paglilipat sa VietQR"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "Mga Kaugnay na Komunidad"
         },
         "post": {
-            "guestCtaTitle": "Sumali sa komunidad ng SyncViet",
+            "guestCtaTitle": "Sumali sa komunidad ng SysNoxis",
             "guestCtaDesc": "Gumawa ng libreng account para magkomento, mag-save, at makipagtalakayan sa buong mundo.",
             "availableLanguages": "Mga magagamit na wika",
             "relatedTopics": "Mga Paksa at Komunidad",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "AI Agent",
-            "defaultDisclosure": "Opisyal na SyncViet AI Agent — Transparent na awtomatikong katulong",
-            "profileBannerTitle": "Opisyal na SyncViet AI Account"
+            "defaultDisclosure": "Opisyal na SysNoxis AI Agent — Transparent na awtomatikong katulong",
+            "profileBannerTitle": "Opisyal na SysNoxis AI Account"
         }
     },
     "growth": {
@@ -2456,8 +2456,8 @@
         },
         "referral": {
             "pageTitle": "Mag-imbita ng mga Kaibigan at Kumita ng Premium",
-            "heading": "Mag-imbita ng mga Kaibigan sa SyncViet",
-            "subtitle": "Ibahagi ang iyong personal na link ng referral. Kapag na-verify ng mga kaibigan ang kanilang email at lumahok sa SyncViet, awtomatiko kang makakakuha ng pinagsama-samang araw ng SyncViet Premium.",
+            "heading": "Mag-imbita ng mga Kaibigan sa SysNoxis",
+            "subtitle": "Ibahagi ang iyong personal na link ng referral. Kapag na-verify ng mga kaibigan ang kanilang email at lumahok sa SysNoxis, awtomatiko kang makakakuha ng pinagsama-samang araw ng SysNoxis Premium.",
             "viewPremium": "My Premium",
             "yourCode": "Iyong Referral Code",
             "active": "Active",
@@ -2466,25 +2466,25 @@
             "copied": "Copied!",
             "linkCopied": "Nakopya ang referral link sa clipboard.",
             "share": "Share",
-            "shareMessage": "Sumali sa akin sa SyncViet — isang internasyonal na komunidad para sa kaalaman at bukas na talakayan:",
+            "shareMessage": "Sumali sa akin sa SysNoxis — isang internasyonal na komunidad para sa kaalaman at bukas na talakayan:",
             "statTotal": "Kabuuang Na-refer",
             "statPending": "Pending",
             "statQualified": "Qualified",
             "statRejected": "Rejected",
             "statDaysEarned": "Nakuhang Premium",
             "progressTitle": "Pinagsama-samang mga Milestone ng Premium",
-            "progressSummary": "Mayroon kang {qualified} / {target} kwalipikadong referral. Mag-imbita ng {remaining} pang na-verify na miyembro upang maabot ang kabuuang {days} araw ng SyncViet Premium.",
+            "progressSummary": "Mayroon kang {qualified} / {target} kwalipikadong referral. Mag-imbita ng {remaining} pang na-verify na miyembro upang maabot ang kabuuang {days} araw ng SysNoxis Premium.",
             "verificationWindow": "{hours} oras na panahon ng pag-verify",
             "qualifiedUnit": "qualified",
             "claimed": "Claimed",
             "cumulativeTotal": "Pinagsama-samang kabuuan",
             "historyTitle": "Pag-usad ng Referral",
-            "emptyHistory": "Wala pang naimbitahang miyembro. Ibahagi ang iyong link upang magsimulang makakuha ng SyncViet Premium.",
+            "emptyHistory": "Wala pang naimbitahang miyembro. Ibahagi ang iyong link upang magsimulang makakuha ng SysNoxis Premium.",
             "rewardHistoryTitle": "Kasaysayan ng Gantimpala"
         },
         "earlyMember": {
-            "title": "Mga Maagang Kasapi ng SyncViet (Unang 1,000)",
-            "description": "Ang mga na-verify na tagapangunang taong miyembro ay makakatanggap ng permanenteng Badge ng Maagang Kasapi at libreng SyncViet Premium kapag aktibo ang programa.",
+            "title": "Mga Maagang Kasapi ng SysNoxis (Unang 1,000)",
+            "description": "Ang mga na-verify na tagapangunang taong miyembro ay makakatanggap ng permanenteng Badge ng Maagang Kasapi at libreng SysNoxis Premium kapag aktibo ang programa.",
             "yourNumber": "Ikaw ay Maagang Kasapi #{num}!",
             "openStatus": "Bukas sa mga kwalipikadong na-verify na miyembro",
             "pausedStatus": "Kasalukuyang naka-pause ang programa ng administrator"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "Opsyonal na mga email ng anunsyo ng produkto (may pahintulot)"
         },
         "onboarding": {
-            "pageTitle": "Maligayang Pagdating sa SyncViet",
-            "heading": "I-personalize ang iyong karanasan sa SyncViet",
+            "pageTitle": "Maligayang Pagdating sa SysNoxis",
+            "heading": "I-personalize ang iyong karanasan sa SysNoxis",
             "subtitle": "Piliin ang iyong gustong wika, mga paksa, at mga komunidad. Bawat hakbang ay opsyonal at maaaring laktawan anumang oras.",
             "skip": "Laktawan muna",
             "languageStep": "1. Gustong Wika",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. Mga Kapaki-pakinabang na Account na Tuklasin",
             "join": "Join",
             "joined": "Joined",
-            "finish": "Magpatuloy sa SyncViet"
+            "finish": "Magpatuloy sa SysNoxis"
         },
         "extra": {
             "daysShort": "{count}a",
@@ -2563,7 +2563,7 @@
             "updateProfile": "I-update ang propayl",
             "username": "Username"
         },
-        "checklistSubtitle": "Panatilihing ligtas at napapanahon ang iyong SyncViet account.",
+        "checklistSubtitle": "Panatilihing ligtas at napapanahon ang iyong SysNoxis account.",
         "checklistTitle": "Checklist sa Seguridad ng Account",
         "editProfileButton": "I-edit ang Propayl",
         "feedButton": "Daloy ng Balita",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "Hitsura",
-            "headingDescription": "Piliin kung paano lilitaw ang SyncViet sa device na ito.",
+            "headingDescription": "Piliin kung paano lilitaw ang SysNoxis sa device na ito.",
             "headingTitle": "Tema ng Pagpapakita",
             "pageTitle": "Mga Setting ng Hitsura",
             "srHeading": "Mga Setting ng Hitsura",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "Kapag nabura na ang iyong account, babawiin ang lahat ng aktibong sesyon at hindi na mababawi ang iyong personal na data. Ilagay ang iyong password upang kumpirmahin.",
             "confirmTitle": "Sigurado ka bang gusto mong burahin ang iyong account?",
             "deleteButton": "Burahin ang account",
-            "headingDescription": "Permanenteng isara ang iyong SyncViet account at bawiin ang mga aktibong sesyon.",
+            "headingDescription": "Permanenteng isara ang iyong SysNoxis account at bawiin ang mga aktibong sesyon.",
             "headingTitle": "Burahin ang Account",
             "passwordLabel": "Kasalukuyang password",
             "passwordPlaceholder": "Ilagay ang iyong password upang kumpirmahin",

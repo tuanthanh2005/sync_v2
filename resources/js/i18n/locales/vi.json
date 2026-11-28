@@ -256,7 +256,7 @@
         "clearHistory": "Xóa",
         "errorLoadFailed": "Không thể tải kết quả tìm kiếm lúc này. Vui lòng thử lại.",
         "exploreCategories": "Duyệt theo chủ đề",
-        "exploreHeading": "Khám phá SyncViet",
+        "exploreHeading": "Khám phá SysNoxis",
         "exploreMore": "Khám phá các chủ đề và cộng đồng nổi bật",
         "exploreSubtitle": "Khám phá thảo luận, cộng đồng sôi nổi, chủ đề và thành viên tiêu biểu.",
         "exploreTitle": "Khám phá",
@@ -332,7 +332,7 @@
         "highlightSecurity": "Bảo vệ tài khoản an toàn với xác minh email và bảo mật hai yếu tố.",
         "highlightCommunity": "Trải nghiệm thảo luận văn minh, minh bạch và tôn trọng quyền riêng tư.",
         "confirmPassword": {
-            "layoutDescription": "Đây là khu vực bảo mật của SyncViet. Vui lòng xác nhận mật khẩu của bạn trước khi tiếp tục.",
+            "layoutDescription": "Đây là khu vực bảo mật của SysNoxis. Vui lòng xác nhận mật khẩu của bạn trước khi tiếp tục.",
             "layoutTitle": "Xác nhận mật khẩu",
             "pageTitle": "Xác nhận mật khẩu",
             "submit": "Xác nhận mật khẩu"
@@ -365,7 +365,7 @@
         "login": {
             "continueWithGoogle": "Tiếp tục với Google",
             "forgotPassword": "Quên mật khẩu?",
-            "layoutDescription": "Đăng nhập để tham gia thảo luận, cộng đồng và các chủ đề quốc tế trên SyncViet.",
+            "layoutDescription": "Đăng nhập để tham gia thảo luận, cộng đồng và các chủ đề quốc tế trên SysNoxis.",
             "layoutTitle": "Đăng nhập tài khoản",
             "noAccount": "Chưa có tài khoản?",
             "orDivider": "hoặc",
@@ -377,7 +377,7 @@
         "register": {
             "alreadyHaveAccount": "Đã có tài khoản?",
             "continueWithGoogle": "Đăng ký với Google",
-            "layoutDescription": "Tạo tài khoản SyncViet để kết nối cùng các cộng đồng toàn cầu.",
+            "layoutDescription": "Tạo tài khoản SysNoxis để kết nối cùng các cộng đồng toàn cầu.",
             "layoutTitle": "Tạo tài khoản mới",
             "loginLink": "Đăng nhập",
             "orCreateAccount": "hoặc tạo bằng email",
@@ -386,7 +386,7 @@
             "pausedNotice": "Đăng ký tài khoản mới đang tạm dừng để bảo vệ hệ thống. Thành viên đã xác minh vẫn có thể đăng nhập bình thường."
         },
         "resetPassword": {
-            "layoutDescription": "Chọn một mật khẩu mới an toàn cho tài khoản SyncViet của bạn.",
+            "layoutDescription": "Chọn một mật khẩu mới an toàn cho tài khoản SysNoxis của bạn.",
             "layoutTitle": "Đặt lại mật khẩu",
             "pageTitle": "Đặt lại mật khẩu",
             "submit": "Cập nhật mật khẩu"
@@ -656,7 +656,7 @@
     },
     "admin": {
         "centerTitle": "Trung tâm Quản trị",
-        "backToSite": "Quay lại SyncViet",
+        "backToSite": "Quay lại SysNoxis",
         "collapseSidebar": "Thu gọn thanh bên",
         "expandSidebar": "Mở rộng thanh bên",
         "quickSearch": "Tìm nhanh người dùng, bài viết, nhật ký...",
@@ -1134,7 +1134,7 @@
             "kpiGoogleIndexed": "Google đã lập chỉ mục",
             "notIndexed": "Chưa lập chỉ mục",
             "kpiTechnicalScore": "Điểm sức khỏe kỹ thuật",
-            "scoreDisclaimer": "Điểm kiểm tra kỹ thuật nội bộ SyncViet (KHÔNG phải điểm xếp hạng Google).",
+            "scoreDisclaimer": "Điểm kiểm tra kỹ thuật nội bộ SysNoxis (KHÔNG phải điểm xếp hạng Google).",
             "gscPerformance": "Hiệu suất Google Search Console",
             "gscHonestSubtitle": "Dữ liệu nhấp chuột, hiển thị, CTR và vị trí thực tế từ Search Console API.",
             "gscNotConnected": "Google Search Console — Cần thiết lập",
@@ -1767,7 +1767,7 @@
                 "maxPendingOrdersPerUser": "Số đơn chờ tối đa / Người dùng",
                 "nativeIapRequired": "Yêu cầu IAP gốc",
                 "openPendingOrders": "Đơn hàng đang chờ xử lý ({count})",
-                "premiumPurchase": "Mua SyncViet Premium",
+                "premiumPurchase": "Mua SysNoxis Premium",
                 "saveAdsenseConfig": "Lưu cấu hình AdSense",
                 "saveRule": "Lưu quy tắc",
                 "sigOk": "CHỮ KÝ HỢP LỆ",
@@ -2146,7 +2146,7 @@
         "previous": "Trước"
     },
     "pwa": {
-        "installApp": "Cài đặt ứng dụng SyncViet"
+        "installApp": "Cài đặt ứng dụng SysNoxis"
     },
     "monetization": {
         "sidebar": {
@@ -2157,29 +2157,29 @@
             "admin": "Quản trị"
         },
         "badge": {
-            "title": "Thành viên SyncViet Premium",
-            "tooltip": "Huy hiệu tích xanh này thuộc gói thành viên trả phí SyncViet Premium đang hoạt động, khác hoàn toàn với Xác minh danh tính, Tổ chức chính thức hay Quản trị viên."
+            "title": "Thành viên SysNoxis Premium",
+            "tooltip": "Huy hiệu tích xanh này thuộc gói thành viên trả phí SysNoxis Premium đang hoạt động, khác hoàn toàn với Xác minh danh tính, Tổ chức chính thức hay Quản trị viên."
         },
         "common": {
             "days": "ngày",
             "monthShort": "tháng"
         },
         "benefits": {
-            "blue_badge": "Huy hiệu tích xanh SyncViet Premium tại bài viết, bình luận, hồ sơ & tin nhắn",
+            "blue_badge": "Huy hiệu tích xanh SysNoxis Premium tại bài viết, bình luận, hồ sơ & tin nhắn",
             "post_analytics": "Thống kê hiệu suất tiếp cận & tương tác bài viết",
             "reduced_ads": "Giảm tần suất hiển thị quảng cáo trên bảng tin",
-            "ad_free": "Trải nghiệm duyệt SyncViet không quảng cáo",
+            "ad_free": "Trải nghiệm duyệt SysNoxis không quảng cáo",
             "priority_support": "Ưu tiên tiếp nhận & xử lý hỗ trợ",
             "profile_highlights": "Tùy chỉnh & làm nổi bật hồ sơ cá nhân nâng cao"
         },
         "services": {
             "pageTitle": "Trung tâm Dịch vụ",
-            "eyebrow": "Dịch vụ chính thức SyncViet",
-            "heading": "Nâng tầm thương hiệu & tiếng nói trên SyncViet",
+            "eyebrow": "Dịch vụ chính thức SysNoxis",
+            "heading": "Nâng tầm thương hiệu & tiếng nói trên SysNoxis",
             "subtitle": "Bảng giá minh bạch, xác nhận thủ công Có/Không trước khi tạo đơn và kiểm duyệt an toàn. Mọi chức năng mạng xã hội cơ bản luôn miễn phí 100%.",
             "freeCoreGuarantee": "Đăng bài, bình luận, bày tỏ cảm xúc, theo dõi, tham gia cộng đồng, tìm kiếm và báo cáo vi phạm luôn miễn phí cho mọi thành viên.",
             "startingFrom": "Giá khởi điểm từ",
-            "premiumTitle": "SyncViet Premium",
+            "premiumTitle": "SysNoxis Premium",
             "premiumDesc": "Gói thành viên có thời hạn với huy hiệu tích xanh riêng, giảm hoặc tắt quảng cáo và thống kê hiệu suất bài viết.",
             "bannerTitle": "Quảng cáo Banner",
             "bannerDesc": "Thuê vị trí banner nổi bật trên Desktop và Mobile theo tuần hoặc tháng với chế độ độc quyền hoặc xoay vòng.",
@@ -2191,23 +2191,23 @@
             "advertisingHubLink": "Mở Trung tâm Quảng cáo"
         },
         "premium": {
-            "pageTitle": "SyncViet Premium",
-            "heading": "Nổi bật cùng SyncViet Premium",
+            "pageTitle": "SysNoxis Premium",
+            "heading": "Nổi bật cùng SysNoxis Premium",
             "subtitle": "Gói thành viên trả trước có thời hạn minh bạch, không tự động trừ tiền bất ngờ. Gia hạn bất kỳ lúc nào mà không mất ngày còn lại.",
             "manageMyPlan": "Quản lý Premium của tôi",
-            "activeBanner": "Gói SyncViet Premium của bạn đang hoạt động đến {date}.",
+            "activeBanner": "Gói SysNoxis Premium của bạn đang hoạt động đến {date}.",
             "extendPreservesDays": "Gia hạn ngay sẽ cộng dồn thời gian vào ngày hết hạn hiện tại.",
             "paymentMethodLabel": "Chọn phương thức thanh toán",
-            "noAutoAdBalanceDebit": "SyncViet Premium thanh toán trực tiếp qua đơn hàng, tuyệt đối không tự động trừ Số dư quảng cáo.",
+            "noAutoAdBalanceDebit": "SysNoxis Premium thanh toán trực tiếp qua đơn hàng, tuyệt đối không tự động trừ Số dư quảng cáo.",
             "popular": "Phổ biến nhất",
             "buyButton": "Chọn gói này",
             "extendButton": "Gia hạn gói",
             "moderationRuleTitle": "Tiêu chuẩn kiểm duyệt & an toàn bình đẳng",
-            "moderationRuleDesc": "Thành viên Premium vẫn tuân thủ đầy đủ Quy tắc cộng đồng, chống spam và mọi giới hạn bảo mật của SyncViet.",
+            "moderationRuleDesc": "Thành viên Premium vẫn tuân thủ đầy đủ Quy tắc cộng đồng, chống spam và mọi giới hạn bảo mật của SysNoxis.",
             "manualConfirmHint": "Hệ thống không bao giờ tự tạo đơn khi mở trang. Bạn luôn xem chi tiết và bấm xác nhận Có/Không trước khi tạo đơn thanh toán.",
-            "slogan": "Trải nghiệm trọn vẹn, tập trung và nổi bật hơn trên SyncViet.",
+            "slogan": "Trải nghiệm trọn vẹn, tập trung và nổi bật hơn trên SysNoxis.",
             "chooseDurationTitle": "Chọn thời hạn thành viên",
-            "chooseDurationSubtitle": "Cùng một gói thành viên SyncViet Premium — thời hạn càng dài, mức tiết kiệm càng cao.",
+            "chooseDurationSubtitle": "Cùng một gói thành viên SysNoxis Premium — thời hạn càng dài, mức tiết kiệm càng cao.",
             "bestValue": "Tiết kiệm nhất",
             "savePercent": "Tiết kiệm {percent}%",
             "perMonth": "{price} / tháng",
@@ -2217,7 +2217,7 @@
             "durationDays": "{count} ngày",
             "adFreeTag": "Không quảng cáo",
             "reducedAdsTag": "Giảm quảng cáo",
-            "benefitsHeading": "Quyền lợi thành viên SyncViet Premium",
+            "benefitsHeading": "Quyền lợi thành viên SysNoxis Premium",
             "adFreeUpgradeHint": "Gói {duration} bao gồm trải nghiệm không quảng cáo hoàn toàn thay vì chỉ giảm quảng cáo.",
             "switchToAdFree": "Chọn gói {duration}",
             "adFreeIncludedBadge": "Không quảng cáo",
@@ -2232,27 +2232,27 @@
             "signInToUpgrade": "Đăng nhập để nâng cấp"
         },
         "accountPremium": {
-            "pageTitle": "SyncViet Premium của tôi",
+            "pageTitle": "SysNoxis Premium của tôi",
             "expiresOn": "Đang hoạt động đến {date} (còn {days} ngày)",
-            "inactiveNotice": "Tài khoản của bạn hiện chưa kích hoạt gói SyncViet Premium.",
+            "inactiveNotice": "Tài khoản của bạn hiện chưa kích hoạt gói SysNoxis Premium.",
             "historyTitle": "Lịch sử đăng ký & gia hạn",
             "complimentary": "Tặng / Khuyến mãi",
             "emptyHistory": "Chưa có lịch sử đăng ký Premium."
         },
         "advertising": {
             "pageTitle": "Trung tâm Quảng cáo",
-            "eyebrow": "Quảng cáo SyncViet",
+            "eyebrow": "Quảng cáo SysNoxis",
             "heading": "Tiếp cận cộng đồng thật với quảng cáo minh bạch",
             "subtitle": "Chọn thuê Banner theo thời gian để phủ thương hiệu bền vững hoặc Boost Post theo gói cố định để lan tỏa bài viết chất lượng."
         },
         "banner": {
             "pageTitle": "Quảng cáo Banner",
-            "heading": "Thuê vị trí Banner nổi bật trên SyncViet",
+            "heading": "Thuê vị trí Banner nổi bật trên SysNoxis",
             "subtitle": "Giá thuê minh bạch theo 7, 15, 30, 90 ngày cho cả Desktop và Mobile. Mọi banner đều qua kiểm duyệt an toàn trước khi hiển thị.",
             "sponsoredLabel": "Được tài trợ",
             "adOptions": "Tùy chọn quảng cáo",
             "adInfo": "Thông tin quảng cáo này",
-            "adInfoDesc": "Đây là vị trí banner tài trợ trực tiếp đã qua kiểm duyệt của SyncViet. Bạn có thể ẩn hoặc báo cáo bất kỳ lúc nào.",
+            "adInfoDesc": "Đây là vị trí banner tài trợ trực tiếp đã qua kiểm duyệt của SysNoxis. Bạn có thể ẩn hoặc báo cáo bất kỳ lúc nào.",
             "hideAd": "Ẩn quảng cáo này",
             "reportAd": "Báo cáo quảng cáo",
             "placementsUnit": "vị trí",
@@ -2282,7 +2282,7 @@
         },
         "boost": {
             "pageTitle": "Quảng bá bài viết (Boost Post)",
-            "heading": "Tăng tiếp cận cho bài viết công khai trên SyncViet",
+            "heading": "Tăng tiếp cận cho bài viết công khai trên SysNoxis",
             "subtitle": "Gói đẩy bài cố định rõ ràng với nhãn Được tài trợ. Thời hạn chỉ bắt đầu tính sau khi duyệt và không bao giờ làm sai lệch bảng Thịnh hành tự nhiên.",
             "modalTitle": "Quảng bá bài viết này",
             "packagesUnit": "gói",
@@ -2298,15 +2298,15 @@
         },
         "wallet": {
             "title": "Số dư quảng cáo",
-            "subtitle": "Số dư trả trước chỉ dùng cho dịch vụ Quảng bá bài viết và Quảng cáo trên SyncViet.",
+            "subtitle": "Số dư trả trước chỉ dùng cho dịch vụ Quảng bá bài viết và Quảng cáo trên SysNoxis.",
             "promoBalance": "Tín dụng khuyến mãi",
             "availableShort": "Số dư quảng cáo khả dụng",
             "topUpTitle": "Nạp Số dư quảng cáo",
-            "purposeDisclaimer": "Số dư quảng cáo chỉ phục vụ quảng cáo trên SyncViet. Không hỗ trợ rút tiền mặt, chuyển tiền giữa người dùng hoặc sinh lãi."
+            "purposeDisclaimer": "Số dư quảng cáo chỉ phục vụ quảng cáo trên SysNoxis. Không hỗ trợ rút tiền mặt, chuyển tiền giữa người dùng hoặc sinh lãi."
         },
         "payments": {
             "title": "Lịch sử thanh toán",
-            "subtitle": "Quản lý toàn bộ đơn hàng SyncViet Premium, Quảng cáo Banner, Boost Post và Nạp Số dư quảng cáo tại một nơi.",
+            "subtitle": "Quản lý toàn bộ đơn hàng SysNoxis Premium, Quảng cáo Banner, Boost Post và Nạp Số dư quảng cáo tại một nơi.",
             "openPendingLabel": "Đơn chờ thanh toán",
             "searchPlaceholder": "Tìm theo mã đơn, mã giao dịch hoặc cổng thanh toán...",
             "allServices": "Tất cả dịch vụ",
@@ -2332,7 +2332,7 @@
             "method": "Phương thức",
             "fee": "Phí xử lý",
             "total": "Tổng thanh toán",
-            "termsNotice": "Khi bấm xác nhận, bạn đồng ý với Điều khoản thanh toán và chính sách dịch vụ tương ứng của SyncViet.",
+            "termsNotice": "Khi bấm xác nhận, bạn đồng ý với Điều khoản thanh toán và chính sách dịch vụ tương ứng của SysNoxis.",
             "noButton": "Không, quay lại",
             "yesButton": "Có, tạo đơn thanh toán"
         },
@@ -2346,14 +2346,14 @@
         },
         "faq": {
             "title": "Câu hỏi thường gặp",
-            "q1": "Tôi có phải trả tiền để dùng mạng xã hội SyncViet không?",
+            "q1": "Tôi có phải trả tiền để dùng mạng xã hội SysNoxis không?",
             "a1": "Không. Đăng bài, bình luận, thả cảm xúc, theo dõi, nhắn tin và tham gia cộng đồng luôn hoàn toàn miễn phí.",
-            "q2": "Huy hiệu SyncViet Premium có phải Xác minh danh tính không?",
-            "a2": "Không. Tích xanh biểu thị thành viên trả phí SyncViet Premium đang hoạt động, hoàn toàn tách biệt với Xác minh danh tính và Quản trị viên.",
+            "q2": "Huy hiệu SysNoxis Premium có phải Xác minh danh tính không?",
+            "a2": "Không. Tích xanh biểu thị thành viên trả phí SysNoxis Premium đang hoạt động, hoàn toàn tách biệt với Xác minh danh tính và Quản trị viên.",
             "q3": "Gia hạn Premium trước khi hết hạn có bị mất ngày còn lại không?",
             "a3": "Không. Thời hạn mới luôn được cộng dồn trực tiếp vào mốc hết hạn hiện tại của bạn.",
             "q4": "Tôi có thể rút tiền hoặc chuyển Số dư quảng cáo sang tài khoản khác không?",
-            "a4": "Không. Số dư quảng cáo chỉ dùng để thanh toán dịch vụ quảng cáo trên SyncViet, không phải ví ngân hàng và không hỗ trợ rút tiền hay chuyển P2P."
+            "a4": "Không. Số dư quảng cáo chỉ dùng để thanh toán dịch vụ quảng cáo trên SysNoxis, không phải ví ngân hàng và không hỗ trợ rút tiền hay chuyển P2P."
         },
         "admin": {
             "revenueSubtitle": "Báo cáo tách bạch VND & USD, phân tách rõ tiền nạp trả trước (Số dư quảng cáo) và doanh thu dịch vụ đã ghi nhận.",
@@ -2363,7 +2363,7 @@
         "benefitDetails": {
             "blue_badge": {
                 "title": "Huy hiệu tích xanh Premium",
-                "desc": "Hiển thị huy hiệu tích xanh riêng của SyncViet cạnh tên bạn tại bài viết, bình luận, hồ sơ, tìm kiếm và tin nhắn."
+                "desc": "Hiển thị huy hiệu tích xanh riêng của SysNoxis cạnh tên bạn tại bài viết, bình luận, hồ sơ, tìm kiếm và tin nhắn."
             },
             "post_analytics": {
                 "title": "Thống kê hiệu suất bài viết",
@@ -2379,15 +2379,15 @@
             },
             "ad_free": {
                 "title": "Trải nghiệm không quảng cáo",
-                "desc": "Duyệt bảng tin và các cộng đồng SyncViet hoàn toàn không bị gián đoạn bởi quảng cáo tài trợ."
+                "desc": "Duyệt bảng tin và các cộng đồng SysNoxis hoàn toàn không bị gián đoạn bởi quảng cáo tài trợ."
             },
             "priority_support": {
                 "title": "Hỗ trợ ưu tiên",
-                "desc": "Các yêu cầu hỗ trợ tài khoản được đội ngũ SyncViet ưu tiên tiếp nhận và phản hồi nhanh hơn."
+                "desc": "Các yêu cầu hỗ trợ tài khoản được đội ngũ SysNoxis ưu tiên tiếp nhận và phản hồi nhanh hơn."
             }
         },
         "bookingExtra": {
-            "badgeTitle": "Quảng cáo Banner SyncViet",
+            "badgeTitle": "Quảng cáo Banner SysNoxis",
             "campaignStats": "{impressions} lượt hiển thị · {clicks} lượt nhấp ({ctr}% CTR)",
             "desktop": "Máy tính",
             "mobile": "Di động",
@@ -2395,11 +2395,11 @@
             "recommendedSizeSpec": "{label}: {width}×{height}px ({mode})"
         },
         "checkout": {
-            "boostBadgeTitle": "Quảng bá bài viết SyncViet",
+            "boostBadgeTitle": "Quảng bá bài viết SysNoxis",
             "currencyUsd": "USD ($)",
             "currencyVnd": "VND (₫)",
             "hours24": "/ 24 giờ",
-            "premiumPlanTitle": "SyncViet Premium ({duration})"
+            "premiumPlanTitle": "SysNoxis Premium ({duration})"
         },
         "paymentsExtra": {
             "accountHolder": "Chủ tài khoản",
@@ -2409,7 +2409,7 @@
             "paypalEmail": "Email PayPal",
             "serviceBanner": "Quảng cáo Banner",
             "serviceBoost": "Quảng bá bài viết",
-            "servicePremium": "SyncViet Premium",
+            "servicePremium": "SysNoxis Premium",
             "vietQrAlt": "Mã QR chuyển khoản VietQR"
         }
     },
@@ -2431,7 +2431,7 @@
             "relatedCommunities": "Cộng đồng liên quan"
         },
         "post": {
-            "guestCtaTitle": "Tham gia cộng đồng SyncViet",
+            "guestCtaTitle": "Tham gia cộng đồng SysNoxis",
             "guestCtaDesc": "Tạo tài khoản miễn phí để bình luận, lưu bài viết, theo dõi tác giả và tham gia thảo luận toàn cầu.",
             "availableLanguages": "Ngôn ngữ khả dụng",
             "relatedTopics": "Chủ đề & Cộng đồng",
@@ -2442,8 +2442,8 @@
     "ai": {
         "badge": {
             "label": "AI Agent",
-            "defaultDisclosure": "AI Agent chính thức của SyncViet — Trợ lý tự động minh bạch",
-            "profileBannerTitle": "Tài khoản AI chính thức của SyncViet"
+            "defaultDisclosure": "AI Agent chính thức của SysNoxis — Trợ lý tự động minh bạch",
+            "profileBannerTitle": "Tài khoản AI chính thức của SysNoxis"
         }
     },
     "growth": {
@@ -2455,9 +2455,9 @@
             "communityBuilder": "Người xây cộng đồng"
         },
         "referral": {
-            "pageTitle": "Mời bạn bè & Nhận SyncViet Premium",
-            "heading": "Mời bạn bè tham gia SyncViet",
-            "subtitle": "Chia sẻ liên kết giới thiệu cá nhân. Khi bạn bè xác minh email và tham gia hoạt động thực tế, bạn sẽ tự động nhận ngày SyncViet Premium theo mốc cộng dồn.",
+            "pageTitle": "Mời bạn bè & Nhận SysNoxis Premium",
+            "heading": "Mời bạn bè tham gia SysNoxis",
+            "subtitle": "Chia sẻ liên kết giới thiệu cá nhân. Khi bạn bè xác minh email và tham gia hoạt động thực tế, bạn sẽ tự động nhận ngày SysNoxis Premium theo mốc cộng dồn.",
             "viewPremium": "Premium của tôi",
             "yourCode": "Mã giới thiệu của bạn",
             "active": "Đang hoạt động",
@@ -2466,14 +2466,14 @@
             "copied": "Đã sao chép!",
             "linkCopied": "Đã sao chép liên kết giới thiệu vào bộ nhớ tạm.",
             "share": "Chia sẻ",
-            "shareMessage": "Tham gia SyncViet cùng mình — cộng đồng kết nối tri thức và thảo luận cởi mở:",
+            "shareMessage": "Tham gia SysNoxis cùng mình — cộng đồng kết nối tri thức và thảo luận cởi mở:",
             "statTotal": "Tổng đã mời",
             "statPending": "Đang chờ xác minh",
             "statQualified": "Hợp lệ",
             "statRejected": "Từ chối",
             "statDaysEarned": "Ngày Premium nhận được",
             "progressTitle": "Tiến độ Mốc thưởng Premium Cộng dồn",
-            "progressSummary": "Bạn đã giới thiệu thành công {qualified}/{target} thành viên hợp lệ. Cần thêm {remaining} thành viên nữa để đạt tổng {days} ngày SyncViet Premium.",
+            "progressSummary": "Bạn đã giới thiệu thành công {qualified}/{target} thành viên hợp lệ. Cần thêm {remaining} thành viên nữa để đạt tổng {days} ngày SysNoxis Premium.",
             "verificationWindow": "Thời gian xác minh {hours} giờ",
             "qualifiedUnit": "hợp lệ",
             "claimed": "Đã nhận",
@@ -2483,8 +2483,8 @@
             "rewardHistoryTitle": "Lịch sử phần thưởng Premium"
         },
         "earlyMember": {
-            "title": "SyncViet Early Members (1.000 thành viên tiên phong)",
-            "description": "Thành viên người thật xác minh sớm nhận huy hiệu Early Member vĩnh viễn và ngày SyncViet Premium miễn phí khi chương trình đang mở.",
+            "title": "SysNoxis Early Members (1.000 thành viên tiên phong)",
+            "description": "Thành viên người thật xác minh sớm nhận huy hiệu Early Member vĩnh viễn và ngày SysNoxis Premium miễn phí khi chương trình đang mở.",
             "yourNumber": "Bạn là Thành viên Tiên phong #{num}!",
             "openStatus": "Đang mở cho thành viên xác minh đủ điều kiện",
             "pausedStatus": "Chương trình hiện đang tạm dừng theo cấu hình Quản trị viên"
@@ -2502,8 +2502,8 @@
             "marketingEmails": "Email giới thiệu tính năng mới (tùy chọn bật)"
         },
         "onboarding": {
-            "pageTitle": "Chào mừng đến với SyncViet",
-            "heading": "Cá nhân hóa trải nghiệm SyncViet của bạn",
+            "pageTitle": "Chào mừng đến với SysNoxis",
+            "heading": "Cá nhân hóa trải nghiệm SysNoxis của bạn",
             "subtitle": "Chọn ngôn ngữ, chủ đề quan tâm và cộng đồng phù hợp. Mọi bước đều không bắt buộc và bạn có thể bỏ qua bất cứ lúc nào.",
             "skip": "Bỏ qua lúc này",
             "languageStep": "1. Ngôn ngữ hiển thị ưa thích",
@@ -2512,7 +2512,7 @@
             "accountsStep": "4. Tài khoản hữu ích nên khám phá",
             "join": "Tham gia",
             "joined": "Đã tham gia",
-            "finish": "Khám phá SyncViet"
+            "finish": "Khám phá SysNoxis"
         },
         "extra": {
             "daysShort": "{count} ngày",
@@ -2563,7 +2563,7 @@
             "updateProfile": "Cập nhật hồ sơ",
             "username": "Tên người dùng"
         },
-        "checklistSubtitle": "Giữ cho tài khoản SyncViet của bạn luôn an toàn và đầy đủ thông tin.",
+        "checklistSubtitle": "Giữ cho tài khoản SysNoxis của bạn luôn an toàn và đầy đủ thông tin.",
         "checklistTitle": "Danh sách kiểm tra bảo mật tài khoản",
         "editProfileButton": "Chỉnh sửa hồ sơ",
         "feedButton": "Bảng tin",
@@ -2578,7 +2578,7 @@
     "settings": {
         "appearance": {
             "breadcrumb": "Giao diện",
-            "headingDescription": "Chọn giao diện hiển thị của SyncViet trên thiết bị này.",
+            "headingDescription": "Chọn giao diện hiển thị của SysNoxis trên thiết bị này.",
             "headingTitle": "Chế độ hiển thị",
             "pageTitle": "Cài đặt giao diện",
             "srHeading": "Cài đặt giao diện",
@@ -2590,7 +2590,7 @@
             "confirmDescription": "Sau khi xóa tài khoản, toàn bộ phiên đăng nhập sẽ bị thu hồi và dữ liệu cá nhân không thể khôi phục. Nhập mật khẩu của bạn để xác nhận.",
             "confirmTitle": "Bạn chắc chắn muốn xóa tài khoản?",
             "deleteButton": "Xóa tài khoản",
-            "headingDescription": "Đóng vĩnh viễn tài khoản SyncViet và thu hồi mọi phiên đăng nhập.",
+            "headingDescription": "Đóng vĩnh viễn tài khoản SysNoxis và thu hồi mọi phiên đăng nhập.",
             "headingTitle": "Xóa tài khoản",
             "passwordLabel": "Mật khẩu hiện tại",
             "passwordPlaceholder": "Nhập mật khẩu để xác nhận",

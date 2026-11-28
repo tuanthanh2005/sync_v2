@@ -351,7 +351,7 @@ class BannerAdvertisingService
                 $locked->rejection_reason = null;
             } else {
                 $locked->status = BannerCampaignStatus::Rejected;
-                $locked->rejection_reason = trim((string) $reason) ?: __('Banner creative did not meet SyncViet advertising guidelines.');
+                $locked->rejection_reason = trim((string) $reason) ?: __('Banner creative did not meet SysNoxis advertising guidelines.');
             }
 
             $locked->reviewed_by = $reviewer->id;

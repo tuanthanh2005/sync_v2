@@ -12,7 +12,7 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { trackGa4PageView } from '@/lib/analytics';
 import { initializeFlashToast } from '@/lib/flashToast';
 
-const appName = import.meta.env.VITE_APP_NAME || 'SyncViet';
+const appName = import.meta.env.VITE_APP_NAME || 'SysNoxis';
 
 function syncPageLocale(props: Record<string, unknown> | undefined): void {
     if (!props) {

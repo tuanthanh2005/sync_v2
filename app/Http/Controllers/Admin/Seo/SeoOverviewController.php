@@ -187,7 +187,7 @@ class SeoOverviewController extends Controller
                 'medium_count' => $latestAudit->medium_count,
                 'low_count' => $latestAudit->low_count,
                 'finished_at' => $latestAudit->finished_at?->toIso8601String(),
-                'disclaimer' => 'Internal SyncViet Technical SEO Hygiene Score (NOT a Google Ranking Score).',
+                'disclaimer' => 'Internal SysNoxis Technical SEO Hygiene Score (NOT a Google Ranking Score).',
             ],
             'alerts' => $openCriticalHigh->map(static fn (SeoAuditIssue $i): array => [
                 'id' => $i->id,

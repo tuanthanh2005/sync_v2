@@ -37,8 +37,8 @@ class CommunityController extends Controller
 
         $seo = $this->seoMetadata->forStaticPage(
             '/communities',
-            'Communities | '.config('app.name', 'SyncViet'),
-            'Discover active global communities and topic hubs on '.config('app.name', 'SyncViet').'.',
+            'Communities | '.config('app.name', 'SysNoxis'),
+            'Discover active global communities and topic hubs on '.config('app.name', 'SysNoxis').'.',
             $search === '',
             app()->getLocale(),
         );
@@ -99,7 +99,7 @@ class CommunityController extends Controller
                 'description' => (string) ($community->description ?? ''),
                 'posts' => $ssrPosts,
                 'breadcrumbs' => [
-                    ['label' => (string) config('app.name', 'SyncViet'), 'href' => '/'],
+                    ['label' => (string) config('app.name', 'SysNoxis'), 'href' => '/'],
                     ['label' => 'Communities', 'href' => '/communities'],
                 ],
             ],

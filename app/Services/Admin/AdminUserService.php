@@ -529,7 +529,7 @@ class AdminUserService
                 titleVi: "Thông báo tài khoản ({$sanctionType->label()}): {$cleanReason}",
                 titleEn: "Account notice ({$sanctionType->label()}): {$cleanReason}",
                 url: route('dashboard'),
-                actorName: config('app.name', 'SyncViet'),
+                actorName: config('app.name', 'SysNoxis'),
                 actorUsername: 'system',
             ));
 

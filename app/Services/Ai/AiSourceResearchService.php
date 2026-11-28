@@ -105,7 +105,7 @@ class AiSourceResearchService
             $botOrigin = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/');
             $response = Http::timeout(8)
                 ->withOptions(['allow_redirects' => ['max' => 2]])
-                ->withHeaders(['User-Agent' => "SyncVietEditorialBot/1.0 (+{$botOrigin})"])
+                ->withHeaders(['User-Agent' => "SysNoxisEditorialBot/1.0 (+{$botOrigin})"])
                 ->get($url);
 
             if (! $response->successful()) {

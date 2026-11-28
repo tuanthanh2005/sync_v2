@@ -63,7 +63,7 @@ export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
             missingKeysReported.add(signature);
             if (import.meta.env.DEV) {
                 console.warn(
-                    `[SyncViet i18n] Missing translation key "${key}" for locale "${locale}" (fell back to English).`,
+                    `[SysNoxis i18n] Missing translation key "${key}" for locale "${locale}" (fell back to English).`,
                 );
             }
         }

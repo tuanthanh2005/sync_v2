@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             User::query()->updateOrCreate(
                 ['email' => 'admin@syncviet.local'],
                 [
-                    'name' => 'Quản trị viên SyncViet',
+                    'name' => 'Quản trị viên SysNoxis',
                     'username' => 'syncviet_admin',
                     'password' => $seedPassword,
                     'email_verified_at' => now(),
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             User::query()->updateOrCreate(
                 ['email' => 'mod@syncviet.local'],
                 [
-                    'name' => 'Điều hành viên SyncViet',
+                    'name' => 'Điều hành viên SysNoxis',
                     'username' => 'syncviet_mod',
                     'password' => $seedPassword,
                     'email_verified_at' => now(),
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
             User::query()->updateOrCreate(
                 ['email' => 'member@syncviet.local'],
                 [
-                    'name' => 'Thành viên SyncViet',
+                    'name' => 'Thành viên SysNoxis',
                     'username' => 'syncviet_member',
                     'password' => $seedPassword,
                     'email_verified_at' => now(),

@@ -134,7 +134,7 @@ class PostController extends Controller
         );
 
         $breadcrumbs = [
-            ['label' => (string) config('app.name', 'SyncViet'), 'href' => '/'],
+            ['label' => (string) config('app.name', 'SysNoxis'), 'href' => '/'],
         ];
         if ($internalLinks['related_community'] !== null) {
             $breadcrumbs[] = [

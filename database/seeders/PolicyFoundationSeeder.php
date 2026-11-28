@@ -12,7 +12,7 @@ class PolicyFoundationSeeder extends Seeder
     ) {}
 
     /**
-     * Seed the 10 default SyncViet policy page drafts and hidden footer links.
+     * Seed the 10 default SysNoxis policy page drafts and hidden footer links.
      */
     public function run(): void
     {

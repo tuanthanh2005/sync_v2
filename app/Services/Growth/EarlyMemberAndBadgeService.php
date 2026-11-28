@@ -87,7 +87,7 @@ class EarlyMemberAndBadgeService
                     target: $user,
                     durationDays: $premiumDays,
                     source: 'early_member_reward',
-                    reason: "SyncViet Early Member #{$nextNumber}",
+                    reason: "SysNoxis Early Member #{$nextNumber}",
                     actor: $actor,
                     metadata: ['early_member_number' => $nextNumber],
                 );

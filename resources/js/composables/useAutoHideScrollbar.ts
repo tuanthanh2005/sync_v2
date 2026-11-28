@@ -71,7 +71,7 @@ function getElementStyleMeta(el: HTMLElement): CachedElementStyle {
         return cached;
     }
 
-    // Fast path for SyncViet explicit scroll containers (avoids getComputedStyle reflow cost)
+    // Fast path for SysNoxis explicit scroll containers (avoids getComputedStyle reflow cost)
     if (
         el.dataset.svScrollArea === 'true' ||
         el.dataset.svScrollable === 'true' ||

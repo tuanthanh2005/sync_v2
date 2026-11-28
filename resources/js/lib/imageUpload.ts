@@ -1,7 +1,7 @@
 import { i18n } from '@/i18n';
 
 /**
- * SyncViet Global Image Upload Policy Constants
+ * SysNoxis Global Image Upload Policy Constants
  * 40 MB = 40,000,000 bytes (strict `<`: files >= 40,000,000 bytes are rejected).
  */
 export const MAX_IMAGE_BYTES = 40_000_000;

@@ -32,14 +32,14 @@ class SearchController extends Controller
         $payload = $this->searchService->search($query, $request->user(), $hashtag, $type, $page);
 
         $seoTitle = $query !== ''
-            ? __('Search: :query', ['query' => $query]).' | '.config('app.name', 'SyncViet')
-            : __('Explore').' | '.config('app.name', 'SyncViet');
+            ? __('Search: :query', ['query' => $query]).' | '.config('app.name', 'SysNoxis')
+            : __('Explore').' | '.config('app.name', 'SysNoxis');
 
         // Internal search results are strictly noindex per SEO Architecture V2.0.
         $seo = $this->seoMetadata->forStaticPage(
             '/search',
             $seoTitle,
-            __('Explore discussions, communities, topics, and members on SyncViet.'),
+            __('Explore discussions, communities, topics, and members on SysNoxis.'),
             indexable: false,
             locale: app()->getLocale(),
         );

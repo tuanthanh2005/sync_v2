@@ -53,8 +53,8 @@ class TopicController extends Controller
         $path = $locale !== null && $locale !== $this->seoConfig->defaultLocale() ? "/{$locale}/topics" : '/topics';
         $seo = $this->metadata->forStaticPage(
             $path,
-            'Topics & Discussions | '.config('app.name', 'SyncViet'),
-            'Explore active topics, hashtags, and multilingual community discussions on '.config('app.name', 'SyncViet').'.',
+            'Topics & Discussions | '.config('app.name', 'SysNoxis'),
+            'Explore active topics, hashtags, and multilingual community discussions on '.config('app.name', 'SysNoxis').'.',
             true,
             $activeLocale,
         );

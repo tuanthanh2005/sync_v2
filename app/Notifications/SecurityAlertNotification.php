@@ -34,7 +34,7 @@ class SecurityAlertNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $securityUrl = rtrim((string) config('app.url', 'https://sysnoxis.com'), '/').'/settings/security';
 
         return (new MailMessage)
@@ -56,7 +56,7 @@ class SecurityAlertNotification extends Notification
             'title_en' => __($this->titleKey, $this->params, 'en'),
             'title_vi' => __($this->titleKey, $this->params, 'vi'),
             'url' => '/settings/security',
-            'actor_name' => (string) config('app.name', 'SyncViet'),
+            'actor_name' => (string) config('app.name', 'SysNoxis'),
             'actor_username' => 'security',
         ];
     }

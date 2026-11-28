@@ -1,7 +1,7 @@
 {
     "id": "/",
-    "name": "SyncViet",
-    "short_name": "SyncViet",
+    "name": "SysNoxis",
+    "short_name": "SysNoxis",
     "description": "Global community social network platform.",
     "start_url": "/?source=pwa",
     "scope": "/",

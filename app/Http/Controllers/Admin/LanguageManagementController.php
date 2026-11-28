@@ -123,13 +123,13 @@ class LanguageManagementController extends Controller
 
         if ($format === 'json') {
             return response()->json($report, 200, [
-                'Content-Disposition' => 'attachment; filename="syncviet-localization-report.json"',
+                'Content-Disposition' => 'attachment; filename="sysnoxis-localization-report.json"',
             ]);
         }
 
         return response($this->auditService->toCsv($report), 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="syncviet-localization-report.csv"',
+            'Content-Disposition' => 'attachment; filename="sysnoxis-localization-report.csv"',
         ]);
     }
 
@@ -174,7 +174,7 @@ class LanguageManagementController extends Controller
 
         return response()
             ->json(array_merge($flat, $overrides), 200, [
-                'Content-Disposition' => "attachment; filename=\"syncviet-locale-{$code}.json\"",
+                'Content-Disposition' => "attachment; filename=\"sysnoxis-locale-{$code}.json\"",
             ]);
     }
 

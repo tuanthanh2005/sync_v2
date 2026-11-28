@@ -3,7 +3,7 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Global Internationalization Single Source of Truth (SyncViet)
+    | Global Internationalization Single Source of Truth (SysNoxis)
     |--------------------------------------------------------------------------
     |
     | English (en) is the mandatory default and fallback locale for all
@@ -221,7 +221,7 @@ return [
      * Brand names, protocol labels, and technical tokens intentionally kept untranslated.
      */
     'non_translatable_tokens' => [
-        'SyncViet',
+        'SysNoxis',
         'Google',
         'Gemini',
         'PayPal',

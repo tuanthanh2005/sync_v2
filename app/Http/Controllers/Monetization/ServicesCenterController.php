@@ -39,7 +39,7 @@ class ServicesCenterController extends Controller
         $placements = $this->bannerService->publicPlacements();
         $boostPackages = $this->boostService->publicPackages();
 
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $canonical = route('monetization.services');
 
         return Inertia::render('monetization/Services', [
@@ -51,7 +51,7 @@ class ServicesCenterController extends Controller
         ])->withViewData([
             'seo' => [
                 'title' => __('Services Center').' - '.$appName,
-                'description' => __('Explore SyncViet Premium verified membership, Banner Advertising placements, and Boost Post packages.'),
+                'description' => __('Explore SysNoxis Premium verified membership, Banner Advertising placements, and Boost Post packages.'),
                 'url' => $canonical,
                 'hreflangs' => $this->buildHreflangs($canonical),
                 'jsonLd' => [
@@ -69,7 +69,7 @@ class ServicesCenterController extends Controller
         $user = $request->user();
         $platform = $this->platformService->resolvePlatform($request);
         $plans = $this->premiumService->publicPlans();
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $canonical = route('monetization.premium');
 
         return Inertia::render('monetization/Premium', [
@@ -82,15 +82,15 @@ class ServicesCenterController extends Controller
             'maxPendingOrders' => $this->paymentService->maxPendingPaymentsPerUser(),
         ])->withViewData([
             'seo' => [
-                'title' => 'SyncViet Premium - '.$appName,
-                'description' => __('Upgrade to SyncViet Premium for a blue member badge, reduced ads, and post analytics.'),
+                'title' => 'SysNoxis Premium - '.$appName,
+                'description' => __('Upgrade to SysNoxis Premium for a blue member badge, reduced ads, and post analytics.'),
                 'url' => $canonical,
                 'hreflangs' => $this->buildHreflangs($canonical),
                 'jsonLd' => [
                     '@context' => 'https://schema.org',
                     '@type' => 'Product',
-                    'name' => 'SyncViet Premium',
-                    'description' => 'Time-limited SyncViet Premium membership with blue member badge and creator tools.',
+                    'name' => 'SysNoxis Premium',
+                    'description' => 'Time-limited SysNoxis Premium membership with blue member badge and creator tools.',
                     'brand' => ['@type' => 'Brand', 'name' => $appName],
                 ],
             ],
@@ -99,7 +99,7 @@ class ServicesCenterController extends Controller
 
     public function advertising(Request $request): Response
     {
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $canonical = route('monetization.advertising');
 
         return Inertia::render('monetization/Advertising', [
@@ -109,7 +109,7 @@ class ServicesCenterController extends Controller
         ])->withViewData([
             'seo' => [
                 'title' => __('Advertising Center').' - '.$appName,
-                'description' => __('Promote your brand on SyncViet with transparent Banner Advertising and fixed-duration Boost Post packages.'),
+                'description' => __('Promote your brand on SysNoxis with transparent Banner Advertising and fixed-duration Boost Post packages.'),
                 'url' => $canonical,
                 'hreflangs' => $this->buildHreflangs($canonical),
             ],
@@ -120,7 +120,7 @@ class ServicesCenterController extends Controller
     {
         $user = $request->user();
         $platform = $this->platformService->resolvePlatform($request);
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $canonical = route('monetization.banner');
 
         $myCampaigns = $user === null
@@ -145,7 +145,7 @@ class ServicesCenterController extends Controller
         ])->withViewData([
             'seo' => [
                 'title' => __('Banner Advertising').' - '.$appName,
-                'description' => __('Rent exclusive or rotating desktop and mobile banner placements on SyncViet with transparent daily pricing.'),
+                'description' => __('Rent exclusive or rotating desktop and mobile banner placements on SysNoxis with transparent daily pricing.'),
                 'url' => $canonical,
                 'hreflangs' => $this->buildHreflangs($canonical),
             ],
@@ -156,7 +156,7 @@ class ServicesCenterController extends Controller
     {
         $user = $request->user();
         $platform = $this->platformService->resolvePlatform($request);
-        $appName = (string) config('app.name', 'SyncViet');
+        $appName = (string) config('app.name', 'SysNoxis');
         $canonical = route('monetization.boost');
 
         $eligiblePosts = $user === null
@@ -190,7 +190,7 @@ class ServicesCenterController extends Controller
         ])->withViewData([
             'seo' => [
                 'title' => __('Boost Post').' - '.$appName,
-                'description' => __('Increase visibility for your public SyncViet posts with transparent fixed-duration Boost packages.'),
+                'description' => __('Increase visibility for your public SysNoxis posts with transparent fixed-duration Boost packages.'),
                 'url' => $canonical,
                 'hreflangs' => $this->buildHreflangs($canonical),
             ],

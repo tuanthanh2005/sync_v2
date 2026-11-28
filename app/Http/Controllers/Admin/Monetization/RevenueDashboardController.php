@@ -39,7 +39,7 @@ class RevenueDashboardController extends Controller
 
         return response($csv, 200, [
             'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="syncviet-monetization-report-'.now()->format('Ymd-His').'.csv"',
+            'Content-Disposition' => 'attachment; filename="sysnoxis-monetization-report-'.now()->format('Ymd-His').'.csv"',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }

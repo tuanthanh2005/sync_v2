@@ -158,7 +158,7 @@ const { getInitials } = useInitials();
 
 const user = computed(() => page.props.auth.user);
 const can = computed(() => user.value?.can);
-const brandName = computed(() => page.props.name || 'SyncViet');
+const brandName = computed(() => page.props.name || 'SysNoxis');
 const pending = computed(() => page.props.adminPendingCounts);
 
 const collapsed = ref(false);

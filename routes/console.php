@@ -19,6 +19,7 @@ use App\Services\Monetization\BannerAdvertisingService;
 use App\Services\Monetization\BoostPostService;
 use App\Services\Monetization\MonetizationPaymentService;
 use App\Services\Monetization\PremiumSubscriptionService;
+use App\Services\Policy\FooterMenuService;
 use App\Services\Policy\PolicyManagementService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\RbacService;
@@ -32,6 +33,7 @@ use App\Services\Seo\SeoRegistryService;
 use App\Services\Seo\SitemapEngineService;
 use App\Services\Social\PostViewTrackingService;
 use App\Services\System\LanguageService;
+use App\Services\System\SystemSettingService;
 use Database\Seeders\AiContentCenterSeeder;
 use Database\Seeders\GrowthSeeder;
 use Database\Seeders\MonetizationSeeder;
@@ -183,7 +185,7 @@ Artisan::command('app:notifications:dispatch', function (): void {
                     titleVi: $broadcast->title,
                     titleEn: $broadcast->title,
                     url: $broadcast->action_url ?: '/',
-                    actorName: config('app.name', 'SyncViet'),
+                    actorName: config('app.name', 'SysNoxis'),
                     actorUsername: 'system',
                 ));
                 $count++;
@@ -555,6 +557,175 @@ Artisan::command(
         return 0;
     },
 )->purpose('Safely update allowlisted non-secret domain keys in .env, rebuild caches, and optionally backfill SEO sitemaps');
+
+Artisan::command(
+    'app:brand:sync-sysnoxis {--dry-run : Audit only without modifying .env or database}',
+    function (): int {
+        $dryRun = (bool) $this->option('dry-run');
+        $summary = [
+            'dry_run' => $dryRun,
+            'env_updated' => [],
+            'db_updated' => [],
+            'policy_pages_mentioning_legacy_brand' => 0,
+            'db_counts_preserved' => [
+                'users' => DB::table('users')->count(),
+                'posts' => DB::table('posts')->count(),
+                'comments' => DB::table('comments')->count(),
+                'payments' => Schema::hasTable('payments') ? DB::table('payments')->count() : 0,
+            ],
+        ];
+
+        // 1. Update APP_NAME & VITE_APP_NAME in .env (strictly allowlisted, zero credential changes)
+        $envPath = base_path('.env');
+        if (is_file($envPath) && is_readable($envPath)) {
+            $rawEnv = (string) file_get_contents($envPath);
+            $updatedEnv = $rawEnv;
+            $envUpdates = ['APP_NAME' => 'SysNoxis'];
+            if (preg_match('/^VITE_APP_NAME=/m', $rawEnv) === 1) {
+                $envUpdates['VITE_APP_NAME'] = '"SysNoxis"';
+            }
+
+            foreach ($envUpdates as $key => $value) {
+                $line = "{$key}={$value}";
+                if (preg_match('/^'.preg_quote($key, '/').'=(.*)$/m', $updatedEnv, $m) === 1) {
+                    if (trim($m[1]) !== $value) {
+                        $summary['env_updated'][] = $key;
+                        $updatedEnv = (string) preg_replace('/^'.preg_quote($key, '/').'=.*$/m', $line, $updatedEnv, 1);
+                    }
+                } else {
+                    $summary['env_updated'][] = $key;
+                    $updatedEnv = rtrim($updatedEnv, "\r\n")."\n{$line}\n";
+                }
+            }
+
+            if (! $dryRun && $summary['env_updated'] !== [] && is_writable($envPath)) {
+                $backupDir = storage_path('app/private/backups');
+                if (! is_dir($backupDir)) {
+                    @mkdir($backupDir, 0700, true);
+                }
+                if (! is_file($backupDir.'/env-pre-brand-sysnoxis.bak')) {
+                    @file_put_contents($backupDir.'/env-pre-brand-sysnoxis.bak', $rawEnv);
+                    @chmod($backupDir.'/env-pre-brand-sysnoxis.bak', 0600);
+                }
+                $tmpEnv = $envPath.'.tmp.'.bin2hex(random_bytes(4));
+                file_put_contents($tmpEnv, $updatedEnv);
+                @chmod($tmpEnv, 0600);
+                rename($tmpEnv, $envPath);
+
+                $_ENV['APP_NAME'] = 'SysNoxis';
+                $_SERVER['APP_NAME'] = 'SysNoxis';
+                putenv('APP_NAME=SysNoxis');
+                config(['app.name' => 'SysNoxis']);
+            }
+        }
+
+        // 2. Update strictly platform-managed branding settings & catalog rows (NEVER user posts/comments/audit logs)
+        if (Schema::hasTable('system_settings')) {
+            $brandingKeys = [
+                'site_name',
+                'site_slogan',
+                'site_description',
+                'seo_title_suffix',
+                'seo_meta_description',
+                'maintenance_message',
+                'footer_copyright_text',
+            ];
+            $rows = DB::table('system_settings')->whereIn('key', $brandingKeys)->get();
+            $updatedKeys = [];
+            foreach ($rows as $row) {
+                $val = is_string($row->value) ? $row->value : '';
+                if (str_contains($val, 'SyncViet')) {
+                    $next = str_replace('SyncViet', 'SysNoxis', $val);
+                    $updatedKeys[] = $row->key;
+                    if (! $dryRun) {
+                        DB::table('system_settings')->where('id', $row->id)->update(['value' => $next, 'updated_at' => now()]);
+                    }
+                }
+            }
+            $summary['db_updated']['system_settings'] = $updatedKeys;
+        }
+
+        if (Schema::hasTable('seo_settings')) {
+            $rows = DB::table('seo_settings')->where('is_encrypted', false)->get();
+            $count = 0;
+            foreach ($rows as $row) {
+                $val = is_string($row->value) ? $row->value : '';
+                if (str_contains($val, 'SyncViet')) {
+                    $count++;
+                    if (! $dryRun) {
+                        DB::table('seo_settings')->where('id', $row->id)->update(['value' => str_replace('SyncViet', 'SysNoxis', $val), 'updated_at' => now()]);
+                    }
+                }
+            }
+            $summary['db_updated']['seo_settings'] = $count;
+        }
+
+        $tableColumns = [
+            'premium_plans' => ['name', 'description'],
+            'boost_packages' => ['name', 'description'],
+            'referral_programs' => ['name', 'description'],
+            'early_member_programs' => ['name', 'description'],
+            'growth_achievements' => ['name', 'description'],
+            'ai_prompt_templates' => ['system_instruction'],
+            'ai_agents' => ['display_name', 'expertise', 'ai_disclosure', 'system_prompt'],
+        ];
+
+        foreach ($tableColumns as $table => $columns) {
+            if (! Schema::hasTable($table)) {
+                continue;
+            }
+            $existingCols = array_values(array_filter($columns, static fn (string $c): bool => Schema::hasColumn($table, $c)));
+            if ($existingCols === []) {
+                continue;
+            }
+            $rows = DB::table($table)->select(array_merge(['id'], $existingCols))->get();
+            $changed = 0;
+            foreach ($rows as $row) {
+                $patch = [];
+                foreach ($existingCols as $col) {
+                    $val = $row->{$col};
+                    if (is_string($val) && str_contains($val, 'SyncViet')) {
+                        $patch[$col] = str_replace('SyncViet', 'SysNoxis', $val);
+                    }
+                }
+                if ($patch !== []) {
+                    $changed++;
+                    if (! $dryRun) {
+                        if (Schema::hasColumn($table, 'updated_at')) {
+                            $patch['updated_at'] = now();
+                        }
+                        DB::table($table)->where('id', $row->id)->update($patch);
+                    }
+                }
+            }
+            $summary['db_updated'][$table] = $changed;
+        }
+
+        // Read-only audit of policy pages (never auto-mutates legal text or audit history)
+        if (Schema::hasTable('policy_page_translations')) {
+            $summary['policy_pages_mentioning_legacy_brand'] = DB::table('policy_page_translations')
+                ->where('title', 'like', '%SyncViet%')
+                ->orWhere('content', 'like', '%SyncViet%')
+                ->count();
+        }
+
+        if (! $dryRun) {
+            Cache::forget(SystemSettingService::CACHE_KEY);
+            Cache::forget(SeoConfigService::CACHE_KEY);
+            Cache::forget(RobotsAndRedirectService::ROBOTS_CACHE_KEY);
+            Cache::forget(FooterMenuService::CACHE_KEY);
+
+            Artisan::call('optimize:clear');
+            Artisan::call('config:cache');
+            Artisan::call('route:cache');
+            Artisan::call('view:cache');
+        }
+
+        $this->line(json_encode($summary, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}');
+
+        return 0;
+    },
+)->purpose('Safely synchronize platform branding from SyncViet to SysNoxis in .env and system catalog tables without touching user content or audit logs');
 
 Schedule::command('app:auth:cleanup-pending')->hourly()->withoutOverlapping();
 
