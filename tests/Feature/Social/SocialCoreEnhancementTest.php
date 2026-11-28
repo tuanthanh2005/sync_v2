@@ -216,7 +216,7 @@ test('image validator tolerates host finfo quirks and MIME aliases while rejecti
         $gifAsPngUpload = new UploadedFile((string) $gifAsPngPath, 'animated.png', 'image/png', null, true);
         $polyglotUpload = new UploadedFile((string) $polyglotPath, 'evil.jpg', 'image/jpeg', null, true);
 
-        foreach ([null, 'application/octet-stream', 'image/x-png', 'image/png'] as $simulatedFinfo) {
+        foreach ([null, 'application/octet-stream', 'text/plain', 'image/x-png', 'image/png'] as $simulatedFinfo) {
             $service = new class($simulatedFinfo) extends SafeImageUploadService
             {
                 public function __construct(private readonly ?string $forcedFinfo) {}

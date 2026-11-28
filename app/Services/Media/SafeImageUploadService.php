@@ -4,6 +4,7 @@ namespace App\Services\Media;
 
 use App\Services\System\SystemSettingService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -197,7 +198,7 @@ class SafeImageUploadService
         }
 
         if ($clientExtension !== '' && ! in_array($clientExtension, self::ALLOWED_EXTENSIONS, true)) {
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+            return $this->rejectUnsupportedFormat('extension', $file, $context);
         }
 
         $realPath = $file->getRealPath();
@@ -234,7 +235,7 @@ class SafeImageUploadService
         }
 
         if ($this->containsDisguisedExecutableOrSvg($header)) {
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+            return $this->rejectUnsupportedFormat('disguised_payload', $file, $context, $header);
         }
 
         $signatureMime = $this->detectMagicSignatureMime($header);
@@ -245,17 +246,21 @@ class SafeImageUploadService
                 return __('Video posting is currently under development. Please upload a JPG, PNG, or WebP image instead.');
             }
 
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+            return $this->rejectUnsupportedFormat('magic_signature', $file, $context, $header, null, $rawFinfoMime);
         }
 
         $finfoError = $this->validateDetectedFinfoMime($rawFinfoMime, $signatureMime);
         if ($finfoError !== null) {
+            if (str_contains($finfoError, 'Unsupported image format') || $finfoError === __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.')) {
+                return $this->rejectUnsupportedFormat('finfo_mismatch', $file, $context, $header, $signatureMime, $rawFinfoMime);
+            }
+
             return $finfoError;
         }
 
         $imageInfo = @getimagesize($realPath);
         if ($imageInfo === false) {
-            return __('The uploaded image is corrupted or unreadable.');
+            return $this->rejectCorruptedImage('getimagesize_false', $file, $context, $header, $signatureMime, $rawFinfoMime);
         }
 
         $srcWidth = (int) $imageInfo[0];
@@ -263,7 +268,15 @@ class SafeImageUploadService
         $imageMime = $this->resolveImageInfoMime($imageInfo);
 
         if ($imageMime === null || $imageMime !== $signatureMime) {
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+            return $this->rejectUnsupportedFormat(
+                'getimagesize_mismatch',
+                $file,
+                $context,
+                $header,
+                $signatureMime,
+                $rawFinfoMime,
+                $imageMime,
+            );
         }
 
         $maxDim = (int) config('syncviet.uploads.max_input_dimension', self::MAX_INPUT_PIXELS);
@@ -474,7 +487,78 @@ class SafeImageUploadService
             return __('Video posting is currently under development. Please upload a JPG, PNG, or WebP image instead.');
         }
 
+        $isDisallowedConcreteMime = str_starts_with($rawFinfoMime, 'image/')
+            || str_contains($rawFinfoMime, 'php')
+            || str_contains($rawFinfoMime, 'html')
+            || str_contains($rawFinfoMime, 'xml')
+            || str_contains($rawFinfoMime, 'javascript')
+            || in_array($rawFinfoMime, [
+                'application/pdf',
+                'application/zip',
+                'application/x-gzip',
+                'application/x-tar',
+                'application/x-executable',
+                'application/x-sharedlib',
+            ], true);
+
+        if (! $isDisallowedConcreteMime) {
+            return null;
+        }
+
         return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+    }
+
+    private function rejectUnsupportedFormat(
+        string $reason,
+        UploadedFile $file,
+        string $context,
+        string $header = '',
+        ?string $signatureMime = null,
+        ?string $finfoMime = null,
+        ?string $imageInfoMime = null,
+    ): string {
+        $this->logUploadRejection($reason, $file, $context, $header, $signatureMime, $finfoMime, $imageInfoMime);
+
+        return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+    }
+
+    private function rejectCorruptedImage(
+        string $reason,
+        UploadedFile $file,
+        string $context,
+        string $header = '',
+        ?string $signatureMime = null,
+        ?string $finfoMime = null,
+    ): string {
+        $this->logUploadRejection($reason, $file, $context, $header, $signatureMime, $finfoMime, null);
+
+        return __('The uploaded image is corrupted or unreadable.');
+    }
+
+    private function logUploadRejection(
+        string $reason,
+        UploadedFile $file,
+        string $context,
+        string $header,
+        ?string $signatureMime,
+        ?string $finfoMime,
+        ?string $imageInfoMime,
+    ): void {
+        try {
+            Log::warning('Image upload rejected by SafeImageUploadService', [
+                'reason' => $reason,
+                'context' => $context,
+                'client_extension' => strtolower(trim($file->getClientOriginalExtension())),
+                'client_mime' => strtolower(trim((string) $file->getClientMimeType())),
+                'size_bytes' => $file->getSize(),
+                'signature_mime' => $signatureMime,
+                'finfo_mime' => $finfoMime,
+                'imageinfo_mime' => $imageInfoMime,
+                'header_hex' => $header !== '' ? bin2hex(substr($header, 0, 16)) : '',
+            ]);
+        } catch (\Throwable) {
+            // Do not mask validation errors if logging fails.
+        }
     }
 
     private function normalizeImageMime(?string $mime): ?string
