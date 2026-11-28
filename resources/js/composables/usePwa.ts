@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import { appToast } from '@/lib/toast';
 
 interface BeforeInstallPromptEvent extends Event {
     prompt: () => Promise<void>;
@@ -77,13 +76,6 @@ export function initializePwa(): void {
                             ) {
                                 waitingWorker = installing;
                                 updateAvailable.value = true;
-                                appToast.action(
-                                    'A newer version of SysNoxis is ready.',
-                                    'Reload',
-                                    () => {
-                                        applyPwaUpdate();
-                                    },
-                                );
                             }
                         });
                     });
