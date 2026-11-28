@@ -1,4 +1,4 @@
-const STATIC_CACHE = 'syncviet-static-v4';
+const STATIC_CACHE = 'syncviet-static-v5';
 const OFFLINE_URL = '/offline.html';
 const BRAND_VERSION = 'sysnoxis-2';
 

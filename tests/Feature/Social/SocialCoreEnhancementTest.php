@@ -381,6 +381,59 @@ test('real PNG, JPG, WebP uploads with transparent alpha, metadata chunks, upper
     }
 });
 
+test('valid PNG carrying C2PA Content Credentials caBX SVG icon metadata is accepted and stripped to clean WebP while disguised SVG/polyglot uploads remain rejected', function (): void {
+    Storage::fake('public');
+    config()->set('syncviet.media_disk', 'public');
+
+    $tmpPngPath = tempnam(sys_get_temp_dir(), 'svc2pa_');
+    $polyglotScriptPath = tempnam(sys_get_temp_dir(), 'svscr_');
+    expect($tmpPngPath)->not->toBeFalse()
+        ->and($polyglotScriptPath)->not->toBeFalse();
+
+    try {
+        $im = imagecreatetruecolor(160, 120);
+        $bg = imagecolorallocate($im, 79, 70, 229);
+        imagefilledrectangle($im, 0, 0, 160, 120, $bg);
+        imagepng($im, (string) $tmpPngPath);
+        imagedestroy($im);
+
+        $rawPng = (string) file_get_contents((string) $tmpPngPath);
+        $ihdrEndPos = 8 + 25; // 8-byte PNG signature + 25-byte IHDR chunk
+        $cabxPayload = "jumb\x00\x00\x00\x20jumdc2pa\x00\x00\x00\x00c2pa.assertions"
+            .str_repeat("\x00", 120)
+            ."c2pa.icon\x00image/svg+xml\x00"
+            .'<svg width="716" height="716" viewBox="0 0 716 716" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10v10z"/></svg>';
+        $cabxChunk = pack('N', strlen($cabxPayload)).'caBX'.$cabxPayload.pack('N', crc32('caBX'.$cabxPayload));
+        $c2paPngBytes = substr($rawPng, 0, $ihdrEndPos).$cabxChunk.substr($rawPng, $ihdrEndPos);
+        file_put_contents((string) $tmpPngPath, $c2paPngBytes);
+
+        expect(stripos(substr($c2paPngBytes, 0, 512), '<svg'))->not->toBeFalse();
+
+        $service = app(SafeImageUploadService::class);
+        $c2paUpload = new UploadedFile((string) $tmpPngPath, 'ket-noi.png', 'image/png', null, true);
+
+        expect($service->validateUploadedFile($c2paUpload, 'post'))->toBeNull();
+        $stored = $service->storeImage($c2paUpload, 'posts', 'post');
+        Storage::disk('public')->assertExists($stored['path']);
+
+        $storedBytes = (string) Storage::disk('public')->get($stored['path']);
+        expect($storedBytes)->not->toContain('<svg')
+            ->and($storedBytes)->not->toContain('caBX');
+
+        $disguisedPlainSvg = UploadedFile::fake()->createWithContent('icon.png', '<svg xmlns="http://www.w3.org/2000/svg"><circle r="10"/></svg>');
+        $disguisedXmlSvg = UploadedFile::fake()->createWithContent('vector.jpg', '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"></svg>');
+        file_put_contents((string) $polyglotScriptPath, "\xFF\xD8\xFF\xE0<script>alert(1)</script>");
+        $polyglotScript = new UploadedFile((string) $polyglotScriptPath, 'poly.jpg', 'image/jpeg', null, true);
+
+        expect($service->validateUploadedFile($disguisedPlainSvg, 'post'))->not->toBeNull()
+            ->and($service->validateUploadedFile($disguisedXmlSvg, 'post'))->not->toBeNull()
+            ->and($service->validateUploadedFile($polyglotScript, 'post'))->not->toBeNull();
+    } finally {
+        @unlink((string) $tmpPngPath);
+        @unlink((string) $polyglotScriptPath);
+    }
+});
+
 test('banner booking strictly requires device image upload and rejects external image URLs', function (): void {
     $this->seed(MonetizationSeeder::class);
     $user = User::factory()->create();

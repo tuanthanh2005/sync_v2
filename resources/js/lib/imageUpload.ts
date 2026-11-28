@@ -247,7 +247,10 @@ function detectMagicSignatureFromBytes(
     return null;
 }
 
-function containsDisguisedPayloadInBytes(bytes: Uint8Array): boolean {
+function containsDisguisedPayloadInBytes(
+    bytes: Uint8Array,
+    signatureMime: (typeof ALLOWED_IMAGE_MIMES)[number] | null,
+): boolean {
     if (bytes.length === 0) {
         return false;
     }
@@ -258,13 +261,19 @@ function containsDisguisedPayloadInBytes(bytes: Uint8Array): boolean {
     }
     const lower = text.toLowerCase();
 
-    return (
+    if (
         lower.includes('<?php') ||
         lower.includes('<script') ||
-        lower.includes('<svg') ||
-        lower.includes('<!doctype html') ||
-        lower.trimStart().startsWith('<?xml')
-    );
+        lower.includes('<!doctype html')
+    ) {
+        return true;
+    }
+
+    if (signatureMime !== null) {
+        return false;
+    }
+
+    return lower.includes('<svg') || lower.trimStart().startsWith('<?xml');
 }
 
 async function canBrowserDecodeImage(file: File): Promise<boolean> {
@@ -331,7 +340,9 @@ export async function inspectImageFileContent(
             const buffer = await file.slice(0, 512).arrayBuffer();
             const bytes = new Uint8Array(buffer);
 
-            if (containsDisguisedPayloadInBytes(bytes)) {
+            const signatureMime = detectMagicSignatureFromBytes(bytes);
+
+            if (containsDisguisedPayloadInBytes(bytes, signatureMime)) {
                 return {
                     valid: false,
                     code: 'unsupported_format',
@@ -339,7 +350,7 @@ export async function inspectImageFileContent(
                 };
             }
 
-            if (detectMagicSignatureFromBytes(bytes) === null) {
+            if (signatureMime === null) {
                 return {
                     valid: false,
                     code: 'unsupported_format',

@@ -242,11 +242,12 @@ class SafeImageUploadService
             return __('The uploaded image file is empty or unreadable.');
         }
 
-        if ($this->containsDisguisedExecutableOrSvg($header)) {
-            return $this->rejectUnsupportedFormat('disguised_payload', $file, $context, $header);
+        $signatureMime = $this->detectMagicSignatureMime($header);
+
+        if ($this->containsDisguisedExecutableOrSvg($header, $signatureMime)) {
+            return $this->rejectUnsupportedFormat('disguised_payload', $file, $context, $header, $signatureMime);
         }
 
-        $signatureMime = $this->detectMagicSignatureMime($header);
         $rawFinfoMime = $this->detectFinfoMimeType($realPath);
 
         if ($signatureMime === null) {
@@ -633,14 +634,26 @@ class SafeImageUploadService
         return null;
     }
 
-    private function containsDisguisedExecutableOrSvg(string $header): bool
+    private function containsDisguisedExecutableOrSvg(string $header, ?string $signatureMime = null): bool
     {
         $lower = strtolower($header);
 
-        return str_contains($lower, '<?php')
+        if (
+            str_contains($lower, '<?php')
             || str_contains($lower, '<script')
-            || str_contains($lower, '<svg')
             || str_contains($lower, '<!doctype html')
+        ) {
+            return true;
+        }
+
+        // Authentic raster images (JPEG/PNG/WebP magic header) may carry <svg> / XML inside
+        // C2PA Content Credentials (e.g. Gemini caBX c2pa.icon) or XMP metadata; GD re-encoding
+        // strips all ancillary chunks cleanly while disguised SVG/XML files lack raster signatures.
+        if ($signatureMime !== null) {
+            return false;
+        }
+
+        return str_contains($lower, '<svg')
             || str_starts_with(ltrim($lower), '<?xml');
     }
 
