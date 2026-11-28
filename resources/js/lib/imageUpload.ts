@@ -11,6 +11,17 @@ export const ALLOWED_IMAGE_MIMES = [
     'image/png',
     'image/webp',
 ] as const;
+const ALLOWED_IMAGE_MIME_ALIASES = new Set<string>([
+    ...ALLOWED_IMAGE_MIMES,
+    'image/jpg',
+    'image/pjpeg',
+    'image/x-png',
+    'image/x-webp',
+]);
+const GENERIC_BINARY_MIMES = new Set<string>([
+    'application/octet-stream',
+    'binary/octet-stream',
+]);
 export const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'] as const;
 export const IMAGE_ACCEPT_ATTR =
     'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp';
@@ -67,9 +78,10 @@ export function validateImageFile(
     const maxMb = Math.max(1, Math.round(maxBytes / 1_000_000));
 
     const ext = file.name.includes('.')
-        ? (file.name.split('.').pop()?.toLowerCase() ?? '')
+        ? (file.name.split('.').pop()?.trim().toLowerCase() ?? '')
         : '';
-    const mime = (file.type || '').toLowerCase();
+    const rawMime = (file.type || '').trim().toLowerCase();
+    const mime = rawMime.split(';')[0]?.trim() ?? '';
 
     if (mime.startsWith('video/') || VIDEO_EXTENSIONS.has(ext)) {
         return {
@@ -101,9 +113,8 @@ export function validateImageFile(
         };
     }
 
-    const mimeAllowed =
-        mime !== '' &&
-        (ALLOWED_IMAGE_MIMES as readonly string[]).includes(mime);
+    const mimeAllowed = mime !== '' && ALLOWED_IMAGE_MIME_ALIASES.has(mime);
+    const mimeIsGenericBinary = mime !== '' && GENERIC_BINARY_MIMES.has(mime);
     const extAllowed =
         ext !== '' &&
         (ALLOWED_IMAGE_EXTENSIONS as readonly string[]).includes(ext);
@@ -116,7 +127,7 @@ export function validateImageFile(
         };
     }
 
-    if (mime !== '' && !mimeAllowed) {
+    if (mime !== '' && !mimeAllowed && !(mimeIsGenericBinary && extAllowed)) {
         return {
             valid: false,
             code: 'unsupported_format',

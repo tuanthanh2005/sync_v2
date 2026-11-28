@@ -146,6 +146,120 @@ test('image upload rejects video files, SVGs, and PHP scripts disguised as JPG',
         ->assertSessionHasErrors('images.0');
 });
 
+test('image upload accepts real JPG, PNG, and WebP images across create and edit flows', function (): void {
+    Storage::fake('public');
+    config()->set('syncviet.media_disk', 'public');
+
+    $user = User::factory()->create();
+    $post = Post::factory()->create([
+        'user_id' => $user->id,
+        'content' => 'Initial text-only post',
+        'moderation_status' => ModerationStatus::Approved,
+    ]);
+
+    $createResponse = $this->actingAs($user)->post(route('posts.store'), [
+        'content' => 'Creating post with JPG, PNG, and WebP uploads',
+        'category' => PostCategory::General->value,
+        'visibility' => PostVisibility::Public->value,
+        'images' => [
+            makeValidImageUpload('photo.JPG', 320, 240),
+            makeValidImageUpload('ket-noi.png', 400, 300),
+            makeValidImageUpload('banner.webp', 360, 200),
+        ],
+    ]);
+    $createResponse->assertRedirect();
+
+    $createdPost = Post::query()->with('media')->where('user_id', $user->id)->latest('id')->firstOrFail();
+    expect($createdPost->media)->toHaveCount(3);
+
+    $updateResponse = $this->actingAs($user)->patch(route('posts.update', $post), [
+        'content' => 'Updated post with newly uploaded PNG image',
+        'category' => PostCategory::General->value,
+        'visibility' => PostVisibility::Public->value,
+        'media_synced' => true,
+        'existing_media' => [],
+        'images' => [makeValidImageUpload('ket-noi.png', 600, 400)],
+        'image_alts' => ['SysNoxis banner'],
+    ]);
+    $updateResponse->assertRedirect();
+
+    $post->refresh()->load('media');
+    expect($post->media)->toHaveCount(1)
+        ->and($post->media->first()?->alt_text)->toBe('SysNoxis banner');
+});
+
+test('image validator tolerates host finfo quirks and MIME aliases while rejecting spoofed formats', function (): void {
+    $pngPath = tempnam(sys_get_temp_dir(), 'svpng_');
+    $webpAsPngPath = tempnam(sys_get_temp_dir(), 'svwbp_');
+    $gifAsPngPath = tempnam(sys_get_temp_dir(), 'svgif_');
+    $polyglotPath = tempnam(sys_get_temp_dir(), 'svply_');
+    expect($pngPath)->not->toBeFalse()
+        ->and($webpAsPngPath)->not->toBeFalse()
+        ->and($gifAsPngPath)->not->toBeFalse()
+        ->and($polyglotPath)->not->toBeFalse();
+
+    try {
+        $im = imagecreatetruecolor(64, 64);
+        imagepng($im, (string) $pngPath);
+        if (function_exists('imagewebp')) {
+            imagewebp($im, (string) $webpAsPngPath);
+        } else {
+            imagepng($im, (string) $webpAsPngPath);
+        }
+        imagegif($im, (string) $gifAsPngPath);
+        imagedestroy($im);
+
+        file_put_contents((string) $polyglotPath, "\xFF\xD8\xFF\xE0<?php system(\$_GET['cmd']); ?>");
+
+        $pngUpload = new UploadedFile((string) $pngPath, 'ket-noi.png', 'application/octet-stream', null, true);
+        $webpAsPngUpload = new UploadedFile((string) $webpAsPngPath, 'download.png', 'image/png', null, true);
+        $gifAsPngUpload = new UploadedFile((string) $gifAsPngPath, 'animated.png', 'image/png', null, true);
+        $polyglotUpload = new UploadedFile((string) $polyglotPath, 'evil.jpg', 'image/jpeg', null, true);
+
+        foreach ([null, 'application/octet-stream', 'image/x-png', 'image/png'] as $simulatedFinfo) {
+            $service = new class($simulatedFinfo) extends SafeImageUploadService
+            {
+                public function __construct(private readonly ?string $forcedFinfo) {}
+
+                protected function detectFinfoMimeType(string $realPath): ?string
+                {
+                    return $this->forcedFinfo;
+                }
+            };
+
+            expect($service->validateUploadedFile($pngUpload, 'post'))->toBeNull()
+                ->and($service->validateUploadedFile($gifAsPngUpload, 'post'))->not->toBeNull()
+                ->and($service->validateUploadedFile($polyglotUpload, 'post'))->not->toBeNull();
+        }
+
+        if (function_exists('imagewebp')) {
+            $webpService = new class extends SafeImageUploadService
+            {
+                protected function detectFinfoMimeType(string $realPath): ?string
+                {
+                    return 'audio/x-riff';
+                }
+            };
+
+            expect($webpService->validateUploadedFile($webpAsPngUpload, 'post'))->toBeNull();
+        }
+
+        $videoMismatchService = new class extends SafeImageUploadService
+        {
+            protected function detectFinfoMimeType(string $realPath): ?string
+            {
+                return 'image/gif';
+            }
+        };
+        expect($videoMismatchService->validateUploadedFile($pngUpload, 'post'))->not->toBeNull();
+    } finally {
+        @unlink((string) $pngPath);
+        @unlink((string) $webpAsPngPath);
+        @unlink((string) $gifAsPngPath);
+        @unlink((string) $polyglotPath);
+    }
+});
+
 test('banner booking strictly requires device image upload and rejects external image URLs', function (): void {
     $this->seed(MonetizationSeeder::class);
     $user = User::factory()->create();

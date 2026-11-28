@@ -28,6 +28,33 @@ class SafeImageUploadService
     ];
 
     /**
+     * Normalized MIME aliases emitted across different OS/host libmagic databases.
+     *
+     * @var array<string, string>
+     */
+    private const ALLOWED_MIME_ALIASES = [
+        'image/jpeg' => 'image/jpeg',
+        'image/jpg' => 'image/jpeg',
+        'image/pjpeg' => 'image/jpeg',
+        'image/png' => 'image/png',
+        'image/x-png' => 'image/png',
+        'image/webp' => 'image/webp',
+        'image/x-webp' => 'image/webp',
+    ];
+
+    /**
+     * Generic MIME strings returned by some hosts when finfo cannot classify binary temp files.
+     * Final authorization still requires matching magic bytes, getimagesize(), and GD re-encoding.
+     *
+     * @var list<string>
+     */
+    private const GENERIC_BINARY_MIMES = [
+        'application/octet-stream',
+        'binary/octet-stream',
+        'application/unknown',
+    ];
+
+    /**
      * @var list<string>
      */
     private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
@@ -162,8 +189,8 @@ class SafeImageUploadService
             return __('Unable to upload the image. Please try again.');
         }
 
-        $clientExtension = strtolower($file->getClientOriginalExtension());
-        $clientMime = strtolower((string) $file->getClientMimeType());
+        $clientExtension = strtolower(trim($file->getClientOriginalExtension()));
+        $clientMime = strtolower(trim((string) $file->getClientMimeType()));
 
         if (str_starts_with($clientMime, 'video/') || in_array($clientExtension, self::VIDEO_EXTENSIONS, true)) {
             return __('Video posting is currently under development. Please upload a JPG, PNG, or WebP image instead.');
@@ -211,23 +238,19 @@ class SafeImageUploadService
         }
 
         $signatureMime = $this->detectMagicSignatureMime($header);
+        $rawFinfoMime = $this->detectFinfoMimeType($realPath);
+
         if ($signatureMime === null) {
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
-        }
-
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $detectedMime = $finfo->file($realPath);
-
-        if (! is_string($detectedMime) || ! array_key_exists($detectedMime, self::ALLOWED_MIME_MAP)) {
-            if (is_string($detectedMime) && str_starts_with($detectedMime, 'video/')) {
+            if ($rawFinfoMime !== null && str_starts_with($rawFinfoMime, 'video/')) {
                 return __('Video posting is currently under development. Please upload a JPG, PNG, or WebP image instead.');
             }
 
             return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
         }
 
-        if ($detectedMime !== $signatureMime) {
-            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+        $finfoError = $this->validateDetectedFinfoMime($rawFinfoMime, $signatureMime);
+        if ($finfoError !== null) {
+            return $finfoError;
         }
 
         $imageInfo = @getimagesize($realPath);
@@ -237,7 +260,11 @@ class SafeImageUploadService
 
         $srcWidth = (int) $imageInfo[0];
         $srcHeight = (int) $imageInfo[1];
-        $imageMime = $imageInfo['mime'];
+        $imageMime = $this->resolveImageInfoMime($imageInfo);
+
+        if ($imageMime === null || $imageMime !== $signatureMime) {
+            return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+        }
 
         $maxDim = (int) config('syncviet.uploads.max_input_dimension', self::MAX_INPUT_PIXELS);
         $maxPixels = (int) config('syncviet.uploads.max_total_pixels', self::MAX_TOTAL_PIXELS);
@@ -248,7 +275,6 @@ class SafeImageUploadService
             || $srcWidth > $maxDim
             || $srcHeight > $maxDim
             || ($srcWidth * $srcHeight) > $maxPixels
-            || ! array_key_exists($imageMime, self::ALLOWED_MIME_MAP)
         ) {
             return __('Image dimensions exceed safe processing limits.');
         }
@@ -298,7 +324,13 @@ class SafeImageUploadService
             ]);
         }
 
-        $imageMime = $imageInfo['mime'];
+        $imageMime = $this->resolveImageInfoMime($imageInfo);
+        if ($imageMime === null) {
+            throw ValidationException::withMessages([
+                $errorField => [__('Unsupported image format. Only JPG, PNG, and WebP images are allowed.')],
+            ]);
+        }
+
         $source = $this->decodeFromFile($realPath, $imageMime);
 
         if ($source === false) {
@@ -391,6 +423,96 @@ class SafeImageUploadService
             'k' => (int) round($number * 1024),
             default => (int) round($number),
         };
+    }
+
+    protected function detectFinfoMimeType(string $realPath): ?string
+    {
+        if (! class_exists(\finfo::class)) {
+            return null;
+        }
+
+        try {
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+            $detected = @$finfo->file($realPath);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        if (! is_string($detected)) {
+            return null;
+        }
+
+        // Strip optional MIME parameters such as "; charset=binary".
+        $baseMime = strtolower(trim(explode(';', $detected, 2)[0]));
+
+        return $baseMime !== '' ? $baseMime : null;
+    }
+
+    private function validateDetectedFinfoMime(?string $rawFinfoMime, string $signatureMime): ?string
+    {
+        if ($rawFinfoMime === null) {
+            return null;
+        }
+
+        $normalizedFinfoMime = $this->normalizeImageMime($rawFinfoMime);
+        if ($normalizedFinfoMime !== null) {
+            if ($normalizedFinfoMime !== $signatureMime) {
+                return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+            }
+
+            return null;
+        }
+
+        $isRiffAliasForWebp = $signatureMime === 'image/webp'
+            && in_array($rawFinfoMime, ['audio/x-riff', 'application/x-riff', 'video/x-msvideo'], true);
+
+        if ($isRiffAliasForWebp || in_array($rawFinfoMime, self::GENERIC_BINARY_MIMES, true)) {
+            return null;
+        }
+
+        if (str_starts_with($rawFinfoMime, 'video/')) {
+            return __('Video posting is currently under development. Please upload a JPG, PNG, or WebP image instead.');
+        }
+
+        return __('Unsupported image format. Only JPG, PNG, and WebP images are allowed.');
+    }
+
+    private function normalizeImageMime(?string $mime): ?string
+    {
+        if (! is_string($mime) || trim($mime) === '') {
+            return null;
+        }
+
+        $baseMime = strtolower(trim(explode(';', $mime, 2)[0]));
+
+        return self::ALLOWED_MIME_ALIASES[$baseMime] ?? null;
+    }
+
+    /**
+     * Resolve canonical allowed image MIME type from PHP's native getimagesize() output.
+     *
+     * @param  array<int|string, mixed>  $imageInfo
+     */
+    private function resolveImageInfoMime(array $imageInfo): ?string
+    {
+        $imageType = isset($imageInfo[2]) ? (int) $imageInfo[2] : 0;
+
+        $byType = match ($imageType) {
+            IMAGETYPE_JPEG => 'image/jpeg',
+            IMAGETYPE_PNG => 'image/png',
+            IMAGETYPE_WEBP => 'image/webp',
+            default => null,
+        };
+
+        if ($byType !== null) {
+            return $byType;
+        }
+
+        $rawMime = isset($imageInfo['mime']) && is_string($imageInfo['mime'])
+            ? $imageInfo['mime']
+            : null;
+
+        return $this->normalizeImageMime($rawMime);
     }
 
     private function detectMagicSignatureMime(string $header): ?string
